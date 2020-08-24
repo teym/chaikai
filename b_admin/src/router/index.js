@@ -78,18 +78,6 @@ export const constantRoutes = [
     ]
   },
   {
-    path: '/documentation',
-    component: Layout,
-    children: [
-      {
-        path: 'index',
-        component: () => import('@/views/documentation/index'),
-        name: 'Documentation',
-        meta: { title: 'Documentation', icon: 'documentation', affix: true }
-      }
-    ]
-  },
-  {
     path: '/profile',
     component: Layout,
     redirect: '/profile/index',
@@ -122,16 +110,48 @@ export const asyncRoutes = [
     children: [
       {
         path: 'index',
-        component: () => import('@/views/goods/goods-table'),
+        component: () => import('@/views/goods/table'),
         name: 'table',
         meta: { title: 'Goods' }
       },
       {
         path: 'create',
-        component: () => import('@/views/goods/goods-create'),
+        component: () => import('@/views/goods/create'),
         name: 'create',
         hidden: true,
         meta: { title: 'Create' }
+      }
+    ]
+  },
+  {
+    path: '/activity',
+    component: Layout,
+    redirect: '/activity/index',
+    name: 'Activity',
+    meta: {
+      title: 'Activity',
+      icon: 'table'
+    },
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/activity/table'),
+        name: 'table',
+        meta: { title: 'Activity' }
+      },
+      {
+        path: 'create',
+        component: () => import('@/views/activity/create'),
+        name: 'create',
+        hidden: true,
+        meta: { title: 'Create' }
+      },
+      {
+        path: 'order',
+        component: () => import('@/views/activity/orders'),
+        name: 'order',
+        hidden: true,
+        meta: { title: 'Order' }
       }
     ]
   },
@@ -205,19 +225,6 @@ export const asyncRoutes = [
         component: () => import('@/views/error-log/index'),
         name: 'ErrorLog',
         meta: { title: 'Error Log', icon: 'bug' }
-      }
-    ]
-  },
-
-  {
-    path: '/theme',
-    component: Layout,
-    children: [
-      {
-        path: 'index',
-        component: () => import('@/views/theme/index'),
-        name: 'Theme',
-        meta: { title: 'Theme', icon: 'theme' }
       }
     ]
   },

@@ -29,24 +29,24 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
-import notice from "./components/notice";
+import { mapGetters } from 'vuex'
+import notice from './components/notice'
 
 export default {
-  name: "Dashboard",
+  name: 'Dashboard',
   components: { notice },
   data() {
-    return {};
+    return {}
   },
   computed: {
-    ...mapGetters(["roles"]),
+    ...mapGetters(['roles'])
   },
   created() {
     // if (!this.roles.includes('admin')) {
     //   this.currentRole = 'editorDashboard'
     // }
-  },
-};
+  }
+}
 </script>
 
 <style lang="scss" scoped>

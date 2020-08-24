@@ -70,14 +70,14 @@ import {
   fetchList,
   fetchPv,
   createArticle,
-  updateArticle,
-} from "@/api/article";
-import waves from "@/directive/waves"; // waves directive
-import { parseTime } from "@/utils";
-import Pagination from "@/components/Pagination"; // secondary package based on el-pagination
+  updateArticle
+} from '@/api/article'
+import waves from '@/directive/waves' // waves directive
+import { parseTime } from '@/utils'
+import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
 export default {
-  name: "ComplexTable",
+  name: 'ComplexTable',
   components: { Pagination },
   directives: { waves },
   data() {
@@ -89,55 +89,64 @@ export default {
       listQuery: {
         page: 1,
         limit: 20,
-        title: undefined,
-      },
-    };
+        title: undefined
+      }
+    }
   },
   created() {
-    this.getList();
+    this.getList()
   },
   methods: {
     getList() {
-      this.listLoading = true;
+      this.listLoading = true
       fetchList(this.listQuery).then((response) => {
-        this.list = response.data.items;
-        this.total = response.data.total;
+        this.list = response.data.items
+        this.total = response.data.total
 
         // Just to simulate the time of the request
         setTimeout(() => {
-          this.listLoading = false;
-        }, 1.5 * 1000);
-      });
+          this.listLoading = false
+        }, 1.5 * 1000)
+      })
     },
     handleFilter() {
-      this.listQuery.page = 1;
-      this.getList();
+      this.listQuery.page = 1
+      this.getList()
     },
     handleCreate() {
-      //check
-      if (Math.random() > 0.5) {
-        this.$alert("无法创建商品，为保障品牌合作规范，请先完成企业认证").then(
+      // check
+      const t = Math.random();
+      if (t < 0.3) {
+        this.$alert('无法创建商品，为保障品牌合作规范，请先完成企业认证').then(
           (r) => {
-            if (r === "confirm") {
-              this.$router.push("/account/auth");
+            if (r === 'confirm') {
+              this.$router.push('/account/cert')
             }
           }
-        );
-      } else {
-        this.$router.push("/goods/create");
+        )
+      }else if(t < 0.6){
+        this.$alert('无法创建商品，为保障品牌合作规范，请先完成品牌授权').then(
+          (r) => {
+            if (r === 'confirm') {
+              this.$router.push('/account/auth')
+            }
+          }
+        )
+      }else {
+        this.$router.push('/goods/create')
       }
     },
     createData() {},
     handleUpdate(row) {},
     handleDelete(row, index) {
       this.$notify({
-        title: "Success",
-        message: "Delete Successfully",
-        type: "success",
-        duration: 2000,
-      });
-      this.list.splice(index, 1);
-    },
-  },
-};
+        title: 'Success',
+        message: 'Delete Successfully',
+        type: 'success',
+        duration: 2000
+      })
+      this.list.splice(index, 1)
+    }
+  }
+}
 </script>
