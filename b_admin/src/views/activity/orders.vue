@@ -27,12 +27,27 @@
       highlight-current-row
       style="width: 100%;"
     >
-      <el-table-column label="Title" min-width="150px">
+      <el-table-column label="博主" min-width="150px">
         <template slot-scope="{row}">
           <span>{{ row.title }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Brand" width="110px" align="center">
+      <el-table-column label="申请信息" width="110px" align="center">
+        <template slot-scope="{row}">
+          <span>{{ row.author }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="申请渠道" width="110px" align="center">
+        <template slot-scope="{row}">
+          <span>{{ row.author }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="粉丝/万" width="110px" align="center">
+        <template slot-scope="{row}">
+          <span>{{ row.author }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="合作方式" width="110px" align="center">
         <template slot-scope="{row}">
           <span>{{ row.author }}</span>
         </template>
@@ -44,13 +59,14 @@
         class-name="small-padding fixed-width"
       >
         <template slot-scope="{row,$index}">
-          <el-button type="primary" size="mini" @click="handleUpdate(row)">Edit</el-button>
+          <el-button type="primary" size="mini" @click="handleUpdate(row)">通过</el-button>
           <el-button
             v-if="row.status!='deleted'"
             size="mini"
             type="danger"
             @click="handleDelete(row,$index)"
-          >Delete</el-button>
+          >拒绝</el-button>
+          <el-button type="primary" size="mini" @click="handleUpdate(row)">候选</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -67,13 +83,9 @@
 
 <script>
 import {
-  fetchList,
-  fetchPv,
-  createArticle,
-  updateArticle
+  fetchList
 } from '@/api/article'
 import waves from '@/directive/waves' // waves directive
-import { parseTime } from '@/utils'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
 export default {
@@ -115,7 +127,7 @@ export default {
     },
     handleCreate() {
       // check
-      const t = Math.random();
+      const t = Math.random()
       if (t < 0.3) {
         this.$alert('无法创建商品，为保障品牌合作规范，请先完成企业认证').then(
           (r) => {
@@ -124,7 +136,7 @@ export default {
             }
           }
         )
-      }else if(t < 0.6){
+      } else if (t < 0.6) {
         this.$alert('无法创建商品，为保障品牌合作规范，请先完成品牌授权').then(
           (r) => {
             if (r === 'confirm') {
@@ -132,7 +144,7 @@ export default {
             }
           }
         )
-      }else {
+      } else {
         this.$router.push('/goods/create')
       }
     },

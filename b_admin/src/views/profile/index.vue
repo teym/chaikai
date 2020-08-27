@@ -1,29 +1,47 @@
 <template>
   <div class="app-container">
     <div v-if="user">
-      <el-row :gutter="20">
-
-        <el-col :span="6" :xs="24">
-          <user-card :user="user" />
-        </el-col>
-
-        <el-col :span="18" :xs="24">
-          <el-card>
-            <el-tabs v-model="activeTab">
-              <el-tab-pane label="Activity" name="activity">
-                <activity />
-              </el-tab-pane>
-              <el-tab-pane label="Timeline" name="timeline">
-                <timeline />
-              </el-tab-pane>
-              <el-tab-pane label="Account" name="account">
-                <account :user="user" />
-              </el-tab-pane>
-            </el-tabs>
-          </el-card>
-        </el-col>
-
-      </el-row>
+      <user-card :user="user" />
+    </div>
+    <div>
+      <h3>品牌授权
+        <span>新增授权</span>
+      </h3>
+      <el-table
+        :key="tableKey"
+        v-loading="listLoading"
+        :data="list"
+        border
+        fit
+        highlight-current-row
+        style="width: 100%;"
+      >
+        <el-table-column label="品牌名称" align="center">
+          <template slot-scope="{row}">
+            <span>{{ row.author }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="品牌LOGO" width="110px" align="center">
+          <template slot-scope="{row}">
+            <span>{{ row.author }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="授权时间" width="110px" align="center">
+          <template slot-scope="{row}">
+            <span>{{ row.author }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column
+          label="Actions"
+          align="center"
+          width="230"
+          class-name="small-padding fixed-width"
+        >
+          <template slot-scope="{row}">
+            <el-button type="primary" size="mini" @click="handleUpdate(row)">详情</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
     </div>
   </div>
 </template>
@@ -31,25 +49,20 @@
 <script>
 import { mapGetters } from 'vuex'
 import UserCard from './components/UserCard'
-import Activity from './components/Activity'
-import Timeline from './components/Timeline'
-import Account from './components/Account'
 
 export default {
   name: 'Profile',
-  components: { UserCard, Activity, Timeline, Account },
+  components: { UserCard },
   data() {
     return {
       user: {},
-      activeTab: 'activity'
+      tableKey: 0,
+      list: null,
+      listLoading: false
     }
   },
   computed: {
-    ...mapGetters([
-      'name',
-      'avatar',
-      'roles'
-    ])
+    ...mapGetters(['name', 'avatar', 'roles'])
   },
   created() {
     this.getUser()

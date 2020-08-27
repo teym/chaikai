@@ -3,7 +3,7 @@
     <div class="filter-container">
       <el-input
         v-model="listQuery.title"
-        placeholder="请输入商品名称"
+        placeholder="请输入活动名称"
         style="width: 200px;"
         class="filter-item"
         @keyup.enter.native="handleFilter"
@@ -15,7 +15,7 @@
         type="primary"
         icon="el-icon-edit"
         @click="handleCreate"
-      >创建商品</el-button>
+      >创建活动</el-button>
     </div>
 
     <el-table
@@ -51,6 +51,7 @@
             type="danger"
             @click="handleDelete(row,$index)"
           >Delete</el-button>
+          <el-button type="primary" size="mini" @click="handleOrder(row)">Order</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -67,13 +68,9 @@
 
 <script>
 import {
-  fetchList,
-  fetchPv,
-  createArticle,
-  updateArticle
+  fetchList
 } from '@/api/article'
 import waves from '@/directive/waves' // waves directive
-import { parseTime } from '@/utils'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
 export default {
@@ -115,7 +112,7 @@ export default {
     },
     handleCreate() {
       // check
-      const t = Math.random();
+      const t = Math.random()
       if (t < 0.3) {
         this.$alert('无法创建商品，为保障品牌合作规范，请先完成企业认证').then(
           (r) => {
@@ -124,7 +121,7 @@ export default {
             }
           }
         )
-      }else if(t < 0.6){
+      } else if (t < 0.6) {
         this.$alert('无法创建商品，为保障品牌合作规范，请先完成品牌授权').then(
           (r) => {
             if (r === 'confirm') {
@@ -132,11 +129,13 @@ export default {
             }
           }
         )
-      }else {
-        this.$router.push('/goods/create')
+      } else {
+        this.$router.push('/activity/create')
       }
     },
-    createData() {},
+    handleOrder() {
+      this.$router.push('/activity/order')
+    },
     handleUpdate(row) {},
     handleDelete(row, index) {
       this.$notify({

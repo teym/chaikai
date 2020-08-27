@@ -1,8 +1,13 @@
 <template>
   <div v-loading="loading" class="notice-container">
-    <p>公告规则</p>
+    <h3>公告规则</h3>
     <el-row>
-      <el-col v-for="(item, i) in list" :key="i" :span="12">{{ item.title }}</el-col>
+      <el-col v-for="(item, i) in list" :key="i" :span="12">
+        <div>
+          {{ item.title }}
+          <span>最新</span>
+        </div>
+      </el-col>
     </el-row>
   </div>
 </template>
@@ -40,4 +45,33 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.notice-container {
+  background-color: white;
+  padding: 20px;
+  border-radius: 4px;
+  h3 {
+    margin: 0 0 8px 0;
+    padding: 0;
+    color: #222;
+  }
+  .el-row {
+    .el-col {
+      padding: 8px;
+      color: #333;
+      font-size: 16px;
+      div {
+        width: 80%;
+
+        span {
+          background-color: #4244ff;
+          padding: 2px 10px;
+          border-radius: 2px;
+          color: white;
+          font-size: 12px;
+          float: right;
+        }
+      }
+    }
+  }
+}
 </style>

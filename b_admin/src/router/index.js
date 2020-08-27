@@ -50,6 +50,16 @@ export const constantRoutes = [
     hidden: true
   },
   {
+    path: '/regist',
+    component: () => import('@/views/login/create'),
+    hidden: true
+  },
+  {
+    path: '/resetpass',
+    component: () => import('@/views/login/reset'),
+    hidden: true
+  },
+  {
     path: '/auth-redirect',
     component: () => import('@/views/login/auth-redirect'),
     hidden: true
@@ -73,7 +83,7 @@ export const constantRoutes = [
         path: 'dashboard',
         component: () => import('@/views/dashboard/index'),
         name: 'Dashboard',
-        meta: { title: 'Dashboard', icon: 'dashboard', affix: true }
+        meta: { title: '后台首页', icon: 'dashboard', affix: true }
       }
     ]
   },
@@ -88,6 +98,12 @@ export const constantRoutes = [
         component: () => import('@/views/profile/index'),
         name: 'Profile',
         meta: { title: 'Profile', icon: 'user', noCache: true }
+      },
+      {
+        path: 'create',
+        component: () => import('@/views/profile/create'),
+        name: 'Auth',
+        meta: { title: 'Auth', icon: 'user', noCache: true }
       }
     ]
   }
@@ -103,21 +119,17 @@ export const asyncRoutes = [
     component: Layout,
     redirect: '/goods/index',
     name: 'Goods',
-    meta: {
-      title: 'Goods',
-      icon: 'table'
-    },
     children: [
       {
         path: 'index',
         component: () => import('@/views/goods/table'),
-        name: 'table',
-        meta: { title: 'Goods' }
+        name: 'goods-table',
+        meta: { title: '商品管理', icon: 'table' }
       },
       {
         path: 'create',
         component: () => import('@/views/goods/create'),
-        name: 'create',
+        name: 'goods-create',
         hidden: true,
         meta: { title: 'Create' }
       }
@@ -128,31 +140,83 @@ export const asyncRoutes = [
     component: Layout,
     redirect: '/activity/index',
     name: 'Activity',
-    meta: {
-      title: 'Activity',
-      icon: 'table'
-    },
     children: [
       {
         path: 'index',
         component: () => import('@/views/activity/table'),
-        name: 'table',
-        meta: { title: 'Activity' }
+        name: 'activity-table',
+        meta: { title: '活动管理', icon: 'table' }
       },
       {
         path: 'create',
         component: () => import('@/views/activity/create'),
-        name: 'create',
+        name: 'activity-create',
         hidden: true,
         meta: { title: 'Create' }
       },
       {
         path: 'order',
         component: () => import('@/views/activity/orders'),
-        name: 'order',
+        name: 'activity-order',
         hidden: true,
         meta: { title: 'Order' }
       }
+    ]
+  },
+  {
+    path: '/issue',
+    component: Layout,
+    redirect: '/issue/index',
+    name: 'Issue',
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/issue/table'),
+        name: 'issue-table',
+        meta: { title: '问题管理', icon: 'table' }
+      }
+      // {
+      //   path: 'create',
+      //   component: () => import('@/views/activity/create'),
+      //   name: 'activity-create',
+      //   hidden: true,
+      //   meta: { title: 'Create' }
+      // },
+      // {
+      //   path: 'order',
+      //   component: () => import('@/views/activity/orders'),
+      //   name: 'activity-order',
+      //   hidden: true,
+      //   meta: { title: 'Order' }
+      // }
+    ]
+  },
+  {
+    path: '/user',
+    component: Layout,
+    redirect: '/user/index',
+    name: 'User',
+    meta: { title: '账号信息', icon: 'table' },
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/profile/index'),
+        name: 'profile-table',
+        meta: { title: '账号信息', icon: 'table' }
+      },
+      {
+        path: 'create',
+        component: () => import('@/views/activity/create'),
+        name: 'profile-create',
+        meta: { title: '企业认证', icon: 'table' }
+      }
+      // {
+      //   path: 'order',
+      //   component: () => import('@/views/activity/orders'),
+      //   name: 'activity-order',
+      //   hidden: true,
+      //   meta: { title: 'Order' }
+      // }
     ]
   },
   // {
@@ -196,10 +260,7 @@ export const asyncRoutes = [
     component: Layout,
     redirect: 'noRedirect',
     name: 'ErrorPages',
-    meta: {
-      title: 'Error Pages',
-      icon: '404'
-    },
+    hidden: true,
     children: [
       {
         path: '401',
@@ -216,31 +277,31 @@ export const asyncRoutes = [
     ]
   },
 
-  {
-    path: '/error-log',
-    component: Layout,
-    children: [
-      {
-        path: 'log',
-        component: () => import('@/views/error-log/index'),
-        name: 'ErrorLog',
-        meta: { title: 'Error Log', icon: 'bug' }
-      }
-    ]
-  },
+  // {
+  //   path: '/error-log',
+  //   component: Layout,
+  //   children: [
+  //     {
+  //       path: 'log',
+  //       component: () => import('@/views/error-log/index'),
+  //       name: 'ErrorLog',
+  //       meta: { title: 'Error Log', icon: 'bug' }
+  //     }
+  //   ]
+  // },
 
-  {
-    path: '/clipboard',
-    component: Layout,
-    children: [
-      {
-        path: 'index',
-        component: () => import('@/views/clipboard/index'),
-        name: 'ClipboardDemo',
-        meta: { title: 'Clipboard', icon: 'clipboard' }
-      }
-    ]
-  },
+  // {
+  //   path: '/clipboard',
+  //   component: Layout,
+  //   children: [
+  //     {
+  //       path: 'index',
+  //       component: () => import('@/views/clipboard/index'),
+  //       name: 'ClipboardDemo',
+  //       meta: { title: 'Clipboard', icon: 'clipboard' }
+  //     }
+  //   ]
+  // },
 
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }

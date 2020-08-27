@@ -19,6 +19,16 @@ export function validUsername(str) {
   return valid_map.indexOf(str.trim()) >= 0
 }
 
+export function validPhone(phone) {
+  const reg = /^1[0-9]{10}$/
+  return reg.test(phone)
+}
+
+export function validCode(code) {
+  const reg = /^[0-9]{4}$/
+  return reg.test(code)
+}
+
 /**
  * @param {string} url
  * @returns {Boolean}
