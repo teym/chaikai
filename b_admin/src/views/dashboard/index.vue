@@ -65,7 +65,6 @@ export default {
 <style lang="scss" scoped>
 .dashboard-container {
   padding: 20px;
-  background-color: #f2f3f7;
   .tools {
     margin: 20px 0;
     .block {
