@@ -1,28 +1,27 @@
 <template>
-  <div class="createPost-container">
-    <el-form ref="postForm" :model="postForm" :rules="rules" class="form-container">
+  <div class="create-container">
+    <el-form ref="postForm" :model="postForm" :rules="rules" class="form-container" label-width="130px">
       <div class="createPost-main-container">
-        <el-form-item style="margin-bottom: 30px;" label-width="90px" label="公司名称:">
+        <el-form-item label="公司名称:" prop="name">
           <el-input v-model="postForm.price" placeholder="请输入公司名称" />
         </el-form-item>
-        <el-form-item style="margin-bottom: 30px;" label-width="90px" label="统一社会信用代码:">
+        <el-form-item label="统一社会信用代码:" prop="code">
           <el-input v-model="postForm.price" placeholder="请输入统一社会信用代码" />
         </el-form-item>
         <el-form-item
           prop="image_uri"
           style="margin-bottom: 30px;"
-          label-width="90px"
           label="营业执照:"
         >
           <Upload v-model="postForm.image_uri" />
         </el-form-item>
-        <el-form-item style="margin-bottom: 30px;" label-width="90px" label="联系人:">
+        <el-form-item label="联系人:" prop="contact">
           <el-input v-model="postForm.price" placeholder="请输入联系人" />
         </el-form-item>
-        <el-form-item style="margin-bottom: 30px;" label-width="90px" label="微信号:">
+        <el-form-item label="微信号:" prop="wechat">
           <el-input v-model="postForm.price" placeholder="请输入微信号" />
         </el-form-item>
-        <el-button>提交审核</el-button>
+        <el-button type="primary">提交审核</el-button>
       </div>
     </el-form>
   </div>
@@ -173,40 +172,17 @@ export default {
 
 <style lang="scss" scoped>
 @import "~@/styles/mixin.scss";
+.create-container{
+  background-color: white;
+  margin: 20px;
+  border-radius: 4px;
+  padding: 20px;
+  .el-form{
+    width: 50%;
 
-.createPost-container {
-  position: relative;
-  max-width: 960px;
-
-  .createPost-main-container {
-    padding: 40px 45px 20px 50px;
-
-    .postInfo-container {
-      position: relative;
-      @include clearfix;
-      margin-bottom: 10px;
-
-      .postInfo-container-item {
-        float: left;
-      }
+    .el-button{
+      margin-left: 130px;
     }
-  }
-
-  .word-counter {
-    width: 40px;
-    position: absolute;
-    right: 10px;
-    top: 0px;
-  }
-}
-
-.article-textarea {
-  textarea {
-    padding-right: 40px;
-    resize: none;
-    border: none;
-    border-radius: 0px;
-    border-bottom: 1px solid #bfcbd9;
   }
 }
 </style>

@@ -14,7 +14,7 @@
           <div>
             企业认证：未认证
             <span>
-              <el-button size="mini" type="primary">马上认证</el-button>
+              <el-button size="mini" type="primary" @click="handleAuth">马上认证</el-button>
             </span>
           </div>
         </div>
@@ -42,35 +42,43 @@
         </div>
       </el-col>
     </el-row>
-    <el-dialog title="绑定手机号" :visible.sync="showChangePhone" width="30%" label-width="100px">
-      <el-form :model="phoneForm" :rules="rules">
+    <el-dialog title="绑定手机号" :visible.sync="showChangePhone" width="420px">
+      <el-form :model="phoneForm" :rules="rules" label-position="right" label-width="92px">
         <el-form-item label="登录密码" prop="password">
           <el-input v-model="phoneForm.password" autocomplete="off" />
         </el-form-item>
         <el-form-item label="(新)手机号" prop="username">
-          <el-input v-model="phoneForm.phone" autocomplete="off" />
+          <el-input v-model="phoneForm.username" autocomplete="off" />
         </el-form-item>
         <el-form-item label="验证码" props="code">
-          <el-input v-model="phoneForm.code" autocomplete="off" />
-          <el-button plain type="info" @click="handleCode">{{ count > 0 ? `${count}后再试` :'获取验证码' }}</el-button>
+          <el-input v-model="phoneForm.code" autocomplete="off" style="width:60%" />
+          <el-button
+            style="float:right"
+            plain
+            type="info"
+            @click="handleCode"
+          >{{ count > 0 ? `${count}后再试` :'获取验证码' }}</el-button>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" :loading="phoneLoading" @click="handleChangePhone">确 定</el-button>
       </div>
     </el-dialog>
-    <el-dialog title="修改密码" :visible.sync="showChangePassword" width="480">
-      <el-form :model="passwordForm" :rules="rules">
-        <el-form-item label="手机号" label-width="80" prop="username">
-          <el-input v-model="passwordForm.phone" autocomplete="off" />
+    <el-dialog title="修改密码" :visible.sync="showChangePassword" width="420px">
+      <el-form :model="passwordForm" :rules="rules" label-position="right" label-width="92px">
+        <el-form-item label="手机号" prop="username">
+          <el-input v-model="passwordForm.username" autocomplete="off" />
         </el-form-item>
-        <div class="sms">
-          <el-form-item label="验证码" label-width="80" prop="code">
-            <el-input v-model="passwordForm.code" autocomplete="off" />
-          </el-form-item>
-          <el-button plain type="info" @click="handleCode">{{ count > 0 ? `${count}后再试` :'获取验证码' }}</el-button>
-        </div>
-        <el-form-item label="重置密码" label-width="80" prop="password">
+        <el-form-item label="验证码" prop="code">
+          <el-input v-model="passwordForm.code" autocomplete="off" style="width:60%" />
+          <el-button
+            style="float:right"
+            plain
+            type="info"
+            @click="handleCode"
+          >{{ count > 0 ? `${count}后再试` :'获取验证码' }}</el-button>
+        </el-form-item>
+        <el-form-item label="重置密码" prop="password">
           <el-input v-model="passwordForm.password" autocomplete="off" />
         </el-form-item>
       </el-form>
@@ -114,14 +122,14 @@ export default {
       showChangePhone: false,
       showChangePassword: false,
       phoneForm: {
-        phone: '',
+        username: '',
         password: '',
         code: ''
       },
       phoneLoading: false,
 
       passwordForm: {
-        phone: '',
+        username: '',
         code: '',
         password: ''
       },
@@ -178,6 +186,9 @@ export default {
         this.passwordLoading = false
         this.showChangePassword = false
       }, 1000)
+    },
+    handleAuth() {
+      this.$router.push('/user/create')
     }
   }
 }
@@ -233,17 +244,6 @@ export default {
         flex-direction: row;
         align-items: center;
       }
-    }
-  }
-  .sms {
-    .el-form-item {
-      display: inline-block;
-      width: 60%;
-    }
-    .el-button {
-      float: right;
-      height: 40px;
-      width: 36%;
     }
   }
 }

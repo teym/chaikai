@@ -206,7 +206,7 @@ export const asyncRoutes = [
       },
       {
         path: 'create',
-        component: () => import('@/views/activity/create'),
+        component: () => import('@/views/profile/create'),
         name: 'profile-create',
         meta: { title: '企业认证', icon: 'table' }
       }
