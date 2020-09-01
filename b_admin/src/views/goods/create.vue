@@ -2,8 +2,13 @@
   <div class="createPost-container">
     <el-form ref="postForm" :model="postForm" :rules="rules" class="form-container">
       <div class="createPost-main-container">
-        <el-form-item prop="brand" style="margin-bottom: 30px;" label-width="90px" label="商品品牌:">
-          <el-select v-model="postForm.brand" placeholder="请选择品牌">
+        <el-form-item
+          prop="brand"
+          style="margin-bottom: 30px;max-width:640px"
+          label-width="90px"
+          label="商品品牌:"
+        >
+          <el-select v-model="postForm.brand.id" placeholder="请选择品牌">
             <el-option
               v-for="(item,index) in brandListOptions"
               :key="index"
@@ -12,29 +17,32 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item style="margin-bottom: 30px;" label-width="90px" label="商品链接:">
-          <el-input v-model="postForm.link" placeholder="请输入淘宝/天猫的售卖链接">
-            <el-button slot="append" icon="el-icon-plus">快速导入</el-button>
-          </el-input>
+        <el-form-item prop="importUrl" style="margin-bottom: 30px;max-width:640px" label-width="90px" label="商品链接:">
+          <el-input v-model="postForm.importUrl" placeholder="请输入淘宝/天猫的售卖链接" />
+          <el-button type="text" @click="handleImport">快速导入</el-button>
         </el-form-item>
-        <el-form-item style="margin-bottom: 30px;" label-width="90px" label="商品价值:">
-          <el-input v-model="postForm.price" placeholder="请输入产品价值">
-            <span slot="suffix">$</span>
-          </el-input>
+        <el-form-item prop="price" style="margin-bottom: 30px;max-width:360px" label-width="90px" label="商品价值:">
+          <el-input v-model="postForm.price" placeholder="请输入产品价值" />
+          <span>元</span>
         </el-form-item>
-        <el-form-item style="margin-bottom: 30px;" label-width="90px" label="商品名称:">
-          <el-input v-model="postForm.name" placeholder="请输入商品名称" maxlength="10" show-word-limit />
+        <el-form-item prop="title" style="margin-bottom: 30px;max-width:640px" label-width="90px" label="商品名称:">
+          <el-input v-model="postForm.title" placeholder="请输入商品名称" maxlength="10" show-word-limit />
         </el-form-item>
         <el-form-item
-          prop="image_uri"
-          style="margin-bottom: 30px;"
+          prop="picUrl"
+          style="margin-bottom: 30px;max-width:720px"
           label-width="90px"
           label="商品头图:"
         >
-          <Upload v-model="postForm.image_uri" />
+          <Upload v-model="postForm.picUrl" />
         </el-form-item>
-        <el-form-item prop="content" style="margin-bottom: 30px;">
-          <Tinymce ref="editor" v-model="postForm.content" :height="400" />
+        <el-form-item
+          prop="detail"
+          label-width="90px"
+          label="商品详情:"
+          style="margin-bottom: 30px;max-width:840px"
+        >
+          <Tinymce ref="editor" v-model="postForm.detail" :height="400" />
         </el-form-item>
       </div>
     </el-form>
@@ -45,16 +53,17 @@
 import Tinymce from '@/components/Tinymce'
 import Upload from '@/components/Upload/SingleImage3'
 import { validURL } from '@/utils/validate'
-import { fetchArticle } from '@/api/article'
+import { importData } from '@/api/goods'
 import { searchUser } from '@/api/remote-search'
 
 const defaultForm = {
-  brand: 'draft',
-  link: '',
+  brand: { id: 0 },
+  importUrl: '',
   price: '',
-  name: '',
-  image_uri: '',
-  content: ''
+  title: '',
+  picUrl: '',
+  detail: '',
+  skuGroups: []
 }
 
 export default {
@@ -127,35 +136,35 @@ export default {
     this.tempRoute = Object.assign({}, this.$route)
   },
   methods: {
-    fetchData(id) {
-      fetchArticle(id)
-        .then((response) => {
-          this.postForm = response.data
+    // fetchData(id) {
+    // fetchArticle(id)
+    //   .then((response) => {
+    //     this.postForm = response.data
 
-          // just for test
-          this.postForm.title += `   Article Id:${this.postForm.id}`
-          this.postForm.content_short += `   Article Id:${this.postForm.id}`
+    //     // just for test
+    //     this.postForm.title += `   Article Id:${this.postForm.id}`
+    //     this.postForm.content_short += `   Article Id:${this.postForm.id}`
 
-          // set tagsview title
-          this.setTagsViewTitle()
+    //     // set tagsview title
+    //     this.setTagsViewTitle()
 
-          // set page title
-          this.setPageTitle()
+    //     // set page title
+    //     this.setPageTitle()
+    //   })
+    //   .catch((err) => {
+    //     console.log(err)
+    //   })
+    // },
+    handleImport() {
+      this.loading = true
+      importData({ url: this.postForm.importUrl })
+        .then(({ data }) => {
+          this.postForm = Object.assign({}, this.postForm, data || {})
+          this.loading = false
         })
-        .catch((err) => {
-          console.log(err)
+        .catch((e) => {
+          this.loading = false
         })
-    },
-    setTagsViewTitle() {
-      const title = '编辑文章'
-      const route = Object.assign({}, this.tempRoute, {
-        title: `${title}-${this.postForm.id}`
-      })
-      this.$store.dispatch('tagsView/updateVisitedView', route)
-    },
-    setPageTitle() {
-      const title = 'Edit Article'
-      document.title = `${title} - ${this.postForm.id}`
     },
     submitForm() {
       console.log(this.postForm)
@@ -187,31 +196,39 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "~@/styles/mixin.scss";
-
+// @import "~@/styles/mixin.scss";
 .createPost-container {
-  position: relative;
-  max-width: 960px;
+  padding: 20px;
+  .form-container {
+    border-radius: 4px;
+    background-color: white;
 
-  .createPost-main-container {
-    padding: 40px 45px 20px 50px;
+    .createPost-main-container {
+      padding: 40px 45px 20px 50px;
 
-    .postInfo-container {
-      position: relative;
-      @include clearfix;
-      margin-bottom: 10px;
-
-      .postInfo-container-item {
-        float: left;
+      .el-form-item {
+        .el-input {
+          width: 80%;
+        }
       }
-    }
-  }
 
-  .word-counter {
-    width: 40px;
-    position: absolute;
-    right: 10px;
-    top: 0px;
+      // .postInfo-container {
+      //   position: relative;
+      //   @include clearfix;
+      //   margin-bottom: 10px;
+
+      //   .postInfo-container-item {
+      //     float: left;
+      //   }
+      // }
+    }
+
+    .word-counter {
+      width: 40px;
+      position: absolute;
+      right: 10px;
+      top: 0px;
+    }
   }
 }
 

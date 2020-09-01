@@ -1,10 +1,12 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
+      <span class="filter-item">商品管理</span>
       <el-input
-        v-model="listQuery.title"
-        placeholder="请输入活动名称"
+        v-model="listQuery.key"
+        placeholder="请输入商品名称"
         style="width: 200px;"
+        size="mini"
         class="filter-item"
         @keyup.enter.native="handleFilter"
       />
@@ -13,9 +15,9 @@
         class="filter-item"
         style="float: right"
         type="primary"
-        icon="el-icon-edit"
+        size="mini"
         @click="handleCreate"
-      >发布活动</el-button>
+      >创建商品</el-button>
     </div>
 
     <el-table
@@ -27,22 +29,17 @@
       highlight-current-row
       style="width: 100%;"
     >
-      <el-table-column label="Title" min-width="150px">
+      <el-table-column label="商品名称">
         <template slot-scope="{row}">
           <span>{{ row.title }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Brand" width="110px" align="center">
+      <el-table-column label="品牌" width="150" align="center">
         <template slot-scope="{row}">
           <span>{{ row.author }}</span>
         </template>
       </el-table-column>
-      <el-table-column
-        label="Actions"
-        align="center"
-        width="230"
-        class-name="small-padding fixed-width"
-      >
+      <el-table-column label="操作" align="center" width="230" class-name="small-padding fixed-width">
         <template slot-scope="{row,$index}">
           <el-button type="primary" size="mini" @click="handleUpdate(row)">Edit</el-button>
           <el-button
@@ -59,21 +56,15 @@
       v-show="total>0"
       :total="total"
       :page.sync="listQuery.page"
-      :limit.sync="listQuery.limit"
+      :limit.sync="listQuery.size"
       @pagination="getList"
     />
   </div>
 </template>
 
 <script>
-import {
-  fetchList,
-  fetchPv,
-  createArticle,
-  updateArticle
-} from '@/api/article'
+import { fetchList } from '@/api/goods'
 import waves from '@/directive/waves' // waves directive
-import { parseTime } from '@/utils'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
 export default {
@@ -88,8 +79,8 @@ export default {
       listLoading: true,
       listQuery: {
         page: 1,
-        limit: 20,
-        title: undefined
+        size: 20,
+        key: undefined
       }
     }
   },
@@ -99,9 +90,9 @@ export default {
   methods: {
     getList() {
       this.listLoading = true
-      fetchList(this.listQuery).then((response) => {
-        this.list = response.data.items
-        this.total = response.data.total
+      fetchList(this.listQuery).then(({ data }) => {
+        this.list = data.data
+        this.total = data.pager.count
 
         // Just to simulate the time of the request
         setTimeout(() => {
@@ -115,38 +106,64 @@ export default {
     },
     handleCreate() {
       // check
-      const t = Math.random();
+      const t = Math.random()
       if (t < 0.3) {
         this.$alert('无法创建商品，为保障品牌合作规范，请先完成企业认证').then(
           (r) => {
             if (r === 'confirm') {
-              this.$router.push('/account/cert')
+              this.$router.push('/user/create')
             }
           }
         )
-      }else if(t < 0.6){
+      } else if (t < 0.6) {
         this.$alert('无法创建商品，为保障品牌合作规范，请先完成品牌授权').then(
           (r) => {
             if (r === 'confirm') {
-              this.$router.push('/account/auth')
+              this.$router.push('/user/auth')
             }
           }
         )
-      }else {
-        this.$router.push('/activity/create')
+      } else {
+        this.$router.push('/goods/create')
       }
     },
     createData() {},
     handleUpdate(row) {},
     handleDelete(row, index) {
-      this.$notify({
-        title: 'Success',
-        message: 'Delete Successfully',
-        type: 'success',
-        duration: 2000
+      this.$confirm(
+        '确认删除商品' + row.name + ',将无法恢复',
+        '删除商品',
+        {}
+      ).then((r) => {
+        if (r === 'confirm') {
+          this.$notify({
+            title: 'Success',
+            message: 'Delete Successfully',
+            type: 'success',
+            duration: 2000
+          })
+          this.list.splice(index, 1)
+        }
       })
-      this.list.splice(index, 1)
     }
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.app-container {
+  .filter-container {
+    background-color: white;
+    padding: 16px 16px 6px 16px;
+    border-radius: 4px;
+    span {
+      font-size: 16px;
+      margin-right: 8px;
+    }
+  }
+  .el-table {
+    margin: 20px 0;
+    border-radius: 4px;
+  }
+}
+</style>

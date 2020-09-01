@@ -209,14 +209,13 @@ export const asyncRoutes = [
         component: () => import('@/views/profile/create'),
         name: 'profile-create',
         meta: { title: '企业认证', icon: 'table' }
+      },
+      {
+        path: 'auth',
+        component: () => import('@/views/profile/auth'),
+        name: 'profile-auth',
+        meta: { title: '品牌授权', icon: 'table' }
       }
-      // {
-      //   path: 'order',
-      //   component: () => import('@/views/activity/orders'),
-      //   name: 'activity-order',
-      //   hidden: true,
-      //   meta: { title: 'Order' }
-      // }
     ]
   },
   // {

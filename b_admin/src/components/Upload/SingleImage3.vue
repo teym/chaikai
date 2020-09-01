@@ -10,7 +10,10 @@
       action="https://httpbin.org/post"
     >
       <img v-if="imageUrl" :src="imageUrl">
-      <i v-else class="el-icon-upload" />
+      <div v-else class="place">
+        <i class="el-icon-upload" />
+        <p>上传图片</p>
+      </div>
     </el-upload>
   </div>
 </template>
@@ -75,6 +78,13 @@ export default {
   width: 100%;
   position: relative;
   @include clearfix;
+
+  .place{
+    p{
+      margin: 8px 0;
+      color: #999999;
+    }
+  }
   .image-uploader {
     width: 35%;
     float: left;
