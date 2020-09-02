@@ -31,23 +31,26 @@
     >
       <el-table-column label="商品名称">
         <template slot-scope="{row}">
-          <span>{{ row.title }}</span>
+          <p class="info">
+            <img :src="row.picUrl" alt="pic" class="pic">
+            <span>{{ row.title }}</span>
+          </p>
         </template>
       </el-table-column>
       <el-table-column label="品牌" width="150" align="center">
         <template slot-scope="{row}">
-          <span>{{ row.author }}</span>
+          <span class="info">{{ (row.brand || {}).name }}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" width="230" class-name="small-padding fixed-width">
         <template slot-scope="{row,$index}">
-          <el-button type="primary" size="mini" @click="handleUpdate(row)">Edit</el-button>
+          <el-button type="text" size="mini" @click="handleUpdate(row)">编辑</el-button>
           <el-button
             v-if="row.status!='deleted'"
             size="mini"
-            type="danger"
+            type="text"
             @click="handleDelete(row,$index)"
-          >Delete</el-button>
+          >删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -164,6 +167,22 @@ export default {
   .el-table {
     margin: 20px 0;
     border-radius: 4px;
+  }
+  .info {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    img {
+      width: 90px;
+      height: 90px;
+      border-radius: 4px;
+      margin-right: 8px;
+    }
+    font-size: 14px;
+    color: #666;
+    vertical-align: middle;
+    margin: 0;
+    padding: 0;
   }
 }
 </style>

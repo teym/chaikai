@@ -16,34 +16,26 @@ export function importData(query) {
   })
 }
 
-export function fetchArticle(id) {
+export function createData(data) {
   return request({
-    url: '/vue-element-admin/article/detail',
-    method: 'get',
-    params: { id }
-  })
-}
-
-export function fetchPv(pv) {
-  return request({
-    url: '/vue-element-admin/article/pv',
-    method: 'get',
-    params: { pv }
-  })
-}
-
-export function createArticle(data) {
-  return request({
-    url: '/vue-element-admin/article/create',
+    url: '/br/goods',
     method: 'post',
     data
   })
 }
 
-export function updateArticle(data) {
+export function updateData(data) {
   return request({
     url: '/vue-element-admin/article/update',
-    method: 'post',
+    method: 'put',
     data
+  })
+}
+
+export function fetchPv(query) {
+  return request({
+    url: '/br/account/brand/list',
+    method: 'get',
+    params: query
   })
 }

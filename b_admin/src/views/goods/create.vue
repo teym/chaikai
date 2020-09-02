@@ -17,15 +17,30 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item prop="importUrl" style="margin-bottom: 30px;max-width:640px" label-width="90px" label="商品链接:">
+        <el-form-item
+          prop="importUrl"
+          style="margin-bottom: 30px;max-width:640px"
+          label-width="90px"
+          label="商品链接:"
+        >
           <el-input v-model="postForm.importUrl" placeholder="请输入淘宝/天猫的售卖链接" />
           <el-button type="text" @click="handleImport">快速导入</el-button>
         </el-form-item>
-        <el-form-item prop="price" style="margin-bottom: 30px;max-width:360px" label-width="90px" label="商品价值:">
+        <el-form-item
+          prop="price"
+          style="margin-bottom: 30px;max-width:360px"
+          label-width="90px"
+          label="商品价值:"
+        >
           <el-input v-model="postForm.price" placeholder="请输入产品价值" />
           <span>元</span>
         </el-form-item>
-        <el-form-item prop="title" style="margin-bottom: 30px;max-width:640px" label-width="90px" label="商品名称:">
+        <el-form-item
+          prop="title"
+          style="margin-bottom: 30px;max-width:640px"
+          label-width="90px"
+          label="商品名称:"
+        >
           <el-input v-model="postForm.title" placeholder="请输入商品名称" maxlength="10" show-word-limit />
         </el-form-item>
         <el-form-item
@@ -37,12 +52,57 @@
           <Upload v-model="postForm.picUrl" />
         </el-form-item>
         <el-form-item
+          prop="skuGroups"
+          style="margin-bottom: 30px;max-width:840px"
+          label-width="90px"
+          label="商品规格:"
+        >
+          <div class="skus">
+            <el-row v-if="postForm.skuGroups.length > 0" class="head">
+              <el-col :span="8">
+                <span>规格名</span>
+              </el-col>
+              <el-col :span="16">
+                <span>规格值</span>
+              </el-col>
+            </el-row>
+            <el-row v-for="(sku, i) in postForm.skuGroups" :key="i" :gutter="32">
+              <el-col :span="8" class="label">
+                <el-autocomplete
+                  v-model="sku.name"
+                  class="inline-input"
+                  :fetch-suggestions="handleSkuSuggestions"
+                  placeholder="请输入内容"
+                />
+                <el-icon class="el-icon-circle-close" @click="handleRemoveSku(i)" />
+              </el-col>
+              <el-col :span="16" class="value">
+                <el-row :gutter="8">
+                  <el-col v-for="(s, j) in sku.skuList" :key="j" :span="8">
+                    <el-input v-model="s.name" />
+                    <el-icon class="el-icon-circle-close" @click="handleRemoveSkuValue(sku, j)" />
+                  </el-col>
+                  <el-col :span="8">
+                    <el-button type="text" @click="handleAddSkuValue(sku)">添加规格值</el-button>
+                  </el-col>
+                </el-row>
+              </el-col>
+            </el-row>
+            <el-row>
+              <el-button @click="handleAddSku">添加规格项目</el-button>
+            </el-row>
+          </div>
+        </el-form-item>
+        <el-form-item
           prop="detail"
           label-width="90px"
           label="商品详情:"
           style="margin-bottom: 30px;max-width:840px"
         >
           <Tinymce ref="editor" v-model="postForm.detail" :height="400" />
+        </el-form-item>
+        <el-form-item label-width="90px" style="margin-bottom: 30px;max-width:840px">
+          <el-button type="primary" @click="handleSubmit">保存</el-button>
         </el-form-item>
       </div>
     </el-form>
@@ -53,7 +113,7 @@
 import Tinymce from '@/components/Tinymce'
 import Upload from '@/components/Upload/SingleImage3'
 import { validURL } from '@/utils/validate'
-import { importData } from '@/api/goods'
+import { importData, createData, fetchPv } from '@/api/goods'
 import { searchUser } from '@/api/remote-search'
 
 const defaultForm = {
@@ -61,7 +121,9 @@ const defaultForm = {
   importUrl: '',
   price: '',
   title: '',
-  picUrl: '',
+  itemId: 0,
+  picUrl:
+    'https://gd2.alicdn.com/imgextra/i1/831279688/TB2HmVucrsTMeJjy1zbXXchlVXa_!!831279688.jpg_400x400.jpg',
   detail: '',
   skuGroups: []
 }
@@ -81,28 +143,23 @@ export default {
   data() {
     const validateRequire = (rule, value, callback) => {
       if (value === '') {
-        this.$message({
-          message: rule.field + '为必传项',
-          type: 'error'
-        })
         callback(new Error(rule.field + '为必传项'))
       } else {
         callback()
       }
     }
-    const validateSourceUri = (rule, value, callback) => {
-      if (value) {
-        if (validURL(value)) {
-          callback()
-        } else {
-          this.$message({
-            message: '外链url填写不正确',
-            type: 'error'
-          })
-          callback(new Error('外链url填写不正确'))
-        }
+    const validateNumber = (rule, value, callback) => {
+      if (!(parseFloat(value) > 0)) {
+        callback(new Error('请填写正确的数字'))
       } else {
         callback()
+      }
+    }
+    const validateSourceUri = (rule, value, callback) => {
+      if (validURL(value || '')) {
+        callback()
+      } else {
+        callback(new Error('外链url填写不正确'))
       }
     }
     return {
@@ -110,12 +167,15 @@ export default {
       loading: false,
       brandListOptions: [],
       rules: {
-        image_uri: [{ validator: validateRequire }],
-        title: [{ validator: validateRequire }],
+        brand: [{ validator: validateRequire }],
+        importUrl: [{ validator: validateSourceUri, trigger: 'blur' }],
+        price: [{ validator: validateNumber, trigger: 'blur' }],
+        title: [{ validator: validateRequire, trigger: 'blur' }],
         content: [{ validator: validateRequire }],
-        source_uri: [{ validator: validateSourceUri, trigger: 'blur' }]
-      },
-      tempRoute: {}
+        skuGroups: [{ validator: validateRequire }],
+        picUrl: [{ validator: validateSourceUri }]
+      }
+      // tempRoute: {},
     }
   },
   computed: {
@@ -133,28 +193,18 @@ export default {
       const id = this.$route.params && this.$route.params.id
       this.fetchData(id)
     }
-    this.tempRoute = Object.assign({}, this.$route)
+    this.fetchPv()
+    // this.tempRoute = Object.assign({}, this.$route);
   },
   methods: {
-    // fetchData(id) {
-    // fetchArticle(id)
-    //   .then((response) => {
-    //     this.postForm = response.data
-
-    //     // just for test
-    //     this.postForm.title += `   Article Id:${this.postForm.id}`
-    //     this.postForm.content_short += `   Article Id:${this.postForm.id}`
-
-    //     // set tagsview title
-    //     this.setTagsViewTitle()
-
-    //     // set page title
-    //     this.setPageTitle()
-    //   })
-    //   .catch((err) => {
-    //     console.log(err)
-    //   })
-    // },
+    fetchPv(id) {
+      fetchPv({ page: 1, size: 50 }).then((r) => {
+        this.brandListOptions = r.data.data
+        if (this.postForm.brand.id === 0) {
+          this.postForm.brand.id = (this.brandListOptions[0] || {}).id || 0
+        }
+      })
+    },
     handleImport() {
       this.loading = true
       importData({ url: this.postForm.importUrl })
@@ -166,21 +216,47 @@ export default {
           this.loading = false
         })
     },
-    submitForm() {
-      console.log(this.postForm)
-      this.$refs.postForm.validate((valid) => {
+    handleAddSku() {
+      this.postForm.skuGroups = this.postForm.skuGroups.concat([
+        { name: '', skuList: [] }
+      ])
+    },
+    handleRemoveSku(index) {
+      this.postForm.skuGroups.splice(index, 1)
+    },
+    handleAddSkuValue(sku) {
+      sku.skuList = sku.skuList.concat({ name: '' })
+    },
+    handleRemoveSkuValue(sku, index) {
+      sku.skuList.splice(index, 1)
+    },
+    handleSkuSuggestions(queryString, cb) {
+      var all = ['颜色', '尺寸', '尺码', '净含量']
+      var rest = queryString
+        ? all.filter((i) => i.indexOf(queryString) === 0)
+        : all
+      cb(rest.map((i) => ({ value: i })))
+    },
+    handleSubmit() {
+      this.$refs.postForm.validate((valid, e) => {
         if (valid) {
           this.loading = true
-          this.$notify({
-            title: '成功',
-            message: '发布文章成功',
-            type: 'success',
-            duration: 2000
-          })
-          this.postForm.status = 'published'
-          this.loading = false
+          createData(Object.assign({}, this.postForm))
+            .then((r) => {
+              this.$notify({
+                title: '成功',
+                message: '保存成功',
+                type: 'success',
+                duration: 2000
+              })
+              this.loading = false
+              this.$router.push('/goods/index')
+            })
+            .catch((e) => {
+              this.loading = false
+            })
         } else {
-          console.log('error submit!!')
+          console.log(e)
           return false
         }
       })
@@ -209,6 +285,40 @@ export default {
       .el-form-item {
         .el-input {
           width: 80%;
+        }
+        .skus {
+          .el-col {
+            position: relative;
+            .el-input {
+              width: 100%;
+            }
+            .el-autocomplete {
+              width: 100%;
+            }
+            .el-icon-circle-close {
+              font-size: 16px;
+              position: absolute;
+              right: 0;
+              top: -6px;
+              display: none;
+            }
+          }
+          .el-col:hover {
+            .el-icon-circle-close {
+              display: block;
+            }
+          }
+          .head {
+            span {
+              color: #999;
+            }
+          }
+          .value {
+            .el-col {
+              margin-bottom: 8px;
+              position: relative;
+            }
+          }
         }
       }
 
