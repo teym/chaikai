@@ -22,21 +22,24 @@
     >
       <div class="createPost-main-container">
         <el-form-item label="公司名称:" prop="name">
-          <el-input v-model="postForm.price" placeholder="请输入公司名称" />
+          <el-input v-model="postForm.name" placeholder="请输入公司名称" />
         </el-form-item>
-        <el-form-item label="统一社会信用代码:" prop="code">
-          <el-input v-model="postForm.price" placeholder="请输入统一社会信用代码" />
+        <el-form-item label="统一社会信用代码:" prop="creditCode">
+          <el-input v-model="postForm.creditCode" placeholder="请输入统一社会信用代码" />
         </el-form-item>
-        <el-form-item prop="image_uri" style="margin-bottom: 30px;" label="营业执照:">
-          <Upload v-model="postForm.image_uri" />
+        <el-form-item prop="businessLicense" style="margin-bottom: 30px;" label="营业执照:">
+          <Upload v-model="postForm.businessLicense" />
         </el-form-item>
         <el-form-item label="联系人:" prop="contact">
-          <el-input v-model="postForm.price" placeholder="请输入联系人" />
+          <el-input v-model="postForm.contact" placeholder="请输入联系人" />
         </el-form-item>
-        <el-form-item label="微信号:" prop="wechat">
-          <el-input v-model="postForm.price" placeholder="请输入微信号" />
+        <el-form-item label="微信号:" prop="contactWechat">
+          <el-input v-model="postForm.contactWechat" placeholder="请输入微信号" />
         </el-form-item>
-        <el-button type="primary">提交审核</el-button>
+        <el-button
+          type="primary"
+          @click="submitForm"
+        >{{ (["","提交审核","审核中","已通过","提交审核"])[data.statusCode] }}</el-button>
       </div>
     </el-form>
   </div>
@@ -45,20 +48,19 @@
 <script>
 import Upload from '@/components/Upload/SingleImage3'
 import { validURL } from '@/utils/validate'
-import { fetchArticle } from '@/api/article'
-import { searchUser } from '@/api/remote-search'
+import { fetchStat, auth } from '@/api/user'
+// import { searchUser } from '@/api/remote-search'
 
 const defaultForm = {
-  brand: 'draft',
-  link: '',
-  price: '',
   name: '',
-  image_uri: '',
-  content: ''
+  contact: '',
+  contactWechat: '',
+  creditCode: '',
+  businessLicense: ''
 }
 
 export default {
-  name: 'ArticleDetail',
+  name: 'UserDetail',
   components: {
     Upload
   },
@@ -81,106 +83,73 @@ export default {
       }
     }
     const validateSourceUri = (rule, value, callback) => {
-      if (value) {
-        if (validURL(value)) {
-          callback()
-        } else {
-          this.$message({
-            message: '外链url填写不正确',
-            type: 'error'
-          })
-          callback(new Error('外链url填写不正确'))
-        }
-      } else {
+      if (validURL(value)) {
         callback()
+      } else {
+        this.$message({
+          message: '外链url填写不正确',
+          type: 'error'
+        })
+        callback(new Error('外链url填写不正确'))
       }
     }
     return {
       postForm: Object.assign({}, defaultForm),
       loading: false,
       tip: false,
-      brandListOptions: [],
+      data: {},
       rules: {
-        image_uri: [{ validator: validateRequire }],
-        title: [{ validator: validateRequire }],
-        content: [{ validator: validateRequire }],
-        source_uri: [{ validator: validateSourceUri, trigger: 'blur' }]
+        name: [{ validator: validateRequire }],
+        contact: [{ validator: validateRequire }],
+        contactWechat: [{ validator: validateRequire }],
+        creditCode: [{ validator: validateRequire }],
+        businessLicense: [{ validator: validateSourceUri }]
       },
       tempRoute: {}
     }
   },
-  computed: {
-    displayTime: {
-      get() {
-        return +new Date(this.postForm.display_time)
-      },
-      set(val) {
-        this.postForm.display_time = new Date(val)
-      }
-    }
-  },
   created() {
-    if (this.isEdit) {
-      const id = this.$route.params && this.$route.params.id
-      this.fetchData(id)
-    }
-    this.tempRoute = Object.assign({}, this.$route)
+    this.fetchData()
   },
   methods: {
-    fetchData(id) {
-      fetchArticle(id)
+    fetchData() {
+      this.loading = true
+      fetchStat()
         .then((response) => {
-          this.postForm = response.data
-
-          // just for test
-          this.postForm.title += `   Article Id:${this.postForm.id}`
-          this.postForm.content_short += `   Article Id:${this.postForm.id}`
-
-          // set tagsview title
-          this.setTagsViewTitle()
-
-          // set page title
-          this.setPageTitle()
+          this.data = response.data
+          for (const key in defaultForm) {
+            this.postForm[key] = response.data[key] || ''
+          }
+          // this.postForm.businessLicense =
+          // "https://gd2.alicdn.com/imgextra/i1/831279688/TB2HmVucrsTMeJjy1zbXXchlVXa_!!831279688.jpg_400x400.jpg";
+          this.loading = false
         })
         .catch((err) => {
           console.log(err)
+          this.loading = false
         })
     },
-    setTagsViewTitle() {
-      const title = '编辑文章'
-      const route = Object.assign({}, this.tempRoute, {
-        title: `${title}-${this.postForm.id}`
-      })
-      this.$store.dispatch('tagsView/updateVisitedView', route)
-    },
-    setPageTitle() {
-      const title = 'Edit Article'
-      document.title = `${title} - ${this.postForm.id}`
-    },
     submitForm() {
-      console.log(this.postForm)
-      this.$refs.postForm.validate((valid) => {
-        if (valid) {
-          this.loading = true
-          this.$notify({
-            title: '成功',
-            message: '发布文章成功',
-            type: 'success',
-            duration: 2000
-          })
-          this.postForm.status = 'published'
-          this.loading = false
-        } else {
-          console.log('error submit!!')
-          return false
-        }
-      })
-    },
-    getRemoteUserList(query) {
-      searchUser(query).then((response) => {
-        if (!response.data.items) return
-        this.brandListOptions = response.data.items.map((v) => v.name)
-      })
+      if (this.data.statusCode === 1 || this.data.statusCode === 4) {
+        this.$refs.postForm.validate((valid, e) => {
+          if (valid) {
+            this.loading = true
+            auth(Object.assign({}, this.postForm)).then((r) => {
+              this.$notify({
+                title: '成功',
+                message: '提交成功',
+                type: 'success',
+                duration: 2000
+              })
+              this.tip = true
+              this.loading = false
+            })
+          } else {
+            console.log('error submit!!', e)
+            return false
+          }
+        })
+      }
     }
   }
 }
@@ -204,7 +173,7 @@ export default {
     width: 100%;
     padding: 96px 0;
     text-align: center;
-    img{
+    img {
       width: 64px;
     }
     h1 {
@@ -218,11 +187,11 @@ export default {
       line-height: 1.5;
       font-size: 14px;
       a {
-        color: #4244FF;
+        color: #4244ff;
         text-decoration: underline;
       }
     }
-    .el-button{
+    .el-button {
       margin: 8px 0;
     }
   }

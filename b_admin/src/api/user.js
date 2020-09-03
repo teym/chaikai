@@ -31,6 +31,21 @@ export function getInfo() {
   })
 }
 
+export function fetchStat() {
+  return request({
+    url: '/br/account/company',
+    method: 'get'
+  })
+}
+
+export function auth(data) {
+  return request({
+    url: '/br/account/company',
+    method: 'post',
+    data
+  })
+}
+
 export function getCode(telephone, type) {
   const sign = md5(`telephone=${telephone}&type=${type}chaikai`)
   return request({

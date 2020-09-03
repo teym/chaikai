@@ -5,16 +5,20 @@
         <div class="block function">
           <h4>{{ name }}</h4>
           <div>
-            手机号：15127635621
+            手机号：{{ telephone }}
             <span>
               <el-button type="text" @click="showChangePhone=true">绑定手机</el-button>
               <el-button type="text" @click="showChangePassword=true">修改密码</el-button>
             </span>
           </div>
           <div>
-            企业认证：未认证
+            企业认证：{{ (["UNKNOW","未认证","审核中","已认证","已拒绝"])[user.statusCode] }}
             <span>
-              <el-button size="mini" type="primary" @click="handleAuth">马上认证</el-button>
+              <el-button
+                size="mini"
+                type="primary"
+                @click="handleAuth"
+              >{{ (["","马上认证","查看认证","查看认证","重新认证"])[user.statusCode] }}</el-button>
             </span>
           </div>
         </div>
@@ -96,6 +100,12 @@ import { getCode } from '@/api/user'
 
 export default {
   name: 'UserCard',
+  props: {
+    user: {
+      type: Object,
+      default: () => ({})
+    }
+  },
   data() {
     const validateUsername = (rule, value, callback) => {
       if (!validPhone(value)) {
@@ -149,7 +159,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['name', 'avatar'])
+    ...mapGetters(['name', 'avatar', 'telephone'])
   },
   created() {
     // if (!this.roles.includes('admin')) {
@@ -203,7 +213,7 @@ export default {
       padding: 20px;
       height: 185px;
       h4 {
-        margin: 0 0 12px 0;
+        margin: 0 0 24px 0;
         padding: 0;
       }
       .el-col {
@@ -212,8 +222,8 @@ export default {
     }
     .function {
       div {
-        font-size: 18px;
-        padding: 8px 16px 8px 0;
+        font-size: 16px;
+        padding: 6px 16px 6px 0;
         display: flex;
         flex-direction: row;
         align-items: center;

@@ -21,20 +21,35 @@
       label-width="130px"
     >
       <div class="createPost-main-container">
-        <el-form-item label="公司名称:" prop="name">
-          <el-input v-model="postForm.price" placeholder="请输入公司名称" />
+        <el-form-item label="品牌名称:" prop="name">
+          <el-input v-model="postForm.name" placeholder="请输入品牌名称" />
         </el-form-item>
-        <el-form-item label="统一社会信用代码:" prop="code">
-          <el-input v-model="postForm.price" placeholder="请输入统一社会信用代码" />
+        <el-form-item prop="logo" style="margin-bottom: 30px;" label="品牌LOGO:">
+          <Upload v-model="postForm.logo" />
         </el-form-item>
-        <el-form-item prop="image_uri" style="margin-bottom: 30px;" label="营业执照:">
-          <Upload v-model="postForm.image_uri" />
+        <el-form-item label="品牌故事:" prop="story">
+          <el-input
+            v-model="postForm.story"
+            type="textarea"
+            placeholder="请输入您的品牌故事，帮助博主和粉丝更好了解贵品牌"
+          />
         </el-form-item>
-        <el-form-item label="联系人:" prop="contact">
-          <el-input v-model="postForm.price" placeholder="请输入联系人" />
+        <el-form-item prop="trademarkRegistration" style="margin-bottom: 30px;" label="商标注册书:">
+          <Upload v-model="postForm.trademarkRegistration" />
         </el-form-item>
-        <el-form-item label="微信号:" prop="wechat">
-          <el-input v-model="postForm.price" placeholder="请输入微信号" />
+        <el-form-item label="品牌关系:" prop="relationType">
+          <el-radio-group v-model="postForm.relationType">
+            <el-radio :label="'1'">品牌方</el-radio>
+            <el-radio :label="'2'">代理商</el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item
+          v-if="postForm.relationType === 2"
+          prop="qualification"
+          style="margin-bottom: 30px;"
+          label="品牌授权资质:"
+        >
+          <Upload v-model="postForm.qualification" />
         </el-form-item>
         <el-button type="primary">提交审核</el-button>
       </div>
@@ -49,12 +64,12 @@ import { fetchArticle } from '@/api/article'
 import { searchUser } from '@/api/remote-search'
 
 const defaultForm = {
-  brand: 'draft',
-  link: '',
-  price: '',
   name: '',
-  image_uri: '',
-  content: ''
+  logo: '',
+  story: '',
+  trademarkRegistration: '',
+  qualification: '',
+  relationType: '1'
 }
 
 export default {
@@ -81,42 +96,29 @@ export default {
       }
     }
     const validateSourceUri = (rule, value, callback) => {
-      if (value) {
-        if (validURL(value)) {
-          callback()
-        } else {
-          this.$message({
-            message: '外链url填写不正确',
-            type: 'error'
-          })
-          callback(new Error('外链url填写不正确'))
-        }
-      } else {
+      if (validURL(value)) {
         callback()
+      } else {
+        this.$message({
+          message: '外链url填写不正确',
+          type: 'error'
+        })
+        callback(new Error('外链url填写不正确'))
       }
     }
     return {
       postForm: Object.assign({}, defaultForm),
       loading: false,
       tip: false,
-      brandListOptions: [],
       rules: {
-        image_uri: [{ validator: validateRequire }],
-        title: [{ validator: validateRequire }],
+        name: [{ validator: validateRequire }],
+        story: [{ }],
         content: [{ validator: validateRequire }],
-        source_uri: [{ validator: validateSourceUri, trigger: 'blur' }]
+        logo: [{ validator: validateSourceUri }],
+        trademarkRegistration: [{ validator: validateSourceUri }],
+        qualification: [{ validator: validateSourceUri }]
       },
       tempRoute: {}
-    }
-  },
-  computed: {
-    displayTime: {
-      get() {
-        return +new Date(this.postForm.display_time)
-      },
-      set(val) {
-        this.postForm.display_time = new Date(val)
-      }
     }
   },
   created() {
@@ -204,7 +206,7 @@ export default {
     width: 100%;
     padding: 96px 0;
     text-align: center;
-    img{
+    img {
       width: 64px;
     }
     h1 {
@@ -218,11 +220,11 @@ export default {
       line-height: 1.5;
       font-size: 14px;
       a {
-        color: #4244FF;
+        color: #4244ff;
         text-decoration: underline;
       }
     }
-    .el-button{
+    .el-button {
       margin: 8px 0;
     }
   }

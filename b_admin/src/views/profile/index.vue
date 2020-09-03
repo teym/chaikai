@@ -11,7 +11,7 @@
             <el-icon class="el-icon-question" />如何设置活动
           </span>
         </h5>
-        <el-button type="primary" size="mini">新增授权</el-button>
+        <el-button type="primary" size="mini" @click="handleAddAuth">新增授权</el-button>
       </head>
       <el-table
         :key="tableKey"
@@ -23,32 +23,33 @@
       >
         <el-table-column label="品牌名称" align="left">
           <template slot-scope="{row}">
-            <span>{{ row.author }}</span>
+            <span>{{ row.name }}</span>
           </template>
         </el-table-column>
         <el-table-column label="品牌LOGO" align="left">
           <template slot-scope="{row}">
-            <span>{{ row.author }}</span>
+            <img class="logo" :src="row.logo" alt="logo">
           </template>
         </el-table-column>
         <el-table-column label="状态" align="left">
           <template slot-scope="{row}">
-            <span>{{ row.author }}</span>
+            <span>{{ (["UNKNOW","未认证","审核中","已认证","已拒绝"])[row.statusCode] }}</span>
+            <span v-if="row.statusCode === 4" class="reason">
+              <br>
+              {{ row.rejectReason }}
+            </span>
           </template>
         </el-table-column>
         <el-table-column label="授权时间" align="left">
           <template slot-scope="{row}">
-            <span>{{ row.author }}</span>
+            <span>{{ new Date(row.gmtCreate) | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
           </template>
         </el-table-column>
-        <el-table-column
-          label="操作"
-          align="center"
-          width="230"
-          class-name="small-padding fixed-width"
-        >
+        <el-table-column label="操作" align="center" width="230" class-name="small-padding fixed-width">
           <template slot-scope="{row}">
-            <el-button type="primary" size="mini" @click="handleUpdate(row)">详情</el-button>
+            <el-button v-if="row.statusCode === 4" type="text" size="mini">重新提交</el-button>
+            <el-button v-if="row.statusCode === 4" type="text" size="mini">删除</el-button>
+            <el-button v-else type="text" size="mini" @click="handleUpdate(row)">详情</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -58,6 +59,9 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import { fetchPv } from '@/api/goods'
+import { fetchStat } from '@/api/user'
+// import { parseTime } from '@/utils/index'
 import UserCard from './components/UserCard'
 
 export default {
@@ -75,16 +79,28 @@ export default {
     ...mapGetters(['name', 'avatar', 'roles'])
   },
   created() {
-    this.getUser()
+    this.fetchPvList()
+    this.fetchData()
   },
   methods: {
-    getUser() {
-      this.user = {
-        name: this.name,
-        role: this.roles.join(' | '),
-        email: 'admin@test.com',
-        avatar: this.avatar
-      }
+    fetchData() {
+      fetchStat().then((r) => {
+        this.user = r.data
+      })
+    },
+    fetchPvList() {
+      this.listLoading = true
+      fetchPv({ page: 1, size: 50 })
+        .then((r) => {
+          this.list = r.data.data
+          this.listLoading = false
+        })
+        .catch((e) => {
+          this.listLoading = false
+        })
+    },
+    handleAddAuth() {
+      this.$router.push('/user/auth')
     }
   }
 }
@@ -111,6 +127,15 @@ export default {
           margin-left: 8px;
         }
       }
+    }
+    .logo {
+      width: 36px;
+      height: 36px;
+      border-radius: 18px;
+    }
+    .reason {
+      color: #666;
+      font-size: 14px;
     }
   }
 }

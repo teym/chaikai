@@ -86,26 +86,6 @@ export const constantRoutes = [
         meta: { title: '后台首页', icon: 'dashboard', affix: true }
       }
     ]
-  },
-  {
-    path: '/profile',
-    component: Layout,
-    redirect: '/profile/index',
-    hidden: true,
-    children: [
-      {
-        path: 'index',
-        component: () => import('@/views/profile/index'),
-        name: 'Profile',
-        meta: { title: 'Profile', icon: 'user', noCache: true }
-      },
-      {
-        path: 'create',
-        component: () => import('@/views/profile/create'),
-        name: 'Auth',
-        meta: { title: 'Auth', icon: 'user', noCache: true }
-      }
-    ]
   }
 ]
 

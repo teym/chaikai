@@ -6,7 +6,7 @@ const state = {
   token: getToken(),
   name: '',
   avatar: '',
-  introduction: '',
+  telephone: '',
   roles: []
 }
 
@@ -14,8 +14,8 @@ const mutations = {
   SET_TOKEN: (state, token) => {
     state.token = token
   },
-  SET_INTRODUCTION: (state, introduction) => {
-    state.introduction = introduction
+  SET_INTRODUCTION: (state, telephone) => {
+    state.telephone = telephone
   },
   SET_NAME: (state, name) => {
     state.name = name
