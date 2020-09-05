@@ -26,9 +26,15 @@ export function createData(data) {
 
 export function updateData(data) {
   return request({
-    url: '/vue-element-admin/article/update',
+    url: '/br/goods',
     method: 'put',
     data
+  })
+}
+export function removeData(id) {
+  return request({
+    url: '/br/goods/' + id,
+    method: 'delete'
   })
 }
 
@@ -37,5 +43,21 @@ export function fetchPv(query) {
     url: '/br/account/brand/list',
     method: 'get',
     params: query
+  })
+}
+
+export function createPv(data) {
+  return request({
+    url: '/br/account/brand',
+    method: 'post',
+    data
+  })
+}
+
+export function submitPv(data) {
+  return request({
+    url: '/br/account/brand/submit',
+    method: 'post',
+    data
   })
 }

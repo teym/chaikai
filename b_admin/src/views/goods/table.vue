@@ -66,8 +66,9 @@
 </template>
 
 <script>
-import { fetchList } from '@/api/goods'
+import { fetchList, removeData } from '@/api/goods'
 import waves from '@/directive/waves' // waves directive
+import { mapGetters } from 'vuex'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
 export default {
@@ -86,6 +87,9 @@ export default {
         key: undefined
       }
     }
+  },
+  computed: {
+    ...mapGetters(['name', 'avatar', 'telephone', 'statusCode', 'brandCount'])
   },
   created() {
     this.getList()
@@ -108,9 +112,7 @@ export default {
       this.getList()
     },
     handleCreate() {
-      // check
-      const t = Math.random()
-      if (t < 0.3) {
+      if (this.statusCode !== 3) {
         this.$alert('无法创建商品，为保障品牌合作规范，请先完成企业认证').then(
           (r) => {
             if (r === 'confirm') {
@@ -118,7 +120,7 @@ export default {
             }
           }
         )
-      } else if (t < 0.6) {
+      } else if (this.brandCount === 0) {
         this.$alert('无法创建商品，为保障品牌合作规范，请先完成品牌授权').then(
           (r) => {
             if (r === 'confirm') {
@@ -130,8 +132,9 @@ export default {
         this.$router.push('/goods/create')
       }
     },
-    createData() {},
-    handleUpdate(row) {},
+    handleUpdate(row) {
+      this.$router.push({ path: '/goods/create', query: { id: row.id }})
+    },
     handleDelete(row, index) {
       this.$confirm(
         '确认删除商品' + row.name + ',将无法恢复',
@@ -139,13 +142,15 @@ export default {
         {}
       ).then((r) => {
         if (r === 'confirm') {
-          this.$notify({
-            title: 'Success',
-            message: 'Delete Successfully',
-            type: 'success',
-            duration: 2000
+          removeData(row.id).then((r) => {
+            this.$notify({
+              title: 'Success',
+              message: 'Delete Successfully',
+              type: 'success',
+              duration: 2000
+            })
+            this.list.splice(index, 1)
           })
-          this.list.splice(index, 1)
         }
       })
     }

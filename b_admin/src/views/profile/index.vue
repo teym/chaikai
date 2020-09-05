@@ -49,7 +49,7 @@
           <template slot-scope="{row}">
             <el-button v-if="row.statusCode === 4" type="text" size="mini">重新提交</el-button>
             <el-button v-if="row.statusCode === 4" type="text" size="mini">删除</el-button>
-            <el-button v-else type="text" size="mini" @click="handleUpdate(row)">详情</el-button>
+            <el-button v-else type="text" size="mini" @click="handleAuthDetail(row)">详情</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -98,6 +98,9 @@ export default {
         .catch((e) => {
           this.listLoading = false
         })
+    },
+    handleAuthDetail(row) {
+      this.$router.push({ path: '/user/auth', query: { id: row.id }})
     },
     handleAddAuth() {
       this.$router.push('/user/auth')

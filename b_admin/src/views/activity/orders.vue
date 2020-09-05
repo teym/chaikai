@@ -82,9 +82,8 @@
 </template>
 
 <script>
-import {
-  fetchList
-} from '@/api/article'
+import { fetchList } from '@/api/article'
+import { mapGetters } from 'vuex'
 import waves from '@/directive/waves' // waves directive
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
@@ -104,6 +103,9 @@ export default {
         title: undefined
       }
     }
+  },
+  computed: {
+    ...mapGetters(['name', 'avatar', 'telephone', 'statusCode', 'brandCount'])
   },
   created() {
     this.getList()
@@ -126,21 +128,19 @@ export default {
       this.getList()
     },
     handleCreate() {
-      // check
-      const t = Math.random()
-      if (t < 0.3) {
+      if (this.statusCode !== 3) {
         this.$alert('无法创建商品，为保障品牌合作规范，请先完成企业认证').then(
           (r) => {
             if (r === 'confirm') {
-              this.$router.push('/account/cert')
+              this.$router.push('/user/create')
             }
           }
         )
-      } else if (t < 0.6) {
+      } else if (this.brandCount === 0) {
         this.$alert('无法创建商品，为保障品牌合作规范，请先完成品牌授权').then(
           (r) => {
             if (r === 'confirm') {
-              this.$router.push('/account/auth')
+              this.$router.push('/user/auth')
             }
           }
         )

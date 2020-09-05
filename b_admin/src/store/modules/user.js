@@ -1,4 +1,5 @@
-import { login, regist, logout, getInfo } from '@/api/user'
+import { login, regist, logout, getInfo, fetchStat } from '@/api/user'
+import { fetchPv } from '@/api/goods'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import router, { resetRouter } from '@/router'
 
@@ -7,7 +8,9 @@ const state = {
   name: '',
   avatar: '',
   telephone: '',
-  roles: []
+  roles: [],
+  statusCode: 0,
+  brandCount: 0
 }
 
 const mutations = {
@@ -25,6 +28,12 @@ const mutations = {
   },
   SET_ROLES: (state, roles) => {
     state.roles = roles
+  },
+  SET_STATUS: (state, code) => {
+    state.statusCode = code
+  },
+  SET_BRAND_COUNT: (state, count) => {
+    state.brandCount = count
   }
 }
 
@@ -60,20 +69,20 @@ const actions = {
   // get user info
   getInfo({ commit, state }) {
     return new Promise((resolve, reject) => {
-      getInfo(state.token).then(response => {
-        const { data } = response
-
-        if (!data) {
-          reject('Verification failed, please Login again.')
-        }
-
-        const { roles, company, avatar, telephone } = data
+      Promise.all([getInfo(), fetchStat(), fetchPv({ page: 1, size: 5 })]).then(([r1, r2, r3]) => {
+        const { roles, company, avatar, telephone } = r1.data || {}
 
         commit('SET_ROLES', roles)
         commit('SET_NAME', company)
         commit('SET_AVATAR', avatar)
         commit('SET_INTRODUCTION', telephone)
-        resolve(data)
+
+        const { statusCode } = r2.data || {}
+        commit('SET_STATUS', statusCode)
+
+        const { count } = r3.data.pager || {}
+        commit('SET_BRAND_COUNT', count)
+        resolve(Object.assign({}, r1.data, { statusCode, brandCount: count }))
       }).catch(error => {
         reject(error)
       })

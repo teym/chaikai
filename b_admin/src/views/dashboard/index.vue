@@ -7,17 +7,25 @@
           <h3>快捷功能</h3>
           <el-row>
             <el-col :span="12">
-              <img src="@/assets/images/dash_create.png">
-              创建商品
+              <div @click="handelCreate">
+                <img src="@/assets/images/dash_create.png">
+                创建商品
+              </div>
             </el-col>
             <el-col :span="12">
-              <img src="@/assets/images/dash_activity.png"> 发布活动
+              <div @click="handleActivity">
+                <img src="@/assets/images/dash_activity.png"> 发布活动
+              </div>
             </el-col>
             <el-col :span="12">
-              <img src="@/assets/images/dash_auth.png">认证授权
+              <div @click="handleAuth">
+                <img src="@/assets/images/dash_auth.png">认证授权
+              </div>
             </el-col>
             <el-col :span="12">
-              <img src="@/assets/images/dash_invoice.png">申请开票
+              <div @click="handleInvoice">
+                <img src="@/assets/images/dash_invoice.png">申请开票
+              </div>
             </el-col>
           </el-row>
         </div>
@@ -27,10 +35,12 @@
           <h3>待办事项</h3>
           <el-row>
             <el-col :span="12">
-              <span>2</span> 待确认 <el-icon class="el-icon-arrow-right" />
+              <span>2</span> 待确认
+              <el-icon class="el-icon-arrow-right" />
             </el-col>
             <el-col :span="12">
-              <span>2</span> 待发货<el-icon class="el-icon-arrow-right" />
+              <span>2</span> 待发货
+              <el-icon class="el-icon-arrow-right" />
             </el-col>
             <el-col class="title" :span="12">订单问题</el-col>
             <el-col class="title" :span="12">活动订单</el-col>
@@ -52,12 +62,47 @@ export default {
     return {}
   },
   computed: {
-    ...mapGetters(['roles'])
+    ...mapGetters(['roles', 'statusCode', 'brandCount'])
   },
-  created() {
-    // if (!this.roles.includes('admin')) {
-    //   this.currentRole = 'editorDashboard'
-    // }
+  methods: {
+    handelCreate() {
+      if (this.checkStat()) {
+        this.$router.push('/goods/create')
+      }
+    },
+    checkStat() {
+      if (this.statusCode !== 3) {
+        this.$alert('无法创建商品，为保障品牌合作规范，请先完成企业认证').then(
+          (r) => {
+            if (r === 'confirm') {
+              this.$router.push('/user/create')
+            }
+          }
+        )
+        return false
+      } else if (this.brandCount === 0) {
+        this.$alert('无法创建商品，为保障品牌合作规范，请先完成品牌授权').then(
+          (r) => {
+            if (r === 'confirm') {
+              this.$router.push('/user/auth')
+            }
+          }
+        )
+        return false
+      }
+      return true
+    },
+    handleActivity() {
+      if (this.checkStat()) {
+        this.$router.push('/activity/create')
+      }
+    },
+    handleAuth() {
+      this.$router.push('/user/create')
+    },
+    handleInvoice() {
+      this.$router.push('/user/invoice')
+    }
   }
 }
 </script>
@@ -81,7 +126,7 @@ export default {
       }
     }
     .function {
-      .el-col {
+      .el-col div {
         display: flex;
         flex-direction: row;
         align-items: center;

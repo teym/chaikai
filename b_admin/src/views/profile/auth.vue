@@ -44,14 +44,14 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item
-          v-if="postForm.relationType === 2"
+          v-if="postForm.relationType === '2'"
           prop="qualification"
           style="margin-bottom: 30px;"
           label="品牌授权资质:"
         >
           <Upload v-model="postForm.qualification" />
         </el-form-item>
-        <el-button type="primary">提交审核</el-button>
+        <el-button :loading="loading" type="primary" @click="submitForm">提交审核</el-button>
       </div>
     </el-form>
   </div>
@@ -60,15 +60,17 @@
 <script>
 import Upload from '@/components/Upload/SingleImage3'
 import { validURL } from '@/utils/validate'
-import { fetchArticle } from '@/api/article'
-import { searchUser } from '@/api/remote-search'
+import { fetchPv, createPv, submitPv } from '@/api/goods'
 
 const defaultForm = {
   name: '',
-  logo: '',
+  logo:
+    'https://gd2.alicdn.com/imgextra/i1/831279688/TB2HmVucrsTMeJjy1zbXXchlVXa_!!831279688.jpg_400x400.jpg',
   story: '',
-  trademarkRegistration: '',
-  qualification: '',
+  trademarkRegistration:
+    'https://gd2.alicdn.com/imgextra/i1/831279688/TB2HmVucrsTMeJjy1zbXXchlVXa_!!831279688.jpg_400x400.jpg',
+  qualification:
+    'https://gd2.alicdn.com/imgextra/i1/831279688/TB2HmVucrsTMeJjy1zbXXchlVXa_!!831279688.jpg_400x400.jpg',
   relationType: '1'
 }
 
@@ -112,76 +114,59 @@ export default {
       tip: false,
       rules: {
         name: [{ validator: validateRequire }],
-        story: [{ }],
-        content: [{ validator: validateRequire }],
+        story: [{}],
+        relationType: [{ validator: validateRequire }],
         logo: [{ validator: validateSourceUri }],
         trademarkRegistration: [{ validator: validateSourceUri }],
         qualification: [{ validator: validateSourceUri }]
-      },
-      tempRoute: {}
+      }
     }
   },
   created() {
-    if (this.isEdit) {
-      const id = this.$route.params && this.$route.params.id
+    const id = this.$route.query && this.$route.query.id
+    if (id) {
       this.fetchData(id)
     }
     this.tempRoute = Object.assign({}, this.$route)
   },
   methods: {
     fetchData(id) {
-      fetchArticle(id)
+      fetchPv({ id, page: 1, size: 1 })
         .then((response) => {
-          this.postForm = response.data
-
-          // just for test
-          this.postForm.title += `   Article Id:${this.postForm.id}`
-          this.postForm.content_short += `   Article Id:${this.postForm.id}`
-
-          // set tagsview title
-          this.setTagsViewTitle()
-
-          // set page title
-          this.setPageTitle()
+          this.postForm = response.data.data[0]
         })
         .catch((err) => {
           console.log(err)
         })
     },
-    setTagsViewTitle() {
-      const title = '编辑文章'
-      const route = Object.assign({}, this.tempRoute, {
-        title: `${title}-${this.postForm.id}`
-      })
-      this.$store.dispatch('tagsView/updateVisitedView', route)
-    },
-    setPageTitle() {
-      const title = 'Edit Article'
-      document.title = `${title} - ${this.postForm.id}`
-    },
     submitForm() {
-      console.log(this.postForm)
       this.$refs.postForm.validate((valid) => {
         if (valid) {
           this.loading = true
-          this.$notify({
-            title: '成功',
-            message: '发布文章成功',
-            type: 'success',
-            duration: 2000
-          })
-          this.postForm.status = 'published'
-          this.loading = false
+          const id = this.$route.params && this.$route.params.id
+
+          if (!id) {
+            createPv(Object.assign({}, this.postForm))
+              .then((r) => {
+                this.loading = false
+                this.tip = true
+              })
+              .catch((e) => {
+                this.loading = false
+              })
+          } else {
+            submitPv(Object.assign({}, this.postForm))
+              .then((r) => {
+                this.loading = false
+                this.tip = true
+              })
+              .catch((e) => {
+                this.loading = false
+              })
+          }
         } else {
-          console.log('error submit!!')
           return false
         }
-      })
-    },
-    getRemoteUserList(query) {
-      searchUser(query).then((response) => {
-        if (!response.data.items) return
-        this.brandListOptions = response.data.items.map((v) => v.name)
       })
     }
   }

@@ -113,7 +113,13 @@
 import Tinymce from '@/components/Tinymce'
 import Upload from '@/components/Upload/SingleImage3'
 import { validURL } from '@/utils/validate'
-import { importData, createData, fetchPv } from '@/api/goods'
+import {
+  fetchList,
+  importData,
+  createData,
+  updateData,
+  fetchPv
+} from '@/api/goods'
 import { searchUser } from '@/api/remote-search'
 
 const defaultForm = {
@@ -165,12 +171,12 @@ export default {
     }
     const validateSourceUri = (rule, value, callback) => {
       if (validURL(value || '')) {
+        callback()
+      } else {
         this.$message({
           message: '外链url填写不正确',
           type: 'error'
         })
-        callback()
-      } else {
         callback(new Error('外链url填写不正确'))
       }
     }
@@ -187,29 +193,26 @@ export default {
         skuGroups: [{ validator: validateRequire }],
         picUrl: [{ validator: validateSourceUri }]
       }
-      // tempRoute: {},
-    }
-  },
-  computed: {
-    displayTime: {
-      get() {
-        return +new Date(this.postForm.display_time)
-      },
-      set(val) {
-        this.postForm.display_time = new Date(val)
-      }
     }
   },
   created() {
-    if (this.isEdit) {
-      const id = this.$route.params && this.$route.params.id
+    const id = this.$route.query && this.$route.query.id
+    if (id) {
       this.fetchData(id)
     }
     this.fetchPv()
-    // this.tempRoute = Object.assign({}, this.$route);
   },
   methods: {
-    fetchPv(id) {
+    fetchData(id) {
+      fetchList({ page: 1, size: 1, id }).then((r) => {
+        const d = r.data.data[0] || defaultForm
+        if (!d.skuGroups) {
+          d.skuGroups = []
+        }
+        this.postForm = d
+      })
+    },
+    fetchPv() {
       fetchPv({ page: 1, size: 50 }).then((r) => {
         this.brandListOptions = r.data.data
         if (this.postForm.brand.id === 0) {
@@ -253,20 +256,38 @@ export default {
       this.$refs.postForm.validate((valid, e) => {
         if (valid) {
           this.loading = true
-          createData(Object.assign({}, this.postForm))
-            .then((r) => {
-              this.$notify({
-                title: '成功',
-                message: '保存成功',
-                type: 'success',
-                duration: 2000
+          const id = this.$route.query && this.$route.query.id
+          if (!id) {
+            createData(Object.assign({}, this.postForm))
+              .then((r) => {
+                this.$notify({
+                  title: '成功',
+                  message: '保存成功',
+                  type: 'success',
+                  duration: 2000
+                })
+                this.loading = false
+                this.$router.push('/goods/index')
               })
-              this.loading = false
-              this.$router.push('/goods/index')
-            })
-            .catch((e) => {
-              this.loading = false
-            })
+              .catch((e) => {
+                this.loading = false
+              })
+          } else {
+            updateData(Object.assign({ id }, this.postForm))
+              .then((r) => {
+                this.$notify({
+                  title: '成功',
+                  message: '保存成功',
+                  type: 'success',
+                  duration: 2000
+                })
+                this.loading = false
+                this.$router.push('/goods/index')
+              })
+              .catch((e) => {
+                this.loading = false
+              })
+          }
         } else {
           console.log(e)
           return false
