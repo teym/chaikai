@@ -1,4 +1,4 @@
-import { login, regist, logout, getInfo, fetchStat } from '@/api/user'
+import { login, regist, logout, getInfo, fetchStat, fetchFinance } from '@/api/user'
 import { fetchPv } from '@/api/goods'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import router, { resetRouter } from '@/router'
@@ -10,7 +10,9 @@ const state = {
   telephone: '',
   roles: [],
   statusCode: 0,
-  brandCount: 0
+  brandCount: 0,
+  amount: 0,
+  activity: 0
 }
 
 const mutations = {
@@ -34,6 +36,12 @@ const mutations = {
   },
   SET_BRAND_COUNT: (state, count) => {
     state.brandCount = count
+  },
+  SET_AMOUNT: (state, amount) => {
+    state.amount = amount
+  },
+  SET_ACTIVITY: (state, activity) => {
+    state.activity = activity
   }
 }
 
@@ -69,7 +77,7 @@ const actions = {
   // get user info
   getInfo({ commit, state }) {
     return new Promise((resolve, reject) => {
-      Promise.all([getInfo(), fetchStat(), fetchPv({ page: 1, size: 5 })]).then(([r1, r2, r3]) => {
+      Promise.all([getInfo(), fetchStat(), fetchPv({ page: 1, size: 5 }), fetchFinance()]).then(([r1, r2, r3, r4]) => {
         const { roles, company, avatar, telephone } = r1.data || {}
 
         commit('SET_ROLES', roles)
@@ -81,7 +89,13 @@ const actions = {
         commit('SET_STATUS', statusCode)
 
         const { count } = r3.data.pager || {}
-        commit('SET_BRAND_COUNT', count)
+        commit('SET_BRAND_COUNT', count || 0)
+
+        const { totalAmount, activityAmount } = r4.data || {}
+
+        commit('SET_AMOUNT', totalAmount || 0)
+        commit('SET_ACTIVITY', activityAmount || 0)
+
         resolve(Object.assign({}, r1.data, { statusCode, brandCount: count }))
       }).catch(error => {
         reject(error)

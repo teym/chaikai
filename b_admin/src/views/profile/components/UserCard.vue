@@ -28,10 +28,10 @@
           <h4>账户资产</h4>
           <el-row>
             <el-col :span="12">
-              <span>2</span> 次
+              <span>{{ activity }}</span> 次
             </el-col>
             <el-col :span="12">
-              <span>2</span> 元
+              <span>{{ amount }}</span> 元
               <el-icon class="el-icon-arrow-right" />
             </el-col>
             <el-col class="title" :span="12">
@@ -159,7 +159,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['name', 'avatar', 'telephone'])
+    ...mapGetters(['name', 'avatar', 'telephone', 'amount', 'activity'])
   },
   created() {
     // if (!this.roles.includes('admin')) {

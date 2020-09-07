@@ -38,6 +38,13 @@ export function fetchStat() {
   })
 }
 
+export function fetchFinance() {
+  return request({
+    url: '/br/account/finance',
+    method: 'get'
+  })
+}
+
 export function auth(data) {
   return request({
     url: '/br/account/company',

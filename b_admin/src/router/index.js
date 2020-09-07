@@ -120,26 +120,25 @@ export const asyncRoutes = [
     component: Layout,
     redirect: '/activity/index',
     name: 'Activity',
+    meta: { title: '活动管理', icon: 'table' },
     children: [
       {
         path: 'index',
         component: () => import('@/views/activity/table'),
         name: 'activity-table',
-        meta: { title: '活动管理', icon: 'table' }
+        meta: { title: '活动列表', icon: 'table' }
       },
       {
         path: 'create',
         component: () => import('@/views/activity/create'),
         name: 'activity-create',
-        hidden: true,
-        meta: { title: 'Create' }
+        meta: { title: '发布活动', icon: 'table' }
       },
       {
         path: 'order',
         component: () => import('@/views/activity/orders'),
         name: 'activity-order',
-        hidden: true,
-        meta: { title: 'Order' }
+        meta: { title: '活动订单', icon: 'table' }
       }
     ]
   },

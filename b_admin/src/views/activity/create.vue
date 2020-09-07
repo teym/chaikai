@@ -3,36 +3,31 @@
     <el-form ref="postForm" :model="postForm" :rules="rules" class="form-container">
       <div class="createPost-main-container">
         <el-form-item prop="brand" style="margin-bottom: 30px;" label-width="90px" label="活动商品:">
-          <el-select v-model="postForm.brand" placeholder="请选择活动商品">
-            <el-option
-              v-for="(item,index) in brandListOptions"
-              :key="index"
-              :label="item.name"
-              :value="item.id"
-            />
-          </el-select>
+          <el-button icon="el-icon-plus" @click="handleSelectGoods">选择商品</el-button>
         </el-form-item>
-        <el-form-item prop="brand" style="margin-bottom: 30px;" label-width="90px" label="活动规格:">
-          <el-select v-model="postForm.brand" placeholder="请选择商品规格">
-            <el-option
-              v-for="(item,index) in brandListOptions"
-              :key="index"
-              :label="item.name"
-              :value="item.id"
-            />
-          </el-select>
+        <el-form-item prop="brand" style="margin-bottom: 30px;" label-width="90px" label="商品规格:">
+          <el-input v-model="postForm.sku" placeholder="活动规格" />
         </el-form-item>
         <el-form-item style="margin-bottom: 30px;" label-width="90px" label="活动名称:">
-          <el-input v-model="postForm.link" placeholder="活动名称" />
+          <el-input v-model="postForm.title" placeholder="活动名称" />
         </el-form-item>
         <el-form-item style="margin-bottom: 30px;" label-width="90px" label="报名时间:">
-          <el-input v-model="postForm.price" placeholder="报名时间" />
+          <el-input v-model="postForm.regStartTime" placeholder="报名时间" />
+          <el-input v-model="postForm.regEndTime" placeholder="报名时间" />
         </el-form-item>
         <el-form-item style="margin-bottom: 30px;" label-width="90px" label="活动名额:">
-          <el-input v-model="postForm.price" placeholder="活动名额" />
+          <el-input v-model="postForm.totalNum" placeholder="活动名额" />
         </el-form-item>
         <el-form-item style="margin-bottom: 30px;" label-width="90px" label="测评指引:">
-          <el-input v-model="postForm.name" placeholder="请输入测评指引" maxlength="10" show-word-limit />
+          <el-input
+            v-for="(line, i) in postForm.guidelines"
+            :key="i"
+            v-model="line.txt"
+            placeholder="请输入测评指引"
+            maxlength="10"
+            show-word-limit
+          />
+          <el-button>add guide</el-button>
         </el-form-item>
       </div>
       <div class="createPost-main-container">
@@ -62,13 +57,31 @@
         <el-button>提交审核</el-button>
       </div>
     </el-form>
+    <el-dialog custom-class="goods" title="选择活动商品" :visible.sync="goodsFormVisible">
+      <div slot="title">
+        <el-form :inline="true">
+          <el-form-item label="选择活动商品">
+            <el-input v-model="goods.key" placeholder="请输入商品名称" @keypress.enter="handleFilter" />
+          </el-form-item>
+        </el-form>
+      </div>
+      <el-row :gutter="20" justify="center" :loading="goods.loading">
+        <el-col v-for="(g, i) in goods.list" :key="i" :span="4">
+          <img :src="g.picUrl" alt="pic">
+          <p>{{ g.title }}</p>
+        </el-col>
+      </el-row>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisible = false">取 消</el-button>
+        <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import { validURL } from '@/utils/validate'
-import { fetchArticle } from '@/api/article'
-import { searchUser } from '@/api/remote-search'
+import { fetchData, fetchPv } from '@/api/activities'
 
 const defaultForm = {
   brand: 'draft',
@@ -124,16 +137,13 @@ export default {
         content: [{ validator: validateRequire }],
         source_uri: [{ validator: validateSourceUri, trigger: 'blur' }]
       },
-      tempRoute: {}
-    }
-  },
-  computed: {
-    displayTime: {
-      get() {
-        return +new Date(this.postForm.display_time)
-      },
-      set(val) {
-        this.postForm.display_time = new Date(val)
+      goodsFormVisible: false,
+      goods: {
+        page: 0,
+        list: [],
+        loading: false,
+        total: 0,
+        key: ''
       }
     }
   },
@@ -142,38 +152,36 @@ export default {
       const id = this.$route.params && this.$route.params.id
       this.fetchData(id)
     }
-    this.tempRoute = Object.assign({}, this.$route)
   },
   methods: {
     fetchData(id) {
-      fetchArticle(id)
+      fetchData(id)
         .then((response) => {
           this.postForm = response.data
-
-          // just for test
-          this.postForm.title += `   Article Id:${this.postForm.id}`
-          this.postForm.content_short += `   Article Id:${this.postForm.id}`
-
-          // set tagsview title
-          this.setTagsViewTitle()
-
-          // set page title
-          this.setPageTitle()
         })
         .catch((err) => {
           console.log(err)
         })
     },
-    setTagsViewTitle() {
-      const title = '编辑文章'
-      const route = Object.assign({}, this.tempRoute, {
-        title: `${title}-${this.postForm.id}`
+    fetchPv(page) {
+      this.goods.loading = true
+      fetchPv({ page, size: 10 }).then((r) => {
+        this.goods = {
+          page,
+          total: r.data.pager.count,
+          list: r.data.data,
+          loading: false
+        }
       })
-      this.$store.dispatch('tagsView/updateVisitedView', route)
     },
-    setPageTitle() {
-      const title = 'Edit Article'
-      document.title = `${title} - ${this.postForm.id}`
+    handleSelectGoods() {
+      this.goodsFormVisible = true
+      if (this.goods.page === 0) {
+        this.fetchPv(1)
+      }
+    },
+    handleFilter() {
+      this.fetchPv(1)
     },
     submitForm() {
       console.log(this.postForm)
@@ -192,12 +200,6 @@ export default {
           console.log('error submit!!')
           return false
         }
-      })
-    },
-    getRemoteUserList(query) {
-      searchUser(query).then((response) => {
-        if (!response.data.items) return
-        this.brandListOptions = response.data.items.map((v) => v.name)
       })
     }
   }
@@ -232,14 +234,27 @@ export default {
     top: 0px;
   }
 }
-
-.article-textarea {
-  textarea {
-    padding-right: 40px;
-    resize: none;
-    border: none;
-    border-radius: 0px;
-    border-bottom: 1px solid #bfcbd9;
+.goods {
+  .el-dialog__header{
+    padding-bottom: 0;
+  }
+  .el-row {
+    .el-col {
+      background-color: #f2f3f7;
+      border-radius: 4px;
+      text-align: center;
+      img {
+        width: 94%;
+        height: auto;
+        max-height: 120px;
+      }
+      p {
+        text-align: center;
+        font-size: 12px;
+        margin: 0;
+        padding: 0;
+      }
+    }
   }
 }
 </style>

@@ -1,16 +1,8 @@
 import request from '@/utils/request'
 
-export function fetchList(query) {
+export function fetchData(query) {
   return request({
-    url: '/br/activity/goods/list',
-    method: 'get',
-    params: query
-  })
-}
-
-export function importData(query) {
-  return request({
-    url: '/br/goods/analyseUrl',
+    url: '/br/activity',
     method: 'get',
     params: query
   })
@@ -18,7 +10,7 @@ export function importData(query) {
 
 export function createData(data) {
   return request({
-    url: '/br/goods',
+    url: '/br/activity',
     method: 'post',
     data
   })
@@ -26,38 +18,22 @@ export function createData(data) {
 
 export function updateData(data) {
   return request({
-    url: '/br/goods',
+    url: '/br/activity',
     method: 'put',
     data
   })
 }
 export function removeData(id) {
   return request({
-    url: '/br/goods/' + id,
+    url: '/br/activity/' + id,
     method: 'delete'
   })
 }
 
 export function fetchPv(query) {
   return request({
-    url: '/br/account/brand/list',
+    url: '/br/activity/goods/list',
     method: 'get',
     params: query
-  })
-}
-
-export function createPv(data) {
-  return request({
-    url: '/br/account/brand',
-    method: 'post',
-    data
-  })
-}
-
-export function submitPv(data) {
-  return request({
-    url: '/br/account/brand/submit',
-    method: 'post',
-    data
   })
 }

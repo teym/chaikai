@@ -10,7 +10,21 @@
           src="@/assets/images/nav_account.png"
           alt="setting"
         >
-        <div>账户资产</div>
+        <div class="account">
+          <h5>账户资产</h5>
+          <el-row :gutter="20">
+            <el-col :span="12">
+              <span>{{ activity }}</span>次
+              <p>置换活动</p>
+              <el-button size="mini" round>增加次数</el-button>
+            </el-col>
+            <el-col :span="12">
+              <span>{{ amount }}</span>元
+              <p>账户余额</p>
+              <el-button size="mini" round>充值金额</el-button>
+            </el-col>
+          </el-row>
+        </div>
       </el-popover>
       <div class="right-menu-item menu-noti">
         <el-badge is-dot class="nav_img_box">
@@ -32,7 +46,7 @@
 </template>
 
 <script>
-// import { mapGetters } from 'vuex'
+import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Search from '@/components/HeaderSearch'
 
@@ -41,9 +55,9 @@ export default {
     Breadcrumb,
     Search
   },
-  // computed: {
-  //   ...mapGetters(["sidebar"]),
-  // },
+  computed: {
+    ...mapGetters(['amount', 'activity'])
+  },
   methods: {
     // toggleSideBar() {
     //   this.$store.dispatch("app/toggleSideBar");
@@ -107,6 +121,29 @@ export default {
     }
     .menu-help {
       margin-right: 8px;
+    }
+  }
+}
+.account {
+  h5 {
+    color: #333;
+    font-size: 16px;
+    margin: 0;
+    padding: 0;
+  }
+  .el-row {
+    .el-col {
+      text-align: center;
+      font-size: 14px;
+      color: #333;
+      span {
+        font-size: 26px;
+        font-weight: bold;
+      }
+      p {
+        margin: 4px 0;
+        padding: 0;
+      }
     }
   }
 }

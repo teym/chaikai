@@ -20,23 +20,23 @@
         >创建活动</el-button>
       </div>
       <div class="row">
-        <el-menu
-          :default-active="'1'"
-          class="el-menu-demo"
-          mode="horizontal"
-          @select="handleSelect"
-        >
-          <el-menu-item index="1">
-            处理中心
-            <span class="pill">10</span>
+        <el-menu :default-active="''" class="el-menu-demo" mode="horizontal" @select="handleSelect">
+          <el-menu-item :index="''">
+            全部
+            <span v-if="stat.total > 0" class="pill">{{ stat.total }}</span>
           </el-menu-item>
-          <el-menu-item index="2">处理中心</el-menu-item>
-          <el-menu-item index="3">
-            处理中心
-            <span class="pill">3</span>
+          <el-menu-item index="SIGNING_UP">
+            报名中
+            <span v-if="stat.signingUp > 0" class="pill">{{ stat.signingUp }}</span>
           </el-menu-item>
-          <el-menu-item index="4">处理中心</el-menu-item>
-          <el-menu-item index="5">处理中心</el-menu-item>
+          <el-menu-item index="NOT_STARTED">
+            未开始
+            <span v-if="stat.notStarted > 0" class="pill">{{ stat.notStarted }}</span>
+          </el-menu-item>
+          <el-menu-item index="SIGN_UP_CLOSED">
+            报名结束
+            <span v-if="stat.signUpClosed > 0" class="pill">{{ stat.signUpClosed }}</span>
+          </el-menu-item>
         </el-menu>
       </div>
     </div>
@@ -50,31 +50,54 @@
       highlight-current-row
       style="width: 100%;"
     >
-      <el-table-column label="Title" min-width="150px">
+      <el-table-column label="商品名称">
         <template slot-scope="{row}">
           <span>{{ row.title }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Brand" width="110px" align="center">
+      <el-table-column label="待审核">
         <template slot-scope="{row}">
-          <span>{{ row.author }}</span>
+          <span>{{ row.title }}</span>
         </template>
       </el-table-column>
-      <el-table-column
-        label="Actions"
-        align="center"
-        width="230"
-        class-name="small-padding fixed-width"
-      >
+      <el-table-column label="待缴押金">
+        <template slot-scope="{row}">
+          <span>{{ row.title }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="待发货">
+        <template slot-scope="{row}">
+          <span>{{ row.title }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="待评测">
+        <template slot-scope="{row}">
+          <span>{{ row.title }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="已评测">
+        <template slot-scope="{row}">
+          <span>{{ row.title }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="报名时间">
+        <template slot-scope="{row}">
+          <span>{{ row.title }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="活动状态">
+        <template slot-scope="{row}">
+          <span>{{ row.title }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="操作" align="center" width="230" class-name="small-padding fixed-width">
         <template slot-scope="{row,$index}">
-          <el-button type="primary" size="mini" @click="handleUpdate(row)">Edit</el-button>
-          <el-button
-            v-if="row.status!='deleted'"
-            size="mini"
-            type="danger"
-            @click="handleDelete(row,$index)"
-          >Delete</el-button>
-          <el-button type="primary" size="mini" @click="handleOrder(row)">Order</el-button>
+          <el-button type="text" size="mini" @click="handleUpdate(row)">编辑</el-button>
+          <el-button size="mini" type="text" @click="handleDelete(row,$index)">删除</el-button>
+          <!-- <el-button type="text" size="mini" @click="handleOrder(row)">活动订单</el-button>
+          <el-button type="text" size="mini" @click="handleOrder(row)">复制订单</el-button>
+          <el-button type="text" size="mini" @click="handleOrder(row)">预览订单</el-button>
+          <el-button type="text" size="mini" @click="handleOrder(row)">增加名额</el-button> -->
         </template>
       </el-table-column>
     </el-table>
@@ -90,7 +113,7 @@
 </template>
 
 <script>
-import { fetchList } from '@/api/activities'
+import { fetchList, fetchStat } from '@/api/activities'
 import { mapGetters } from 'vuex'
 import waves from '@/directive/waves' // waves directive
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
@@ -104,28 +127,35 @@ export default {
       tableKey: 0,
       list: null,
       total: 0,
+      stat: {},
       listLoading: true,
       listQuery: {
         page: 1,
         size: 10,
         key: undefined
       },
-      activeIndex: '1'
+      activeIndex: ''
     }
   },
   computed: {
     ...mapGetters(['name', 'avatar', 'telephone', 'statusCode', 'brandCount'])
   },
   created() {
+    this.getTabs()
     this.getList()
   },
   methods: {
+    getTabs() {
+      fetchStat().then((r) => {
+        this.stat = r.data
+      })
+    },
     getList() {
       this.listLoading = true
       fetchList(this.listQuery)
         .then((response) => {
-          this.list = response.data.items
-          this.total = response.data.total
+          this.list = response.data.data
+          this.total = response.data.pager.count
 
           setTimeout(() => {
             this.listLoading = false
@@ -136,7 +166,8 @@ export default {
         })
     },
     handleSelect(e) {
-      console.log(this.activeIndex, e)
+      this.activeIndex = e
+      this.handleFilter()
     },
     handleFilter() {
       this.listQuery.page = 1
