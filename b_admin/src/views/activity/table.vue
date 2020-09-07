@@ -1,21 +1,44 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-input
-        v-model="listQuery.title"
-        placeholder="请输入活动名称"
-        style="width: 200px;"
-        class="filter-item"
-        @keyup.enter.native="handleFilter"
-      />
+      <div class="row">
+        <span class="title">活动列表</span>
+        <el-input
+          v-model="listQuery.key"
+          placeholder="请输入活动名称"
+          style="width: 200px;"
+          class="filter-item"
+          @keyup.enter.native="handleFilter"
+        />
 
-      <el-button
-        class="filter-item"
-        style="float: right"
-        type="primary"
-        icon="el-icon-edit"
-        @click="handleCreate"
-      >创建活动</el-button>
+        <el-button
+          class="filter-item"
+          style="float: right"
+          type="primary"
+          icon="el-icon-edit"
+          @click="handleCreate"
+        >创建活动</el-button>
+      </div>
+      <div class="row">
+        <el-menu
+          :default-active="'1'"
+          class="el-menu-demo"
+          mode="horizontal"
+          @select="handleSelect"
+        >
+          <el-menu-item index="1">
+            处理中心
+            <span class="pill">10</span>
+          </el-menu-item>
+          <el-menu-item index="2">处理中心</el-menu-item>
+          <el-menu-item index="3">
+            处理中心
+            <span class="pill">3</span>
+          </el-menu-item>
+          <el-menu-item index="4">处理中心</el-menu-item>
+          <el-menu-item index="5">处理中心</el-menu-item>
+        </el-menu>
+      </div>
     </div>
 
     <el-table
@@ -60,14 +83,14 @@
       v-show="total>0"
       :total="total"
       :page.sync="listQuery.page"
-      :limit.sync="listQuery.limit"
+      :limit.sync="listQuery.size"
       @pagination="getList"
     />
   </div>
 </template>
 
 <script>
-import { fetchList } from '@/api/article'
+import { fetchList } from '@/api/activities'
 import { mapGetters } from 'vuex'
 import waves from '@/directive/waves' // waves directive
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
@@ -84,9 +107,10 @@ export default {
       listLoading: true,
       listQuery: {
         page: 1,
-        limit: 20,
-        title: undefined
-      }
+        size: 10,
+        key: undefined
+      },
+      activeIndex: '1'
     }
   },
   computed: {
@@ -98,15 +122,21 @@ export default {
   methods: {
     getList() {
       this.listLoading = true
-      fetchList(this.listQuery).then((response) => {
-        this.list = response.data.items
-        this.total = response.data.total
+      fetchList(this.listQuery)
+        .then((response) => {
+          this.list = response.data.items
+          this.total = response.data.total
 
-        // Just to simulate the time of the request
-        setTimeout(() => {
+          setTimeout(() => {
+            this.listLoading = false
+          }, 1.5 * 1000)
+        })
+        .catch((e) => {
           this.listLoading = false
-        }, 1.5 * 1000)
-      })
+        })
+    },
+    handleSelect(e) {
+      console.log(this.activeIndex, e)
     },
     handleFilter() {
       this.listQuery.page = 1
@@ -149,3 +179,41 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.filter-container {
+  background-color: white;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  padding: 8px 0;
+  .row {
+    padding: 8px 16px;
+    .title {
+      font-size: 20px;
+      color: #333;
+      font-weight: bold;
+      margin-right: 12px;
+    }
+    .el-menu {
+      border: none;
+      .el-menu-item {
+        height: 40px;
+        line-height: 40px;
+        .pill {
+          background-color: #4244ff;
+          font-size: 12px;
+          color: white;
+          line-height: 18px;
+          border-radius: 9px;
+          min-width: 18px;
+          padding: 0 4px;
+          margin-left: 8px;
+        }
+      }
+    }
+  }
+  .row:last-child {
+    border-top: 1px solid #f5f5f5;
+  }
+}
+</style>
