@@ -88,7 +88,7 @@
                 </el-row>
               </el-col>
             </el-row>
-            <el-row>
+            <el-row v-if="postForm.skuGroups.length < 2">
               <el-button @click="handleAddSku">添加规格项目</el-button>
             </el-row>
           </div>
@@ -115,12 +115,12 @@ import Upload from '@/components/Upload/SingleImage3'
 import { validURL } from '@/utils/validate'
 import {
   fetchList,
+  fetchSkus,
   importData,
   createData,
   updateData,
   fetchPv
 } from '@/api/goods'
-import { searchUser } from '@/api/remote-search'
 
 const defaultForm = {
   brand: { id: 0 },
@@ -201,6 +201,7 @@ export default {
       this.fetchData(id)
     }
     this.fetchPv()
+    this.fetchSkus()
   },
   methods: {
     fetchData(id) {
@@ -231,10 +232,16 @@ export default {
           this.loading = false
         })
     },
+    fetchSkus() {
+      fetchSkus().then((r) => {
+        this.skus = r.data
+      })
+    },
     handleAddSku() {
-      this.postForm.skuGroups = this.postForm.skuGroups.concat([
-        { name: '', skuList: [] }
-      ])
+      this.postForm.skuGroups.splice(this.postForm.skuGroups.length, 0, {
+        name: '',
+        skuList: []
+      })
     },
     handleRemoveSku(index) {
       this.postForm.skuGroups.splice(index, 1)
@@ -246,7 +253,16 @@ export default {
       sku.skuList.splice(index, 1)
     },
     handleSkuSuggestions(queryString, cb) {
-      var all = ['颜色', '尺寸', '尺码', '净含量']
+      var all = [
+        '颜色',
+        '尺寸',
+        '尺码',
+        '款式',
+        '套装',
+        '净含量',
+        '容量',
+        '口味'
+      ]
       var rest = queryString
         ? all.filter((i) => i.indexOf(queryString) === 0)
         : all
@@ -292,12 +308,6 @@ export default {
           console.log(e)
           return false
         }
-      })
-    },
-    getRemoteUserList(query) {
-      searchUser(query).then((response) => {
-        if (!response.data.items) return
-        this.brandListOptions = response.data.items.map((v) => v.name)
       })
     }
   }

@@ -37,6 +37,12 @@ export function removeData(id) {
     method: 'delete'
   })
 }
+export function fetchSkus() {
+  return request({
+    url: '/br/goods/sku/group/list',
+    method: 'get'
+  })
+}
 
 export function fetchPv(query) {
   return request({

@@ -1,55 +1,82 @@
 <template>
   <div class="createPost-container">
-    <el-form ref="postForm" :model="postForm" :rules="rules" class="form-container">
+    <el-form ref="postForm" :model="postForm" :rules="rules">
       <div class="createPost-main-container">
-        <el-form-item prop="brand" style="margin-bottom: 30px;" label-width="90px" label="活动商品:">
-          <el-button icon="el-icon-plus" @click="handleSelectGoods">选择商品</el-button>
-        </el-form-item>
-        <el-form-item prop="brand" style="margin-bottom: 30px;" label-width="90px" label="商品规格:">
-          <el-input v-model="postForm.sku" placeholder="活动规格" />
-        </el-form-item>
-        <el-form-item style="margin-bottom: 30px;" label-width="90px" label="活动名称:">
-          <el-input v-model="postForm.title" placeholder="活动名称" />
-        </el-form-item>
-        <el-form-item style="margin-bottom: 30px;" label-width="90px" label="报名时间:">
-          <el-input v-model="postForm.regStartTime" placeholder="报名时间" />
-          <el-input v-model="postForm.regEndTime" placeholder="报名时间" />
-        </el-form-item>
-        <el-form-item style="margin-bottom: 30px;" label-width="90px" label="活动名额:">
-          <el-input v-model="postForm.totalNum" placeholder="活动名额" />
-        </el-form-item>
-        <el-form-item style="margin-bottom: 30px;" label-width="90px" label="测评指引:">
-          <el-input
-            v-for="(line, i) in postForm.guidelines"
-            :key="i"
-            v-model="line.txt"
-            placeholder="请输入测评指引"
-            maxlength="10"
-            show-word-limit
-          />
-          <el-button>add guide</el-button>
-        </el-form-item>
+        <div class="form-container">
+          <p>基本信息</p>
+          <el-form-item prop="brand" style="margin-bottom: 30px;" label-width="90px" label="活动商品:">
+            <el-button v-if="!postForm.goods" icon="el-icon-plus" @click="handleSelectGoods">选择商品</el-button>
+            <div v-else class="goods_p">
+              <img :src="postForm.goods.picUrl" alt="pic">
+              <div>
+                <p>{{ postForm.goods.title }}</p>
+                <span>{{ postForm.goods.price }}</span>
+              </div>
+            </div>
+          </el-form-item>
+          <el-form-item prop="brand" style="margin-bottom: 30px;" label-width="90px" label="商品规格:">
+            <el-input v-model="postForm.sku" placeholder="活动规格" />
+          </el-form-item>
+          <el-form-item style="margin-bottom: 30px;" label-width="90px" label="活动名称:">
+            <el-input v-model="postForm.title" placeholder="活动名称" />
+          </el-form-item>
+          <el-form-item style="margin-bottom: 30px;" label-width="90px" label="报名时间:">
+            <el-date-picker
+              v-model="postForm.regTime"
+              type="daterange"
+              range-separator="至"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期"
+            />
+          </el-form-item>
+          <el-form-item style="margin-bottom: 30px;" label-width="90px" label="活动名额:">
+            <el-input v-model="postForm.totalNum" placeholder="活动名额" />
+          </el-form-item>
+          <el-form-item style="margin-bottom: 30px;" label-width="90px" label="测评指引:">
+            <el-input
+              v-for="(line, i) in postForm.guidelines"
+              :key="i"
+              v-model="line.txt"
+              placeholder="请输入测评指引"
+              maxlength="10"
+              show-word-limit
+            />
+            <el-button v-if="postForm.guidelines.length < 5" icon="el-icon-plus">添加指引</el-button>
+          </el-form-item>
+        </div>
       </div>
       <div class="createPost-main-container">
-        <p>活动设置</p>
-        <el-form-item style="margin-bottom: 30px;" label-width="90px" label="私密活动:">
-          <el-input v-model="postForm.link" placeholder="私密活动" />
-        </el-form-item>
-        <el-form-item style="margin-bottom: 30px;" label-width="90px" label="收货地限制:">
-          <el-input v-model="postForm.link" placeholder="收货地限制" />
-        </el-form-item>
+        <div class="form-container">
+          <p>活动设置</p>
+          <el-form-item style="margin-bottom: 30px;" label-width="90px" label="私密活动:">
+            <el-switch
+              v-model="postForm.displayType"
+              active-color="#13ce66"
+              inactive-color="#ff4949"
+            />
+          </el-form-item>
+          <el-form-item style="margin-bottom: 30px;" label-width="90px" label="收货地限制:">
+            <el-switch v-model="postForm.recvArea" active-color="#13ce66" inactive-color="#ff4949" />
+            <div>
+              <h5>已选地区</h5>
+              <p />
+            </div>
+          </el-form-item>
+        </div>
       </div>
       <div class="createPost-main-container">
-        <p>合作任务</p>
-        <el-form-item style="margin-bottom: 30px;" label-width="90px" label="报名渠道:">
-          <el-input v-model="postForm.link" placeholder="私密活动" />
-        </el-form-item>
-        <el-form-item style="margin-bottom: 30px;" label-width="90px" label="合作方式:">
-          <el-input v-model="postForm.link" placeholder="收货地限制" />
-        </el-form-item>
-        <el-form-item style="margin-bottom: 30px;" label-width="90px" label="合作要求:">
-          <el-input v-model="postForm.link" placeholder="收货地限制" />
-        </el-form-item>
+        <div class="form-container">
+          <p>合作任务</p>
+          <el-form-item style="margin-bottom: 30px;" label-width="90px" label="报名渠道:">
+            <el-input v-model="postForm.link" placeholder="私密活动" />
+          </el-form-item>
+          <el-form-item style="margin-bottom: 30px;" label-width="90px" label="合作方式:">
+            <el-input v-model="postForm.link" placeholder="收货地限制" />
+          </el-form-item>
+          <el-form-item style="margin-bottom: 30px;" label-width="90px" label="合作要求:">
+            <el-input v-model="postForm.link" placeholder="收货地限制" />
+          </el-form-item>
+        </div>
       </div>
       <div>
         <el-button>取消</el-button>
@@ -65,15 +92,40 @@
           </el-form-item>
         </el-form>
       </div>
-      <el-row :gutter="20" justify="center" :loading="goods.loading">
-        <el-col v-for="(g, i) in goods.list" :key="i" :span="4">
-          <img :src="g.picUrl" alt="pic">
-          <p>{{ g.title }}</p>
-        </el-col>
-      </el-row>
+      <div>
+        <el-row :gutter="20" justify="center" :loading="goods.loading">
+          <el-col v-for="(g, i) in goods.list" :key="i" :span="4">
+            <div class="info" @click="handleGoods(g)">
+              <img :src="g.picUrl" alt="pic">
+              <p>{{ g.title }}</p>
+            </div>
+          </el-col>
+        </el-row>
+        <el-pagination
+          layout="total, prev, pager, next"
+          :page-size="10"
+          :total="goods.total"
+          :current-page="goods.page"
+          @current-change="handleGoodsPage"
+        />
+      </div>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+        <el-button type="primary" @click="goodsFormVisible = false">确 定</el-button>
+      </div>
+    </el-dialog>
+    <el-dialog title="选择区域" :visible.sync="addressFormVisible">
+      <div>
+        <h5>省份选择</h5>
+        <div>
+          <span v-for="i in addressKeys" :key="i" class="pill">{{ i }}</span>
+        </div>
+        <div>
+          <!-- <div v-for="(i, j) in "></div> -->
+        </div>
+      </div>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="addressFormVisible = false">取消</el-button>
+        <el-button type="primary" @click="addressFormVisible = false">确定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -84,12 +136,11 @@ import { validURL } from '@/utils/validate'
 import { fetchData, fetchPv } from '@/api/activities'
 
 const defaultForm = {
-  brand: 'draft',
-  link: '',
-  price: '',
-  name: '',
-  image_uri: '',
-  content: ''
+  goods: null,
+  regTime: [],
+  guidelines: [''],
+  title: '',
+  totalNum: 0
 }
 
 export default {
@@ -144,7 +195,8 @@ export default {
         loading: false,
         total: 0,
         key: ''
-      }
+      },
+      addressKeys: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
     }
   },
   created() {
@@ -180,8 +232,16 @@ export default {
         this.fetchPv(1)
       }
     },
+    handleGoods(goods) {
+      this.postForm.goods = goods
+      this.goodsFormVisible = false
+      console.log(goods)
+    },
     handleFilter() {
       this.fetchPv(1)
+    },
+    handleGoodsPage(p) {
+      this.fetchPv(p)
     },
     submitForm() {
       console.log(this.postForm)
@@ -211,10 +271,33 @@ export default {
 
 .createPost-container {
   position: relative;
-  max-width: 960px;
 
   .createPost-main-container {
     padding: 40px 45px 20px 50px;
+    background-color: white;
+    margin: 10px 20px;
+    .form-container {
+      max-width: 720px;
+    }
+
+    .goods_p {
+      img {
+        width: 70px;
+        height: 70px;
+      }
+      div {
+        display: inline-block;
+        p {
+          font-size: 14px;
+          margin: 0;
+          padding: 0;
+        }
+        span {
+          font-size: 12px;
+          color: #4244ff;
+        }
+      }
+    }
 
     .postInfo-container {
       position: relative;
@@ -235,11 +318,11 @@ export default {
   }
 }
 .goods {
-  .el-dialog__header{
+  .el-dialog__header {
     padding-bottom: 0;
   }
   .el-row {
-    .el-col {
+    .info {
       background-color: #f2f3f7;
       border-radius: 4px;
       text-align: center;
