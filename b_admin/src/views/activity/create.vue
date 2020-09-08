@@ -59,7 +59,7 @@
             <el-switch v-model="postForm.recvArea" active-color="#13ce66" inactive-color="#ff4949" />
             <div>
               <h5>已选地区</h5>
-              <p />
+              <el-button type="text" @click="addressFormVisible=true">选择</el-button>
             </div>
           </el-form-item>
         </div>
@@ -120,7 +120,25 @@
           <span v-for="i in addressKeys" :key="i" class="pill">{{ i }}</span>
         </div>
         <div>
-          <!-- <div v-for="(i, j) in "></div> -->
+          <el-row v-for="(i, j) in priovices" :key="j">
+            <el-col :span="4">
+              <el-checkbox
+                :indeterminate="isIndeterminate"
+                :checked="checked(i)"
+                @change="handleCheckAllChange(i)"
+              >{{ i.name }}</el-checkbox>
+            </el-col>
+            <el-col :span="20">
+              <el-row :gutter="10">
+                <el-col
+                  v-for="(m,n) in i.cities"
+                  :key="n"
+                  :span="4"
+                  :checked="checked(i, m)"
+                >{{ m.name }}</el-col>
+              </el-row>
+            </el-col>
+          </el-row>
         </div>
       </div>
       <div slot="footer" class="dialog-footer">
@@ -134,6 +152,7 @@
 <script>
 import { validURL } from '@/utils/validate'
 import { fetchData, fetchPv } from '@/api/activities'
+import { area } from '@/util/area'
 
 const defaultForm = {
   goods: null,
@@ -196,7 +215,7 @@ export default {
         total: 0,
         key: ''
       },
-      addressKeys: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
+      addressKeys: area.map(i => i.key)
     }
   },
   created() {
@@ -242,6 +261,12 @@ export default {
     },
     handleGoodsPage(p) {
       this.fetchPv(p)
+    },
+    handleCheckAllChange(i) {
+
+    },
+    checked(i, m) {
+      return false
     },
     submitForm() {
       console.log(this.postForm)
