@@ -1,10 +1,17 @@
 import request from '@/utils/request'
 
-export function fetchData(query) {
+export function fetchList(query) {
   return request({
-    url: '/br/activity',
+    url: '/br/activity/list',
     method: 'get',
     params: query
+  })
+}
+
+export function fetchStat() {
+  return request({
+    url: '/br/activity/stat',
+    method: 'get'
   })
 }
 
@@ -23,6 +30,15 @@ export function updateData(data) {
     data
   })
 }
+
+export function submitData(data) {
+  return request({
+    url: '/br/activity/sumbit',
+    method: 'post',
+    data
+  })
+}
+
 export function removeData(id) {
   return request({
     url: '/br/activity/' + id,

@@ -97,7 +97,7 @@
           <!-- <el-button type="text" size="mini" @click="handleOrder(row)">活动订单</el-button>
           <el-button type="text" size="mini" @click="handleOrder(row)">复制订单</el-button>
           <el-button type="text" size="mini" @click="handleOrder(row)">预览订单</el-button>
-          <el-button type="text" size="mini" @click="handleOrder(row)">增加名额</el-button> -->
+          <el-button type="text" size="mini" @click="handleOrder(row)">增加名额</el-button>-->
         </template>
       </el-table-column>
     </el-table>
@@ -146,9 +146,11 @@ export default {
   },
   methods: {
     getTabs() {
-      fetchStat().then((r) => {
-        this.stat = r.data
-      })
+      fetchStat()
+        .then((r) => {
+          this.stat = r.data
+        })
+        .catch((e) => {})
     },
     getList() {
       this.listLoading = true

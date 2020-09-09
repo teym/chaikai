@@ -8,11 +8,18 @@ export function fetchList(query) {
   })
 }
 
+export function fetchData(id) {
+  return request({
+    url: '/br/goods/' + id,
+    method: 'get'
+  })
+}
+
 export function importData(query) {
   return request({
-    url: '/br/goods/analyseUrl',
-    method: 'get',
-    params: query
+    url: '/br/goods/import',
+    method: 'post',
+    data: query
   })
 }
 

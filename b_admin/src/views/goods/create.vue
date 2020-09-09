@@ -114,7 +114,7 @@ import Tinymce from '@/components/Tinymce'
 import Upload from '@/components/Upload/SingleImage3'
 import { validURL } from '@/utils/validate'
 import {
-  fetchList,
+  fetchData,
   fetchSkus,
   importData,
   createData,
@@ -128,8 +128,7 @@ const defaultForm = {
   price: '',
   title: '',
   itemId: 0,
-  picUrl:
-    'https://gd2.alicdn.com/imgextra/i1/831279688/TB2HmVucrsTMeJjy1zbXXchlVXa_!!831279688.jpg_400x400.jpg',
+  picUrl: '',
   detail: '',
   skuGroups: []
 }
@@ -201,12 +200,12 @@ export default {
       this.fetchData(id)
     }
     this.fetchPv()
-    this.fetchSkus()
+    // this.fetchSkus();
   },
   methods: {
     fetchData(id) {
-      fetchList({ page: 1, size: 1, id }).then((r) => {
-        const d = r.data.data[0] || defaultForm
+      fetchData(id).then((r) => {
+        const d = r.data || defaultForm
         if (!d.skuGroups) {
           d.skuGroups = []
         }
@@ -225,7 +224,24 @@ export default {
       this.loading = true
       importData({ url: this.postForm.importUrl })
         .then(({ data }) => {
-          this.postForm = Object.assign({}, this.postForm, data || {})
+          if (this.postForm.itemId && this.postForm.itemId !== data.itemId) {
+            this.loading = false
+            this.$message({ message: '非同一商品不可导入', type: 'error' })
+            return
+          }
+          const imgs = data.descImgs
+            .map((i) => `<img style="width:100%" src="${i}"/>`)
+            .join('')
+          const d = {
+            title: data.title || this.postForm.title,
+            picUrl: data.images[0] || this.postForm.picUrl,
+            detail:
+              data.descImgs && data.descImgs.length > 0
+                ? '<p>' + imgs + '</p>'
+                : this.postForm.picUrl,
+            itemId: data.itemId || 0
+          }
+          this.postForm = Object.assign({}, this.postForm, d)
           this.loading = false
         })
         .catch((e) => {
