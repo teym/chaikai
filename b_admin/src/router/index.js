@@ -194,6 +194,30 @@ export const asyncRoutes = [
         component: () => import('@/views/profile/auth'),
         name: 'profile-auth',
         meta: { title: '品牌授权', icon: 'table' }
+      },
+      {
+        path: 'buy',
+        component: () => import('@/views/profile/buy'),
+        name: 'profile-buy',
+        meta: { title: '服务订购', icon: 'table' }
+      },
+      {
+        path: 'topup',
+        component: () => import('@/views/profile/topup'),
+        name: 'profile-topup',
+        meta: { title: '账户充值', icon: 'table' }
+      },
+      {
+        path: 'balance',
+        component: () => import('@/views/profile/balance'),
+        name: 'profile-balance',
+        meta: { title: '账户余额', icon: 'table' }
+      },
+      {
+        path: 'history',
+        component: () => import('@/views/profile/history'),
+        name: 'profile-history',
+        meta: { title: '订购记录', icon: 'table' }
       }
     ]
   },

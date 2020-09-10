@@ -6,7 +6,7 @@
           <p>基本信息</p>
           <el-form-item prop="brand" style="margin-bottom: 30px;" label-width="110px" label="活动商品:">
             <el-button v-if="!postForm.goods" icon="el-icon-plus" @click="handleSelectGoods">选择商品</el-button>
-            <div v-else class="goods_p">
+            <div v-else class="goods_p" @click="handleSelectGoods">
               <img :src="postForm.goods.picUrl" alt="pic">
               <div>
                 <p>{{ postForm.goods.title }}</p>
@@ -62,7 +62,7 @@
         <div class="form-container">
           <p>活动设置</p>
           <el-form-item prop="displayType" style="margin-bottom: 30px;" label-width="110px">
-            <label slot="label" for="displayType">
+            <span slot="label" for="displayType">
               私密活动
               <el-popover
                 placement="bottom"
@@ -72,7 +72,7 @@
               >
                 <el-icon slot="reference" class="el-icon-question" />
               </el-popover>
-            </label>
+            </span>
             <el-switch
               v-model="postForm.displayType"
               active-color="#13ce66"
@@ -80,12 +80,12 @@
             />
           </el-form-item>
           <el-form-item prop="recvArea" style="margin-bottom: 30px;" label-width="110px" label=":">
-            <label slot="label" for="recvArea">
+            <span slot="label" for="recvArea">
               收货地限制
               <el-popover placement="bottom" width="300" trigger="click" content="若博主收货地址不符，无法申请活动">
                 <el-icon slot="reference" class="el-icon-question" />
               </el-popover>
-            </label>
+            </span>
             <el-switch v-model="postForm.recvArea" active-color="#13ce66" inactive-color="#D3D3D3" />
             <div v-if="postForm.recvArea">
               <el-radio-group v-model="postForm.recvAreaType">
@@ -108,13 +108,9 @@
         <div class="form-container">
           <p>合作任务</p>
           <el-form-item style="margin-bottom: 30px;" label-width="110px" label="报名渠道:">
-            <el-checkbox-group v-model="postForm.channels">
+            <el-checkbox-group v-model="postForm.channels" @change="onChannels">
               <el-checkbox :label="0">不限</el-checkbox>
-              <el-checkbox :label="1">微博</el-checkbox>
-              <el-checkbox :label="2">小红书</el-checkbox>
-              <el-checkbox :label="3">B站</el-checkbox>
-              <el-checkbox :label="4">抖音</el-checkbox>
-              <el-checkbox :label="5">快手</el-checkbox>
+              <el-checkbox v-for="i in channelList" :key="i.id" :label="i.id">{{ i.name }}</el-checkbox>
             </el-checkbox-group>
           </el-form-item>
           <el-form-item style="margin-bottom: 30px;" label-width="110px" label="合作方式:">
@@ -191,10 +187,17 @@
             </el-radio-group>
           </el-form-item>
           <el-form-item style="margin-bottom: 30px;" label-width="170px" label="账号话题:">
-            <el-button>添加话题</el-button>
+            <div v-for="(t, i) in postForm.topics" :key="i">
+              <span>
+                {{ t.name }}
+                <br>
+                @{{ t.nickname }}#{{ t.topic }}
+              </span>
+            </div>
+            <el-button @click="onShowTopicForm">添加话题</el-button>
           </el-form-item>
           <el-form-item prop="discountInfo" style="margin-bottom: 30px;" label-width="170px">
-            <label slot="label" for="discountInfo">
+            <span slot="label" for="discountInfo">
               优惠信息
               <el-popover
                 placement="bottom"
@@ -204,7 +207,7 @@
               >
                 <el-icon slot="reference" class="el-icon-question" />
               </el-popover>
-            </label>
+            </span>
             <el-input
               v-model="postForm.extension.discountInfo"
               placeholder="请填写需要露出的优惠信息"
@@ -217,12 +220,12 @@
             label-width="170px"
             label="附加关键词:"
           >
-            <label slot="label" for="keywords">
+            <span slot="label" for="keywords">
               附加关键词
               <el-popover placement="bottom" width="300" trigger="click" content="博主需在测评正文中添加关键词">
                 <el-icon slot="reference" class="el-icon-question" />
               </el-popover>
-            </label>
+            </span>
             <el-input v-model="postForm.extension.keywords" placeholder="博主需在测评正文中添加关键词" />
           </el-form-item>
           <el-form-item
@@ -231,7 +234,7 @@
             label-width="170px"
             label="发布时间"
           >
-            <label slot="label" for="bloggerPublishTime">
+            <span slot="label" for="bloggerPublishTime">
               发布时间
               <el-popover
                 placement="bottom"
@@ -241,7 +244,7 @@
               >
                 <el-icon slot="reference" class="el-icon-question" />
               </el-popover>
-            </label>
+            </span>
             <el-date-picker
               v-model="postForm.extension.bloggerPublishTime"
               type="date"
@@ -271,13 +274,9 @@
               :placeholder="'最低' + minAmount +'元/人'"
             />
           </el-form-item>
-          <el-form-item
-            prop="extension.awardAmount"
-            style="margin-bottom: 30px;"
-            label-width="100px"
-          >
+          <el-form-item style="margin-bottom: 30px;" label-width="100px">
             <el-button @click="onCancel">取消</el-button>
-            <el-button @click="submitForm">保存</el-button>
+            <el-button @click="submitForm(false)">保存</el-button>
             <el-button type="primary" @click="submitForm(true)">提交审核</el-button>
           </el-form-item>
         </div>
@@ -325,6 +324,23 @@
         <el-button type="primary" @click="addressFormVisible = false">确定</el-button>
       </div>
     </el-dialog>
+    <el-dialog
+      custom-class="custom-dialog"
+      title="账号话题"
+      :visible.sync="topicFormVisible"
+      width="420px"
+    >
+      <el-form label-width="60px">
+        <el-form-item v-for="i in topics" :key="i.id" :label="i.name">
+          <el-input v-model="i.nickname" placeholder="@账号" style="width:50%;padding-right:8px" />
+          <el-input v-model="i.topic" placeholder="#话题" style="width:50%;padding-left:8px" />
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="topicFormVisible = false">取消</el-button>
+        <el-button type="primary" @click="handleAddTopic">确定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -333,6 +349,14 @@
 import { fetchData, fetchPv, createData, submitData } from '@/api/activities'
 import address from './components/address'
 import moment from 'moment'
+
+const Channels = [
+  { id: 1, name: '微博' },
+  { id: 2, name: '小红书' },
+  { id: 3, name: 'B站' },
+  { id: 4, name: '抖音' },
+  { id: 5, name: '快手' }
+]
 
 const defaultForm = {
   goods: null,
@@ -345,7 +369,8 @@ const defaultForm = {
   recvArea: true,
   recvAreaType: 1,
   cooperationType: 1,
-  channels: [0],
+  channels: [0].concat(Channels.map((i) => i.id)),
+  topics: [],
   extension: {
     channels: [],
     articleType: 0,
@@ -429,6 +454,7 @@ export default {
           { validator: validateAmount, trigger: 'blur' }
         ]
       },
+      channelList: Channels,
       goodsFormVisible: false,
       goods: {
         page: 0,
@@ -437,6 +463,7 @@ export default {
         total: 0,
         key: ''
       },
+      topics: [],
       addressFormVisible: false,
       dateOptions: {
         disabledDate(time) {
@@ -446,7 +473,8 @@ export default {
             t > n + 2 * 24 * 60 * 60 * 1000 && t < n + 7 * 24 * 60 * 60 * 1000
           )
         }
-      }
+      },
+      topicFormVisible: false
     }
   },
   computed: {
@@ -535,7 +563,32 @@ export default {
       }
     },
     onCancel() {
-      this.$router.pop()
+      this.$router.back()
+    },
+    onChannels(e) {
+      const last = [].concat(e).pop()
+      if (last === 0) {
+        e.splice(0, e.length, 0, ...Channels.map((i) => i.id))
+      } else {
+        if (e.filter((i) => i !== 0).length >= Channels.length) {
+          e.splice(0, e.length, 0, ...Channels.map((i) => i.id))
+        } else {
+          e.splice(0, e.length, ...e.filter((i) => i !== 0))
+        }
+      }
+    },
+    onShowTopicForm() {
+      this.topics = Channels.filter(
+        (i) => this.postForm.channels.indexOf(i.id) >= 0
+      ).map((i) => {
+        const obj = this.postForm.topics.find((j) => j.id === i.id)
+        return Object.assign({ nickname: '', topic: '' }, i, obj || {})
+      })
+      this.topicFormVisible = true
+    },
+    handleAddTopic() {
+      this.postForm.topics = this.topics.filter((i) => i.nickname && i.topic)
+      this.topicFormVisible = false
     },
     submitForm(submit) {
       var obj = Object.assign(
@@ -553,16 +606,17 @@ export default {
         },
         {
           goods: Object.assign({}, this.postForm.goods, {
-            skuList: this.postForm.skus.map((id) => ({
-              skuIds: id.split('+')
-            }))
+            skuUnionList: this.postForm.goods.skuUnionList.filter(
+              (i) => this.postForm.skus.indexOf(i.skuIds.join('+')) >= 0
+            )
           })
         },
         {
           extension: Object.assign({}, this.postForm.extension, {
-            channels: this.postForm.channels.map((id) => ({
-              id
-            })),
+            channels: this.postForm.channels.map((id) => {
+              const topic = this.postForm.topics.find((i) => i.id === id)
+              return Object.assign({}, topic || {}, { platformId: id })
+            }),
             otherReq: this.postForm.extension.otherReq.join(' ')
           })
         }

@@ -50,54 +50,92 @@
       highlight-current-row
       style="width: 100%;"
     >
-      <el-table-column label="商品名称">
+      <el-table-column label="商品名称" width="260">
         <template slot-scope="{row}">
-          <span>{{ row.title }}</span>
+          <div class="info">
+            <img :src="row.picUrl" alt="pic">
+            <span>{{ row.title }}</span>
+          </div>
         </template>
       </el-table-column>
       <el-table-column label="待审核">
         <template slot-scope="{row}">
-          <span>{{ row.title }}</span>
+          <span>{{ row.pendingEvaNum }}</span>
         </template>
       </el-table-column>
       <el-table-column label="待缴押金">
         <template slot-scope="{row}">
-          <span>{{ row.title }}</span>
+          <span>{{ row.notPayDepositNum }}</span>
         </template>
       </el-table-column>
       <el-table-column label="待发货">
         <template slot-scope="{row}">
-          <span>{{ row.title }}</span>
+          <span>{{ row.undeliveredNum }}</span>
         </template>
       </el-table-column>
       <el-table-column label="待评测">
         <template slot-scope="{row}">
-          <span>{{ row.title }}</span>
+          <span>{{ row.unevaluatedNum }}</span>
         </template>
       </el-table-column>
       <el-table-column label="已评测">
         <template slot-scope="{row}">
-          <span>{{ row.title }}</span>
+          <span>{{ row.evaluatedNum }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="报名时间">
+      <el-table-column label="报名时间" width="160">
         <template slot-scope="{row}">
-          <span>{{ row.title }}</span>
+          <span>
+            {{ row.regStartTime }}
+            <br>
+            {{ row.regEndTime }}
+          </span>
         </template>
       </el-table-column>
       <el-table-column label="活动状态">
         <template slot-scope="{row}">
-          <span>{{ row.title }}</span>
+          <span>{{ ["","待提交","待排期","已拒绝","未开始","报名中","报名结束"][row.statusCode] }}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" width="230" class-name="small-padding fixed-width">
         <template slot-scope="{row,$index}">
-          <el-button type="text" size="mini" @click="handleUpdate(row)">编辑</el-button>
-          <el-button size="mini" type="text" @click="handleDelete(row,$index)">删除</el-button>
-          <!-- <el-button type="text" size="mini" @click="handleOrder(row)">活动订单</el-button>
-          <el-button type="text" size="mini" @click="handleOrder(row)">复制订单</el-button>
-          <el-button type="text" size="mini" @click="handleOrder(row)">预览订单</el-button>
-          <el-button type="text" size="mini" @click="handleOrder(row)">增加名额</el-button>-->
+          <el-button
+            v-if="row.statusCode === 1 || row.statusCode === 3"
+            type="text"
+            size="mini"
+            @click="handleUpdate(row)"
+          >编辑</el-button>
+          <el-button
+            v-if="row.statusCode === 1 || row.statusCode === 3"
+            type="text"
+            size="mini"
+            @click="handleDelete(row,$index)"
+          >删除</el-button>
+          <el-button
+            v-if="row.statusCode === 5 || row.statusCode === 6"
+            type="text"
+            size="mini"
+            @click="handleOrder(row)"
+          >活动订单</el-button>
+          <el-button
+            v-if="row.statusCode === 5 || row.statusCode === 6"
+            type="text"
+            size="mini"
+            @click="handleOrder(row)"
+          >预览订单</el-button>
+          <br v-if="row.statusCode === 5 || row.statusCode === 6">
+          <el-button
+            v-if="row.statusCode >= 4"
+            type="text"
+            size="mini"
+            @click="handleOrder(row)"
+          >复制订单</el-button>
+          <el-button
+            v-if="row.statusCode === 4 || row.statusCode === 5"
+            type="text"
+            size="mini"
+            @click="handleAddOrder(row)"
+          >增加名额</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -109,11 +147,33 @@
       :limit.sync="listQuery.size"
       @pagination="getList"
     />
+    <el-dialog
+      custom-class="custom-dialog"
+      title="增加活动名额"
+      :visible.sync="formVisible"
+      width="420px"
+    >
+      <el-form label-width="60px">
+        <el-form-item label="活动名额">
+          <span>{{ detail.totalNum }}</span>
+        </el-form-item>
+        <el-form-item label="剩余名额">
+          <span>{{ detail.remainingNum }}</span>
+        </el-form-item>
+        <el-form-item label="增加名额">
+          <el-input v-model="append" placeholder="#话题" />
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="formVisible = false">取消</el-button>
+        <el-button :loading="formLoading" type="primary" @click="handleAddNumber">确定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { fetchList, fetchStat } from '@/api/activities'
+import { fetchList, fetchStat, updateData } from '@/api/activities'
 import { mapGetters } from 'vuex'
 import waves from '@/directive/waves' // waves directive
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
@@ -134,7 +194,11 @@ export default {
         size: 10,
         key: undefined
       },
-      activeIndex: ''
+      activeIndex: '',
+      detail: {},
+      append: 0,
+      formVisible: false,
+      formLoading: false
     }
   },
   computed: {
@@ -199,7 +263,25 @@ export default {
     handleOrder() {
       this.$router.push('/activity/order')
     },
-    handleUpdate(row) {},
+    handleUpdate(row) {
+      this.$router.push({ path: '/activity/create', query: { id: row.id }})
+    },
+    handleAddOrder(row) {
+      this.detail = row
+      this.formVisible = true
+    },
+    handleAddNumber() {
+      this.formLoading = true
+      updateData({ id: this.detail.id, totalNum: this.append })
+        .then((r) => {
+          this.formLoading = false
+          this.formVisible = false
+          this.getList()
+        })
+        .catch((e) => {
+          this.formLoading = false
+        })
+    },
     handleDelete(row, index) {
       this.$notify({
         title: 'Success',
@@ -247,6 +329,18 @@ export default {
   }
   .row:last-child {
     border-top: 1px solid #f5f5f5;
+  }
+}
+.info {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  img {
+    width: 90px;
+    height: 90px;
+  }
+  span {
+    flex: 1;
   }
 }
 </style>

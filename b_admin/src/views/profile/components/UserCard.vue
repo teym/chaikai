@@ -36,11 +36,11 @@
             </el-col>
             <el-col class="title" :span="12">
               置换活动
-              <el-button size="mini" type="primary" round>增加次数</el-button>
+              <el-button size="mini" type="primary" round @click="$router.push('/user/buy')">增加次数</el-button>
             </el-col>
             <el-col class="title" :span="12">
               账户余额
-              <el-button size="mini" type="primary" round>充值金额</el-button>
+              <el-button size="mini" type="primary" round @click="$router.push('/user/topup')">充值金额</el-button>
             </el-col>
           </el-row>
         </div>
