@@ -4,8 +4,8 @@
       <div class="info">
         <el-menu default-active="1" mode="horizontal" @select="handleSelect">
           <el-menu-item index="1">置换活动</el-menu-item>
-          <el-menu-item index="2">管家服务</el-menu-item>
-          <el-menu-item index="3">托管服务</el-menu-item>
+          <el-menu-item index="2" disabled>管家服务</el-menu-item>
+          <el-menu-item index="3" disabled>托管服务</el-menu-item>
         </el-menu>
         <el-button
           size="mini"
@@ -17,11 +17,11 @@
       <div class="block">
         <el-form label-width="80px">
           <el-form-item label="购买次数">
-            <el-input-number v-model="num" :min="0" :max="99" />
-            <span class="price">340元每次</span>
+            <el-input-number v-model="num" :min="1" :max="99" />
+            <span class="price">399元每次</span>
           </el-form-item>
           <el-form-item label="订购金额">
-            <span class="total">{{ 340 * num }}</span>
+            <span class="total">{{ 399 * num }}</span>
           </el-form-item>
           <el-form-item label="支付方式">
             <el-radio-group v-model="pay">
@@ -46,7 +46,7 @@ export default {
   data() {
     return {
       active: '1',
-      num: 0,
+      num: 1,
       pay: '1',
       loading: false
     }

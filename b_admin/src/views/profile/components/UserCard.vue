@@ -31,8 +31,10 @@
               <span>{{ activity }}</span> 次
             </el-col>
             <el-col :span="12">
-              <span>{{ amount }}</span> 元
-              <el-icon class="el-icon-arrow-right" />
+              <div @click="$router.push('/user/balance')">
+                <span>{{ amount }}</span> 元
+                <el-icon class="el-icon-arrow-right" />
+              </div>
             </el-col>
             <el-col class="title" :span="12">
               置换活动

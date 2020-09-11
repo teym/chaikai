@@ -45,6 +45,14 @@ export function fetchFinance() {
   })
 }
 
+export function fetchHistory(query) {
+  return request({
+    url: '/br/account/finance/record/list',
+    method: 'get',
+    params: query
+  })
+}
+
 export function auth(data) {
   return request({
     url: '/br/account/company',

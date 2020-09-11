@@ -1,108 +1,141 @@
 <template>
   <div class="profile-container">
-    <div v-if="user">
-      <user-card :user="user" />
+    <div class="header">
+      账户金额
+      <span>
+        {{ amount }}
+        <span>元</span>
+      </span>
+      <el-button>提现</el-button>
+      <el-button type="primary">充值</el-button>
     </div>
-    <div class="auth-table">
-      <head>
-        <h5>
-          品牌授权
-          <span>
-            <el-icon class="el-icon-question" />如何设置活动
-          </span>
-        </h5>
-        <el-button type="primary" size="mini" @click="handleAddAuth">新增授权</el-button>
-      </head>
+    <div class="table">
+      <div class="head">
+        余额明细
+        <el-button type="primary" size="mini" @click="$router.push('/user/invoice')">开发票</el-button>
+      </div>
       <el-table
         :key="tableKey"
         v-loading="listLoading"
         :data="list"
+        border
         fit
         highlight-current-row
         style="width: 100%;"
       >
-        <el-table-column label="品牌名称" align="left">
+        <el-table-column label="订购时间" width="260">
           <template slot-scope="{row}">
-            <span>{{ row.name }}</span>
+            <div class="info">
+              <img :src="row.picUrl" alt="pic">
+              <span>{{ row.title }}</span>
+            </div>
           </template>
         </el-table-column>
-        <el-table-column label="品牌LOGO" align="left">
+        <el-table-column label="订购服务">
           <template slot-scope="{row}">
-            <img class="logo" :src="row.logo" alt="logo">
+            <span>{{ row.pendingEvaNum }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="状态" align="left">
+        <el-table-column label="状态">
           <template slot-scope="{row}">
-            <span>{{ (["UNKNOW","未认证","审核中","已认证","已拒绝"])[row.statusCode] }}</span>
-            <span v-if="row.statusCode === 4" class="reason">
-              <br>
-              {{ row.rejectReason }}
-            </span>
+            <span>{{ ["","待提交","待排期","已拒绝","未开始","报名中","报名结束"][row.statusCode] }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="授权时间" align="left">
+        <el-table-column
+          label="操作"
+          align="center"
+          width="230"
+          class-name="small-padding fixed-width"
+        >
           <template slot-scope="{row}">
-            <span>{{ new Date(row.gmtCreate) | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="操作" align="center" width="230" class-name="small-padding fixed-width">
-          <template slot-scope="{row}">
-            <el-button v-if="row.statusCode === 4" type="text" size="mini">重新提交</el-button>
-            <el-button v-if="row.statusCode === 4" type="text" size="mini">删除</el-button>
-            <el-button v-else type="text" size="mini" @click="handleAuthDetail(row)">详情</el-button>
+            <el-button
+              v-if="row.statusCode === 1 || row.statusCode === 3"
+              type="text"
+              size="mini"
+              @click="handleDetail(row)"
+            >详情</el-button>
+            <el-button
+              v-if="row.statusCode === 1 || row.statusCode === 3"
+              type="text"
+              size="mini"
+              @click="handlePay(row)"
+            >去支付</el-button>
           </template>
         </el-table-column>
       </el-table>
+
+      <pagination
+        v-show="total>0"
+        :total="total"
+        :page.sync="listQuery.page"
+        :limit.sync="listQuery.size"
+        @pagination="fetchData"
+      />
     </div>
+    <!-- <el-dialog
+      custom-class="custom-dialog"
+      title="增加活动名额"
+      :visible.sync="formVisible"
+      width="420px"
+    >
+      <el-form label-width="60px">
+        <el-form-item label="活动名额">
+          <span>{{ detail.totalNum }}</span>
+        </el-form-item>
+        <el-form-item label="剩余名额">
+          <span>{{ detail.remainingNum }}</span>
+        </el-form-item>
+        <el-form-item label="增加名额">
+          <el-input v-model="append" placeholder="#话题" />
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="formVisible = false">取消</el-button>
+        <el-button :loading="formLoading" type="primary" @click="handleAddNumber">确定</el-button>
+      </div>
+    </el-dialog>-->
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
-import { fetchPv } from '@/api/goods'
-import { fetchStat } from '@/api/user'
-// import { parseTime } from '@/utils/index'
-import UserCard from './components/UserCard'
+import { fetchHistory } from '@/api/user'
+import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
 export default {
   name: 'Profile',
-  components: { UserCard },
+  components: { Pagination },
   data() {
     return {
-      user: {},
       tableKey: 0,
       list: null,
-      listLoading: false
+      total: 0,
+      listLoading: true,
+      listQuery: {
+        page: 1,
+        size: 10
+      }
     }
   },
   computed: {
-    ...mapGetters(['name', 'avatar', 'roles'])
+    ...mapGetters(['name', 'avatar', 'roles', 'amount'])
   },
   created() {
-    this.fetchPvList()
     this.fetchData()
   },
   methods: {
     fetchData() {
-      fetchStat().then((r) => {
-        this.user = r.data
+      this.listLoading = true
+      fetchHistory(this.listQuery).then((r) => {
+        this.list = (r.data || {}).data || []
+        this.total = ((r.data || {}).pager || {}).count || 0
+        this.listLoading = false
       })
     },
-    fetchPvList() {
-      this.listLoading = true
-      fetchPv({ page: 1, size: 50 })
-        .then((r) => {
-          this.list = r.data.data
-          this.listLoading = false
-        })
-        .catch((e) => {
-          this.listLoading = false
-        })
-    },
-    handleAuthDetail(row) {
+    handleDetail(row) {
       this.$router.push({ path: '/user/auth', query: { id: row.id }})
     },
-    handleAddAuth() {
+    handlePay() {
       this.$router.push('/user/auth')
     }
   }
@@ -112,33 +145,43 @@ export default {
 <style lang="scss" scoped>
 .profile-container {
   padding: 20px;
-  .auth-table {
+  .header {
+    background-color: white;
+    margin-bottom: 20px;
+    padding: 16px 0 16px 16px;
+    font-size: 18px;
+    line-height: 36px;
+    font-weight: bold;
+    vertical-align: middle;
+    span {
+      font-size: 26px;
+      line-height: 36px;
+      color: #4244ff;
+      margin-left: 40px;
+      span {
+        font-size: 14px;
+        line-height: 36px;
+        color: #666;
+        margin-left: 4px;
+      }
+    }
+    .el-button {
+      float: right;
+      margin-right: 16px;
+    }
+  }
+  .table {
     background-color: white;
     border-radius: 4px;
     margin-top: 16px;
-    head {
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
-      padding: 16px;
-      h5 {
-        margin: 0;
-        padding: 0;
-        span {
-          font-size: 12px;
-          color: #737373;
-          margin-left: 8px;
-        }
+    .head{
+      padding: 12px;
+      font-size: 16px;
+      line-height: 28px;
+      font-weight: bold;
+      .el-button{
+        float: right
       }
-    }
-    .logo {
-      width: 36px;
-      height: 36px;
-      border-radius: 18px;
-    }
-    .reason {
-      color: #666;
-      font-size: 14px;
     }
   }
 }

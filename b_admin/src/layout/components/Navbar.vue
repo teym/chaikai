@@ -16,12 +16,12 @@
             <el-col :span="12">
               <span>{{ activity }}</span>次
               <p>置换活动</p>
-              <el-button size="mini" round>增加次数</el-button>
+              <el-button size="mini" round @click="$router.push('/user/buy')">增加次数</el-button>
             </el-col>
             <el-col :span="12">
               <span>{{ amount }}</span>元
               <p>账户余额</p>
-              <el-button size="mini" round>充值金额</el-button>
+              <el-button size="mini" round @click="$router.push('/user/topup')">充值金额</el-button>
             </el-col>
           </el-row>
         </div>
