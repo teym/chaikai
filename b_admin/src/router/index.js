@@ -214,6 +214,18 @@ export const asyncRoutes = [
         meta: { title: '账户余额', icon: 'table' }
       },
       {
+        path: 'withdraw',
+        component: () => import('@/views/profile/withdraw'),
+        name: 'profile-withdraw',
+        meta: { title: '账户提现', icon: 'table' }
+      },
+      {
+        path: 'invoice',
+        component: () => import('@/views/profile/invoice'),
+        name: 'profile-invoice',
+        meta: { title: '开发票', icon: 'table' }
+      },
+      {
         path: 'history',
         component: () => import('@/views/profile/history'),
         name: 'profile-history',

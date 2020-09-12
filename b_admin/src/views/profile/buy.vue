@@ -80,6 +80,9 @@ export default {
         border-bottom: none;
         display: inline-block;
       }
+      .el-button {
+        margin: 16px 0;
+      }
     }
     .block {
       max-width: 450px;

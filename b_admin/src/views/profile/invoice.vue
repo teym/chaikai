@@ -1,18 +1,22 @@
 <template>
   <div class="profile-container">
     <div class="header">
-      账户金额
-      <span>
-        {{ amount }}
-        <span>元</span>
-      </span>
-      <el-button @click="$router.push('/user/withdraw')">提现</el-button>
-      <el-button type="primary" @click="$router.push('/user/topup')">充值</el-button>
+      <el-menu default-active="1" mode="horizontal" @select="handleSelect">
+        <el-menu-item index="1">活动订单</el-menu-item>
+        <el-menu-item index="2">服务订购</el-menu-item>
+      </el-menu>
+      <el-button
+        size="mini"
+        style="float:right"
+        type="primary"
+        @click="$router.push('/user/history')"
+      >开票记录</el-button>
     </div>
     <div class="table">
       <div class="head">
-        余额明细
-        <el-button type="primary" size="mini" @click="$router.push('/user/invoice')">开发票</el-button>
+        选择开票的订单
+        <span>仅支持悬赏已发放的活动订单</span>
+        <el-button type="primary" size="mini" @click="$router.push('/user/invoice')">申请开票</el-button>
       </div>
       <el-table
         :key="tableKey"
@@ -22,7 +26,9 @@
         fit
         highlight-current-row
         style="width: 100%;"
+        @selection-change="handleSelectionChange"
       >
+        <el-table-column type="selection" width="50" label="全选" />
         <el-table-column label="订购时间" width="260">
           <template slot-scope="{row}">
             <div class="info">
@@ -132,11 +138,14 @@ export default {
         this.listLoading = false
       })
     },
-    handleDetail(row) {
-      this.$router.push({ path: '/user/auth', query: { id: row.id }})
-    },
     handlePay() {
       this.$router.push('/user/auth')
+    },
+    handleSelectionChange(e) {},
+    handleSelect() {
+      this.listQuery.type = '1'
+      this.listQuery.page = 1
+      this.fetchData()
     }
   }
 }
@@ -147,40 +156,31 @@ export default {
   padding: 20px;
   .header {
     background-color: white;
-    margin-bottom: 20px;
-    padding: 16px 0 16px 16px;
-    font-size: 18px;
-    line-height: 36px;
-    font-weight: bold;
-    vertical-align: middle;
-    span {
-      font-size: 26px;
-      line-height: 36px;
-      color: #4244ff;
-      margin-left: 40px;
-      span {
-        font-size: 14px;
-        line-height: 36px;
-        color: #666;
-        margin-left: 4px;
-      }
+    padding: 8px 16px;
+    .el-menu {
+      border-bottom: none;
+      display: inline-block;
     }
     .el-button {
-      float: right;
-      margin-right: 16px;
+      margin: 16px 0;
     }
   }
   .table {
     background-color: white;
     border-radius: 4px;
     margin-top: 16px;
-    .head{
+    .head {
       padding: 12px;
       font-size: 16px;
       line-height: 28px;
       font-weight: bold;
-      .el-button{
-        float: right
+      span {
+        color: #666;
+        font-size: 12px;
+        font-weight: normal;
+      }
+      .el-button {
+        float: right;
       }
     }
   }
