@@ -1,23 +1,6 @@
 <template>
   <div class="profile-container">
-    <div class="header">
-      <el-menu default-active="1" mode="horizontal" @select="handleSelect">
-        <el-menu-item index="1">活动订单</el-menu-item>
-        <el-menu-item index="2">服务订购</el-menu-item>
-      </el-menu>
-      <el-button
-        size="mini"
-        style="float:right"
-        type="primary"
-        @click="$router.push('/user/invoices')"
-      >开票记录</el-button>
-    </div>
     <div class="table">
-      <div class="head">
-        选择开票的订单
-        <span>仅支持悬赏已发放的活动订单</span>
-        <el-button type="primary" size="mini" @click="$router.push('/user/invoice')">申请开票</el-button>
-      </div>
       <el-table
         :key="tableKey"
         v-loading="listLoading"
@@ -28,23 +11,24 @@
         style="width: 100%;"
         @selection-change="handleSelectionChange"
       >
-        <el-table-column type="selection" width="50" label="全选" />
-        <el-table-column label="订购时间" width="260">
+        <el-table-column label="开票编号" width="260">
           <template slot-scope="{row}">
-            <div class="info">
-              <img :src="row.picUrl" alt="pic">
-              <span>{{ row.title }}</span>
-            </div>
+            <span>{{ row.id }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="订购服务">
+        <el-table-column label="申请时间" width="260">
           <template slot-scope="{row}">
-            <span>{{ row.pendingEvaNum }}</span>
+            <span>{{ row.createTime }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="状态">
+        <el-table-column label="开票状态">
           <template slot-scope="{row}">
             <span>{{ ["","待提交","待排期","已拒绝","未开始","报名中","报名结束"][row.statusCode] }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="开票金额">
+          <template slot-scope="{row}">
+            <span>{{ row.amount }}</span>
           </template>
         </el-table-column>
         <el-table-column
@@ -54,18 +38,7 @@
           class-name="small-padding fixed-width"
         >
           <template slot-scope="{row}">
-            <el-button
-              v-if="row.statusCode === 1 || row.statusCode === 3"
-              type="text"
-              size="mini"
-              @click="handleDetail(row)"
-            >详情</el-button>
-            <el-button
-              v-if="row.statusCode === 1 || row.statusCode === 3"
-              type="text"
-              size="mini"
-              @click="handlePay(row)"
-            >去支付</el-button>
+            <el-button type="text" size="mini" @click="handleDetail(row)">详情</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -78,34 +51,53 @@
         @pagination="fetchData"
       />
     </div>
-    <!-- <el-dialog
-      custom-class="custom-dialog"
-      title="增加活动名额"
-      :visible.sync="formVisible"
-      width="420px"
-    >
-      <el-form label-width="60px">
-        <el-form-item label="活动名额">
-          <span>{{ detail.totalNum }}</span>
-        </el-form-item>
-        <el-form-item label="剩余名额">
-          <span>{{ detail.remainingNum }}</span>
-        </el-form-item>
-        <el-form-item label="增加名额">
-          <el-input v-model="append" placeholder="#话题" />
-        </el-form-item>
-      </el-form>
+    <el-dialog custom-class="custom-dialog" title="开票详情" :visible.sync="showDetail" width="420px">
+      <div class="info">
+        <p>开票编号：343424</p>
+        <p>
+          开票状态：已拒绝
+          <span>开票信息有误，请修改后提交</span>
+        </p>
+        <p>开票时间：2020-09-22 12:22</p>
+        <p>开票金额：2000元</p>
+        <p>发票抬头：9898NJKKK</p>
+        <p>公司名称：杭州多维科技有限公司</p>
+        <p>接收邮箱：yuu@qq.com</p>
+        <h5>关联订单</h5>
+        <el-table :key="1" v-loading="detailLoading" :data="orders" border style="width: 100%;">
+          <el-table-column label="订单编号">
+            <template slot-scope="{row}">
+              <span>{{ row.id }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="活动名称">
+            <template slot-scope="{row}">
+              <span>{{ row.id }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="达人昵称">
+            <template slot-scope="{row}">
+              <span>{{ row.id }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="订单金额">
+            <template slot-scope="{row}">
+              <span>{{ row.id }}</span>
+            </template>
+          </el-table-column>
+        </el-table>
+      </div>
       <div slot="footer" class="dialog-footer">
         <el-button @click="formVisible = false">取消</el-button>
-        <el-button :loading="formLoading" type="primary" @click="handleAddNumber">确定</el-button>
+        <el-button type="primary" @click="handleAddNumber">确定</el-button>
       </div>
-    </el-dialog>-->
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
-import { fetchHistory } from '@/api/user'
+import { fetchInvoices, fetchInvoice } from '@/api/user'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
 export default {
@@ -120,7 +112,11 @@ export default {
       listQuery: {
         page: 1,
         size: 10
-      }
+      },
+      detail: {},
+      orders: [],
+      detailLoading: false,
+      showDetail: false
     }
   },
   computed: {
@@ -132,20 +128,25 @@ export default {
   methods: {
     fetchData() {
       this.listLoading = true
-      fetchHistory(this.listQuery).then((r) => {
+      fetchInvoices(this.listQuery).then((r) => {
         this.list = (r.data || {}).data || []
         this.total = ((r.data || {}).pager || {}).count || 0
         this.listLoading = false
       })
     },
-    handlePay() {
-      this.$router.push('/user/auth')
-    },
-    handleSelectionChange(e) {},
-    handleSelect() {
-      this.listQuery.type = '1'
-      this.listQuery.page = 1
-      this.fetchData()
+    handleDetail(row) {
+      this.detail = row
+      this.orders = []
+      this.detailLoading = true
+      fetchInvoice({ id: row.id })
+        .then((r) => {
+          this.orders = r.data.data
+          this.detailLoading = false
+        })
+        .catch((e) => {
+          this.detailLoading = false
+        })
+      this.showDetail = true
     }
   }
 }

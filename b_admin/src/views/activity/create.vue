@@ -347,16 +347,9 @@
 <script>
 // import { validURL } from '@/utils/validate'
 import { fetchData, fetchPv, createData, submitData } from '@/api/activities'
+import { Channels } from '@/utils/constant'
 import address from './components/address'
 import moment from 'moment'
-
-const Channels = [
-  { id: 1, name: '微博' },
-  { id: 2, name: '小红书' },
-  { id: 3, name: 'B站' },
-  { id: 4, name: '抖音' },
-  { id: 5, name: '快手' }
-]
 
 const defaultForm = {
   goods: null,
@@ -510,8 +503,8 @@ export default {
     }
   },
   created() {
-    if (this.isEdit) {
-      const id = this.$route.params && this.$route.params.id
+    const id = this.$route.query && this.$route.query.id
+    if (id) {
       this.fetchData(id)
     }
   },
@@ -617,6 +610,7 @@ export default {
               const topic = this.postForm.topics.find((i) => i.id === id)
               return Object.assign({}, topic || {}, { platformId: id })
             }),
+            channelLimit: this.postForm.channels.indexOf('0') < 0,
             otherReq: this.postForm.extension.otherReq.join(' ')
           })
         }

@@ -226,6 +226,12 @@ export const asyncRoutes = [
         meta: { title: '开发票', icon: 'table' }
       },
       {
+        path: 'invoices',
+        component: () => import('@/views/profile/invoices'),
+        name: 'profile-invoices',
+        meta: { title: '开票记录', icon: 'table' }
+      },
+      {
         path: 'history',
         component: () => import('@/views/profile/history'),
         name: 'profile-history',

@@ -52,6 +52,20 @@ export function fetchHistory(query) {
     params: query
   })
 }
+export function fetchInvoices(query) {
+  return request({
+    url: '/br/invoice/list',
+    method: 'get',
+    params: query
+  })
+}
+export function fetchInvoice(query) {
+  return request({
+    url: '/br/invoice/order/list',
+    method: 'get',
+    params: query
+  })
+}
 
 export function auth(data) {
   return request({

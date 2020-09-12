@@ -8,6 +8,13 @@ export function fetchList(query) {
   })
 }
 
+export function fetchData(id) {
+  return request({
+    url: '/br/activity/' + id,
+    method: 'get'
+  })
+}
+
 export function fetchStat() {
   return request({
     url: '/br/activity/stat',
@@ -49,6 +56,21 @@ export function removeData(id) {
 export function fetchPv(query) {
   return request({
     url: '/br/activity/goods/list',
+    method: 'get',
+    params: query
+  })
+}
+
+export function fetchOdList(query) {
+  return request({
+    url: '/br/activity/order/list',
+    method: 'get',
+    params: query
+  })
+}
+export function fetchOdStat(query) {
+  return request({
+    url: '/br/activity/order/stat',
     method: 'get',
     params: query
   })

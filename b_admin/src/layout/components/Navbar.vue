@@ -26,7 +26,7 @@
           </el-row>
         </div>
       </el-popover>
-      <div class="right-menu-item menu-noti">
+      <div class="right-menu-item menu-noti" @click="handelMessage">
         <el-badge is-dot class="nav_img_box">
           <img class="nav_img_icon" src="@/assets/images/nav_noti.png" alt="setting">
         </el-badge>
@@ -42,6 +42,7 @@
       </el-dropdown>
       <el-button type="text" class="right-menu-item menu-help">帮助</el-button>
     </div>
+    <Communicate ref="communicate" />
   </div>
 </template>
 
@@ -49,11 +50,13 @@
 import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Search from '@/components/HeaderSearch'
+import Communicate from '@/components/Communicate'
 
 export default {
   components: {
     Breadcrumb,
-    Search
+    Search,
+    Communicate
   },
   computed: {
     ...mapGetters(['amount', 'activity'])
@@ -65,6 +68,9 @@ export default {
     async logout() {
       await this.$store.dispatch('user/logout')
       this.$router.push(`/login?redirect=${this.$route.fullPath}`)
+    },
+    handelMessage() {
+      this.$refs.communicate.show()
     }
   }
 }
