@@ -10,15 +10,15 @@ export const ActivityOrderStatus = [
 
 export const Channels = [
   { id: 1, name: '微博' },
-  { id: 4, name: '小红书' },
   { id: 2, name: 'B站' },
+  { id: 4, name: '小红书' },
   { id: 8, name: '抖音' },
   { id: 16, name: '快手' }
 ]
 export const ChannelIcons = {
-  '1': '@/',
-  '2': '',
-  '4': '',
-  '8': '',
-  '16': ''
+  '1': { icon: '@/', name: '微博' },
+  '2': { icon: '', name: 'B站' },
+  '4': { icon: '', name: '小红书' },
+  '8': { icon: '', name: '抖音' },
+  '16': { icon: '', name: '快手' }
 }

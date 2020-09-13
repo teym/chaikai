@@ -26,22 +26,31 @@
         <el-table-column label="订购时间" width="260">
           <template slot-scope="{row}">
             <div class="info">
-              <img :src="row.picUrl" alt="pic">
-              <span>{{ row.title }}</span>
+              <span>{{ row.gmtCreate }}</span>
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="订购服务">
+        <el-table-column label="类型">
           <template slot-scope="{row}">
-            <span>{{ row.pendingEvaNum }}</span>
+            <span>{{ ({'101':'服务订购','102':'账户充值','103':'账户提现','104':'悬赏订单','105':'悬赏退回'})[row.type + ''] }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="状态">
+        <el-table-column label="详情描述">
           <template slot-scope="{row}">
-            <span>{{ ["","待提交","待排期","已拒绝","未开始","报名中","报名结束"][row.statusCode] }}</span>
+            <span>{{ row.remark }}</span>
           </template>
         </el-table-column>
-        <el-table-column
+        <el-table-column label="余额变动">
+          <template slot-scope="{row}">
+            <span>{{ (row.raeType === 2 ? '-' : '') + row.amount }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="上次余额">
+          <template slot-scope="{row}">
+            <span>{{ row.lastBalance }}</span>
+          </template>
+        </el-table-column>
+        <!-- <el-table-column
           label="操作"
           align="center"
           width="230"
@@ -61,7 +70,7 @@
               @click="handlePay(row)"
             >去支付</el-button>
           </template>
-        </el-table-column>
+        </el-table-column> -->
       </el-table>
 
       <pagination
@@ -174,13 +183,13 @@ export default {
     background-color: white;
     border-radius: 4px;
     margin-top: 16px;
-    .head{
+    .head {
       padding: 12px;
       font-size: 16px;
       line-height: 28px;
       font-weight: bold;
-      .el-button{
-        float: right
+      .el-button {
+        float: right;
       }
     }
   }

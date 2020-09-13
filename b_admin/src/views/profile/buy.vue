@@ -30,16 +30,18 @@
             </el-radio-group>
           </el-form-item>
           <el-form-item style="margin-top:50px">
-            <el-button type="primary">提交订单</el-button>
+            <el-button :loading="loading" type="primary" @click="handleSubmit">提交订单</el-button>
           </el-form-item>
         </el-form>
       </div>
     </div>
+    <div id="tmp" v-html="tmp" />
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
+import { buy, buyAlipay } from '@/api/user'
 
 export default {
   name: 'Profile',
@@ -48,7 +50,8 @@ export default {
       active: '1',
       num: 1,
       pay: '1',
-      loading: false
+      loading: false,
+      tmp: ''
     }
   },
   computed: {
@@ -60,7 +63,40 @@ export default {
       this.active = e
     },
     handleSubmit() {
-      this.$router.push('/user/auth')
+      this.loading = true
+      if (this.pay === '1') {
+        buy({ amount: this.num, type: 'SERVER_ORDER' })
+          .then((r) => {
+            this.loading = false
+            this.$message({ message: '订购成功', type: 'success' })
+            setTimeout(() => {
+              this.$store.dispatch('user/getInfo')
+              this.$router.push('/user/index')
+            }, 500)
+          })
+          .catch((e) => {
+            this.loading = false
+          })
+      } else {
+        buyAlipay({ amount: this.num * 399, type: 'SERVER_ORDER' })
+          .then((r) => {
+            this.tmp = r.data.body.replace('<form ', '<form target="_blank"')
+            this.$nextTick().then((r) => {
+              window.document.getElementById('bestPayForm').submit()
+            })
+            this.loading = false
+            this.$confirm('是否已完成支付？').then((r) => {
+              if (r === 'confirm') {
+                this.$store.dispatch('user/getInfo')
+                this.$router.push('/user/index')
+              }
+            })
+          })
+          .catch((e) => {
+            console.log(e)
+            this.loading = false
+          })
+      }
     }
   }
 }

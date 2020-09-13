@@ -29,43 +29,38 @@
         @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" width="50" label="全选" />
-        <el-table-column label="订购时间" width="260">
+        <el-table-column label="订单编号">
           <template slot-scope="{row}">
             <div class="info">
-              <img :src="row.picUrl" alt="pic">
+              <span>{{ row.id }}</span>
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column v-if="listQuery.type === '1'" label="活动名称">
+          <template>
+            <span>置换活动</span>
+          </template>
+        </el-table-column>
+        <el-table-column v-if="listQuery.type === '1'" label="达人昵称">
+          <template>
+            <span>置换活动</span>
+          </template>
+        </el-table-column>
+        <el-table-column v-if="listQuery.type === '2'" label="订购类型">
+          <template>
+            <span>置换活动</span>
+          </template>
+        </el-table-column>
+        <el-table-column v-if="listQuery.type === '2'" label="订购时间">
+          <template slot-scope="{row}">
+            <div class="info">
               <span>{{ row.title }}</span>
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="订购服务">
+        <el-table-column label="订单金额">
           <template slot-scope="{row}">
-            <span>{{ row.pendingEvaNum }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="状态">
-          <template slot-scope="{row}">
-            <span>{{ ["","待提交","待排期","已拒绝","未开始","报名中","报名结束"][row.statusCode] }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column
-          label="操作"
-          align="center"
-          width="230"
-          class-name="small-padding fixed-width"
-        >
-          <template slot-scope="{row}">
-            <el-button
-              v-if="row.statusCode === 1 || row.statusCode === 3"
-              type="text"
-              size="mini"
-              @click="handleDetail(row)"
-            >详情</el-button>
-            <el-button
-              v-if="row.statusCode === 1 || row.statusCode === 3"
-              type="text"
-              size="mini"
-              @click="handlePay(row)"
-            >去支付</el-button>
+            <span>{{ row.amount }}</span>
           </template>
         </el-table-column>
       </el-table>
@@ -105,7 +100,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import { fetchHistory } from '@/api/user'
+import { fetchInvoice } from '@/api/user'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
 export default {
@@ -118,6 +113,7 @@ export default {
       total: 0,
       listLoading: true,
       listQuery: {
+        type: '1',
         page: 1,
         size: 10
       }
@@ -132,18 +128,19 @@ export default {
   methods: {
     fetchData() {
       this.listLoading = true
-      fetchHistory(this.listQuery).then((r) => {
-        this.list = (r.data || {}).data || []
-        this.total = ((r.data || {}).pager || {}).count || 0
-        this.listLoading = false
-      })
-    },
-    handlePay() {
-      this.$router.push('/user/auth')
+      fetchInvoice(this.listQuery)
+        .then((r) => {
+          this.list = (r.data || {}).data || []
+          this.total = ((r.data || {}).pager || {}).count || 0
+          this.listLoading = false
+        })
+        .catch((e) => {
+          this.listLoading = false
+        })
     },
     handleSelectionChange(e) {},
-    handleSelect() {
-      this.listQuery.type = '1'
+    handleSelect(e) {
+      this.listQuery.type = e
       this.listQuery.page = 1
       this.fetchData()
     }

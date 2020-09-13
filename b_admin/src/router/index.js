@@ -139,6 +139,12 @@ export const asyncRoutes = [
         component: () => import('@/views/activity/orders'),
         name: 'activity-order',
         meta: { title: '活动订单', icon: 'table' }
+      },
+      {
+        path: 'qorder',
+        component: () => import('@/views/activity/qorders'),
+        name: 'activity-qorder',
+        meta: { title: '候选订单', icon: 'table' }
       }
     ]
   },

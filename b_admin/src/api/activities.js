@@ -21,7 +21,13 @@ export function fetchStat() {
     method: 'get'
   })
 }
-
+export function updateAction(data) {
+  return request({
+    url: '/br/activity/order/action',
+    method: 'post',
+    data
+  })
+}
 export function createData(data) {
   return request({
     url: '/br/activity',
@@ -38,11 +44,11 @@ export function updateData(data) {
   })
 }
 
-export function submitData(data) {
+export function submitData(id) {
   return request({
-    url: '/br/activity/sumbit',
-    method: 'post',
-    data
+    url: '/br/activity/submit',
+    method: 'put',
+    data: { id }
   })
 }
 

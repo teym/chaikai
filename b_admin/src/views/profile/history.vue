@@ -9,38 +9,27 @@
       highlight-current-row
       style="width: 100%;"
     >
-      <el-table-column label="订购时间" width="260">
+      <el-table-column label="订购时间">
         <template slot-scope="{row}">
           <div class="info">
-            <img :src="row.picUrl" alt="pic">
-            <span>{{ row.title }}</span>
+            <span>{{ row.gmtCreate }}</span>
           </div>
         </template>
       </el-table-column>
       <el-table-column label="订购服务">
-        <template slot-scope="{row}">
-          <span>{{ row.pendingEvaNum }}</span>
+        <template>
+          <span>置换活动</span>
         </template>
       </el-table-column>
       <el-table-column label="状态">
         <template slot-scope="{row}">
-          <span>{{ ["","待提交","待排期","已拒绝","未开始","报名中","报名结束"][row.statusCode] }}</span>
+          <span>{{ ["","待支付","成功","失败","已拒绝","已关闭","处理中"][row.statusCode] }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" width="230" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="{row}">
-          <el-button
-            v-if="row.statusCode === 1 || row.statusCode === 3"
-            type="text"
-            size="mini"
-            @click="handleDetail(row)"
-          >详情</el-button>
-          <el-button
-            v-if="row.statusCode === 1 || row.statusCode === 3"
-            type="text"
-            size="mini"
-            @click="handlePay(row)"
-          >去支付</el-button>
+          <el-button type="text" size="mini" @click="handleDetail(row)">详情</el-button>
+          <el-button v-if="row.statusCode === 1" type="text" size="mini" @click="handlePay(row)">去支付</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -52,34 +41,42 @@
       :limit.sync="listQuery.size"
       @pagination="fetchData"
     />
-    <!-- <el-dialog
-      custom-class="custom-dialog"
-      title="增加活动名额"
-      :visible.sync="formVisible"
-      width="420px"
-    >
-      <el-form label-width="60px">
-        <el-form-item label="活动名额">
-          <span>{{ detail.totalNum }}</span>
-        </el-form-item>
-        <el-form-item label="剩余名额">
-          <span>{{ detail.remainingNum }}</span>
-        </el-form-item>
-        <el-form-item label="增加名额">
-          <el-input v-model="append" placeholder="#话题" />
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="formVisible = false">取消</el-button>
-        <el-button :loading="formLoading" type="primary" @click="handleAddNumber">确定</el-button>
+    <el-dialog custom-class="custom-dialog" title="订购详情" :visible.sync="formVisible" width="620px">
+      <div class="detail">
+        <el-row>
+          <el-col :span="4">提交时间</el-col>
+          <el-col :span="8">{{ detail.gmtCreate }}</el-col>
+          <el-col :span="4">支付时间</el-col>
+          <el-col :span="8">{{ detail.gmtCreate }}</el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="4">订购服务</el-col>
+          <el-col :span="8">置换活动</el-col>
+          <el-col :span="4">订购状态</el-col>
+          <el-col :span="8">{{ (["","待支付","成功","失败","已拒绝","已关闭","处理中"])[detail.statusCode] }}</el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="4">订购详情</el-col>
+          <el-col :span="20">
+            订购次数: {{ Math.ceil(detail.amount / 399) }}
+            <br>
+            <br>
+            支付金额: {{ detail.amount }}
+            <br>
+            <br>
+            支付方式: {{ detail.recharge ? '支付宝' :'余额' }} {{ detail.tradeNo ? (' 支付单号' + detail.tradeNo):'' }}
+          </el-col>
+        </el-row>
       </div>
-    </el-dialog>-->
+      <div slot="footer" class="dialog-footer" />
+    </el-dialog>
+    <div id="tmp" v-html="tmp" />
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
-import { fetchHistory } from '@/api/user'
+import { fetchHistory, buyAlipay } from '@/api/user'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
 export default {
@@ -93,8 +90,12 @@ export default {
       listLoading: true,
       listQuery: {
         page: 1,
-        size: 10
-      }
+        size: 10,
+        type: 101
+      },
+      detail: {},
+      formVisible: false,
+      tmp: ''
     }
   },
   computed: {
@@ -113,10 +114,29 @@ export default {
       })
     },
     handleDetail(row) {
-      this.$router.push({ path: '/user/auth', query: { id: row.id }})
+      this.detail = row
+      this.formVisible = true
     },
-    handlePay() {
-      this.$router.push('/user/auth')
+    handlePay(row) {
+      this.listLoading = true
+      buyAlipay({ amount: row.amount, type: 'SERVER_ORDER', recordId: row.id })
+        .then((r) => {
+          this.listLoading = false
+          this.tmp = r.data.body.replace('<form ', '<form target="_blank"')
+          this.$nextTick().then((r) => {
+            window.document.getElementById('bestPayForm').submit()
+          })
+          this.$confirm('是否已完成支付？').then((r) => {
+            if (r === 'confirm') {
+              this.$store.dispatch('user/getInfo')
+              this.$router.push('/user/index')
+            }
+          })
+        })
+        .catch((e) => {
+          console.log(e)
+          this.listLoading = false
+        })
     }
   }
 }
@@ -129,6 +149,18 @@ export default {
     background-color: white;
     border-radius: 4px;
     margin-top: 16px;
+  }
+  .detail {
+    border-left: 1px solid #f5f5f5;
+    border-bottom: 1px solid #f5f5f5;
+    .el-row {
+      border-top: 1px solid #f5f5f5;
+      .el-col {
+        border-right: 1px solid #f5f5f5;
+        height: 100%;
+        padding: 16px;
+      }
+    }
   }
 }
 </style>

@@ -67,6 +67,28 @@ export function fetchInvoice(query) {
   })
 }
 
+export function buy(data) {
+  return request({
+    url: '/br/account/finance/exchange',
+    method: 'post',
+    data
+  })
+}
+export function buyAlipay(data) {
+  return request({
+    url: '/alipay/br',
+    method: 'post',
+    data
+  })
+}
+export function withdraw(data) {
+  return request({
+    url: '/br/account/finance/withdraw',
+    method: 'post',
+    data
+  })
+}
+
 export function auth(data) {
   return request({
     url: '/br/account/company',

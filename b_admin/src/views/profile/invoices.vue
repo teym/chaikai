@@ -89,7 +89,7 @@
       </div>
       <div slot="footer" class="dialog-footer">
         <el-button @click="formVisible = false">取消</el-button>
-        <el-button type="primary" @click="handleAddNumber">确定</el-button>
+        <el-button type="primary" @click="handleInvoice">确定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -147,6 +147,12 @@ export default {
           this.detailLoading = false
         })
       this.showDetail = true
+    },
+    handleSelectionChange(sel) {
+      console.log(sel)
+    },
+    handleInvoice(e) {
+
     }
   }
 }

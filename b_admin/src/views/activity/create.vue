@@ -18,9 +18,9 @@
             <el-select v-model="postForm.skus" multiple placeholder="请选择">
               <el-option
                 v-for="item in ((postForm.goods || {}).skuUnionList || [])"
-                :key="item.skuIds.join('+')"
+                :key="item.skuIdUnion"
                 :label="item.name"
-                :value="item.skuIds.join('+')"
+                :value="item.skuIdUnion"
               />
             </el-select>
           </el-form-item>
@@ -86,8 +86,12 @@
                 <el-icon slot="reference" class="el-icon-question" />
               </el-popover>
             </span>
-            <el-switch v-model="postForm.recvArea" active-color="#13ce66" inactive-color="#D3D3D3" />
-            <div v-if="postForm.recvArea">
+            <el-switch
+              v-model="postForm.extension.receiveAreaLimit"
+              active-color="#13ce66"
+              inactive-color="#D3D3D3"
+            />
+            <div v-if="postForm.extension.receiveAreaLimit">
               <el-radio-group v-model="postForm.recvAreaType">
                 <el-radio :label="1">不可收货地区</el-radio>
                 <el-radio :label="2">可收货地区</el-radio>
@@ -189,7 +193,7 @@
           <el-form-item style="margin-bottom: 30px;" label-width="170px" label="账号话题:">
             <div v-for="(t, i) in postForm.topics" :key="i">
               <span>
-                {{ t.name }}
+                {{ t.platformName }}
                 <br>
                 @{{ t.nickname }}#{{ t.topic }}
               </span>
@@ -331,7 +335,7 @@
       width="420px"
     >
       <el-form label-width="60px">
-        <el-form-item v-for="i in topics" :key="i.id" :label="i.name">
+        <el-form-item v-for="i in topics" :key="i.id" :label="i.platformName">
           <el-input v-model="i.nickname" placeholder="@账号" style="width:50%;padding-right:8px" />
           <el-input v-model="i.topic" placeholder="#话题" style="width:50%;padding-left:8px" />
         </el-form-item>
@@ -346,7 +350,13 @@
 
 <script>
 // import { validURL } from '@/utils/validate'
-import { fetchData, fetchPv, createData, submitData } from '@/api/activities'
+import {
+  fetchData,
+  fetchPv,
+  createData,
+  submitData,
+  updateData
+} from '@/api/activities'
 import { Channels } from '@/utils/constant'
 import address from './components/address'
 import moment from 'moment'
@@ -359,7 +369,6 @@ const defaultForm = {
   totalNum: 5,
   guidelines: [{ txt: '' }],
   displayType: 0,
-  recvArea: true,
   recvAreaType: 1,
   cooperationType: 1,
   channels: [0].concat(Channels.map((i) => i.id)),
@@ -368,6 +377,7 @@ const defaultForm = {
     channels: [],
     articleType: 0,
     contentType: 0,
+    receiveAreaLimit: false,
     receiveAreas: [],
     minWordNum: 0,
     minPicNum: 0,
@@ -505,14 +515,51 @@ export default {
   created() {
     const id = this.$route.query && this.$route.query.id
     if (id) {
-      this.fetchData(id)
+      this.loadData(id)
     }
   },
   methods: {
-    fetchData(id) {
+    loadData(id) {
       fetchData(id)
         .then((response) => {
-          this.postForm = response.data
+          return fetchPv({
+            page: 1,
+            size: 1,
+            brGoodsId: response.data.goods.brGoodsId
+          }).then((r) => {
+            response.data.skus = response.data.goods.skuUnionList.map(
+              (i) => i.skuIdUnion
+            )
+            response.data.goods = r.data.data[0]
+            return response.data
+          })
+        })
+        .then((r) => {
+          const obj = Object.assign({}, defaultForm, r)
+
+          obj.regTime = [r.regStartTime, r.regEndTime]
+          if (!r.extension.channelLimit) {
+            obj.channels = [0].concat(Channels.map((i) => i.id))
+          } else {
+            obj.channels = r.extension.channels.map((i) => i.platformId)
+          }
+          if (r.extension.receiveAreaLimit) {
+            obj.recvAreaType = r.extension.receiveAreas[0].type || 1
+            obj.extension.receiveAreas = r.extension.receiveAreas.map((i) =>
+              Object.assign({ name: i.cityId ? i.city : i.province }, i)
+            )
+          } else {
+            obj.extension.receiveAreas = []
+          }
+          obj.topics = []
+            .concat(r.extension.channels || [])
+            .filter((i) => i.nickname && i.topic)
+          obj.extension.otherReq = (r.extension.otherReq || '')
+            .split('+')
+            .map((i) => parseInt(i))
+            .filter((i) => i > 0 && i <= 3)
+          obj.guidelines = r.guidelines.map((i) => ({ txt: i }))
+          this.postForm = obj
         })
         .catch((err) => {
           console.log(err)
@@ -575,7 +622,11 @@ export default {
         (i) => this.postForm.channels.indexOf(i.id) >= 0
       ).map((i) => {
         const obj = this.postForm.topics.find((j) => j.id === i.id)
-        return Object.assign({ nickname: '', topic: '' }, i, obj || {})
+        return Object.assign(
+          { nickname: '', topic: '', platformName: i.name },
+          i,
+          obj || {}
+        )
       })
       this.topicFormVisible = true
     },
@@ -600,27 +651,33 @@ export default {
         {
           goods: Object.assign({}, this.postForm.goods, {
             skuUnionList: this.postForm.goods.skuUnionList.filter(
-              (i) => this.postForm.skus.indexOf(i.skuIds.join('+')) >= 0
+              (i) => this.postForm.skus.indexOf(i.skuIdUnion) >= 0
             )
           })
         },
         {
           extension: Object.assign({}, this.postForm.extension, {
+            receiveAreaLimit: this.postForm.extension.receiveAreas.length > 0,
+            receiveAreas: this.postForm.extension.receiveAreas.map((i) =>
+              Object.assign({}, i, { type: this.postForm.recvAreaType })
+            ),
             channels: this.postForm.channels.map((id) => {
               const topic = this.postForm.topics.find((i) => i.id === id)
               return Object.assign({}, topic || {}, { platformId: id })
             }),
             channelLimit: this.postForm.channels.indexOf('0') < 0,
-            otherReq: this.postForm.extension.otherReq.join(' ')
+            otherReq: this.postForm.extension.otherReq.join('+')
           })
         }
       )
+      const id = this.$route.query && this.$route.query.id
+
       this.$refs.postForm.validate((valid) => {
         if (valid) {
           this.loading = true
-          var t = createData(obj)
+          var t = !id ? createData(obj) : updateData(obj)
           if (submit) {
-            t = t.then((r) => submitData(r.data))
+            t = t.then((r) => submitData(id || r.data))
           }
           t.then((r) => {
             this.$notify({

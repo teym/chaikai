@@ -63,9 +63,9 @@ export default {
     },
     loadAll() {
       this.loading = true
-      fetchList()
+      fetchList({ page: 1, size: 10 })
         .then((r) => {
-          this.list = r.data
+          this.list = r.data.data
           this.loading = false
         })
         .catch((e) => {

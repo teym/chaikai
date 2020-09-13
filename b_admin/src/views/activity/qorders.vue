@@ -1,65 +1,11 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <div class="row">
-        <el-menu
-          :default-active="'1'"
-          class="el-menu-demo"
-          mode="horizontal"
-          @select="handleSelect"
-        >
-          <el-menu-item v-for="i in statusList" :key="i.value" :index="i.value">
-            {{ i.name }}
-            <span v-if="stat[i.value] > 0" class="pill">{{ stat[i.value] }}</span>
-          </el-menu-item>
-        </el-menu>
-        <el-input v-model="listQuery.searchKey" placeholder="请输入内容" class="input-with-select">
-          <el-select
-            slot="prepend"
-            v-model="listQuery.searchType"
-            placeholder="请选择"
-            style="width:80px"
-          >
-            <el-option label="达人" value="1" />
-            <el-option label="订单" value="2" />
-          </el-select>
-          <el-button slot="append" icon="el-icon-search" @click="handleFilter" />
-        </el-input>
-      </div>
       <div v-show="listQuery.statusCode === '1'" class="row row2">
-        <el-select v-model="listQuery.sort" @change="handleFilter">
-          <el-option label="推荐排序" value="RECOMMEND" />
-          <el-option label="粉丝量" value="FANS" />
-          <el-option label="最新申请" value="TIME" />
-        </el-select>
-
-        <el-select v-model="listQuery.platformId" @change="handleFilter">
-          <el-option label="全部渠道" :value="''" />
-          <el-option
-            v-for="i in channels"
-            :key="i.id"
-            :label="i.platformName"
-            :value="i.platformId"
-          />
-        </el-select>
-
-        <el-select v-model="listQuery.goodsSkuUnionId" @change="handleFilter">
-          <el-option label="全部规格" :value="''" />
-          <el-option v-for="i in skus" :key="i.skuIdUnion" :label="i.name" :value="i.skuIdUnion" />
-        </el-select>
-        <div class="right">
-          <span>活动名额: {{ stat['0'] }} 已通过: {{ stat['2'] }} 已候选: {{ stat['8'] }}</span>
-          <el-button
-            type="primary"
-            size="mini"
-            @click="$router.push({path:'/activity/qorder', query:{id:listQuery.brActivityId}})"
-          >候选名单{{ stat['8'] }}</el-button>
-        </div>
-      </div>
-      <div v-show="listQuery.statusCode === '3'" class="row row2">
         <div class="place" />
         <div class="right">
-          <el-button type="primary" size="mini" @click="handleShip">批量发货</el-button>
+          <span>活动名额: {{ stat['0'] }} 已通过: {{ stat['2'] }} 已候选: {{ stat['8'] }}</span>
+          <el-button type="primary" size="mini" @click="handleAccept()">一键通过</el-button>
         </div>
       </div>
     </div>
@@ -422,8 +368,8 @@ export default {
     },
     handleAction(row, act, tip) {
       if (act === 'CANDIDATE') {
-        row.brRemark = ''
-        row.candidate = true
+        row.brRemark = row.brRemark || ''
+        row.candidate = !row.candidate
       } else if (act === 'PASS' && !tip) {
         this.$confirm(
           '确认通过' +
@@ -438,8 +384,6 @@ export default {
           if (r === 'confirm') {
             this.handleAction(row, act, true)
           }
-        }).catch(e => {
-
         })
       } else {
         this.listLoading = true
@@ -469,8 +413,13 @@ export default {
           this.listLoading = false
         })
     },
-    handleShip() {
-
+    handleAccept() {
+      this.$confirm('将消耗3个活动名额和账户余额600元', {
+        title: '一键通过'
+      }).then((r) => {
+        // if (r === 'confirm') {
+        // }
+      })
     }
   }
 }
