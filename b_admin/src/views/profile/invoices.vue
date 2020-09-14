@@ -18,17 +18,17 @@
         </el-table-column>
         <el-table-column label="申请时间" width="260">
           <template slot-scope="{row}">
-            <span>{{ row.createTime }}</span>
+            <span>{{ row.gmtCreate }}</span>
           </template>
         </el-table-column>
         <el-table-column label="开票状态">
           <template slot-scope="{row}">
-            <span>{{ ["","待提交","待排期","已拒绝","未开始","报名中","报名结束"][row.statusCode] }}</span>
+            <span>{{ ["","待开票","已开票","已拒绝"][row.statusCode] }}</span>
           </template>
         </el-table-column>
         <el-table-column label="开票金额">
           <template slot-scope="{row}">
-            <span>{{ row.amount }}</span>
+            <span>{{ row.totalAmount }}</span>
           </template>
         </el-table-column>
         <el-table-column
@@ -53,43 +53,55 @@
     </div>
     <el-dialog custom-class="custom-dialog" title="开票详情" :visible.sync="showDetail" width="420px">
       <div class="info">
-        <p>开票编号：343424</p>
+        <p>开票编号：{{ detail.id }}</p>
         <p>
-          开票状态：已拒绝
-          <span>开票信息有误，请修改后提交</span>
+          开票状态：{{ ["","待开票","已开票","已拒绝"][detail.statusCode] }}
+          <span>{{ detail.rejectReason }}</span>
         </p>
-        <p>开票时间：2020-09-22 12:22</p>
-        <p>开票金额：2000元</p>
-        <p>发票抬头：9898NJKKK</p>
-        <p>公司名称：杭州多维科技有限公司</p>
-        <p>接收邮箱：yuu@qq.com</p>
+        <p>开票时间：{{ detail.gmtCreate }}</p>
+        <p>开票金额：{{ detail.totalAmount }}元</p>
+        <p>发票抬头：{{ detail.rise }}</p>
+        <p>公司名称：{{ detail.company }}</p>
+        <p>接收邮箱：{{ detail.receiveMail }}</p>
         <h5>关联订单</h5>
         <el-table :key="1" v-loading="detailLoading" :data="orders" border style="width: 100%;">
-          <el-table-column label="订单编号">
+          <el-table-column label="开票编号">
             <template slot-scope="{row}">
-              <span>{{ row.id }}</span>
+              <span>{{ row.orderId }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="活动名称">
+          <el-table-column v-if="detail.type === 1" label="活动名称">
             <template slot-scope="{row}">
-              <span>{{ row.id }}</span>
+              <span>{{ row.activityName }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="达人昵称">
+          <el-table-column v-if="detail.type === 1" label="达人昵称">
             <template slot-scope="{row}">
-              <span>{{ row.id }}</span>
+              <span>{{ row.bloggerName }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column v-if="detail.type === 2" label="订购类型">
+            <template>
+              <span>置换活动</span>
+            </template>
+          </el-table-column>
+          <el-table-column v-if="detail.type === 2" label="订购时间">
+            <template slot-scope="{row}">
+              <div class="info">
+                <span>{{ row.orderTime }}</span>
+              </div>
             </template>
           </el-table-column>
           <el-table-column label="订单金额">
             <template slot-scope="{row}">
-              <span>{{ row.id }}</span>
+              <span>{{ row.amount }}</span>
             </template>
           </el-table-column>
         </el-table>
       </div>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="formVisible = false">取消</el-button>
-        <el-button type="primary" @click="handleInvoice">确定</el-button>
+        <el-button @click="showDetail = false">取消</el-button>
+        <el-button type="primary" @click="showDetail = false">确定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -97,7 +109,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import { fetchInvoices, fetchInvoice } from '@/api/user'
+import { fetchInvoices, fetchLinkInvoice } from '@/api/user'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
 export default {
@@ -138,7 +150,7 @@ export default {
       this.detail = row
       this.orders = []
       this.detailLoading = true
-      fetchInvoice({ id: row.id })
+      fetchLinkInvoice({ invoiceId: row.id, type: row.type, page: 1, size: 50 })
         .then((r) => {
           this.orders = r.data.data
           this.detailLoading = false
@@ -151,9 +163,7 @@ export default {
     handleSelectionChange(sel) {
       console.log(sel)
     },
-    handleInvoice(e) {
-
-    }
+    handleInvoice(e) {}
   }
 }
 </script>

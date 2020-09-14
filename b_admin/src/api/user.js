@@ -67,6 +67,22 @@ export function fetchInvoice(query) {
   })
 }
 
+export function fetchLinkInvoice(query) {
+  return request({
+    url: '/br/invoice/order/relation/list',
+    method: 'get',
+    params: query
+  })
+}
+
+export function createInvoice(data) {
+  return request({
+    url: '/br/invoice',
+    method: 'post',
+    data
+  })
+}
+
 export function buy(data) {
   return request({
     url: '/br/account/finance/exchange',

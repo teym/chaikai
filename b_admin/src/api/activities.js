@@ -15,6 +15,14 @@ export function fetchData(id) {
   })
 }
 
+export function fetchIssues(query) {
+  return request({
+    url: '/ticket/ao/list',
+    method: 'get',
+    params: query
+  })
+}
+
 export function fetchStat() {
   return request({
     url: '/br/activity/stat',

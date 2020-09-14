@@ -272,9 +272,9 @@
       :limit.sync="listQuery.size"
       @pagination="getList"
     />
-    <!-- <el-dialog
+    <el-dialog
       custom-class="custom-dialog"
-      title="增加活动名额"
+      title="投诉测评"
       :visible.sync="formVisible"
       width="420px"
     >
@@ -293,7 +293,7 @@
         <el-button @click="formVisible = false">取消</el-button>
         <el-button :loading="formLoading" type="primary" @click="handleAddNumber">确定</el-button>
       </div>
-    </el-dialog>-->
+    </el-dialog>
   </div>
 </template>
 
