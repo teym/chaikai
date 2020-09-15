@@ -124,7 +124,7 @@ export default {
     }
     const validateCode = (rule, value, callback) => {
       if (!validCode(value)) {
-        callback(new Error('验证码为4位数字'))
+        callback(new Error('验证码为6位数字'))
       } else {
         callback()
       }

@@ -25,7 +25,7 @@ export function validPhone(phone) {
 }
 
 export function validCode(code) {
-  const reg = /^[0-9]{4}$/
+  const reg = /^[0-9]{6}$/
   return reg.test(code)
 }
 
