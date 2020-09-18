@@ -1,25 +1,30 @@
 <template>
-  <div class="navbar">
-    <div :style="{height: statusBarHeight}"></div>
-    <div class="content" :style="{height: navbarHeight}">
-      <slot />
+  <div class="navbar" :style="{height: totalHeight}">
+    <div :class="{fixed: fixed}">
+      <div :style="{height: statusBarHeight}"></div>
+      <div class="content" :style="{height: navbarHeight}">
+        <slot />
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 export default {
+  props: ['fixed'],
   data () {
     return {
-      statusBarHeight: 0,
-      navbarHeight: 0
+      statusBarHeight: '',
+      navbarHeight: '',
+      totalHeight: ''
     }
   },
   created () {
     const {statusBarHeight, platform} = mpvue.getSystemInfoSync()
-    console.log(statusBarHeight, platform)
+    const navbarHeight = (platform === 'Android' ? 48 : 44)
     this.statusBarHeight = statusBarHeight + 'px'
-    this.navbarHeight = (platform === 'Android' ? 48 : 44) + 'px'
+    this.navbarHeight = navbarHeight + 'px'
+    this.totalHeight = (statusBarHeight + navbarHeight) + 'px'
   }
 }
 </script>
@@ -27,8 +32,17 @@ export default {
 <style scoped>
 .navbar{
   width: 100%;
+  background-color: white;
 }
 .content{
   width: 100%;
+}
+.fixed{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 750rpx;
+  z-index: 999;
+  background-color: white;
 }
 </style>
