@@ -2,7 +2,9 @@
   "pages": [
     "pages/index/main",
     "pages/messages/main",
-    "pages/mine/main"  ],
+    "pages/mine/main",
+    "pages/detail/main"
+  ],
   "window": {
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#fff",

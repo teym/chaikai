@@ -1,40 +1,95 @@
 <template>
   <div class="container">
     <div class="content">
-      <swiper class="banners" :indicator-dots="true" indicator-color='white' indicator-active-color='#FF8E3B' previous-margin="0" next-margin="0">
+      <swiper
+        class="banners"
+        :indicator-dots="true"
+        indicator-color="white"
+        indicator-active-color="#FF8E3B"
+        previous-margin="0"
+        next-margin="0"
+      >
         <block v-for="(item, index) in banners" :index="index" :key="index">
           <swiper-item class="banner">
-            <img :src="item.img" alt="banner" mode="aspectFill">
+            <img :src="item.img" alt="banner" mode="aspectFill" />
           </swiper-item>
         </block>
       </swiper>
+      <div class="stop">报名结束</div>
       <div class="info">
-      <h5>小奥汀芝心腮红 猫和老鼠联名奶酪腮红盘正品裸妆自然橘色粉色9g</h5>
-      <div class="row just">
-        <span>价值 340元</span>
-        <span>报名剩余7天12小时32分</span>
-      </div>
-      <div class="row count">
-        <p>20<span>剩余名额</span></p>
-        <p>200<span>申请</span></p>
-      </div>
-      <div class="row just channel">
-        <span>报名渠道</span>
-        <ul>
-          <li v-for="(i, j) in channels" :key="j">
-            <img :src="i.img" :alt="i.name">
-          </li>
-        </ul>
-      </div>
+        <h5>小奥汀芝心腮红 猫和老鼠联名奶酪腮红盘正品裸妆自然橘色粉色9g</h5>
+        <div class="row just">
+          <span>价值 340元</span>
+          <span>报名剩余7天12小时32分</span>
+        </div>
+        <div class="row count">
+          <p>20<span>剩余名额</span></p>
+          <p>200<span>申请</span></p>
+        </div>
+        <div class="row just channel">
+          <span>报名渠道</span>
+          <ul>
+            <li v-for="(i, j) in channels" :key="j" :style="{'z-index': 99 - j}">
+              <img :src="i.img" :alt="i.name" />
+            </li>
+          </ul>
+        </div>
+        <div class="hot">
+          <img src="/static/images/detail_hot.png" alt="hot">
+        </div>
       </div>
       <div class="detail">
         <div class="tab">
-          <div>产品详情</div>
-          <div>合作任务</div>
+          <div :class="{active:tab === 1}">
+            <p @click="tab = 1">产品详情</p>
+            <span></span>
+          </div>
+          <div :class="{active:tab === 2}">
+            <p @click="tab = 2">合作任务</p>
+            <span></span>
+          </div>
         </div>
-        <div v-if="tab===1"></div>
-        <div v-if="tab===2"></div>
+        <div class="block desc" v-if="tab===1">
+          <div class="brand">
+            <img :src="data.brand.logo" alt="logo" />
+            <div>
+              <h5>{{data.brand.title}}</h5>
+              <p :class="{collapse:!expand}">{{data.brand.desc}}
+                <span class="float" v-if="!expand" @click="expand=true">展开更多︾</span>
+                <span v-if="expand" @click="expand=false">收起︽</span></p>
+            </div>
+          </div>
+          <div class="guide">
+            <h5>测评指引</h5>
+            <ul>
+              <li v-for="(line, i) in data.guideLine" :key="i">{{line}}</li>
+            </ul>
+          </div>
+          <div class="ship">
+            <h5>
+              收货地限制
+              <span>不支持以下地区收货</span>
+            </h5>
+            <p>香港特别行政区、澳门特别行政区、新疆维吾尔自治区、西藏自治区、台湾省、湖北省</p>
+          </div>
+          <div class="text">
+            <div class="row center">
+              <img src="/static/images/detail_dot_l.png" alt="dot_l" />
+              <p>产品详情</p>
+              <img src="/static/images/detail_dot_r.png" alt="dot_l" />
+            </div>
+            <div v-html="data.desc"></div>
+          </div>
+        </div>
+        <div class="block task" v-if="tab===2">
+          <div class="rule">
+            <img src="/static/images/detail_tip.png" alt="tip">
+          </div>
+        </div>
       </div>
+    </div>
+    <div class="bar">
+      <div>立即申请</div>
     </div>
   </div>
 </template>
@@ -50,10 +105,19 @@ export default {
         url: 'http://www.baidu.com',
         img: ImgUrl
       })),
-      datas: {},
+      data: {
+        brand: {
+          title: 'abcd',
+          desc: 'aksjdlkajdlaskjd\nkajslkajfkhdfksjf\nkjsdfksdjfs\nsjdfksdj',
+          logo: ImgUrl
+        },
+        guideLine: ['asdasasda', 'asdadads'],
+        desc: '<img style="width:100%;height:auto" src="' + ImgUrl + '">'
+      },
       channels: [{name: 'b', img: '/static/images/channel_bi.png'}, {name: 'w', img: '/static/images/channel_wb.png'}],
       loading: false,
-      tab: 1
+      tab: 1,
+      expand: false
     }
   },
   created () {
@@ -71,61 +135,238 @@ export default {
 </script>
 
 <style scoped>
-.content{
+.content {
   flex: 1;
+  padding-bottom: 88rpx;
+  background-color: #f5f5f5;
+  position: relative;
 }
-.banners{
+.stop{
+  position: absolute;
+  width: 280rpx;
+  height: 280rpx;
+  border-radius: 140rpx;
+  background-color: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  left: 235rpx;
+  top: 235rpx;
+  color: white;
+  font-size: 44rpx;
+  font-weight: 500;
+}
+.banners {
   width: 750rpx;
   height: 750rpx;
 }
-.banner{
+.banner {
   width: 750rpx;
   height: 750rpx;
 }
-.banner img{
+.banner img {
   width: 750rpx;
   height: 750rpx;
 }
-.info{
-  padding: 24rpx
-}
-.info h5{
-  font-size: 32rpx;
-  line-height: 44rpx;
-  color: #494C5E;
-  font-weight: 400;
-}
-.info .row{
+.row {
   display: flex;
   flex-direction: row;
   align-items: center;
 }
-.info .just{
-  justify-content: space-between;
+.info {
+  padding: 24rpx;
+  background-color: white;
 }
-.info .row span{
-  font-size: 24rpx;
-  color: #7B7F8E;
-}
-.info .count p{
-  color: #FF8E3B;
-  font-size: 44rpx;
+.info h5 {
+  font-size: 32rpx;
+  line-height: 44rpx;
+  color: #494c5e;
   font-weight: 400;
 }
-.info .count p span{
-  color: #FF8E3B;
+.info .row {
+  margin: 16rpx 0 0 0;
+}
+.info .just {
+  justify-content: space-between;
+}
+.info .row span {
+  font-size: 24rpx;
+  color: #7b7f8e;
+}
+.info .count p {
+  color: #ff8e3b;
+  font-size: 44rpx;
+  font-weight: 400;
+  margin-right: 32rpx;
+}
+.info .count p span {
+  color: #ff8e3b;
   font-weight: normal;
 }
-.info .channel span{
+.info .channel span {
   font-size: 28rpx;
-  color: #494C5E;
+  color: #494c5e;
 }
-.info .channel ul{
+.info .channel ul {
   display: flex;
   flex-direction: row;
 }
-.info .channel ul img{
+.info .channel ul img {
   width: 44rpx;
   height: 44rpx;
+  margin: 0 -8rpx;
+}
+.info .hot {
+  padding: 24rpx 0 0 0;
+}
+.info .hot img{
+  width: 702rpx;
+  height: 128rpx;
+}
+.detail {
+  margin: 24rpx 0 0 0;
+  background-color: white;
+}
+.detail .tab {
+  display: flex;
+  flex-direction: row;
+  border-bottom: 1rpx solid #f5f5f5;
+}
+.detail .tab div {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.detail .tab div p {
+  font-size: 28rpx;
+  color: #494c5e;
+  margin: 24rpx 0;
+}
+.detail .tab div span {
+  width: 64rpx;
+  color: white;
+  height: 4rpx;
+}
+.detail .tab .active p {
+  color: #ff8e3b !important;
+}
+.detail .tab .active span {
+  background-color: #ff8e3b !important;
+}
+.desc .brand {
+  display: flex;
+  flex-direction: row;
+  margin: 24rpx;
+}
+.desc .brand img {
+  width: 72rpx;
+  height: 72rpx;
+  border-radius: 36rpx;
+  background-color: #f5f5f5;
+}
+.desc .brand div {
+  margin-left: 16rpx;
+}
+.desc h5 {
+  font-size: 28rpx;
+  font-weight: 500;
+  color: #494c5e;
+}
+.desc .brand p {
+  font-size: 24rpx;
+  line-height: 40rpx;
+  color: #7b7f8e;
+  position: relative;
+}
+.desc .brand .collapse {
+  max-height: 80rpx;
+}
+.desc .brand p span{
+  color: #FF8E3B;
+  font-size: 24rpx;
+  line-height: 40rpx;
+  background-color: white;
+}
+.desc .brand p .float{
+  position: absolute;
+  right: 0;
+  bottom: 0;
+}
+.desc .guide{
+  padding: 0 24rpx;
+  margin: 24rpx 0;
+}
+.desc .guide ul {
+  background-color: #F5F5F5;
+  border-radius: 12rpx;
+  margin-top: 24rpx;
+}
+.desc .guide li{
+  color: #7B7F8E;
+  font-size: 24rpx;
+  padding: 20rpx;
+  border-bottom: 1rpx solid #EBEBEB;
+}
+.desc .ship{
+  padding: 0 24rpx;
+}
+.desc .ship h5 span{
+  font-size: 24rpx;
+  color: #C1C6CB;
+  font-weight: normal;
+  margin-left: 16rpx;
+}
+.desc .ship p{
+  margin: 24rpx 0;
+  font-size: 24rpx;
+  color: #7B7F8E;
+  line-height: 40rpx;
+}
+.desc .text .row{
+  justify-content: center;
+  margin-bottom: 16rpx;
+}
+.desc .text .row img{
+  width: 56rpx;
+  height: 32rpx;
+}
+.desc .text .row p{
+  font-size: 28rpx;
+  color: #494C5E;
+  font-weight: 500;
+  margin: 0 12rpx;
+}
+.task .rule{
+  padding: 24rpx;
+}
+.task .rule img{
+  width: 702rpx;
+  height: 128rpx;
+}
+
+.bar{
+  position: fixed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: white;
+  left: 0;
+  bottom: 0;
+  width: 750rpx;
+  height: 88rpx;
+}
+.bar div{
+  height: 80rpx;
+  margin: 4rpx 58rpx;
+  flex: 1;
+  border-radius: 40rpx;
+  background-color: #FF8E3B;
+  color: white;
+  font-size: 30rpx;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 </style>
