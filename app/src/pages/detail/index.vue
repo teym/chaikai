@@ -17,7 +17,7 @@
       </swiper>
       <div class="stop">报名结束</div>
       <div class="info">
-        <h5>小奥汀芝心腮红 猫和老鼠联名奶酪腮红盘正品裸妆自然橘色粉色9g</h5>
+        <h4>小奥汀芝心腮红 猫和老鼠联名奶酪腮红盘正品裸妆自然橘色粉色9g</h4>
         <div class="row just">
           <span>价值 340元</span>
           <span>报名剩余7天12小时32分</span>
@@ -85,27 +85,42 @@
           <div class="rule">
             <img src="/static/images/detail_tip.png" alt="tip">
           </div>
-          <div class="row just">
+          <div class="row just line">
             <h5>合作方式</h5>
-            <span class="round-btn">接受悬赏</span>
+            <div class="round-btn">接受悬赏</div>
           </div>
-          <div class="row just">
+          <div class="row just line">
             <h5>合作要求</h5>
-            <span class="round-btn">200/人</span>
+            <div class="round-btn">200/人</div>
           </div>
-          <div class="row just">
-            <p>合作篇幅</p>
-            <span>单篇</span>
+          <div class="row just line">
+            <h6>合作篇幅</h6>
+            <p>单篇</p>
           </div>
-          <div class="row just">
-            <p>附带关键词</p>
-            <span class="round-btn gray">一周新品</span>
+          <div class="row just line">
+            <h6>优惠信息</h6>
+            <p>覆置内容₴tDx71ykFZr7₴咑幵淘tao寳或掂击炼接 https://m.tb.cn/<span>复制</span></p>
+          </div>
+          <div class="row just line">
+            <h6>附带关键词</h6>
+            <div class="round-btn gray">一周新品</div>
           </div>
         </div>
       </div>
     </div>
     <div class="bar">
       <div>立即申请</div>
+    </div>
+    <div class="pop">
+      <div class="pop-content">
+        <h5>选择商品规格</h5>
+        <div class="sku">
+          <h6>name</h6>
+          <ul>
+            li
+          </ul>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -127,6 +142,7 @@ export default {
           desc: 'aksjdlkajdlaskjd\nkajslkajfkhdfksjf\nkjsdfksdjfs\nsjdfksdj',
           logo: ImgUrl
         },
+        skus: [{name: '颜色', list: ['abcd', 'def', 'asfdasf']}, {name: '大小', list: ['abcd', 'def', 'asfdasf']}],
         guideLine: ['asdasasda', 'asdadads'],
         desc: '<img style="width:100%;height:auto" src="' + ImgUrl + '">'
       },
@@ -196,11 +212,16 @@ export default {
   padding: 24rpx;
   background-color: white;
 }
-h5 {
+h4 {
   font-size: 32rpx;
   line-height: 44rpx;
   color: #494c5e;
   font-weight: 400;
+}
+h5 {
+  font-size: 28rpx;
+  font-weight: 500;
+  color: #494c5e;
 }
 .info .row {
   margin: 16rpx 0 0 0;
@@ -242,6 +263,7 @@ h5 {
 .detail {
   margin: 24rpx 0 0 0;
   background-color: white;
+  padding-bottom: 48rpx;
 }
 .detail .tab {
   display: flex;
@@ -284,11 +306,7 @@ h5 {
 .desc .brand div {
   margin-left: 16rpx;
 }
-.desc h5 {
-  font-size: 28rpx;
-  font-weight: 500;
-  color: #494c5e;
-}
+
 .desc .brand p {
   font-size: 24rpx;
   line-height: 40rpx;
@@ -357,7 +375,7 @@ h5 {
   padding: 0 24rpx;
 }
 .task .rule{
-  padding: 24rpx 0;
+  padding: 24rpx 0 0 0;
 }
 .task .rule img{
   width: 702rpx;
@@ -371,15 +389,27 @@ h5 {
   height: 48rpx;
   border-radius: 24rpx;
   padding: 0 24rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.task .line{
+  margin-top: 12rpx;
+  align-items: flex-start;
+}
+.task .line h6{
+  font-size: 24rpx;
+  color: #494C5E;
 }
 .task .line p{
   font-size: 24rpx;
   color: #494C5E;
-}
-.task .line span{
-  font-size: 24rpx;
-  color: #494C5E;
   font-weight: 400;
+  flex: 1;
+  text-align: right;
+}
+.task .line p span{
+  color:#FF8E3B;
 }
 .task .line .gray{
   color: #7B7F8E;
