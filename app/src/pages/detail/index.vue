@@ -85,6 +85,22 @@
           <div class="rule">
             <img src="/static/images/detail_tip.png" alt="tip">
           </div>
+          <div class="row just">
+            <h5>合作方式</h5>
+            <span class="round-btn">接受悬赏</span>
+          </div>
+          <div class="row just">
+            <h5>合作要求</h5>
+            <span class="round-btn">200/人</span>
+          </div>
+          <div class="row just">
+            <p>合作篇幅</p>
+            <span>单篇</span>
+          </div>
+          <div class="row just">
+            <p>附带关键词</p>
+            <span class="round-btn gray">一周新品</span>
+          </div>
         </div>
       </div>
     </div>
@@ -173,11 +189,14 @@ export default {
   flex-direction: row;
   align-items: center;
 }
+.just {
+  justify-content: space-between;
+}
 .info {
   padding: 24rpx;
   background-color: white;
 }
-.info h5 {
+h5 {
   font-size: 32rpx;
   line-height: 44rpx;
   color: #494c5e;
@@ -185,9 +204,6 @@ export default {
 }
 .info .row {
   margin: 16rpx 0 0 0;
-}
-.info .just {
-  justify-content: space-between;
 }
 .info .row span {
   font-size: 24rpx;
@@ -337,12 +353,37 @@ export default {
   font-weight: 500;
   margin: 0 12rpx;
 }
+.task{
+  padding: 0 24rpx;
+}
 .task .rule{
-  padding: 24rpx;
+  padding: 24rpx 0;
 }
 .task .rule img{
   width: 702rpx;
   height: 128rpx;
+}
+.task .round-btn{
+  font-size: 24rpx;
+  color: #FF8E3B;
+  font-weight: 500;
+  background-color: #FF8E3B2E;
+  height: 48rpx;
+  border-radius: 24rpx;
+  padding: 0 24rpx;
+}
+.task .line p{
+  font-size: 24rpx;
+  color: #494C5E;
+}
+.task .line span{
+  font-size: 24rpx;
+  color: #494C5E;
+  font-weight: 400;
+}
+.task .line .gray{
+  color: #7B7F8E;
+  background-color: #C1C6CB;
 }
 
 .bar{
