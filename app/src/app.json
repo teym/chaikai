@@ -3,7 +3,8 @@
     "pages/index/main",
     "pages/messages/main",
     "pages/mine/main",
-    "pages/detail/main"
+    "pages/detail/main",
+    "pages/check/main"
   ],
   "window": {
     "backgroundTextStyle": "light",

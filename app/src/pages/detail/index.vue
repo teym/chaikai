@@ -29,7 +29,7 @@
         <div class="row just channel">
           <span>报名渠道</span>
           <ul>
-            <li v-for="(i, j) in channels" :key="j" :style="{'z-index': 99 - j}">
+            <li v-for="(i, j) in channels" :key="j" :style="{'z-index': 9 - j}">
               <img :src="i.img" :alt="i.name" />
             </li>
           </ul>
@@ -98,7 +98,7 @@
             <p>单篇</p>
           </div>
           <div class="row just line">
-            <h6>优惠信息</h6>
+            <h6 @click="tip=true">优惠信息Ⓢ</h6>
             <p>覆置内容₴tDx71ykFZr7₴咑幵淘tao寳或掂击炼接 https://m.tb.cn/<span>复制</span></p>
           </div>
           <div class="row just line">
@@ -109,24 +109,35 @@
       </div>
     </div>
     <div class="bar">
-      <div>立即申请</div>
+      <div class="btn" @click="onOk">立即申请</div>
     </div>
-    <div class="pop">
-      <div class="pop-content">
+    <div v-if="tip" class="pop">
+      <div class="pop-content bottom">
+        <h6>合作要求特殊说明：</h6>
+        <p>小红书：因添加优惠信息后，内容屏蔽风险较高，内容正文和评论中暂不支持添加优惠信息</p>
+      </div>
+      <div class="place" @click="tip=false"></div>
+    </div>
+    <div v-if="pop" class="pop">
+      <div class="place"></div>
+      <div class="pop-content top">
         <h5>选择商品规格</h5>
-        <div class="sku">
-          <h6>name</h6>
+        <div v-for="(sku, i) in data.skus" :key="i" class="sku">
+          <h6>{{sku.name}}</h6>
           <ul>
-            li
+            <li v-for="(item, j) in sku.list" :key="j" :class="{sel:active[sku.id] && active[sku.id].id === item.id}" @click="onSelect(sku, item)">{{item.name}}</li>
           </ul>
         </div>
+        <div class="btn" @click="onGo">立即申请</div>
+        <img @click="pop=false" class="close" src="/static/images/pop-close.png" alt="close">
       </div>
     </div>
   </div>
 </template>
 
 <script>
-// import _ from 'underscore'
+import _ from 'underscore'
+import {router, uiapi} from '@/utils/index'
 
 const ImgUrl = 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1600427730668&di=07620f900465606f5579258a46d132ba&imgtype=0&src=http%3A%2F%2Fd.hiphotos.baidu.com%2Fzhidao%2Fpic%2Fitem%2F0e2442a7d933c895ca486665d51373f0820200fd.jpg'
 export default {
@@ -142,14 +153,17 @@ export default {
           desc: 'aksjdlkajdlaskjd\nkajslkajfkhdfksjf\nkjsdfksdjfs\nsjdfksdj',
           logo: ImgUrl
         },
-        skus: [{name: '颜色', list: ['abcd', 'def', 'asfdasf']}, {name: '大小', list: ['abcd', 'def', 'asfdasf']}],
+        skus: [{id: 1, name: '颜色', list: [{name: 'abcd', id: 1}, {name: 'def', id: 2}, {name: 'asfdasf', id: 3}]}, {id: 2, name: '大小', list: [{name: 'abcd', id: 1}, {name: 'def', id: 2}, {name: 'asfdasf', id: 3}]}],
         guideLine: ['asdasasda', 'asdadads'],
         desc: '<img style="width:100%;height:auto" src="' + ImgUrl + '">'
       },
       channels: [{name: 'b', img: '/static/images/channel_bi.png'}, {name: 'w', img: '/static/images/channel_wb.png'}],
       loading: false,
       tab: 1,
-      expand: false
+      expand: false,
+      active: {},
+      pop: false,
+      tip: false
     }
   },
   created () {
@@ -162,6 +176,32 @@ export default {
 
   },
   methods: {
+    onSelect (sku, item) {
+      this.active = Object.assign({}, this.active, _.object([[sku.id, item]]))
+    },
+    onOk () {
+      const t = Math.random()
+      if (t < 0.4) {
+        this.pop = true
+      } else {
+        if (t < 0.7) {
+          uiapi.alert({ title: '温馨提示', content: '抱歉，您无法申请该活动，需认证以下渠道：抖音/微博/小红书' }).then(r => {
+            router(this).push('/pages/auth/main')
+          }).catch(e => {
+
+          })
+        } else {
+          uiapi.toast('今日申请次数已用完')
+        }
+      }
+    },
+    onGo () {
+      if (_.size(this.active) === _.size(this.data.skus)) {
+        router(this).push('/pages/check/main')
+      } else {
+        uiapi.toast('请选择商品规格')
+      }
+    }
   }
 }
 </script>
@@ -425,12 +465,11 @@ h5 {
   left: 0;
   bottom: 0;
   width: 750rpx;
-  height: 88rpx;
+  height: 96rpx;
+  z-index: 10;
 }
-.bar div{
+.btn{
   height: 80rpx;
-  margin: 4rpx 58rpx;
-  flex: 1;
   border-radius: 40rpx;
   background-color: #FF8E3B;
   color: white;
@@ -439,5 +478,86 @@ h5 {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+.bar .btn{
+  margin: 8rpx 58rpx;
+  flex: 1;
+}
+.pop{
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.4);
+  display: flex;
+  flex-direction: column;
+  z-index: 50;
+}
+.pop .place{
+  flex: 1;
+}
+.pop-content{
+  position: relative;
+  background-color: white;
+  padding: 40rpx 24rpx;
+}
+.pop-content.top{
+  border-radius: 20rpx 20rpx 0 0;
+}
+.pop-content.bottom{
+  border-radius: 0 0 20rpx 20rpx;
+}
+.pop-content .close{
+  position: absolute;
+  right: 16rpx;
+  top: 32rpx;
+  width: 48rpx;
+  height: 48rpx;
+}
+.pop-content h5{
+  font-size: 32rpx;
+  color: #494C5E;
+  font-weight: 500;
+  text-align: center;
+  margin-bottom: 16rpx;
+}
+.pop-content .sku {
+  margin-top: 16rpx;
+}
+.pop-content h6{
+  font-size: 28rpx;
+  color: #494C5E;
+  font-weight: 400;
+}
+.pop-content p{
+  font-size: 24rpx;
+  line-height: 40rpx;
+  color: #7B7F8E;
+}
+.pop-content .sku ul{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+.pop-content .sku li{
+  background-color: #F2F2F2;
+  font-size: 24rpx;
+  color: #494C5E;
+  font-weight: normal;
+  margin: 8rpx 16rpx 0 0;
+  height: 48rpx;
+  border-radius: 24rpx;
+  padding: 0 24rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.pop-content .sku li.sel{
+  background-color: #FF8E3B44;
+  color: #FF8E3B;
+}
+.pop-content .btn{
+  margin: 200rpx 32rpx 24rpx 32rpx;
 }
 </style>
