@@ -4,7 +4,8 @@
     "pages/messages/main",
     "pages/mine/main",
     "pages/detail/main",
-    "pages/check/main"
+    "pages/check/main",
+    "pages/profile/main"
   ],
   "window": {
     "backgroundTextStyle": "light",
