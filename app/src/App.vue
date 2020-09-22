@@ -120,7 +120,7 @@ page{
   font-size: 28rpx;
 }
 .big{
-  font-size: 32rpx;
+  font-size: 36rpx;
 }
 .pad{
   padding: 16rpx;

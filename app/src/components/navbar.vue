@@ -1,6 +1,6 @@
 <template>
-  <div class="navbar" :style="{height: totalHeight}">
-    <div :class="{fixed: fixed}">
+  <div class="navbar" :style="{height: totalHeight, background: background || 'transparent'}">
+    <div :class="{fixed: fixed}" :style="{background: background || 'transparent'}">
       <div :style="{height: statusBarHeight}"></div>
       <div class="content" :style="{height: navbarHeight}">
         <slot />
@@ -11,7 +11,7 @@
 
 <script>
 export default {
-  props: ['fixed'],
+  props: ['fixed', 'background'],
   data () {
     return {
       statusBarHeight: '',
@@ -32,7 +32,6 @@ export default {
 <style scoped>
 .navbar{
   width: 100%;
-  background-color: white;
 }
 .content{
   width: 100%;
@@ -43,6 +42,5 @@ export default {
   left: 0;
   width: 750rpx;
   z-index: 999;
-  background-color: white;
 }
 </style>

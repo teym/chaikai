@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <navbar :fixed="true">
+    <navbar :fixed="true" background="white">
       <div class="navbar">
         <p>活动<span>今日还可申请5次</span></p>
       </div>
