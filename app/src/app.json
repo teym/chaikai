@@ -5,7 +5,10 @@
     "pages/mine/main",
     "pages/detail/main",
     "pages/check/main",
-    "pages/profile/main"
+    "pages/profile/main",
+    "pages/scope/main",
+    "pages/channel/main",
+    "pages/auth/main"
   ],
   "window": {
     "backgroundTextStyle": "light",
