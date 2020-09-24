@@ -3,5 +3,5 @@
     "backgroundTextStyle": "dark",
     "backgroundColor": "#FFFFFF",
     "onReachBottomDistance": 20,
-    "navigationStyle": "custom"
+    "navigationBarTitleText": "悬赏明细"
 }

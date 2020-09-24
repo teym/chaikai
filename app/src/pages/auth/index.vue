@@ -9,7 +9,8 @@
         <input class="flex middle dark" type="text" v-model="url" placeholder="请输入主页链接">
       </div>
       <div class="light_bg row center margin2-t shot">
-        <p class="middle light">点击上传主页截图</p>
+        <p v-if="!img" class="middle light">点击上传主页截图</p>
+        <img v-else :src="img" alt="img">
       </div>
       <p class="red small text-right margin2-t">查看示例</p>
       <h5 class="middle dark medium margin2-t">微博入驻要求</h5>
@@ -23,15 +24,14 @@
       <div class="flex"></div>
       <div class="btn middle blod row center" :class="{bg:vaild, red_bg:!vaild}" @click="onGo">提交审核</div>
     </div>
-    <div class="pos_a" v-if="tip">
-      <img src="/static/images/act_done.png" alt="done">
-    </div>
+    <done v-if="tip" message="小二会尽快给您反馈结果，请耐心等待～"/>
   </div>
 </template>
 
 <script>
 // import _ from 'underscore'
 // import {router, uiapi} from '@/utils/index'
+import done from '@/components/done'
 
 export default {
   data () {
@@ -40,8 +40,12 @@ export default {
       url: '',
       image: '',
       vaild: false,
-      reason: '您提交的主页链接已被达人【好新鲜的小治】所认证，请重新提交主页链接，若有疑问请联系客服微信ckgift2020'
+      reason: '您提交的主页链接已被达人【好新鲜的小治】所认证，请重新提交主页链接，若有疑问请联系客服微信ckgift2020',
+      tip: false
     }
+  },
+  components: {
+    done
   },
   created () {
     // let app = getApp()
@@ -67,6 +71,10 @@ export default {
 }
 .shot{
   height: 300rpx;
+}
+.shot img{
+  width: 100%;
+  height: 100%;
 }
 .btn{
   margin: 60rpx;

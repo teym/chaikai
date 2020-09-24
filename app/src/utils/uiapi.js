@@ -22,5 +22,21 @@ export function loading (title) {
   }
 }
 
-export const muiapi = { alert, toast, loading }
+export function chooseImage () {
+  return new Promise((resolve, reject) => {
+    mpvue.chooseImage({
+      count: 1,
+      sizeType: ['compressed'],
+      sourceType: ['album', 'camera'],
+      success: (e) => {
+        resolve(e.tempFilePaths[0])
+      },
+      fail: (e) => {
+        reject(e)
+      }
+    })
+  })
+}
+
+export const muiapi = { alert, toast, loading, chooseImage }
 export default muiapi

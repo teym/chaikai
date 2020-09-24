@@ -8,7 +8,10 @@
     "pages/profile/main",
     "pages/scope/main",
     "pages/channel/main",
-    "pages/auth/main"
+    "pages/auth/main",
+    "pages/wallet/main",
+    "pages/list/main",
+    "pages/message/main"
   ],
   "window": {
     "backgroundTextStyle": "light",
