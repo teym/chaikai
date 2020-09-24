@@ -8,7 +8,7 @@
       </div>
     </navbar>
     <div class="row just info pad2-l pad2-r margin-t">
-      <div class="row">
+      <div class="row" @click="onRouter('profile')">
         <img class="logo" :src="user.avatar" alt="logo">
         <div class="col just margin-l">
           <h5 class="big blod">{{user.nickName}}</h5>
@@ -33,7 +33,7 @@
     <div class="flex white_bg round pad2-l pad2-r">
       <div class="row just">
         <h5 class="big blod dark">活动订单</h5>
-        <div class="row i-center">
+        <div class="row i-center" @click="onRouter('orders')">
           <p class="small light">查看全部</p>
           <img class="right" src="/static/images/arrow_right.png" alt="right">
         </div>
@@ -56,13 +56,13 @@
           <p class="small light margin-t">待测评</p>
         </div>
       </div>
-      <div class="row just margin2-t margin2-b">
+      <div class="row just margin2-t margin2-b" @click="onRouter('issues')">
         <p class="middle light">订单问题</p>
         <div class="row i-center">
           <img class="right" src="/static/images/arrow_right.png" alt="right">
         </div>
       </div>
-      <div class="row just margin2-t margin2-b">
+      <div class="row just margin2-t margin2-b" @click="onRouter('wallet')">
         <p class="middle light">钱包收入</p>
         <div class="row i-center">
           <span class="big red blod">500.00</span>

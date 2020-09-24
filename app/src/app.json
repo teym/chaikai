@@ -11,7 +11,12 @@
     "pages/auth/main",
     "pages/wallet/main",
     "pages/list/main",
-    "pages/message/main"
+    "pages/message/main",
+    "pages/issues/main",
+    "pages/issue/main",
+    "pages/orders/main",
+    "pages/order/main",
+    "pages/deposit/main"
   ],
   "window": {
     "backgroundTextStyle": "light",
