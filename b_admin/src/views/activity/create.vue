@@ -539,7 +539,7 @@ export default {
 
           obj.regTime = [r.regStartTime, r.regEndTime]
           if (!r.extension.channelLimit) {
-            obj.channels = [0].concat(Channels.map((i) => i.id))
+            obj.channels = Channels.map((i) => i.id)
           } else {
             obj.channels = r.extension.channels.map((i) => i.platformId)
           }

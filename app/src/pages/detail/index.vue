@@ -137,7 +137,7 @@
 
 <script>
 import _ from 'underscore'
-import {router, uiapi} from '@/utils/index'
+import {router, uiapi, api, request} from '@/utils/index'
 
 const ImgUrl = 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1600427730668&di=07620f900465606f5579258a46d132ba&imgtype=0&src=http%3A%2F%2Fd.hiphotos.baidu.com%2Fzhidao%2Fpic%2Fitem%2F0e2442a7d933c895ca486665d51373f0820200fd.jpg'
 export default {
@@ -169,6 +169,9 @@ export default {
   created () {
     // let app = getApp()
   },
+  mounted () {
+    this.loadData()
+  },
   onPullDownRefresh () {
 
   },
@@ -176,6 +179,14 @@ export default {
 
   },
   methods: {
+    loadData () {
+      const {id} = router(this).params()
+      request.get('/bl/activity/' + id).then(({json: {data}}) => {
+
+      }).catch(e => {
+        uiapi.toast(e.info)
+      })
+    },
     onSelect (sku, item) {
       this.active = Object.assign({}, this.active, _.object([[sku.id, item]]))
     },
@@ -196,6 +207,10 @@ export default {
       }
     },
     onGo () {
+      if (!api.isLogin()) {
+        router(this).push('/pages/login/main')
+        return
+      }
       if (_.size(this.active) === _.size(this.data.skus)) {
         router(this).push('/pages/check/main')
       } else {

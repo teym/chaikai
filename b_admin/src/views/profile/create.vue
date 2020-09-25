@@ -39,7 +39,7 @@
         <el-button
           type="primary"
           @click="submitForm"
-        >{{ (["","提交审核","审核中","已通过","提交审核"])[data.statusCode] }}</el-button>
+        >{{ (["","提交审核","审核中","已通过","提交审核"])[data.statusCode || 1] }}</el-button>
       </div>
     </el-form>
   </div>
@@ -116,9 +116,9 @@ export default {
       this.loading = true
       fetchStat()
         .then((response) => {
-          this.data = response.data
+          this.data = response.data || { statusCode: 1 }
           for (const key in defaultForm) {
-            this.postForm[key] = response.data[key] || ''
+            this.postForm[key] = (this.data)[key] || ''
           }
           // this.postForm.businessLicense =
           // "https://gd2.alicdn.com/imgextra/i1/831279688/TB2HmVucrsTMeJjy1zbXXchlVXa_!!831279688.jpg_400x400.jpg";

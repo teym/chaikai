@@ -10,12 +10,12 @@
       </div>
     </navbar>
     <div class="col info center">
-      <h1>8.50</h1>
+      <h1>{{scope}}</h1>
       <span class="middle">综合评分</span>
     </div>
     <div class="flex white_bg round pad2-l pad2-r">
       <h5 class="middle blod dark">我的评价标签</h5>
-      <p v-if="!tags" class="margin2-b margin-t light small">暂未收到评价标签</p>
+      <p v-if="tags.length === 0" class="margin2-b margin-t light small">暂未收到评价标签</p>
       <ul v-else class="tags row margin2-b margin-t">
         <li v-for="(t, i) in tags" :key="i" class="light_bg light small pad2-l pad2-r margin2-r row center">{{t}}</li>
       </ul>
@@ -37,7 +37,8 @@ import {router} from '@/utils/index'
 export default {
   data () {
     return {
-      tags: ['数据欠佳 32', '数据欠佳 32', '数据欠佳 32']
+      tags: [],
+      scope: 0
     }
   },
 
@@ -53,6 +54,11 @@ export default {
 
   created () {
     // let app = getApp()
+  },
+  mounted () {
+    const {scope, tags} = router(this).params()
+    this.scope = scope
+    this.tags = decodeURIComponent(tags).split(',').filter(i => (i !== '' && i !== ' '))
   }
 }
 </script>

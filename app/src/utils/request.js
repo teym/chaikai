@@ -1,7 +1,7 @@
 import _ from 'underscore'
-import { fetch } from './fetch'
-import {mstore} from './store'
-import md5 from 'blueimp-md5'
+import { fetch, upload } from './fetch'
+import { mstore } from './store'
+// import md5 from 'blueimp-md5'
 
 function cleanParam (p) {
   return _.object(_.pairs(p).filter(([k, v]) => (!(_.isNull(v) || _.isUndefined(v) || v === 'null' || v === 'undefined'))))
@@ -11,16 +11,17 @@ function mapHeaders (headers) {
   return _.object(_.map(_.keys(headers.map), (k) => ([k.toLowerCase(), headers.map[k]])))
 }
 
-function sign (param) {
-  const timestamp = Date.now()
-  const s = md5(_.map(_.extend(param, { timestamp }), (v, k) => (`${k}=${v}`)).sort().join('&') + md5('meiwen888') + timestamp)
-  return { timestamp, sign: s }
-}
+// function sign (param) {
+//   const timestamp = Date.now()
+//   const s = md5(_.map(_.extend(param, { timestamp }), (v, k) => (`${k}=${v}`)).sort().join('&') + md5('meiwen888') + timestamp)
+//   return { timestamp, sign: s }
+// }
 const conf = {
-  host: 'http://tpjtest.newtvmall.com',
+  host: 'http://192.168.100.5:8888/api',
   token: '',
-  base: { app: 'XMTT' }
+  base: {}
 }
+
 function setup (cache) {
   if (!conf.token || !cache) {
     conf.token = mstore.getItem('token') || ''
@@ -29,24 +30,23 @@ function setup (cache) {
 function requestConf (path, params) {
   setup(true)
   const pp = cleanParam(_.extend({}, conf.base, params || {}))
-  const qq = _.extend(pp, sign(pp))
+  const qq = pp // _.extend(pp, sign(pp))
   const queryStr = _.map(qq, (v, k) => (`${k}=${encodeURIComponent(v)}`)).join('&')
-  const url = `${conf.host}/${path}?${queryStr}`
-  const requestHeaders = conf.token ? { accessToken: conf.token } : {}
+  const url = `${conf.host}${path}?${queryStr}`
 
-  console.log('-- conf', url, conf.token)
-  return {url, headers: requestHeaders}
+  return { url, headers: {} }
 }
-function requestGet (path, params) {
-  const {url, headers} = requestConf(path, params)
-  console.log('<--', 'GET', path, params)
+function request (method, url, header, body) {
+  const headers = Object.assign({ 'Content-Type': 'application/json' }, header, conf.token ? { token: conf.token } : {})
+  console.log(method, '<--', url, headers, body)
   return fetch(url, {
-    method: 'GET',
-    headers: headers
+    method,
+    headers,
+    body: body ? JSON.stringify(body) : ''
   }).then(ret => {
     return Promise.all([ret.json(), Promise.resolve(mapHeaders(ret.headers))])
   }).then(([json, headers]) => {
-    console.log('-->', 'GET', path, json)
+    console.log(method, '-->', url, json)
     if (json.success) {
       return { json, headers }
     }
@@ -56,29 +56,25 @@ function requestGet (path, params) {
     throw e
   })
 }
+function requestGet (path, params) {
+  const { url, headers } = requestConf(path, params)
+  return request('GET', url, headers)
+}
+
 function requestPost (path, params) {
   setup(true)
   const pp = cleanParam(_.extend({}, conf.base, params || {}))
-  const qq = _.extend(pp, sign(pp))
-  const url = `${conf.host}/${path}`
-  const requestHeaders = conf.token ? { accessToken: conf.token } : {}
-  console.log('<--', 'POST', path, qq, conf.token)
-  return fetch(url, {
-    method: 'POST',
-    headers: _.extend({ 'Content-Type': 'application/json' }, requestHeaders),
-    body: JSON.stringify(qq)
-  }).then(ret => {
-    return Promise.all([ret.json(), Promise.resolve(mapHeaders(ret.headers))])
-  }).then(([json, headers]) => {
-    console.log('-->', 'POST', path, json)
-    if (json.success) {
-      return { json, headers }
-    }
-    throw json
-  }).catch(e => {
-    if (!e.info) { e.info = '请求出错' }
-    throw e
-  })
+  const qq = pp// _.extend(pp, sign(pp))
+  const url = `${conf.host}${path}`
+  return request('POST', url, {}, qq)
+}
+
+function requestPut (path, params) {
+  setup(true)
+  const pp = cleanParam(_.extend({}, conf.base, params || {}))
+  const qq = pp// _.extend(pp, sign(pp))
+  const url = `${conf.host}${path}`
+  return request('PUT', url, {}, qq)
 }
 function requestRaw (url, headers) {
   return fetch(url, {
@@ -86,6 +82,22 @@ function requestRaw (url, headers) {
     headers
   })
 }
+function uploadFile (path, file) {
+  setup(true)
+  const header = conf.token ? { token: conf.token } : {}
+  const url = `${conf.host}${path}`
+  return upload(url, file, header).then(ret => {
+    return Promise.all([ret.json(), Promise.resolve(mapHeaders(ret.headers))])
+  }).then(([json, headers]) => {
+    if (json.success) {
+      return { json, headers }
+    }
+    throw json
+  }).catch(e => {
+    if (!e.info) { e.info = '请求出错' }
+    throw e
+  })
+}
 
-export const mrequest = { get: requestGet, raw: requestRaw, post: requestPost, conf: requestConf, setup }
+export const mrequest = { get: requestGet, raw: requestRaw, post: requestPost, put: requestPut, conf: requestConf, setup, upload: uploadFile }
 export default mrequest

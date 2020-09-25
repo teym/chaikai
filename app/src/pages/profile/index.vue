@@ -5,19 +5,20 @@
         <p class="text-right middle dark label">
           <span class="red">*</span> 手机号码：
         </p>
-        <input class="flex middle dark input" type="text" v-model="phone" placeholder="请输入手机号码" />
+        <input class="flex middle dark input" type="text" v-model="user.telephone" placeholder="请输入手机号码" />
+        <button open-type='getPhoneNumber' class="sbtn row center small" @getphonenumber="onPhone">填写手机号</button>
       </div>
       <div class="row pad-t pad-b i-center border">
         <p class="text-right middle dark label">
           <span class="red">*</span> 真实姓名：
         </p>
-        <input class="flex middle dark input" type="text" v-model="name" placeholder="请输入真实的姓名" />
+        <input class="flex middle dark input" type="text" v-model="user.realName" placeholder="请输入真实的姓名" />
       </div>
       <div class="row pad-t pad-b i-center border">
         <p class="text-right middle dark label">
           <span class="red">*</span> 微信号：
         </p>
-        <input class="flex middle dark input" type="text" v-model="wechat" placeholder="请输入真实的微信号码" />
+        <input class="flex middle dark input" type="text" v-model="user.wechatNo" placeholder="请输入真实的微信号码" />
       </div>
       <div class="row pad-t pad-b i-center">
         <p class="text-right middle dark label">垂直领域：</p>
@@ -32,7 +33,7 @@
               :key="j"
               class="tag middle margin2-r margin2-b pad2-l pad2-r row center"
               :class="{red:!!active[t.id],red_bg:!!active[t.id],light:!active[t.id],light_bg:!active[t.id]}"
-              @click="onSelect(t.id)"
+              @click="onSelect(t)"
             >{{t.name}}</span>
           </div>
         </div>
@@ -43,37 +44,87 @@
       <p class="small light margin-t">*平台将不定时，为您匹配线下品牌合作的邀请</p>
       <p class="small light margin-t">*平台将严格保护达人信息，合作过程中请勿透漏给第三方</p>
     </div>
+    <div class="flex">
+    </div>
+    <div class="btn middle blod row center" @click="onSave">保存</div>
   </div>
 </template>
 
 <script>
 import _ from 'underscore'
-import {uiapi} from '@/utils/index'
+import {uiapi, request, router, api} from '@/utils/index'
 export default {
   data () {
     return {
-      phone: '',
-      name: '',
-      wechat: '',
-      tags: [[{name: '护肤', id: 1}, {name: '彩妆', id: 2}, {name: '时尚搭配', id: 3}], [{name: '母婴', id: 4}, {name: '美食', id: 5}, {name: 'Vlog', id: 6}], [{name: '旅游', id: 7}, {name: '技能', id: 8}, {name: '生活', id: 9}], [{name: '二次元', id: 10}, {name: '萌宠', id: 11}, {name: '宝妈', id: 12}], [{name: '健身', id: 13}, {name: '娱乐', id: 14}, {name: '创意', id: 15}]],
+      user: {
+        telephone: '',
+        realName: '',
+        wechatNo: ''
+      },
+      code: '',
+      tags: [],
       active: {}
     }
   },
 
   methods: {
+    loadCode () {
+      api.rlogin().then(r => {
+        this.code = r.code
+      }).catch(e => {
+      })
+    },
+    loadData () {
+      request.get('/bl/account/area/const/list').then(({json: {data}}) => {
+        this.tags = _.chunk(data, 3)
+      })
+      return request.get('/bl/account').then(({json: {data}}) => {
+        this.user = data
+        this.active = _.object(data.areas.map(i => ([i.id, i])))
+        // this.channels = mapChannel(data.channels)
+      }).catch(e => {
+        uiapi.toast(e.info)
+      })
+    },
+    onPhone (e) {
+      if (e.mp.detail.encryptedData) {
+        const l = uiapi.loading()
+        request.post('/bl/account/wxInfo', {encryptInfo: e.mp.detail, code: this.code}).then(({json}) => {
+          this.user.telephone = json.data.phoneNumber || this.user.telephone
+          this.loadCode()
+          l()
+        }).catch(e => {
+          l()
+          uiapi.toast(e.info)
+          this.loadCode()
+        })
+      }
+    },
     onSelect (sel) {
-      if (this.active[sel]) {
-        this.active = _.omit(this.active, sel)
+      if (this.active[sel.id]) {
+        this.active = _.omit(this.active, sel.id)
       } else {
         if (_.size(this.active) >= 3) {
           uiapi.toast('最多选三项')
           return
         }
-        this.active = Object.assign(_.object([[sel, true]]), this.active)
+        this.active = Object.assign(_.object([[sel.id, sel]]), this.active)
       }
+    },
+    onSave () {
+      const e = uiapi.loading()
+      request.put('/bl/account', Object.assign({}, this.user, {areas: _.values(this.active)})).then((r) => {
+        e()
+        router(this).pop()
+      }).catch(e => {
+        e()
+        uiapi.toast(e.info)
+      })
     }
   },
-
+  onShow () {
+    this.loadData()
+  },
   created () {
     // let app = getApp()
   }
@@ -92,5 +143,20 @@ export default {
   min-width: 84rpx;
   height: 56rpx;
   border-radius: 28rpx;
+}
+.sbtn {
+  height: 48rpx;
+  border-radius: 24rpx;
+  border: 1rpx solid #FF8E3B;
+  padding: 0 24rpx;
+  color: #FF8E3B;
+}
+.btn{
+  height: 80rpx;
+  border-radius: 40rpx;
+  color: white;
+  background-color: #FF8E3B;
+  width: 640rpx;
+  margin: 40rpx 55rpx;
 }
 </style>

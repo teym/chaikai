@@ -5,7 +5,7 @@
         <p>活动<span>今日还可申请5次</span></p>
       </div>
     </navbar>
-    <div class="content">
+    <div class="content flex">
       <swiper class="banners" :indicator-dots="true" indicator-color='white' indicator-active-color='#FF8E3B' previous-margin="0" next-margin="0">
         <block v-for="(item, index) in banners" :index="index" :key="index">
           <swiper-item class="banner">
@@ -13,28 +13,29 @@
           </swiper-item>
         </block>
       </swiper>
-      <div class="items">
-        <div v-for="(data, j) in datas" :key="j" class="col">
+      <div class="items row">
+        <div v-for="(data, j) in datas" :key="j" class="col flex">
           <div class="item" v-for="(item, index) in data" :key="index" @click="onItem(item)">
             <div class="icon">
-              <img :src="item.img" alt="img" mode="aspectFill">
-              <div class="end">
+              <img :src="item.goods.picUrl" alt="img" mode="aspectFill">
+              <div v-if="item.statusCode > 6" class="end">
                 <p>报名结束</p>
               </div>
             </div>
-            <div class="info">
-              <h5>{{item.title}}</h5>
-              <div class="row">
-                <p class="light">
-                价值：{{item.price || 0}}元
+            <div class="pad">
+              <h5 class="middle dark medium">{{item.title}}</h5>
+              <div class="row just i-center margin-t">
+                <p class="small light">
+                价值：{{item.goods.price || 0}}元
                 </p>
               </div>
-              <div class="row">
-                <p class="strong">
-                名额 <span>{{item.count}}</span>
+              <div class="row just i-center margin-t">
+                <p class="middle dark">
+                名额 <span class="red blod">{{item.totalNum}}</span>
                 </p>
-                <ul>
-                  <li>悬赏</li>
+                <ul v-if="item.cooperationType < 3" class="row tag">
+                  <li class="small red">悬赏</li>
+                  <li v-if="item.cooperationType === 2" class="small red">报价</li>
                 </ul>
               </div>
             </div>
@@ -48,7 +49,7 @@
 <script>
 import _ from 'underscore'
 import navbar from '@/components/navbar'
-import {router} from '@/utils/index'
+import {router, request} from '@/utils/index'
 
 const ImgUrl = 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1600427730668&di=07620f900465606f5579258a46d132ba&imgtype=0&src=http%3A%2F%2Fd.hiphotos.baidu.com%2Fzhidao%2Fpic%2Fitem%2F0e2442a7d933c895ca486665d51373f0820200fd.jpg'
 export default {
@@ -67,22 +68,38 @@ export default {
   components: {
     navbar
   },
+  mounted () {
+    this.loadData(1)
+  },
   created () {
     // let app = getApp()
-    const datas = _.head(_.flatten(_.zip(this.datas[0] || [], this.datas[1] || [])),
-      (this.datas[0].length || 0) + (this.datas[1].length || 0)
-    ).concat([1, 2, 3, 4, 5, 6, 7, 8, 9].map((i, j) => ({title: (Math.random() > 0.5 ? '毛戈平故宫' : '毛戈平故宫\nlkajdskajsd') + i, img: ImgUrl})))
-    this.datas = _.partition(datas, (i, j) => (j % 2 === 0))
   },
   onPullDownRefresh () {
-
+    this.loadData(1)
   },
   onReachBottom () {
-
+    this.loadData(this.page + 1)
   },
   methods: {
-    onItem () {
-      router(this).push('/pages/detail/main', {id: 0})
+    loadData (page) {
+      if (this.loading || (page > 1 && this.nomore)) {
+        return Promise.resolve()
+      }
+      return request.get('/bl/activity/list', {page, size: 20}).then(({json: {data}}) => {
+        const olds = page === 1 ? [] : _.head(_.flatten(_.zip(this.datas[0] || [], this.datas[1] || [])),
+          (this.datas[0].length || 0) + (this.datas[1].length || 0)
+        )
+        const datas = olds.concat(data.data)
+        this.datas = _.partition(datas, (i, j) => (j % 2 === 0))
+        this.nomore = data.pager.totalPages > page
+        this.page = page
+        this.loading = false
+      }).catch(e => {
+        this.loading = false
+      })
+    },
+    onItem (item) {
+      router(this).push('/pages/detail/main', {id: item.id})
     }
   }
 }
@@ -106,9 +123,7 @@ export default {
   font-weight: normal;
   margin-left: 16rpx;
 }
-.content{
-  flex: 1;
-}
+
 .banners{
   width: 750rpx;
   height: 400rpx;
@@ -124,13 +139,10 @@ export default {
   margin: 0 32rpx;
 }
 .items{
-  display: flex;
-  flex-direction: row;
   padding: 0 20rpx;
   margin: 24rpx 0;
 }
 .items .col{
-  flex: 1;
   margin: 0 12rpx;
 }
 .item{
@@ -176,26 +188,14 @@ export default {
   color: #494C5E;
 }
 .item .info .row{
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
   margin-top: 8rpx;
-  align-items: center;
 }
-.item .info .row .light{
-  color: #7B7F8E;
-  font-size: 24rpx;
-  line-height: 34rpx;
-}
-.item .info .row .strong{
-  color: #494C5E;
-  font-size: 28rpx;
-}
-.item .info ul{
+
+.tag{
   display: flex;
   flex-direction: row;
 }
-.item .info ul li{
+.tag li{
   font-size: 16rpx;
   line-height: 28rpx;
   color: #FF8E3B;

@@ -7,7 +7,9 @@
         <p>
           审核通过后，将通过短信进行通知
           <br>为加快小二审核效率，
-          <router-link :to="{path:'/user/auth'}">请完成最后一步品牌授权</router-link>，即可招募博主
+          <router-link
+            :to="{ path: '/user/auth' }"
+          >请完成最后一步品牌授权</router-link>，即可招募博主
         </p>
         <el-button size="mini">新增品牌授权</el-button>
       </div>
@@ -24,7 +26,7 @@
         <el-form-item label="品牌名称:" prop="name">
           <el-input v-model="postForm.name" placeholder="请输入品牌名称" />
         </el-form-item>
-        <el-form-item prop="logo" style="margin-bottom: 30px;" label="品牌LOGO:">
+        <el-form-item prop="logo" style="margin-bottom: 30px" label="品牌LOGO:">
           <Upload v-model="postForm.logo" />
         </el-form-item>
         <el-form-item label="品牌故事:" prop="story">
@@ -34,7 +36,11 @@
             placeholder="请输入您的品牌故事，帮助博主和粉丝更好了解贵品牌"
           />
         </el-form-item>
-        <el-form-item prop="trademarkRegistration" style="margin-bottom: 30px;" label="商标注册书:">
+        <el-form-item
+          prop="trademarkRegistration"
+          style="margin-bottom: 30px"
+          label="商标注册书:"
+        >
           <Upload v-model="postForm.trademarkRegistration" />
         </el-form-item>
         <el-form-item label="品牌关系:" prop="relationType">
@@ -46,12 +52,16 @@
         <el-form-item
           v-if="postForm.relationType === '2'"
           prop="qualification"
-          style="margin-bottom: 30px;"
+          style="margin-bottom: 30px"
           label="品牌授权资质:"
         >
           <Upload v-model="postForm.qualification" />
         </el-form-item>
-        <el-button :loading="loading" type="primary" @click="submitForm">提交审核</el-button>
+        <el-button
+          :loading="loading"
+          type="primary"
+          @click="submitForm"
+        >提交审核</el-button>
       </div>
     </el-form>
   </div>
@@ -64,13 +74,10 @@ import { fetchPv, createPv, submitPv } from '@/api/goods'
 
 const defaultForm = {
   name: '',
-  logo:
-    'https://gd2.alicdn.com/imgextra/i1/831279688/TB2HmVucrsTMeJjy1zbXXchlVXa_!!831279688.jpg_400x400.jpg',
+  logo: '',
   story: '',
-  trademarkRegistration:
-    'https://gd2.alicdn.com/imgextra/i1/831279688/TB2HmVucrsTMeJjy1zbXXchlVXa_!!831279688.jpg_400x400.jpg',
-  qualification:
-    'https://gd2.alicdn.com/imgextra/i1/831279688/TB2HmVucrsTMeJjy1zbXXchlVXa_!!831279688.jpg_400x400.jpg',
+  trademarkRegistration: '',
+  qualification: '',
   relationType: '1'
 }
 

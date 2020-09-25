@@ -29,7 +29,7 @@
 <script>
 // import _ from 'underscore'
 import navbar from '@/components/navbar'
-import {router} from '@/utils/index'
+import {router, api, signal} from '@/utils/index'
 
 const ImgUrl = 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1600427730668&di=07620f900465606f5579258a46d132ba&imgtype=0&src=http%3A%2F%2Fd.hiphotos.baidu.com%2Fzhidao%2Fpic%2Fitem%2F0e2442a7d933c895ca486665d51373f0820200fd.jpg'
 export default {
@@ -56,8 +56,23 @@ export default {
   components: {
     navbar
   },
+  onShow () {
+    if (!api.isLogin()) {
+      router(this).push('/pages/login/main')
+    }
+  },
   created () {
     // let app = getApp()
+    this.onUser = () => {
+      this.loadData()
+    }
+    signal.add('logined', this.onUser)
+    if (api.isLogin()) {
+      this.loadData()
+    }
+  },
+  beforeDestroy () {
+    signal.remove('logined', this.onUser)
   },
   onPullDownRefresh () {
 
@@ -66,6 +81,9 @@ export default {
 
   },
   methods: {
+    loadData () {
+
+    },
     onGo () {
       router(this).push('/pages/message/main')
     }

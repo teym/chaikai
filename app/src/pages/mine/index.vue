@@ -11,21 +11,21 @@
       <div class="row" @click="onRouter('profile')">
         <img class="logo" :src="user.avatar" alt="logo">
         <div class="col just margin-l">
-          <h5 class="big blod">{{user.nickName}}</h5>
-          <p class="small">个护|个护|个护</p>
+          <h5 class="big blod">{{user.nickname}}</h5>
+          <p class="small">{{tags}}</p>
         </div>
       </div>
       <div class="col just end">
         <div class="row i-center" @click="onRouter('channel')">
           <ul class="row channel i-center">
             <li v-for="(i, j) in channels" :key="j" :style="{'z-index': 9 - j}">
-              <img :src="i.img" :alt="i.name" />
+              <img :src="i.img" :alt="i.platformName" />
             </li>
           </ul>
-          <img class="right" src="/static/images/arrow_right.png" alt="right">
+          <img class="right margin-l" src="/static/images/arrow_right.png" alt="right">
         </div>
-        <div class="row i-center" @click="onRouter('scope')">
-          <p class="small">评分 <span class="blod">9.5</span></p>
+        <div class="row i-center" @click="onScope">
+          <p class="small">评分 <span class="blod">{{user.scope || 0}}</span></p>
           <img class="right" src="/static/images/arrow_right.png" alt="right">
         </div>
       </div>
@@ -89,33 +89,62 @@
 
 <script>
 import navbar from '@/components/navbar'
-import {router} from '@/utils/index'
+import {router, api, signal, request, mapChannel, uiapi} from '@/utils/index'
 
 const ImgUrl = 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1600427730668&di=07620f900465606f5579258a46d132ba&imgtype=0&src=http%3A%2F%2Fd.hiphotos.baidu.com%2Fzhidao%2Fpic%2Fitem%2F0e2442a7d933c895ca486665d51373f0820200fd.jpg'
 
 export default {
-  data () {
-    return {
-      user: {
-        nickName: 'mpvue',
-        avatar: ImgUrl
-      },
-      channels: [{name: 'b', img: '/static/images/channel_bi.png'}, {name: 'w', img: '/static/images/channel_wb.png'}]
-    }
-  },
-
   components: {
     navbar
   },
-
-  methods: {
-    onRouter (p) {
-      router(this).push('/pages/' + p + '/main')
+  data () {
+    return {
+      user: {
+        nickname: 'mpvue',
+        avatar: ImgUrl,
+        score: 0,
+        areas: []
+      },
+      channels: []
     }
   },
-
+  computed: {
+    tags () {
+      return this.user.areas.map(i => i.name).join('|')
+    }
+  },
+  onShow () {
+    if (!api.isLogin()) {
+      router(this).push('/pages/login/main')
+    } else {
+      this.loadData()
+    }
+  },
   created () {
     // let app = getApp()
+    this.onUser = () => {
+      this.loadData()
+    }
+    signal.add('logined', this.onUser)
+  },
+  beforeDestroy () {
+    signal.remove('logined', this.onUser)
+  },
+  methods: {
+    loadData () {
+      request.get('/bl/account').then(({json: {data}}) => {
+        this.user = data
+        this.channels = mapChannel(data.channels).filter(i => i.statusCode === 3)
+      }).catch(e => {
+        uiapi.toast(e.info)
+      })
+    },
+    onScope () {
+      this.onRouter('scope', {scope: this.user.score, tags: this.user.scoreInfo.items.map(i => (`${i.msg} ${i.number}`)).join(',')})
+    },
+    onRouter (p, d) {
+      router(this).push('/pages/' + p + '/main', d)
+    }
   }
 }
 </script>
@@ -149,6 +178,9 @@ export default {
 .info p{
   color: white;
 }
+.channel li{
+  height: 44rpx;
+}
 .channel li img {
   width: 44rpx;
   height: 44rpx;
@@ -158,8 +190,8 @@ export default {
   align-items: flex-end;
 }
 .right{
-  width: 44rpx;
-  height: 44rpx;
+  width: 32rpx;
+  height: 32rpx;
 }
 .round{
   margin-top: 52rpx;

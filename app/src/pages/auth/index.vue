@@ -3,44 +3,44 @@
     <div class="white_bg col flex pad2">
       <div class="row i-center channel">
         <img :src="channel.img" alt="img">
-        <p class="middle dark blod margin-l">{{channel.name}}</p>
+        <p class="middle dark blod margin-l">{{channel.platformName}}</p>
       </div>
       <div class="light_bg row pad margin2-t">
-        <input class="flex middle dark" type="text" v-model="url" placeholder="请输入主页链接">
+        <input class="flex middle dark" type="text" v-model="channel.homeLink" placeholder="请输入主页链接">
       </div>
-      <div class="light_bg row center margin2-t shot">
-        <p v-if="!img" class="middle light">点击上传主页截图</p>
-        <img v-else :src="img" alt="img">
+      <div class="light_bg row center margin2-t shot" @click="onChoseImg">
+        <p v-if="!channel.homePic" class="middle light">点击上传主页截图</p>
+        <img v-else :src="channel.homePic" alt="img">
       </div>
       <p class="red small text-right margin2-t">查看示例</p>
-      <h5 class="middle dark medium margin2-t">微博入驻要求</h5>
+      <h5 class="middle dark medium margin2-t">{{channel.platformName}}入驻要求</h5>
       <p class="small light margin-t">1.粉丝数≥10000</p>
       <p class="small light margin-t">2.根据达人账号综合资质，评估入驻资格，如：粉丝量、内容质量、互动真实无水分</p>
       <p class="small light margin-t">3.两个工作日内反馈申请结果</p>
-      <div v-if="reason" class="light_bg pad2 reason margin2-t">
+      <div v-if="channel.statusCode === '2'" class="light_bg pad2 reason margin2-t">
         <h6 class="middle medium">拒绝理由：</h6>
-        <p class="small margin-t">{{reason}}</p>
+        <p class="small margin-t">{{channel.rejectReason}}</p>
       </div>
       <div class="flex"></div>
-      <div class="btn middle blod row center" :class="{bg:vaild, red_bg:!vaild}" @click="onGo">提交审核</div>
+      <div class="btn middle blod row center bg" @click="onGo">提交审核</div>
     </div>
     <done v-if="tip" message="小二会尽快给您反馈结果，请耐心等待～"/>
   </div>
 </template>
 
 <script>
-// import _ from 'underscore'
-// import {router, uiapi} from '@/utils/index'
+import _ from 'underscore'
+import {router, uiapi, request} from '@/utils/index'
 import done from '@/components/done'
 
 export default {
   data () {
     return {
-      channel: {name: 'b', img: '/static/images/channel_bi.png'},
-      url: '',
-      image: '',
-      vaild: false,
-      reason: '您提交的主页链接已被达人【好新鲜的小治】所认证，请重新提交主页链接，若有疑问请联系客服微信ckgift2020',
+      channel: {
+        homeLink: '',
+        homePic: '',
+        rejectReason: ''
+      },
       tip: false
     }
   },
@@ -50,15 +50,41 @@ export default {
   created () {
     // let app = getApp()
   },
+  mounted () {
+    this.channel = _.mapObject(router(this).params(), (v) => { const r = decodeURIComponent(v); return (r === 'null' || r === ' undefined') ? '' : r })
+  },
   onPullDownRefresh () {
 
   },
   onReachBottom () {
 
   },
-  methods: {
-    onGo () {
+  onShow () {
 
+  },
+  methods: {
+    onChoseImg () {
+      uiapi.chooseImage().then(r => {
+        const l = uiapi.loading()
+        request.upload('/oss/upload', r).then(({json: {data}}) => {
+          l()
+          this.channel.homePic = data
+        }).catch(e => {
+          l()
+          uiapi.toast(e.info)
+        })
+      })
+    },
+    onGo () {
+      const l = uiapi.loading()
+      request.post('/bl/account/channel', Object.assign({}, this.channel)).then(r => {
+        l()
+        uiapi.toast('提交成功')
+        router(this).pop()
+      }).catch(e => {
+        l()
+        uiapi.toast(e.info)
+      })
     }
   }
 }

@@ -16,7 +16,8 @@
     "pages/issue/main",
     "pages/orders/main",
     "pages/order/main",
-    "pages/deposit/main"
+    "pages/deposit/main",
+    "pages/login/main"
   ],
   "window": {
     "backgroundTextStyle": "light",
