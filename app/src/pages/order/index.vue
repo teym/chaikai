@@ -203,7 +203,7 @@ export default {
       router(this).push('/pages/reward/main', {status: this.data.rewardStatusCode})
     },
     onDepose () {
-      router(this).push('/pages/depose/main', {id: this.data.id, status: this.data.depositInfo.statusCode})
+      router(this).push('/pages/depose/main', {id: this.data.id})
     }
   }
 }
