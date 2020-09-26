@@ -261,11 +261,11 @@
             label-width="170px"
             label="其它要求"
           >
-            <el-radio-group v-model="postForm.extension.otherReq">
-              <el-radio-button :label="0">产品和达人同框露脸</el-radio-button>
-              <el-radio-button :label="1">使用前后效果对比</el-radio-button>
-              <el-radio-button :label="2">提供评测原图使用权</el-radio-button>
-            </el-radio-group>
+            <el-checkbox-group v-model="postForm.extension.otherReq">
+              <el-checkbox-button :label="1">产品和达人同框露脸</el-checkbox-button>
+              <el-checkbox-button :label="2">使用前后效果对比</el-checkbox-button>
+              <el-checkbox-button :label="3">提供评测原图使用权</el-checkbox-button>
+            </el-checkbox-group>
           </el-form-item>
           <el-form-item
             prop="extension.awardAmount"
@@ -506,9 +506,9 @@ export default {
           ? this.postForm.extension.keywords.split('').length * 30
           : 0) +
         (this.postForm.extension.bloggerPublishTime ? 30 : 0) +
-        (this.postForm.extension.otherReq.indexOf('1') >= 0 ? 10 : 0) +
-        (this.postForm.extension.otherReq.indexOf('2') >= 0 ? 20 : 0) +
-        (this.postForm.extension.otherReq.indexOf('3') >= 0 ? 30 : 0)
+        (this.postForm.extension.otherReq.indexOf(1) >= 0 ? 10 : 0) +
+        (this.postForm.extension.otherReq.indexOf(2) >= 0 ? 20 : 0) +
+        (this.postForm.extension.otherReq.indexOf(3) >= 0 ? 30 : 0)
       )
     }
   },

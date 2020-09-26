@@ -23,7 +23,7 @@
               </div>
             </div>
             <div class="pad">
-              <h5 class="middle dark medium">{{item.title}}</h5>
+              <h5 class="middle dark medium title">{{item.title}}</h5>
               <div class="row just i-center margin-t">
                 <p class="small light">
                 价值：{{item.goods.price || 0}}元
@@ -35,7 +35,7 @@
                 </p>
                 <ul v-if="item.cooperationType < 3" class="row tag">
                   <li class="small red">悬赏</li>
-                  <li v-if="item.cooperationType === 2" class="small red">报价</li>
+                  <li v-if="item.cooperationType === 2" class="small red margin-l">报价</li>
                 </ul>
               </div>
             </div>
@@ -177,18 +177,14 @@ export default {
   color: white;
   font-size: 32rpx;
 }
-.item .info{
-  padding: 16rpx 20rpx;
-}
-.item .info h5{
+
+.item .title{
   font-size: 28rpx;
   font-weight: 400;
   line-height: 40rpx;
-  max-height: 80rpx;
   color: #494C5E;
-}
-.item .info .row{
-  margin-top: 8rpx;
+  width: 100%;
+  word-break: break-all;
 }
 
 .tag{
@@ -197,10 +193,9 @@ export default {
 }
 .tag li{
   font-size: 16rpx;
-  line-height: 28rpx;
   color: #FF8E3B;
-  border-radius: 4rpx;
+  border-radius: 8rpx;
   border: 1rpx solid #FF8E3B;
-  padding: 0 8rpx;
+  padding: 4rpx 8rpx;
 }
 </style>

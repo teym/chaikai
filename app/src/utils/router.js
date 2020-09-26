@@ -26,7 +26,7 @@ export function mrouter (component) {
     mpvue.reLaunch({url})
   }
   function params () {
-    return component.$root.$mp.query
+    return _.mapObject(component.$root.$mp.query || {}, (v) => decodeURIComponent(v))
   }
   function pop () {
     mpvue.navigateBack()

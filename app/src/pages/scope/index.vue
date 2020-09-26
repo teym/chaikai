@@ -58,7 +58,7 @@ export default {
   mounted () {
     const {scope, tags} = router(this).params()
     this.scope = scope
-    this.tags = decodeURIComponent(tags).split(',').filter(i => (i !== '' && i !== ' '))
+    this.tags = tags.split(',').filter(i => (i !== '' && i !== ' '))
   }
 }
 </script>
