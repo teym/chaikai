@@ -25,6 +25,7 @@
   },
   "dependencies": {
     "blueimp-md5": "^2.18.0",
+    "moment": "^2.29.0",
     "mpvue": "^2.0.0",
     "underscore": "^1.11.0"
   },

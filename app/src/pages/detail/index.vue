@@ -173,7 +173,7 @@ export default {
     this.loadData()
   },
   onPullDownRefresh () {
-
+    this.loadData()
   },
   onReachBottom () {
 
