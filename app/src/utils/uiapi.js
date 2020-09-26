@@ -41,7 +41,15 @@ export function chooseAddress () {
   return new Promise((resolve, reject) => {
     wx.chooseAddress({
       success: (e) => {
-        resolve(e)
+        const addr = {
+          address: e.detailInfo,
+          province: e.provinceName,
+          city: e.cityName,
+          county: e.countyName,
+          telephone: e.telNumber,
+          name: e.userName
+        }
+        resolve(addr)
       },
       fail: (e) => {
         reject(e)

@@ -1,8 +1,8 @@
 <template>
   <div class="container light_bg">
-    <div>
+    <div class="col flex">
       <div class="tabs row white_bg pad2-l pad2-r">
-        <div v-for="(tab, i) in status" :key="i" class="col i-center tab" :class="{active: i === active}" @click="active=i">
+        <div v-for="(tab, i) in status" :key="i" class="col i-center tab" :class="{active: i === active}" @click="onActive(i)">
           <p class="margin2-t">{{tab}}</p>
           <div class="margin2-t"></div>
         </div>
@@ -12,13 +12,13 @@
         <p class="light middle">你还没有订单呢～</p>
       </div>
       <div v-else class="flex">
-        <div v-for="(item, j) in datas" :key="j" class="row pad2 item margin-b white_bg" @click="onOrder">
-          <img class="logo" :src="item.img" alt="logo">
+        <div v-for="(item, j) in datas" :key="j" class="row pad2 item margin-b white_bg" @click="onOrder(item)">
+          <img class="logo" :src="item.activity.picUrl" alt="logo">
           <div class="flex col just margin-l">
-            <p class="middle dark">{{item.title}}</p>
+            <p class="middle dark">{{item.activity.title}}</p>
             <div class="row just i-center">
               <p class="small light">{{item.date}}</p>
-              <span class="red small">待审核</span>
+              <span class="red small">{{status[item.statusCode]}}</span>
             </div>
           </div>
         </div>
@@ -29,43 +29,53 @@
 
 <script>
 // import _ from 'underscore'
-import {router, uiapi} from '@/utils/index'
-
-const ImgUrl = 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1600427730668&di=07620f900465606f5579258a46d132ba&imgtype=0&src=http%3A%2F%2Fd.hiphotos.baidu.com%2Fzhidao%2Fpic%2Fitem%2F0e2442a7d933c895ca486665d51373f0820200fd.jpg'
+import moment from 'moment'
+import {router, uiapi, request} from '@/utils/index'
 
 export default {
   data () {
     return {
       active: 0,
       status: ['全部', '待缴押金', '待发货', '待收货', '待测评', '已完成'],
-      datas: [{
-        title: '悬赏发放',
-        img: ImgUrl,
-        date: '2020.03.01 12:10'
-      },
-      {
-        title: '悬赏发放',
-        img: ImgUrl,
-        date: '2020.03.01 12:10'
-      }]
+      datas: [],
+      loading: false,
+      page: 1,
+      nomore: false
     }
   },
   created () {
     // let app = getApp()
 
   },
+  mounted () {
+    this.loadData(1)
+  },
   onPullDownRefresh () {
-
+    this.loadData(1)
   },
   onReachBottom () {
-
+    if (!(this.loading || this.nomore)) {
+      this.loadData(this.page + 1)
+    }
   },
   methods: {
-    loadData () {
-      uiapi.toast('fail')
+    onActive (i) {
+      this.active = i
+      this.datas = []
+      this.loadData(1)
     },
-    onOrder () {
-      router(this).push('/pages/order/main')
+    loadData (page) {
+      request.get('/bl/activity/order/list', Object.assign({page: page, size: 10}, this.active > 0 ? {statusCode: this.active + 1} : {})).then(({json: {data}}) => {
+        this.datas = (page === 1 ? [] : this.datas).concat((data.data || []).map(i => Object.assign({date: moment(i.gmtCreate).format('YYYY.MM.DD')}, i)))
+        this.nomore = data.pager.totalPages > page
+        this.page = page
+        this.loading = false
+      }).catch(e => {
+        uiapi.toast(e.info)
+      })
+    },
+    onOrder (item) {
+      router(this).push('/pages/order/main', {id: item.id})
     }
   }
 }

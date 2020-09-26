@@ -10,12 +10,12 @@
           <img src="/static/images/address_icon.png" alt="icon" />
           <div class="flex col just pad-l pad-r">
             <div class="row just pad-b">
-              <p class="middle dark medium">收货人：{{address.userName}}</p>
-              <p class="middle dark medium">{{address.telNumber}}</p>
+              <p class="middle dark medium">收货人：{{address.name}}</p>
+              <p class="middle dark medium">{{address.telephone}}</p>
             </div>
             <span
               class="small light"
-            >{{address.provinceName}}{{address.cityName}}{{address.countyName}}{{address.detailInfo}}</span>
+            >{{address.province}}{{address.city}}{{address.county}}{{address.address}}</span>
           </div>
           <img src="/static/images/arrow_right.png" alt="icon" />
         </div>
@@ -125,13 +125,13 @@
           <span class="small light normal margin-l">承诺同步的渠道越多，通过率越高</span>
         </h5>
         <ul class="channels margin-t">
-          <li v-for="(i, j) in channels" :key="j" class="row just margin-t">
+          <li v-for="(i, j) in channels" :key="j" class="row just margin-t" @click="onActive(i)">
             <div class="row i-center">
               <img class="margin-r" :src="i.img" :alt="i.platformName" />
               <p class="middle dark">{{i.platformName}}</p>
             </div>
-            <img class="check-img" v-if="active[i.id]" src="/static/images/check.png" alt="check" />
-            <img class="check-img" v-else src="/static/images/checked.png" alt="checked" />
+            <img class="check-img" v-if="active[i.platformId]" src="/static/images/checked.png" alt="checked" />
+            <img class="check-img" v-else src="/static/images/check.png" alt="check" />
           </li>
         </ul>
       </div>
@@ -246,7 +246,6 @@ export default {
   methods: {
     loadData () {
       const {id, select} = router(this).params()
-      console.log(id, select)
       request.get('/bl/activity/' + id).then(({json: {data}}) => {
         this.data = data
         // this.channels = mapChannel(data.extension.channels)
@@ -260,6 +259,7 @@ export default {
       })
       request.get('/bl/account').then(({json: {data}}) => {
         this.channels = mapChannel(data.channels).filter(i => i.statusCode === 3)
+        this.active = _.object(_.map(this.channels, i => ([i.platformId, i])))
       }).catch(e => {
       })
     },
@@ -270,27 +270,41 @@ export default {
 
       })
     },
+    onActive (item) {
+      if (this.active[item.platformId]) {
+        this.active = _.omit(this.active, item.platformId)
+      } else {
+        this.active = Object.assign({}, this.active, _.object([[item.platformId, item]]))
+      }
+    },
     onOk () {
+      if (!this.address) {
+        uiapi.toast('请填写收货地址')
+        return
+      }
+      if (_.size(this.active) <= 0) {
+        uiapi.toast('请选择合作渠道')
+        return
+      }
+      if (!this.text) {
+        uiapi.toast('申请理由也很重要哦~')
+        return
+      }
       const {id} = router(this).params()
       const l = uiapi.loading()
+      const idsum = _.reduce(_.keys(this.active).map(i => parseInt(i)), (i, j) => i + j, 0)
       request.post('/bl/activity/order/apply', {
         activity: {id},
         applyReason: this.text,
         coopSubType: this.type,
-        receiver: {
-          address: this.address.detailInfo,
-          province: this.address.provinceName,
-          city: this.address.cityName,
-          county: this.address.countyName,
-          telephone: this.address.telNumber,
-          name: this.address.userName
-        },
-        platformIdSum: _.reduce(_.keys(this.active).map(i => parseInt(i)), (i, j) => i + j, 0),
+        receiver: this.address,
+        platformIdSum: idsum,
         reward: this.reward,
         skuUnion: this.sku
       }).then(r => {
-        uiapi.toast('申请已提交')
         l()
+        uiapi.toast('申请已提交')
+        router(this).push('/pages/orders/main')
       }).catch(e => {
         uiapi.toast(e.info)
         l()

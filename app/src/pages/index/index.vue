@@ -2,7 +2,7 @@
   <div class="container">
     <navbar :fixed="true" background="white">
       <div class="navbar">
-        <p>活动<span>今日还可申请5次</span></p>
+        <p>活动<span>今日还可申请{{todayNum}}次</span></p>
       </div>
     </navbar>
     <div class="content flex">
@@ -61,7 +61,8 @@ export default {
       })),
       datas: [[], []],
       page: 1,
-      loading: false
+      loading: false,
+      todayNum: 0
     }
   },
 
@@ -84,6 +85,14 @@ export default {
     loadData (page) {
       if (this.loading || (page > 1 && this.nomore)) {
         return Promise.resolve()
+      }
+      if (page === 1) {
+        request.get('/bl/activity/qualification', {}).then(({json: {data}}) => {
+          this.todayNum = data.todayApplyNumRemaining
+          console.log(this.todayNum)
+        }).catch(e => {
+          console.log(e)
+        })
       }
       return request.get('/bl/activity/list', {page, size: 20}).then(({json: {data}}) => {
         const olds = page === 1 ? [] : _.head(_.flatten(_.zip(this.datas[0] || [], this.datas[1] || [])),
