@@ -8,13 +8,11 @@
     <div v-for="(item, j) in datas" :key="j" class="col pad2 item margin-b white_bg">
       <div class="row just">
         <h5 class="middle medium dark">{{item.title}}</h5>
-        <span class="middle medium dark">{{item.amount}}</span>
+        <span class="middle medium dark">{{(item.raeType === 1 ? '+' : '-') + item.amount}}</span>
       </div>
-      <p v-if="item.desc" class="dark small">{{item.desc}}</p>
-      <div class="row just">
-        <span class="light small">订单号：{{item.id}}</span>
-        <span class="light small">{{item.date}}</span>
-      </div>
+      <p v-if="item.msg2" class="dark small">{{item.msg}}</p>
+      <p class="light small">{{item.intro}}</p>
+      <p class="light small">{{(item.raeType === 1 ? '发放时间：' : '提现时间：') + item.date}}</p>
     </div>
     </div>
   </div>
@@ -22,36 +20,42 @@
 
 <script>
 // import _ from 'underscore'
-// import {router, uiapi} from '@/utils/index'
+import moment from 'moment'
+import {uiapi, request} from '@/utils/index'
 
 export default {
   data () {
     return {
-      datas: [{
-        title: '悬赏发放',
-        amount: '+100',
-        desc: '毛戈平 故宫IP碧日良辰多用眼彩盘',
-        id: '17898764567',
-        date: '2020.03.01 12:10'
-      },
-      {
-        title: '悬赏发放',
-        amount: '+100',
-        id: '17898764567',
-        date: '2020.03.01 12:10'
-      }]
+      datas: [],
+      page: 0,
+      loading: false,
+      nomore: false
     }
   },
   created () {
     // let app = getApp()
   },
+  mounted () {
+    this.loadData(1)
+  },
   onPullDownRefresh () {
-
+    this.loadData(1)
   },
   onReachBottom () {
-
+    if (this.loading || (this.page > 1 && !this.nomore)) { return }
+    this.loadData(this.page + 1)
   },
   methods: {
+    loadData (page) {
+      request.get('/bl/account/finance/record/list', {page, size: 10}).then(({json: {data}}) => {
+        this.datas = (page === 1 ? [] : this.datas).concat(data.data.map(i => Object.assign(i, {date: moment(i.gmtCreate).format('YYYY-MM-DD HH:mm')})))
+        this.page = page
+        this.loading = false
+        this.nomore = data.pager.totalPages <= page
+      }).catch(e => {
+        uiapi.toast(e.info)
+      })
+    }
   }
 }
 </script>

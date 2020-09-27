@@ -19,7 +19,9 @@
     "pages/deposit/main",
     "pages/login/main",
     "pages/reward/main",
-    "pages/depose/main"
+    "pages/depose/main",
+    "pages/ship/main",
+    "pages/tester/main"
   ],
   "window": {
     "backgroundTextStyle": "light",

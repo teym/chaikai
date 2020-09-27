@@ -18,7 +18,7 @@
             <p class="middle dark">{{item.activity.title}}</p>
             <div class="row just i-center">
               <p class="small light">{{item.date}}</p>
-              <span class="red small">{{status[item.statusCode]}}</span>
+              <span class="red small">{{['', '待审核', '待缴押金', '待发货', '待收货', '待测评', '已完成'][item.statusCode]}}</span>
             </div>
           </div>
         </div>
@@ -45,9 +45,12 @@ export default {
   },
   created () {
     // let app = getApp()
-
   },
   mounted () {
+    const status = parseInt(router(this).params().status)
+    if (status > 0) {
+      this.active = status - 1
+    }
     this.loadData(1)
   },
   onPullDownRefresh () {

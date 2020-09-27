@@ -57,6 +57,15 @@ export function chooseAddress () {
     })
   })
 }
+export function previewImgs (imgs) {
+  return new Promise((resolve, reject) => {
+    wx.previewImage({
+      urls: imgs,
+      success: resolve,
+      fail: reject
+    })
+  })
+}
 
-export const muiapi = { alert, toast, loading, chooseImage, chooseAddress }
+export const muiapi = { alert, toast, loading, chooseImage, chooseAddress, previewImgs }
 export default muiapi

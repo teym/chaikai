@@ -4,6 +4,7 @@ import { mstore } from './store'
 import { mapi } from './api'
 import { muiapi } from './uiapi'
 import { msignal } from './signal'
+import moment from 'moment'
 
 export function formatNumber (n) {
   const str = n.toString()
@@ -23,6 +24,27 @@ export function formatTime (date) {
   const t2 = [hour, minute, second].map(formatNumber).join(':')
 
   return `${t1} ${t2}`
+}
+export function formatMsgTime (date) {
+  const m = moment(date)
+  const s = m.isSame(new Date(), 'day') ? m.format('Ahh:mm') : m.format('YYYY-MM-DD HH:mm:ss')
+  return s.replace('AM', '上午').replace('PM', '下午')
+}
+export function isImgMsg (s) {
+  return /^\[img:http[s]?:\/\/[a-zA-Z0-9-_./]+\]$/.test(s)
+}
+export function imgMsgUrl (s) {
+  return /^\[img:(http[s]?:\/\/[a-zA-Z0-9-_./]+)\]$/.exec(s)[1]
+}
+export function makeImgMsg (u) {
+  return `[img:${u}]`
+}
+export function diffTime (date) {
+  const sec = date ? moment(date).diff(moment(), 'seconds') : 0
+  const d = Math.floor(sec / (24 * 60 * 60))
+  const h = Math.floor((sec - d * 24 * 60 * 60) / (60 * 60))
+  const m = Math.floor((sec - d * 24 * 60 * 60 - h * 60 * 60) / 60)
+  return `${d > 0 ? d + '天' : ''}${(d > 0 || h > 0) ? h + '小时' : ''}${m}分`
 }
 const CHS = {
   1: { img: '/static/images/channel_wb.png' },
@@ -94,9 +116,14 @@ export const uiapi = muiapi
 export const signal = msignal
 
 export default {
+  formatMsgTime,
   formatNumber,
   formatTime,
   mapChannel,
+  makeImgMsg,
+  diffTime,
+  imgMsgUrl,
+  isImgMsg,
   request,
   signal,
   store,

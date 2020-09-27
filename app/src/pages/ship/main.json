@@ -1,0 +1,7 @@
+{
+    "enablePullDownRefresh": true,
+    "backgroundTextStyle": "dark",
+    "backgroundColor": "#F5F5F5",
+    "onReachBottomDistance": 20,
+    "navigationBarTitleText": "物流详情"
+}

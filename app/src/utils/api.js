@@ -66,7 +66,6 @@ export function userInfo () {
 export function pay (data) {
   return new Promise((resolve, reject) => {
     mpvue.requestPayment(Object.assign({}, data, {
-      package: data.packageValue,
       success: (r) => {
         console.log(r)
         resolve(r)

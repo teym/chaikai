@@ -39,19 +39,19 @@
         </div>
       </div>
       <div class="row icons pad-t pad-l pad-r margin2-b">
-        <div class="flex col center pad-t pad-b">
+        <div class="flex col center pad-t pad-b" @click="onOrder(2)">
           <img src="/static/images/mine_icons_1.png " alt="1">
           <p class="small light margin-t">待缴押金</p>
         </div>
-        <div class="flex col center pad-t pad-b">
+        <div class="flex col center pad-t pad-b" @click="onOrder(3)">
           <img src="/static/images/mine_icons_2.png " alt="2">
           <p class="small light margin-t">待发货</p>
         </div>
-        <div class="flex col center pad-t pad-b">
+        <div class="flex col center pad-t pad-b" @click="onOrder(4)">
           <img src="/static/images/mine_icons_3.png " alt="3">
           <p class="small light margin-t">待收货</p>
         </div>
-        <div class="flex col center pad-t pad-b">
+        <div class="flex col center pad-t pad-b" @click="onOrder(5)">
           <img src="/static/images/mine_icons_4.png " alt="4">
           <p class="small light margin-t">待测评</p>
         </div>
@@ -65,7 +65,7 @@
       <div class="row just margin2-t margin2-b" @click="onRouter('wallet')">
         <p class="middle light">钱包收入</p>
         <div class="row i-center">
-          <span class="big red blod">500.00</span>
+          <span class="big red blod">{{amount}}</span>
           <img class="right" src="/static/images/arrow_right.png" alt="right">
         </div>
       </div>
@@ -105,6 +105,7 @@ export default {
         score: 0,
         areas: []
       },
+      amount: 0,
       channels: []
     }
   },
@@ -138,9 +139,17 @@ export default {
       }).catch(e => {
         uiapi.toast(e.info)
       })
+      request.get('/bl/account/finance').then(({json: {data}}) => {
+        this.amount = data.totalAmount
+      }).catch(e => {
+        console.log(e)
+      })
     },
     onScope () {
       this.onRouter('scope', {scope: this.user.score, tags: this.user.scoreInfo.items.map(i => (`${i.msg} ${i.number}`)).join(',')})
+    },
+    onOrder (status) {
+      router(this).push('/pages/orders/main', {status})
     },
     onRouter (p, d) {
       router(this).push('/pages/' + p + '/main', d)

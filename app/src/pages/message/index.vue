@@ -6,14 +6,14 @@
       <img src="/static/images/arrow_right.png" alt="right">
     </div>
     <div class="content flex">
-      <div v-for="(item, j) in datas" :key="j" class="col pad2 item" :class="{self: item.self}">
-        <p class="date">{{item.time}}</p>
+      <div v-for="(item, j) in datas" :key="j" class="col pad2 item" :class="{self: item.my}">
+        <p class="date">{{item.date}}</p>
         <div class="row margin-t">
-          <img class="logo" :src="item.img" alt="img">
+          <img class="logo" :src="item.accountInfo.avatar" alt="img">
           <div class="col just flex margin-l margin-r">
-            <h5 class="small light">{{item.name}}</h5>
+            <h5 class="small light">{{item.accountInfo.name}}</h5>
             <div class="light_bg text margin-t" :class="{media: item.isimg}">
-              <img v-if="item.isimg" :src="item.content" alt="">
+              <img v-if="item.isimg" :src="item.content" alt="" @click="onPreview(item.content)">
               <p v-else class="margin2 small light">{{item.content}}</p>
             </div>
           </div>
@@ -22,7 +22,7 @@
     </div>
     <bar :fixed="true" background="white">
       <div class="bar row pad2-l pad2-r">
-      <img class="margin-r" src="/static/images/message_order.png" alt="order">
+      <img class="margin-r" src="/static/images/message_order.png" alt="order" @click="onOrder">
       <img class="margin-r" src="/static/images/message_img.png" alt="img" @click="onImg">
       <textarea auto-height class="input light_bg dark middle" v-model="text"/>
       <div class="red_bg margin-l btn row center middle" @click="onSend">发送</div>
@@ -34,31 +34,12 @@
 <script>
 // import _ from 'underscore'
 import bar from '@/components/bar'
-import {router, uiapi} from '@/utils/index'
+import {router, uiapi, request, formatMsgTime, isImgMsg, imgMsgUrl, makeImgMsg} from '@/utils/index'
 
-const ImgUrl = 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1600427730668&di=07620f900465606f5579258a46d132ba&imgtype=0&src=http%3A%2F%2Fd.hiphotos.baidu.com%2Fzhidao%2Fpic%2Fitem%2F0e2442a7d933c895ca486665d51373f0820200fd.jpg'
 export default {
   data () {
     return {
-      datas: [{
-        img: ImgUrl,
-        name: '小奥汀品牌方',
-        content: '亲亲，至于测评合作的要求喔～, 亲亲，至于测评合作的要求喔～',
-        time: '下午02:30'
-      }, {
-        img: ImgUrl,
-        name: '小奥汀品牌方',
-        content: '亲亲，至于测评合作的要求喔～',
-        time: '下午02:30',
-        self: true
-      },
-      {
-        img: ImgUrl,
-        name: '小奥汀品牌方',
-        content: ImgUrl,
-        time: '下午02:30',
-        isimg: true
-      }],
+      datas: [],
       text: '',
       page: 1,
       loading: false
@@ -71,24 +52,67 @@ export default {
   created () {
     // let app = getApp()
   },
+  mounted () {
+    this.loadData(1)
+  },
   onPullDownRefresh () {
-
+    this.loadData(1)
   },
   onReachBottom () {
 
   },
   methods: {
+    loadData (page) {
+      const {id} = router(this).params()
+      request.get('/chat/bl/room/record/list', {page, size: 10, originId: id, roomType: 1}).then(({json: {data}}) => {
+        this.datas = data.data.reverse().map(i => Object.assign(i, {date: formatMsgTime(i.gmtCreate), isimg: isImgMsg(i.content), content: isImgMsg(i.content) ? imgMsgUrl(i.content) : i.content})).concat(page === 1 ? [] : this.datas)
+        this.page = page
+        this.loading = false
+        this.nomore = data.pager.totalPages <= page
+      }).catch(e => {
+        uiapi.toast(e.info)
+      })
+    },
     onOrder () {
-      router(this).push('/pages/order/main')
+      const {id} = router(this).params()
+      router(this).push('/pages/order/main', {id})
     },
     onImg () {
       uiapi.chooseImage().then(r => {
-        console.log(r)
-      }).catch(e => {
-        console.log(e)
+        this.sendMsg(request.upload('/oss/upload', r).then(({json: {data}}) => {
+          return makeImgMsg(data)
+        }))
       })
     },
+    onPreview (img) {
+      uiapi.previewImgs([img]).catch(e => uiapi.toast(e))
+    },
+    sendMsg (content, success) {
+      const {id, room} = router(this).params()
+      this.sending = true
+      const l = uiapi.loading()
+      return content.then(s => {
+        return request.post('/chat/bl/record', {originId: id, roomId: room, roomType: 1, type: 1, content: s})
+      })
+        .then(({json: {data}}) => {
+          data.date = formatMsgTime(new Date())
+          data.isimg = isImgMsg(data.content)
+          data.my = true
+          data.content = data.isimg ? imgMsgUrl(data.content) : data.content
+          this.datas.splice(this.datas.length, 0, data)
+          this.sending = false
+          l()
+          if (success) success()
+        }).catch(e => {
+          this.sending = false
+          l()
+          uiapi.toast(e.info)
+        })
+    },
     onSend () {
+      if (this.text) {
+        this.sendMsg(Promise.resolve(this.text), () => { this.text = '' })
+      }
     }
   }
 }
@@ -102,6 +126,9 @@ export default {
 .tip img{
   width: 32rpx;
   height: 32rpx;
+}
+.content{
+  padding-bottom: 88rpx;
 }
 .item .date{
   color: #7B7F8E;
@@ -128,10 +155,15 @@ export default {
   padding: 0;
   border-radius: 8rpx;
   overflow: hidden;
+  background-color: white;
 }
 .item .text img{
   width: 236rpx;
   height: 236rpx;
+  border-radius: 0 20rpx 20rpx 20rpx;
+}
+.item.self .text img{
+  border-radius: 20rpx 0 20rpx 20rpx;
 }
 .item.self .row{
   flex-direction: row-reverse;
@@ -142,6 +174,9 @@ export default {
 .item.self .text{
   background-color: #FF8E3B;
   border-radius: 20rpx 0 20rpx 20rpx;
+}
+.item.self .text.media{
+  background-color: white;
 }
 .item.self .text p{
   color: white;

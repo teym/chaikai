@@ -13,7 +13,7 @@
     </div>
     <div class="margin-t flex col">
       <h5 class="middle dark blod white_bg pad2-l pad2-t pad2-r">押金明细</h5>
-      <div v-if="data.records && data.records.length > 0 && info.statusCode >= 3">
+      <div v-if="data.records && data.records.length > 0">
         <div v-for="(item, i) in data.records" :key="i" class="row just pad2 white_bg margin-b">
           <div>
             <h5 class="middle dark">{{item.intro}}</h5>
@@ -66,7 +66,6 @@ export default {
       const {id} = router(this).params()
       request.get('/bl/activity/order/' + id).then(({json: {data}}) => {
         data.depositInfo.records = data.depositInfo.records.map(i => Object.assign(i, {date: moment(i.gmtCreate).format('YYYY.MM.DD HH:mm')}))
-        data.statusCode = 3
         this.info = data
         this.data = data.depositInfo
         this.mapState(data.depositInfo.statusCode)

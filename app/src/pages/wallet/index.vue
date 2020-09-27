@@ -10,7 +10,7 @@
       </div>
     </navbar>
     <div class="col info center pos_r">
-      <h1>800</h1>
+      <h1>{{amount}}</h1>
       <span class="middle">悬赏</span>
       <div class="float small pos_a row center" @click="onList">明细</div>
     </div>
@@ -37,14 +37,14 @@
 
 <script>
 import navbar from '@/components/navbar'
-import {router, uiapi} from '@/utils/index'
+import {router, uiapi, request} from '@/utils/index'
 import done from '@/components/done'
 
 export default {
   data () {
     return {
-      tags: ['数据欠佳 32', '数据欠佳 32', '数据欠佳 32'],
-      tip: false
+      tip: false,
+      amount: 0
     }
   },
 
@@ -52,8 +52,17 @@ export default {
     navbar,
     done
   },
-
+  mounted () {
+    this.loadData()
+  },
   methods: {
+    loadData () {
+      request.get('/bl/account/finance').then(({json: {data}}) => {
+        this.amount = data.totalAmount
+      }).catch(e => {
+        console.log(e)
+      })
+    },
     onBack () {
       router(this).pop()
     },
@@ -61,18 +70,21 @@ export default {
       router(this).push('/pages/list/main')
     },
     onGo () {
-      const t = Math.random()
-      if (t < 0.3) {
-        uiapi.alert({ title: '提现确认', content: '确认提现当前悬赏月：800元，确认将消耗一次提现次数' }).then(r => {
-
+      uiapi.alert({ title: '提现确认', content: `确认提现当前悬赏月：${this.amount}元，确认将消耗一次提现次数` }).then(r => {
+        const l = uiapi.loading()
+        request.post('/bl/account/finance/withdraw', {amount: this.amount}).then(r => {
+          uiapi.toast('提现成功')
+          this.loadData()
+          setTimeout(() => {
+            l()
+          }, 500)
         }).catch(e => {
-
+          l()
+          uiapi.toast(e.info)
         })
-      } else if (t < 0.6) {
-        uiapi.toast('抱歉，本月提现次数已用完')
-      } else {
-        this.tip = true
-      }
+      }).catch(e => {
+
+      })
     }
   },
 

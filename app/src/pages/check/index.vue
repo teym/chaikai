@@ -202,7 +202,7 @@
 
 <script>
 import _ from 'underscore'
-import {router, uiapi, request, mapChannel} from '@/utils/index'
+import {router, api, uiapi, request, mapChannel} from '@/utils/index'
 
 export default {
   data () {
@@ -302,13 +302,23 @@ export default {
         reward: this.reward,
         skuUnion: this.sku
       }).then(r => {
-        l()
-        uiapi.toast('申请已提交')
-        router(this).push('/pages/orders/main')
-      }).catch(e => {
-        uiapi.toast(e.info)
-        l()
+        return this.pay === 1 ? request.post('/wxpay/mini', {amount: 0.3 /* this.reward */, brActivityId: id, payScene: 'BL_PAY_DEPOSIT'}).then(({json: {data}}) => {
+          return api.pay(data)
+        })
+          .catch(e => {
+            uiapi.toast(e.info)
+          }) : Promise.resolve()
       })
+        .then(r => {
+          l()
+          if (this.pay !== 1) {
+            uiapi.toast('申请已提交')
+          }
+          router(this).push('/pages/orders/main')
+        }).catch(e => {
+          uiapi.toast(e.info)
+          l()
+        })
       // const t = Math.random()
       // if (t < 0.4) {
       //   this.pop = true

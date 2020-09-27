@@ -78,14 +78,14 @@
             </ul>
           </div>
           <div
-            v-if="data.extension.receiveAreas && data.extension.receiveAreas.length > 0"
+            v-if="data.extension.receiveAreaLimit && data.extension.receiveAreas.length > 0"
             class="ship"
           >
             <h5>
               收货地限制
-              <span>不支持以下地区收货</span>
+              <span>{{data.extension.receiveAreas[0].type === 1 ? '不' : '仅'}}支持以下地区收货</span>
             </h5>
-            <p>香港特别行政区、澳门特别行政区、新疆维吾尔自治区、西藏自治区、台湾省、湖北省</p>
+            <p>{{receiveAreas}}</p>
           </div>
           <div class="text">
             <div class="row center">
@@ -190,8 +190,7 @@
 
 <script>
 import _ from 'underscore'
-import moment from 'moment'
-import {router, uiapi, api, request, mapChannel} from '@/utils/index'
+import {router, uiapi, api, request, mapChannel, diffTime} from '@/utils/index'
 
 export default {
   data () {
@@ -218,11 +217,10 @@ export default {
   },
   computed: {
     leftTime () {
-      const sec = this.data ? moment(this.data.regEndTime).diff(moment(), 'seconds') : 0
-      const d = Math.floor(sec / (24 * 60 * 60))
-      const h = Math.floor((sec - d * 24 * 60 * 60) / (60 * 60))
-      const m = Math.floor((sec - d * 24 * 60 * 60 - h * 60 * 60) / 60)
-      return `${d > 0 ? d + '天' : ''}${(d > 0 || h > 0) ? h + '小时' : ''}${m}分`
+      return this.data ? diffTime(this.data.regEndTime) : ''
+    },
+    receiveAreas () {
+      return (((this.data || {}).extension || {}).receiveAreas || []).map(i => ((i.province || '') + (i.city || ''))).join(',')
     }
   },
   created () {
@@ -257,6 +255,10 @@ export default {
     onOk () {
       if (!api.isLogin()) {
         router(this).push('/pages/login/main')
+        return
+      }
+      if (this.data.applied) {
+        uiapi.toast('你已申请过该活动')
         return
       }
       const {id} = router(this).params()

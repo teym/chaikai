@@ -79,17 +79,16 @@ export default {
     this.loadData(1)
   },
   onReachBottom () {
+    if (this.loading || this.nomore) {
+      return
+    }
     this.loadData(this.page + 1)
   },
   methods: {
     loadData (page) {
-      if (this.loading || (page > 1 && this.nomore)) {
-        return Promise.resolve()
-      }
       if (page === 1) {
         request.get('/bl/activity/qualification', {}).then(({json: {data}}) => {
           this.todayNum = data.todayApplyNumRemaining
-          console.log(this.todayNum)
         }).catch(e => {
           console.log(e)
         })
@@ -100,7 +99,7 @@ export default {
         )
         const datas = olds.concat(data.data)
         this.datas = _.partition(datas, (i, j) => (j % 2 === 0))
-        this.nomore = data.pager.totalPages > page
+        this.nomore = data.pager.totalPages <= page
         this.page = page
         this.loading = false
       }).catch(e => {

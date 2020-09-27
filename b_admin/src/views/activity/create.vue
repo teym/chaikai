@@ -268,13 +268,13 @@
             </el-checkbox-group>
           </el-form-item>
           <el-form-item
-            prop="extension.awardAmount"
+            prop="reward"
             style="margin-bottom: 30px;"
             label-width="170px"
             label="悬赏金额"
           >
             <el-input
-              v-model="postForm.extension.awardAmount"
+              v-model="postForm.reward"
               :placeholder="'最低' + minAmount +'元/人'"
             />
           </el-form-item>
@@ -453,7 +453,7 @@ export default {
       loading: false,
       brandListOptions: [],
       rules: {
-        'extension.awardAmount': [
+        'reward': [
           { validator: validateAmount, trigger: 'blur' }
         ]
       },

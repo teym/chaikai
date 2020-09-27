@@ -10,15 +10,15 @@
         <img src="/static/images/message_empty.png" alt="msg">
         <p class="middle light">你还没有消息哦～</p>
       </div>
-      <div v-for="(item, j) in datas" :key="j" class="row pad2 item" @click="onGo">
-        <img :src="item.img" alt="img">
+      <div v-for="(item, j) in datas" :key="j" class="row pad2 item" @click="onGo(item)">
+        <img :src="item.accountInfo.logo" alt="img">
         <div class="col just flex margin-l">
-          <h5 class="middle dark blod">{{item.name}}</h5>
+          <h5 class="middle dark blod">{{item.accountInfo.name}}</h5>
           <p class="small light">{{item.content}}</p>
         </div>
         <div class="col just margin-l right">
-          <p class="small light date">{{item.time}}</p>
-          <span v-if="item.count > 0" class="round row center">{{item.count}}</span>
+          <p class="small light date">{{item.date}}</p>
+          <span v-if="item.bloggerUnreadNum > 0" class="round row center">{{item.bloggerUnreadNum}}</span>
           <div v-else></div>
         </div>
       </div>
@@ -29,27 +29,15 @@
 <script>
 // import _ from 'underscore'
 import navbar from '@/components/navbar'
-import {router, api, signal} from '@/utils/index'
+import {router, api, signal, uiapi, request, formatMsgTime, isImgMsg} from '@/utils/index'
 
-const ImgUrl = 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1600427730668&di=07620f900465606f5579258a46d132ba&imgtype=0&src=http%3A%2F%2Fd.hiphotos.baidu.com%2Fzhidao%2Fpic%2Fitem%2F0e2442a7d933c895ca486665d51373f0820200fd.jpg'
 export default {
   data () {
     return {
-      datas: [{
-        img: ImgUrl,
-        name: '小奥汀品牌方',
-        content: '亲亲，至于测评合作的要求喔～',
-        time: '下午02:30',
-        count: 1
-      }, {
-        img: ImgUrl,
-        name: '小奥汀品牌方',
-        content: '亲亲，至于测评合作的要求喔～',
-        time: '下午02:30',
-        count: 0
-      }],
+      datas: [],
       page: 1,
-      loading: false
+      loading: false,
+      nomore: false
     }
   },
 
@@ -64,28 +52,38 @@ export default {
   created () {
     // let app = getApp()
     this.onUser = () => {
-      this.loadData()
+      this.loadData(1)
     }
     signal.add('logined', this.onUser)
     if (api.isLogin()) {
-      this.loadData()
+      this.loadData(1)
     }
   },
   beforeDestroy () {
     signal.remove('logined', this.onUser)
   },
   onPullDownRefresh () {
-
+    this.loadData(1)
   },
   onReachBottom () {
-
+    if (this.loading || this.nomore) {
+      return
+    }
+    this.loadData(this.page + 1)
   },
   methods: {
-    loadData () {
-
+    loadData (page) {
+      request.get('/chat/bl/room/list', {page, size: 10, type: 1}).then(({json: {data}}) => {
+        this.datas = (page === 1 ? [] : this.datas).concat(data.data.map(i => Object.assign(i, {date: formatMsgTime(i.lastTime), content: isImgMsg(i.lastRecord.content) ? '[图片]' : i.lastRecord.content})))
+        this.loading = false
+        this.page = page
+        this.nomore = data.pager.totalPages <= page
+      }).catch(e => {
+        uiapi.toast(e.info)
+      })
     },
-    onGo () {
-      router(this).push('/pages/message/main')
+    onGo (item) {
+      router(this).push('/pages/message/main', {id: item.originId, room: item.id})
     }
   }
 }
