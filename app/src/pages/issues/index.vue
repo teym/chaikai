@@ -7,27 +7,19 @@
     <div v-else class="flex">
       <div v-for="(item, j) in datas" :key="j" class="col pad2 item margin-b white_bg">
         <div class="row">
-          <img :src="item.img" alt="img" class="logo" />
-          <h5 class="middle medium dark flex margin-l">{{item.title}}</h5>
+          <img :src="item.activity.picUrl" alt="img" class="logo" />
+          <h5 class="middle medium dark flex margin-l">{{item.activity.title}}</h5>
         </div>
         <div class="col margin-t">
-          <div class="row just i-center">
+          <div class="row just i-center" v-for="(t, i) in item.tickets" :key="i">
             <p class="middle light">
               测评投诉
               <span class="small light">{{item.date}}</span>
             </p>
-            <div class="red middle row i-center">
-              待修改
-              <img src="/static/images/arrow_right.png" alt="right" class="right" />
-            </div>
-          </div>
-          <div class="row just i-center">
-            <p class="middle light">
-              测评投诉
-              <span class="small light">{{item.date}}</span>
-            </p>
-            <div class="light middle row i-center">
-              已完结
+            <div class="red middle row i-center" 
+            @click="onDetail(item, t)"
+            :class="{red:t.statusCode===1||t.statusCode ===4|| t.statusCode === 7,light:t.statusCode!=1&&t.statusCode !=4 && t.statusCode != 7}">
+              {{['','待修改','待确认','小二审核中','待重评','已修改','已取消','已违规'][t.statusCode]}}
               <img src="/static/images/arrow_right.png" alt="right" class="right" />
             </div>
           </div>
@@ -39,34 +31,46 @@
 
 <script>
 // import _ from 'underscore'
-// import {router, uiapi} from '@/utils/index'
-
-const ImgUrl = 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1600427730668&di=07620f900465606f5579258a46d132ba&imgtype=0&src=http%3A%2F%2Fd.hiphotos.baidu.com%2Fzhidao%2Fpic%2Fitem%2F0e2442a7d933c895ca486665d51373f0820200fd.jpg'
+import moment from 'moment'
+import {router, uiapi, request} from '@/utils/index'
 
 export default {
   data () {
     return {
-      datas: [{
-        img: ImgUrl,
-        title: '毛戈平 故宫IP碧日良辰多用眼彩盘',
-        date: '2020.03.01'
-      }, {
-        img: ImgUrl,
-        title: '毛戈平 故宫IP碧日良辰多用眼彩盘',
-        date: '2020.03.01'
-      }]
+      datas: [],
+      page: 0,
+      loading: false,
+      nomore: false
     }
   },
   created () {
     // let app = getApp()
   },
+  mounted () {
+    this.loadData(1)
+  },
   onPullDownRefresh () {
-
+    this.loadData(1)
   },
   onReachBottom () {
-
+    if (this.loading || this.nomore) {
+      return
+    }
+    this.loadData(this.page + 1)
   },
   methods: {
+    loadData (page) {
+      request.get('/bl/activity/order/ticket/list', {page, size: 10}).then(({json: {data}}) => {
+        this.datas = (page === 1 ? [] : this.datas).concat(data.data.map(i => Object.assign(i, {date: moment(i.gmtCreate).format('YYYY.MM.DD')})))
+        this.loading = false
+        this.nomore = data.pager.totalPages <= page
+      }).catch(e => {
+        uiapi.toast(e.info)
+      })
+    },
+    onDetail (item, t) {
+      router(this).push('/pages/issue/main', {id: t.id})
+    }
   }
 }
 </script>

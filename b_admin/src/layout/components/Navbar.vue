@@ -40,7 +40,7 @@
           <el-dropdown-item @click.native="logout">退出登陆</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
-      <el-button type="text" class="right-menu-item menu-help">帮助</el-button>
+      <el-button type="text" class="right-menu-item menu-help" @click="onHelp">帮助</el-button>
     </div>
     <Communicate ref="communicate" />
   </div>
@@ -71,6 +71,9 @@ export default {
     },
     handelMessage() {
       this.$refs.communicate.show()
+    },
+    onHelp() {
+      window._MEIQIA('showPanel')
     }
   }
 }

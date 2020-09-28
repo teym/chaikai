@@ -22,7 +22,19 @@ export function fetchIssues(query) {
     params: query
   })
 }
-
+export function fetchTickets() {
+  return request({
+    url: '/ticket/ao/items',
+    method: 'get'
+  })
+}
+export function fetchShip(no) {
+  return request({
+    url: '/common/logistics',
+    method: 'get',
+    params: { no }
+  })
+}
 export function fetchStat() {
   return request({
     url: '/br/activity/stat',
@@ -87,5 +99,13 @@ export function fetchOdStat(query) {
     url: '/br/activity/order/stat',
     method: 'get',
     params: query
+  })
+}
+
+export function complain(data) {
+  return request({
+    url: '/ticket/ao',
+    method: 'post',
+    data
   })
 }

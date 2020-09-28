@@ -21,7 +21,8 @@
     "pages/reward/main",
     "pages/depose/main",
     "pages/ship/main",
-    "pages/tester/main"
+    "pages/tester/main",
+    "pages/web/main"
   ],
   "window": {
     "backgroundTextStyle": "light",

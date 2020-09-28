@@ -30,30 +30,32 @@
       highlight-current-row
       style="width: 100%;"
     >
-      <el-table-column label="问题编号" min-width="110px">
+      <el-table-column label="问题编号" width="80px">
         <template slot-scope="{row}">
           <span>{{ row.id }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="订单编号" width="110px" align="center">
+      <el-table-column label="订单编号" width="80px" align="center">
         <template slot-scope="{row}">
           <span>{{ row.brActivityOrderId }}</span>
         </template>
       </el-table-column>
       <el-table-column label="活动名称" align="center">
         <template slot-scope="{row}">
-          <span>{{ row.activity }}</span>
+          <span>{{ row.activity.title }}</span>
         </template>
       </el-table-column>
       <el-table-column label="问题类型" align="center">
-        <template slot-scope="{row}">
-          <span>{{ row.type === 101 ? '测评投诉':'' }}</span>
+        <template>
+          <span>测评投诉</span>
         </template>
       </el-table-column>
       <el-table-column label="状态" align="center">
         <template slot-scope="{row}">
           <span>{{ ([""].concat(statusList))[row.statusCode] }}</span>
-          <span style="font-size:12px;line-height:1.2"><br>修改测评还剩5天0时0分，超时将由小二介入</span>
+          <span style="font-size:12px;line-height:1.2"><br>{{
+            ["","修改测评还剩5天0时0分，超时将由小二介入","品牌确认修改还剩3天0时0分，超时将自动确认","请等待小二审核","修改测评还剩5天0时0分，超时将判违规，并扣除押金","处理超时/违规"][row.statusCode]
+          }}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" width="230" class-name="small-padding fixed-width">
@@ -85,8 +87,10 @@
 </template>
 
 <script>
+// import _ from 'underscore'
 import { fetchIssues } from '@/api/activities'
 import { mapGetters } from 'vuex'
+import { clearQueryObject, formatDeadLine } from '@/utils/index'
 import waves from '@/directive/waves' // waves directive
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
@@ -112,7 +116,7 @@ export default {
       listQuery: {
         page: 1,
         size: 20,
-        type: 101,
+        type: 1,
         searchType: '1',
         searchKey: '',
         statusCode: ''
@@ -136,8 +140,8 @@ export default {
           ? { activityName: this.listQuery.searchKey }
           : { brActivityOrderId: this.listQuery.searchKey }
       )
-      fetchIssues(q).then((response) => {
-        this.list = response.data.data
+      fetchIssues(clearQueryObject(q)).then((response) => {
+        this.list = response.data.data.map(i => Object.assign(i, { date: formatDeadLine(i.deadline) }))
         this.total = response.data.pager.count
 
         // Just to simulate the time of the request
@@ -150,8 +154,12 @@ export default {
       this.listQuery.page = 1
       this.getList()
     },
-    handleDetail(item) {},
-    handleAction(item) {}
+    handleDetail(item) {
+      window.showCommunicate(item.brActivityOrderId)
+    },
+    handleAction(item) {
+      window.showCommunicate(item.brActivityOrderId)
+    }
   }
 }
 </script>

@@ -260,8 +260,8 @@ export default {
         this.$router.push('/activity/create')
       }
     },
-    handleOrder() {
-      this.$router.push('/activity/order')
+    handleOrder(row) {
+      this.$router.push({ path: '/activity/order', query: { id: row.id }})
     },
     handleUpdate(row) {
       this.$router.push({ path: '/activity/create', query: { id: row.id }})

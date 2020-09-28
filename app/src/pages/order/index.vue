@@ -7,14 +7,14 @@
       </div>
       <img class="state margin2" src="/static/images/issue_status_1.png" alt="status" />
     </div>
-    <div v-if="data.statusCode > 5" class="margin-t white_bg pad2">
+    <div v-if="data.statusCode > 5 && data.tickets.length > 0" class="margin-t white_bg pad2">
       <h5 class="middle dark blod">订单问题</h5>
-      <div class="row just channel margin-t" v-for="(item, i) in evaluations" :key="i">
+      <div class="row just channel margin-t" v-for="(item, i) in data.tickets" :key="i">
         <div class="row i-center">
           <p class="light middle margin-l">测评投诉</p>
         </div>
-        <div class="row i-center">
-          <p class="light small">已完结</p>
+        <div class="row i-center" @click="onIssue(item)">
+          <p class="light small">{{['','待修改','待确认','小二审核中','待重评','已修改','已取消','已违规'][item.statusCode]}}</p>
           <img class="right" src="/static/images/arrow_right.png" alt="right" />
         </div>
       </div>
@@ -26,7 +26,7 @@
           <img :src="item.img" :alt="item.platformName">
           <p class="light middle margin-l">{{item.type === 1 ? '正式测评':'追加测评'}}</p>
         </div>
-        <div class="row i-center">
+        <div class="row i-center" @click="onWeb(item)">
           <p class="light small">{{item.date}}</p>
           <img class="right" src="/static/images/arrow_right.png" alt="right" />
         </div>
@@ -270,6 +270,9 @@ export default {
     onMessage () {
       router(this).push('/pages/message/main', {id: this.data.id})
     },
+    onWeb (item) {
+      router(this).push('/pages/web/main', {url: item.url})
+    },
     onRecv () {
       uiapi.alert({ title: '确认收货', content: '确认收货后，请及时在规定时间范围内完成测评并上传' })
         .then(r => {
@@ -305,6 +308,9 @@ export default {
           })
         })
         .catch(e => {})
+    },
+    onIssue (item) {
+      router(this).push('/pages/issue/main', {id: item.id})
     },
     onCopy (txt) {
       console.log('copy', txt)

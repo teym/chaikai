@@ -10,20 +10,30 @@
         >
           <el-menu-item v-for="i in statusList" :key="i.value" :index="i.value">
             {{ i.name }}
-            <span v-if="stat[i.value] > 0" class="pill">{{ stat[i.value] }}</span>
+            <span v-if="stat[i.value] > 0" class="pill">{{
+              stat[i.value]
+            }}</span>
           </el-menu-item>
         </el-menu>
-        <el-input v-model="listQuery.searchKey" placeholder="请输入内容" class="input-with-select">
+        <el-input
+          v-model="listQuery.searchKey"
+          placeholder="请输入内容"
+          class="input-with-select"
+        >
           <el-select
             slot="prepend"
             v-model="listQuery.searchType"
             placeholder="请选择"
-            style="width:80px"
+            style="width: 80px"
           >
             <el-option label="达人" value="1" />
             <el-option label="订单" value="2" />
           </el-select>
-          <el-button slot="append" icon="el-icon-search" @click="handleFilter" />
+          <el-button
+            slot="append"
+            icon="el-icon-search"
+            @click="handleFilter"
+          />
         </el-input>
       </div>
       <div v-show="listQuery.statusCode === '1'" class="row row2">
@@ -45,21 +55,36 @@
 
         <el-select v-model="listQuery.goodsSkuUnionId" @change="handleFilter">
           <el-option label="全部规格" :value="''" />
-          <el-option v-for="i in skus" :key="i.skuIdUnion" :label="i.name" :value="i.skuIdUnion" />
+          <el-option
+            v-for="i in skus"
+            :key="i.skuIdUnion"
+            :label="i.name"
+            :value="i.skuIdUnion"
+          />
         </el-select>
         <div class="right">
-          <span>活动名额: {{ stat['0'] }} 已通过: {{ stat['2'] }} 已候选: {{ stat['8'] }}</span>
+          <span>活动名额: {{ stat["0"] }} 已通过: {{ stat["2"] }} 已候选:
+            {{ stat["8"] }}</span>
           <el-button
             type="primary"
             size="mini"
-            @click="$router.push({path:'/activity/qorder', query:{id:listQuery.brActivityId}})"
-          >候选名单{{ stat['8'] }}</el-button>
+            @click="
+              $router.push({
+                path: '/activity/qorder',
+                query: { id: listQuery.brActivityId },
+              })
+            "
+          >候选名单{{ stat["8"] }}</el-button>
         </div>
       </div>
       <div v-show="listQuery.statusCode === '3'" class="row row2">
         <div class="place" />
         <div class="right">
-          <el-button type="primary" size="mini" @click="handleShip">批量发货</el-button>
+          <el-button
+            type="primary"
+            size="mini"
+            @click="handleShip"
+          >批量发货</el-button>
         </div>
       </div>
     </div>
@@ -71,10 +96,10 @@
       border
       fit
       highlight-current-row
-      style="width: 100%;"
+      style="width: 100%"
     >
       <el-table-column label="达人">
-        <template slot-scope="{row}">
+        <template slot-scope="{ row }">
           <div class="info">
             <img :src="row.blogger.avatar" alt="pic">
             <div>
@@ -83,14 +108,18 @@
                 <span>评分：{{ row.blogger.score }}</span>
               </p>
               <p>
-                <span v-for="(i, j) in ['abcd','def']" :key="j" class="pill">{{ i }}</span>
+                <span
+                  v-for="(i, j) in row.blogger.areas"
+                  :key="j"
+                  class="pill"
+                >{{ i.name }}</span>
               </p>
             </div>
           </div>
         </template>
       </el-table-column>
       <el-table-column label="申请信息">
-        <template slot-scope="{row}">
+        <template slot-scope="{ row }">
           <span>
             规格：{{ row.goodsSku }}
             <br>
@@ -103,26 +132,28 @@
         label="申请渠道"
         width="90"
       >
-        <template slot-scope="{row}">
-          <!-- <img
-            v-for="c in row.channels"
-            :key="c.platformId"
-            :src="channelIcons['' + c.platformId]"
-            alt
-            srcset
-          />-->
-          <span v-for="c in row.channels" :key="c.platformId">
-            {{ channelIcons[c.platformId + ''].name }}
-            <br>
-          </span>
+        <template slot-scope="{ row }">
+          <div v-for="c in row.channels" :key="c.platformId" class="channel">
+            <img
+              :src="channelIcons['' + c.platformId].icon"
+            >
+            <span>{{ channelIcons[c.platformId + ""].name }}</span>
+          </div>
         </template>
       </el-table-column>
       <el-table-column v-if="listQuery.statusCode === '6'" label="评测内容">
-        <template slot-scope="{row}">
-          <span v-for="c in row.channels" :key="c.platformId">
-            {{ channelIcons[c.platformId + ''].name }}
-            <br>
-          </span>
+        <template slot-scope="{ row }">
+          <a
+            v-for="(c, i) in row.evaluationItems"
+            :key="i"
+            class="pingce"
+            target="_blank"
+            :href="c.url"
+          >
+            <img :src="channelIcons[c.platformId + ''].icon" alt="">
+            <span>{{ c.type === 1 ? "正式" : "追加" }}</span>
+            <span>活动量{{ c.activeAmount }}</span>
+          </a>
         </template>
       </el-table-column>
       <el-table-column
@@ -130,7 +161,7 @@
         label="粉丝/万"
         width="90"
       >
-        <template slot-scope="{row}">
+        <template slot-scope="{ row }">
           <span v-for="c in row.channels" :key="c.platformId">
             {{ c.fansCount }}
             <br>
@@ -138,42 +169,61 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-if="listQuery.statusCode === '1' || listQuery.statusCode === '2'|| listQuery.statusCode === '6'|| listQuery.statusCode === '7'"
+        v-if="
+          listQuery.statusCode === '1' ||
+            listQuery.statusCode === '2' ||
+            listQuery.statusCode === '6' ||
+            listQuery.statusCode === '7'
+        "
         label="合作方式"
         width="120"
       >
-        <template slot-scope="{row}">
-          <span>{{ ['','接受悬赏',"博主报价"][row.activity.cooperationType] }}¥{{ row.reward }}</span>
+        <template slot-scope="{ row }">
+          <span>{{ ["", "接受悬赏", "博主报价"][row.activity.cooperationType] }}¥{{
+            row.reward
+          }}</span>
         </template>
       </el-table-column>
       <el-table-column
-        v-if="listQuery.statusCode === '3' || listQuery.statusCode === '4' || listQuery.statusCode === '5'"
+        v-if="
+          listQuery.statusCode === '3' ||
+            listQuery.statusCode === '4' ||
+            listQuery.statusCode === '5'
+        "
         label="收货信息"
       >
-        <template slot-scope="{row}">
+        <template slot-scope="{ row }">
           <span>
             收货人：{{ (row.receiver || {}).name }}
             <br>
             手机号码：{{ (row.receiver || {}).telephone }}
             <br>
-            收货地址：{{ ((row.receiver || {}).province || '') + ((row.receiver || {}).city || '') + ((row.receiver || {}).county || '') + ((row.receiver || {}).address || '') }}
+            收货地址：{{
+              ((row.receiver || {}).province || "") +
+                ((row.receiver || {}).city || "") +
+                ((row.receiver || {}).county || "") +
+                ((row.receiver || {}).address || "")
+            }}
             <br>
-            物流信息：{{ ((row.receiver || {}).logisticsPlatform || '') + ((row.receiver || {}).logisticsNo || '') }}
+            物流信息：{{
+              ((row.receiver || {}).logisticsPlatform || "") +
+                ((row.receiver || {}).logisticsNo || "")
+            }}
           </span>
         </template>
       </el-table-column>
       <el-table-column v-if="listQuery.statusCode === '3'" label="发货时间">
-        <template slot-scope="{row}">
+        <template slot-scope="{ row }">
           <span>还剩{{ row.deadlineText }}</span>
         </template>
       </el-table-column>
       <el-table-column v-if="listQuery.statusCode === '4'" label="确认收货">
-        <template slot-scope="{row}">
+        <template slot-scope="{ row }">
           <span>还剩{{ row.deadlineText }}</span>
         </template>
       </el-table-column>
       <el-table-column v-if="listQuery.statusCode === '5'" label="评测时间">
-        <template slot-scope="{row}">
+        <template slot-scope="{ row }">
           <span>测评发布时间还剩{{ row.deadlineText }}</span>
         </template>
       </el-table-column>
@@ -181,25 +231,44 @@
         v-if="listQuery.statusCode === '6' || listQuery.statusCode === '7'"
         label="悬赏"
       >
-        <template slot-scope="{row}">
+        <template slot-scope="{ row }">
           <span>
-            <strong>{{ ({'1':'未缴押金',"9":"已缴押金",'4':'已冻结','3':"押金退回"})[row.depositStatus + ''] }}</strong>
+            <strong>{{
+              {
+                "1": "待发放",
+                "2": "已发放",
+                "3": "已取消",
+              }[row.rewardStatusCode + ""]
+            }}</strong>
             <br>
-            押金支付还剩{{ row.deadlineText }}超时将视作放弃名额
+            {{
+              row.rewardStatusCode === 1
+                ? "还剩" + row.deadlineText + "自动发放"
+                : row.rewardStatusCode === 3
+                  ? "测评违规/不符合悬赏规范，已退回至品牌方"
+                  : ""
+            }}
           </span>
         </template>
       </el-table-column>
-      <el-table-column
-        v-if="listQuery.statusCode === '2' || listQuery.statusCode === '7'"
-        label="押金状态"
-      >
-        <template slot-scope="{row}">
+      <el-table-column label="押金状态">
+        <template slot-scope="{ row }">
           <span>
-            <strong>{{ ({'1':'未缴押金',"9":"已缴押金",'4':'已冻结','3':"押金退回"})[row.depositStatus + ''] }}</strong>
+            <strong>{{
+              {
+                "1": "未缴押金",
+                "2": "已冻结",
+                "3": "已解冻",
+                "4": "已扣除",
+              }[row.depositStatus + ""]
+            }}</strong>
             <br>
             {{
-              listQuery.statusCode === '2' ? '押金支付还剩' + row.deadlineText +',超时将视作放弃名额' :
-              (listQuery.statusCode === '3' ? '发布测评后15天自动退还':'')
+              listQuery.statusCode === "2"
+                ? "押金支付还剩" + row.deadlineText + ",超时将视作放弃名额"
+                : listQuery.statusCode === "3"
+                  ? "发布测评后15天自动退还"
+                  : ""
             }}
           </span>
         </template>
@@ -211,7 +280,7 @@
         width="280"
         class-name="small-padding fixed-width"
       >
-        <template slot-scope="{row}">
+        <template slot-scope="{ row }">
           <div>
             <el-button
               v-if="listQuery.statusCode === '1'"
@@ -230,9 +299,13 @@
               type="primary"
               :icon="row.candidate ? 'el-icon-checked' : 'el-icon-plus'"
               @click="handleAction(row, 'CANDIDATE')"
-            >{{ row.candidate ? '已':'' }}候选</el-button>
+            >{{ row.candidate ? "已" : "" }}候选</el-button>
             <el-button
-              v-if="listQuery.statusCode === '3' || listQuery.statusCode === '4' || listQuery.statusCode === '5'"
+              v-if="
+                listQuery.statusCode === '3' ||
+                  listQuery.statusCode === '4' ||
+                  listQuery.statusCode === '5'
+              "
               size="mini"
               type="primary"
               @click="handleDetail(row)"
@@ -240,9 +313,10 @@
             <el-button
               v-if="listQuery.statusCode === '6'"
               size="mini"
-              type="primary"
+              :type="row.ticketStatusCode > 0 ? '' : 'primary'"
               @click="handleComplain(row)"
-            >投诉</el-button>
+            >{{ row.ticketStatusCode > 0 ? "投诉处理中" : "投诉" }}
+            </el-button>
             <el-button
               v-if="listQuery.statusCode === '6'"
               size="mini"
@@ -250,14 +324,23 @@
               @click="handleComplain(row)"
             >评价</el-button>
             <el-button
-              v-if="listQuery.statusCode === '4' || listQuery.statusCode === '5'|| listQuery.statusCode === '6'"
+              v-if="
+                listQuery.statusCode === '4' || listQuery.statusCode === '5'
+              "
               size="mini"
               type="primary"
-              @click="handleDetail(row)"
+              @click="handleShip(row)"
             >查看物流</el-button>
           </div>
-          <div v-if="listQuery.statusCode === '1' && row.candidate" style="margin: 8px 32px 0 32px">
-            <el-input v-model="row.brRemark" size="mini" @change="handleRemark(row)" />
+          <div
+            v-if="listQuery.statusCode === '1' && row.candidate"
+            style="margin: 8px 32px 0 32px"
+          >
+            <el-input
+              v-model="row.brRemark"
+              size="mini"
+              @change="handleRemark(row)"
+            />
           </div>
           <!-- <el-button type="text" size="mini" @click="handleUpdate(row)">订单详情</el-button>
           <el-button type="text" size="mini" @click="handleDelete(row,$index)">查看物流</el-button>-->
@@ -266,7 +349,7 @@
     </el-table>
 
     <pagination
-      v-show="total>0"
+      v-show="total > 0"
       :total="total"
       :page.sync="listQuery.page"
       :limit.sync="listQuery.size"
@@ -276,22 +359,76 @@
       custom-class="custom-dialog"
       title="投诉测评"
       :visible.sync="formVisible"
-      width="420px"
+      width="720px"
     >
-      <el-form label-width="60px">
-        <el-form-item label="活动名额">
-          <span>{{ detail.totalNum }}</span>
-        </el-form-item>
-        <el-form-item label="剩余名额">
-          <span>{{ detail.remainingNum }}</span>
-        </el-form-item>
-        <el-form-item label="增加名额">
-          <el-input v-model="append" placeholder="#话题" />
-        </el-form-item>
+      <el-form class="dialog-content">
+        <h6>请选择您要投诉的测评（只支持正式测评）</h6>
+        <el-checkbox-group v-model="sels">
+          <el-row>
+            <el-col v-for="(c, i) in detail.evaluationItems" :key="i" :span="8">
+              <el-form-item style="">
+                <el-checkbox :disabled="c.type !== 1" :label="c.id">
+                  <span class="ceping">
+                    <img :src="channelIcons[c.platformId + ''].icon" alt="">
+                    <span>{{ c.type === 1 ? "正式" : "追加" }}</span>
+                    <span>活动量{{ c.activeAmount }}</span>
+                  </span>
+                </el-checkbox>
+              </el-form-item>
+            </el-col>
+          </el-row>
+        </el-checkbox-group>
+        <h6>请选择您要投诉的测评（只支持正式测评）</h6>
+        <p class="light">
+          以下为官方接受的所有测评问题 |
+          不合理的问题博主有权选择忽视，两天后官方会介入审核您的投诉
+        </p>
+        <el-row>
+          <el-col :span="8">
+            <div
+              v-for="(row, i) in reasonList"
+              :key="i"
+              :style="{ height: '32px', marginTop: row.title ? '8px' : '0' }"
+            >
+              {{ row.title }}
+            </div>
+          </el-col>
+          <el-col :span="16">
+            <el-checkbox-group v-model="reason" :min="1" :max="3">
+              <el-checkbox
+                v-for="(row, i) in reasonList"
+                :key="i"
+                :style="{
+                  display: 'block',
+                  height: '32px',
+                  marginTop: row.title ? '8px' : '0',
+                }"
+                :label="row.id"
+              >{{ row.content }}</el-checkbox>
+            </el-checkbox-group>
+          </el-col>
+        </el-row>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="formVisible = false">取消</el-button>
-        <el-button :loading="formLoading" type="primary" @click="handleAddNumber">确定</el-button>
+        <el-button
+          :loading="formLoading"
+          type="primary"
+          @click="handleCreateComplain"
+        >发起投诉</el-button>
+      </div>
+    </el-dialog>
+    <el-dialog
+      custom-class="custom-dialog"
+      title="查看物流"
+      :visible.sync="shipVisible"
+      width="520px"
+    >
+      <h6 style="margin: 8px 0; padding: 0">快递公司: {{ ship.name }}</h6>
+      <h6 style="margin: 8px 0; padding: 0">快递单号: {{ ship.no }}</h6>
+      <div v-for="(l, i) in ship.list" :key="i" style="margin: 8px 0">
+        <p style="margin: 0">{{ l.time }}</p>
+        <p style="margin: 8px 0">{{ l.content }}</p>
       </div>
     </el-dialog>
   </div>
@@ -302,10 +439,15 @@ import {
   fetchOdList,
   fetchOdStat,
   fetchData,
-  updateAction
+  updateAction,
+  complain,
+  fetchTickets,
+  fetchShip
 } from '@/api/activities'
 import { ActivityOrderStatus, Channels, ChannelIcons } from '@/utils/constant'
+import { clearQueryObject } from '@/utils/index'
 import { mapGetters } from 'vuex'
+import _ from 'underscore'
 import moment from 'moment'
 import waves from '@/directive/waves' // waves directive
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
@@ -339,8 +481,13 @@ export default {
       activeIndex: '',
       detail: {},
       append: 0,
+      sels: [],
+      reasonList: [],
+      reason: [],
       formVisible: false,
-      formLoading: false
+      formLoading: false,
+      shipVisible: false,
+      ship: {}
     }
   },
   computed: {
@@ -350,6 +497,7 @@ export default {
     this.listQuery.brActivityId = this.$route.query && this.$route.query.id
     this.getTabs()
     this.getList()
+    this.getTicks()
   },
   methods: {
     getTabs() {
@@ -359,15 +507,15 @@ export default {
       ])
         .then((r) => {
           this.stat = {
-            '0': r[0].data.total,
-            '1': r[0].data.pending,
-            '2': r[0].data.notPayDeposit,
-            '3': r[0].data.toBeDelivered,
-            '4': r[0].data.toBeReceived,
-            '5': r[0].data.toBeEvaluated,
-            '6': r[0].data.evaluated,
-            '7': r[0].data.closed,
-            '8': r[0].data.candidate
+            0: r[0].data.total,
+            1: r[0].data.pending,
+            2: r[0].data.notPayDeposit,
+            3: r[0].data.toBeDelivered,
+            4: r[0].data.toBeReceived,
+            5: r[0].data.toBeEvaluated,
+            6: r[0].data.evaluated,
+            7: r[0].data.closed,
+            8: r[0].data.candidate
           }
           this.channels = r[1].data.extension.channelLimit
             ? r[1].data.extension.channels.map((i) =>
@@ -394,7 +542,7 @@ export default {
       } else {
         obj.bloggerName = obj.searchKey
       }
-      fetchOdList(obj)
+      fetchOdList(clearQueryObject(obj))
         .then((response) => {
           this.list = response.data.data.map((i) =>
             Object.assign(
@@ -411,6 +559,21 @@ export default {
         .catch((e) => {
           this.listLoading = false
         })
+    },
+    getTicks() {
+      fetchTickets().then(({ data }) => {
+        this.reasonList = _.flatten(
+          data.map((i) => {
+            i.list[0].title = i.name
+            return i.list
+          })
+        )
+      })
+    },
+    getShip(id) {
+      fetchShip(id).then((r) => {
+        this.ship = r.data
+      })
     },
     handleSelect(e) {
       this.listQuery.statusCode = e
@@ -434,13 +597,13 @@ export default {
           {
             title: '一键通过'
           }
-        ).then((r) => {
-          if (r === 'confirm') {
-            this.handleAction(row, act, true)
-          }
-        }).catch(e => {
-
-        })
+        )
+          .then((r) => {
+            if (r === 'confirm') {
+              this.handleAction(row, act, true)
+            }
+          })
+          .catch((e) => {})
       } else {
         this.listLoading = true
         updateAction({ orderId: row.id, action: act })
@@ -469,8 +632,31 @@ export default {
           this.listLoading = false
         })
     },
-    handleShip() {
-
+    handleShip(row) {
+      this.shipVisible = true
+      this.getShip(row.receiver.logisticsNo)
+    },
+    handleComplain(row) {
+      if (row.ticketStatusCode > 0) {
+        this.$router.push('/issue/index')
+      } else {
+        this.detail = row
+        this.formVisible = true
+      }
+    },
+    handleCreateComplain() {
+      complain({
+        brActivityId: this.detail.activity.id,
+        brActivityOrderId: this.detail.id,
+        items: this.reason.map((itemId) => ({ itemId })),
+        evaluations: this.sels.map((id) => ({ id }))
+      }).then((r) => {
+        this.formVisible = false
+        this.sels = []
+        this.reason = []
+        this.detail = {}
+        this.$message({ message: '已投诉', type: 'success' })
+      })
     }
   }
 }
@@ -571,6 +757,37 @@ export default {
         margin-right: 8px;
       }
     }
+  }
+}
+.pingce {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  background-color: #dcdfe6;
+  border: 1px solid #f5f5f5;
+  border-radius: 4px;
+  margin: 4px 0;
+  font-size: 14px;
+  img {
+    width: 24px;
+    height: 24px;
+  }
+  span {
+    margin: 0 4px;
+  }
+}
+.ceping {
+  background-color: #dcdfe6;
+  border: 1px solid #f5f5f5;
+  padding: 4px;
+  border-radius: 4px;
+  font-size: 14px;
+  img {
+    width: 20px;
+    height: 20px;
+  }
+  span {
+    margin: 0 4px;
   }
 }
 </style>

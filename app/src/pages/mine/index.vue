@@ -17,11 +17,12 @@
       </div>
       <div class="col just end">
         <div class="row i-center" @click="onRouter('channel')">
-          <ul class="row channel i-center">
+          <ul class="row channel i-center" v-if="channels.length > 0">
             <li v-for="(i, j) in channels" :key="j" :style="{'z-index': 9 - j}">
               <img :src="i.img" :alt="i.platformName" />
             </li>
           </ul>
+          <p v-else class="small text-right">去认证</p>
           <img class="right margin-l" src="/static/images/arrow_right.png" alt="right">
         </div>
         <div class="row i-center" @click="onScope">

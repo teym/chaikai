@@ -1,7 +1,8 @@
 /**
  * Created by PanJiaChen on 16/11/18.
  */
-
+import _ from 'underscore'
+import moment from 'moment'
 /**
  * Parse the time to string
  * @param {(Object|string|number)} time
@@ -93,6 +94,13 @@ export function formatTime(time, option) {
     )
   }
 }
+export function formatDeadLine(date) {
+  const sec = date ? moment(date).diff(moment(), 'seconds') : 0
+  const d = Math.floor(sec / (24 * 60 * 60))
+  const h = Math.floor((sec - d * 24 * 60 * 60) / (60 * 60))
+  const m = Math.floor((sec - d * 24 * 60 * 60 - h * 60 * 60) / 60)
+  return `${d > 0 ? d + '天' : ''}${(d > 0 || h > 0) ? h + '小时' : ''}${m}分`
+}
 
 /**
  * @param {string} url
@@ -111,6 +119,10 @@ export function getQueryObject(url) {
     return rs
   })
   return obj
+}
+
+export function clearQueryObject(obj) {
+  return _.omit(obj, (v) => _.isString(v) && _.isEmpty(v))
 }
 
 /**
