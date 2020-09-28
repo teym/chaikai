@@ -1,7 +1,7 @@
 <template>
   <div class="container white_bg">
-    <div class="flex">
-    <div v-for="(item, i) in channels" :key="i" class="item pad2-l pad2-t pad2-r">
+    <div class="flex" v-if="!append">
+    <div v-for="(item, i) in datas" :key="i" class="item pad2-l pad2-t pad2-r">
       <div class="row i-center">
         <img :src="item.img" :alt="item.platformName">
         <p class="dark middle blod margin-l">{{item.platformName}}</p>
@@ -10,6 +10,31 @@
         <input class="middle dark" type="text" v-model="item.url" :placeholder="'请输入'+item.platformName+'测评链接'">
       </div>
     </div>
+    </div>
+    <div class="flex pad2" v-else>
+      <div class="row margin2-t" v-for="(item, i) in datas" :key="i">
+        <div class="row i-center pop-menu middle light" @click="item.pop = true">
+          {{item.platformName}}
+          <div class="tag" :class="{pop: item.pop}">
+            <span>{{item.pop ? '▲' : '▼'}}</span>
+            <div v-if="item.pop" class="mask" @click.stop="item.pop = false"></div>
+          <div class="pop-menu-content" v-if="item.pop">
+            <div class="tga"></div>
+            <div class="col menu-items">
+              <p class="small margin" v-for="(p, j) in channels" :key='j' @click.stop="Object.assign(item, p, {pop:false})">{{p.platformName}}</p>
+            </div>
+          </div>
+          </div>
+        </div>
+        <div class="flex row light_bg pad">
+          <input class="middle dark flex" type="text" v-model="item.url" :placeholder="'请输入追加的测评链接'">
+          <span class="red small" @click="onDel(i)">删除</span>
+        </div>
+      </div>
+      <div class="row margin2-t">
+        <div class="pop-menu"></div>
+        <div class="add-btn row center small" @click="onAdd">+添加</div>
+      </div>
     </div>
     <div class="btn middle blod row center" @click="onOK">提交测评</div>
   </div>
@@ -25,32 +50,46 @@ export default {
     return {
       datas: [],
       channels: [],
-      loading: false
+      loading: false,
+      append: false
     }
   },
   created () {
     // let app = getApp()
   },
   mounted () {
-    this.loadData()
+    const {id, append} = router(this).params()
+    this.append = !!append
+    this.loadData(id)
   },
   onPullDownRefresh () {
-    this.loadData()
+    const {id} = router(this).params()
+    this.loadData(id)
   },
   onReachBottom () {
   },
   methods: {
-    loadData () {
-      const {id} = router(this).params()
+    loadData (id) {
       request.get('/bl/activity/order/' + id).then(({json: {data}}) => {
         this.channels = mapChannel(data.channels || []).map(i => Object.assign(i, {url: ''}))
+        if (this.append) {
+          this.datas = [Object.assign({}, this.channels[0], {pop: false})]
+        } else {
+          this.datas = [].concat(this.channels)
+        }
       }).catch(e => {
         uiapi.toast(e.info)
       })
     },
+    onAdd () {
+      this.datas.splice(this.datas.length, 0, Object.assign({}, this.channels[0], {pop: false}))
+    },
+    onDel (i) {
+      this.datas.splice(i, 1)
+    },
     onOK () {
       const {id, append} = router(this).params()
-      request.post('/bl/activity/order/evaluation', {brActivityOrderId: id, type: append ? 2 : 1, list: this.channels}).then(r => {
+      request.post('/bl/activity/order/evaluation', {brActivityOrderId: id, type: append ? 2 : 1, list: this.datas}).then(r => {
         uiapi.toast('已提交')
         router(this).pop()
       }).catch(e => {
@@ -65,6 +104,57 @@ export default {
 .item img{
   width: 60rpx;
   height: 60rpx;
+}
+.pop-menu {
+  width: 120rpx;
+}
+.pop-menu .tag {
+  position: relative;
+  margin-left: 8rpx;
+}
+.pop-menu .tag span{
+  font-size: 20rpx;
+  color: #999999;
+}
+.pop-menu .tag.pop span{
+  color: #FF8E3B;
+}
+.pop-menu .mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+.pop-menu .pop-menu-content{
+  position: absolute;
+  z-index: 2;
+  top: 50rpx;
+  left: -40rpx;
+  width: 220rpx;
+  box-shadow: 0px 0px 6px 0px rgba(167, 167, 167, 0.29);
+  background-color: white;
+}
+.pop-menu .pop-menu-content .tga {
+  position: absolute;
+  left: 40rpx;
+  top: -10rpx;
+  width: 10rpx;
+  height: 10rpx;
+  transform: rotate(45deg);
+  background-color: white;
+  z-index: 1;
+}
+.pop-menu .pop-menu-content .menu-items{
+  z-index: 2;
+}
+.add-btn {
+  border: 1px dashed #999999;
+  height: 48rpx;
+  padding: 0 28rpx;
+  border-radius: 12rpx;
+  color: #999999;
 }
 .btn{
   margin: 54rpx;

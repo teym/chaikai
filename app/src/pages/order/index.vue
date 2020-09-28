@@ -8,6 +8,18 @@
       <img class="state margin2" src="/static/images/issue_status_1.png" alt="status" />
     </div>
     <div v-if="data.statusCode > 5" class="margin-t white_bg pad2">
+      <h5 class="middle dark blod">订单问题</h5>
+      <div class="row just channel margin-t" v-for="(item, i) in evaluations" :key="i">
+        <div class="row i-center">
+          <p class="light middle margin-l">测评投诉</p>
+        </div>
+        <div class="row i-center">
+          <p class="light small">已完结</p>
+          <img class="right" src="/static/images/arrow_right.png" alt="right" />
+        </div>
+      </div>
+    </div>
+    <div v-if="data.statusCode > 5" class="margin-t white_bg pad2">
       <h5 class="middle dark blod">我的测评</h5>
       <div class="row just channel margin-t" v-for="(item, i) in evaluations" :key="i">
         <div class="row i-center">

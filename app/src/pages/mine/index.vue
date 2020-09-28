@@ -76,12 +76,12 @@
           <img class="right" src="/static/images/arrow_right.png" alt="right">
         </div>
       </div>
-      <div class="row just margin2-t margin2-b">
+      <button open-type="contact" session-from="weapp" class="btn-row row just margin2-t margin2-b">
         <p class="middle light">联系客服</p>
         <div class="row i-center">
           <img class="right" src="/static/images/arrow_right.png" alt="right">
         </div>
-      </div>
+      </button>
     </div>
     </div>
   </div>
@@ -91,8 +91,6 @@
 import navbar from '@/components/navbar'
 import {router, api, signal, request, mapChannel, uiapi} from '@/utils/index'
 
-const ImgUrl = 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1600427730668&di=07620f900465606f5579258a46d132ba&imgtype=0&src=http%3A%2F%2Fd.hiphotos.baidu.com%2Fzhidao%2Fpic%2Fitem%2F0e2442a7d933c895ca486665d51373f0820200fd.jpg'
-
 export default {
   components: {
     navbar
@@ -101,7 +99,7 @@ export default {
     return {
       user: {
         nickname: 'mpvue',
-        avatar: ImgUrl,
+        avatar: '',
         score: 0,
         areas: []
       },
@@ -213,5 +211,15 @@ export default {
 .icons img{
   width: 64rpx;
   height: 64rpx;
+}
+button.btn-row{
+  border: 0;
+  background-color: white;
+  border-radius: 0;
+  padding-left: 0;
+  padding-right: 0;
+}
+button.btn-row::after{
+  border: none;
 }
 </style>
