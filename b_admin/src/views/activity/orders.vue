@@ -134,9 +134,7 @@
       >
         <template slot-scope="{ row }">
           <div v-for="c in row.channels" :key="c.platformId" class="channel">
-            <img
-              :src="channelIcons['' + c.platformId].icon"
-            >
+            <img :src="channelIcons['' + c.platformId].icon">
             <span>{{ channelIcons[c.platformId + ""].name }}</span>
           </div>
         </template>
@@ -311,17 +309,17 @@
               @click="handleDetail(row)"
             >订单详情</el-button>
             <el-button
-              v-if="listQuery.statusCode === '6'"
+              v-if="listQuery.statusCode === '6' && row.ticketStatusCode !== 5 && row.ticketStatusCode !== 7"
               size="mini"
               :type="row.ticketStatusCode > 0 ? '' : 'primary'"
               @click="handleComplain(row)"
             >{{ row.ticketStatusCode > 0 ? "投诉处理中" : "投诉" }}
             </el-button>
             <el-button
-              v-if="listQuery.statusCode === '6'"
+              v-if="listQuery.statusCode === '6' && !row.scoreInfo"
               size="mini"
               type="primary"
-              @click="handleComplain(row)"
+              @click="handleCommend(row)"
             >评价</el-button>
             <el-button
               v-if="
@@ -342,8 +340,6 @@
               @change="handleRemark(row)"
             />
           </div>
-          <!-- <el-button type="text" size="mini" @click="handleUpdate(row)">订单详情</el-button>
-          <el-button type="text" size="mini" @click="handleDelete(row,$index)">查看物流</el-button>-->
         </template>
       </el-table-column>
     </el-table>
@@ -431,6 +427,40 @@
         <p style="margin: 8px 0">{{ l.content }}</p>
       </div>
     </el-dialog>
+    <el-dialog
+      custom-class="custom-dialog"
+      title=""
+      :visible.sync="commendVisible"
+      width="360px"
+    >
+      <div class="commend">
+        <el-rate v-model="commend.value" class="big" @change="onValue" />
+        <p>{{ commend.scopes.msg }}</p>
+        <el-checkbox-group
+          v-model="commend.tags"
+          size="small"
+          class="check_btns"
+          :min="0"
+          :max="3"
+        >
+          <el-checkbox-button
+            v-for="(item, i) in commend.scopes.list"
+            :key="i"
+            class="check_btn none_border"
+            :label="item.id"
+          >{{ item.msg }}</el-checkbox-button>
+        </el-checkbox-group>
+        <span>合作结束15天后默认好评</span>
+      </div>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="commendVisible = false">取消</el-button>
+        <el-button
+          :loading="formLoading"
+          type="primary"
+          @click="handleCreateCommend"
+        >确定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -442,7 +472,9 @@ import {
   updateAction,
   complain,
   fetchTickets,
-  fetchShip
+  fetchShip,
+  fetchScope,
+  updateScope
 } from '@/api/activities'
 import { ActivityOrderStatus, Channels, ChannelIcons } from '@/utils/constant'
 import { clearQueryObject } from '@/utils/index'
@@ -487,7 +519,14 @@ export default {
       formVisible: false,
       formLoading: false,
       shipVisible: false,
-      ship: {}
+      ship: {},
+      commendVisible: false,
+      commend: {
+        value: 5,
+        tags: [],
+        scopes: {}
+      },
+      scopes: []
     }
   },
   computed: {
@@ -498,6 +537,7 @@ export default {
     this.getTabs()
     this.getList()
     this.getTicks()
+    this.getScope()
   },
   methods: {
     getTabs() {
@@ -568,6 +608,11 @@ export default {
             return i.list
           })
         )
+      })
+    },
+    getScope() {
+      fetchScope().then((r) => {
+        this.scopes = r.data
       })
     },
     getShip(id) {
@@ -643,6 +688,39 @@ export default {
         this.detail = row
         this.formVisible = true
       }
+    },
+    handleCommend(row) {
+      this.commend = {
+        value: 5,
+        tags: [],
+        scopes: this.scopes[4]
+      }
+      this.detail = row
+      this.commendVisible = true
+    },
+    onValue(e) {
+      this.commend.scopes = this.scopes[Math.max(e, 1) - 1]
+    },
+    handleCreateCommend() {
+      const value = this.commend.value
+      const list = this.commend.scopes.list
+        .map((i) => Object.assign(i, { score: value + 5 }))
+        .filter((i) => this.commend.tags.indexOf(i.id) >= 0)
+      this.formLoading = true
+      updateScope({
+        brActivityOrderId: this.detail.id,
+        itemList: list,
+        score: value + 5,
+        blAccountId: this.detail.blAccountId
+      })
+        .then((r) => {
+          this.$message({ message: '已评价' })
+          this.formLoading = false
+          this.commendVisible = false
+        })
+        .catch((e) => {
+          this.formLoading = false
+        })
     },
     handleCreateComplain() {
       complain({
@@ -788,6 +866,32 @@ export default {
   }
   span {
     margin: 0 4px;
+  }
+}
+.commend {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  .check_btns {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    .check_btn {
+      border-radius: 8px;
+      border: 1px solid #dcdfe6;
+      overflow: hidden;
+      margin: 6px 8px;
+    }
+  }
+  p {
+    font-size: 16px;
+    color: #ff8300;
+    margin: 16px;
+  }
+  span {
+    margin-top: 36px;
+    font-size: 12px;
+    color: #c3c3c3;
   }
 }
 </style>

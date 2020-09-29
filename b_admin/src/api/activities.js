@@ -35,6 +35,19 @@ export function fetchShip(no) {
     params: { no }
   })
 }
+export function fetchScope() {
+  return request({
+    url: '/br/activity/order/score/items',
+    method: 'get'
+  })
+}
+export function updateScope(data) {
+  return request({
+    url: '/br/activity/order/score',
+    method: 'post',
+    data
+  })
+}
 export function fetchStat() {
   return request({
     url: '/br/activity/stat',

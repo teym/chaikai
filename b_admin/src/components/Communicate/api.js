@@ -1,4 +1,8 @@
 import request from '@/utils/request'
+import _ from 'underscore'
+import { province } from './province'
+import { city } from './city'
+import { county } from './county'
 
 export function fetchList(query) {
   return request({
@@ -20,13 +24,7 @@ export function fetchHistory(query) {
     params: query
   })
 }
-export function createData(data) {
-  return request({
-    url: '/chat/br/room',
-    method: 'post',
-    data
-  })
-}
+
 export function createHistory(data) {
   return request({
     url: '/chat/br/record',
@@ -34,10 +32,54 @@ export function createHistory(data) {
     data
   })
 }
-export function updateData(id) {
+
+export function uploadFile(f) {
+  const form = new FormData()
+  form.append('file', f)
   return request({
-    url: '/chat/br/room' + id + '/read',
+    url: '/oss/upload',
     method: 'post',
-    data: {}
+    data: form,
+    headers: { 'Content-Type': 'multipart/form-data' }
+  }).then(r => r.data)
+}
+
+export function fetchOrder(id) {
+  return request({
+    url: '/br/activity/order/' + id,
+    method: 'get'
   })
 }
+
+export function updateIssueState(data) {
+  return request({
+    url: '/ticket/ao',
+    method: 'put',
+    data
+  })
+}
+export function updateAddress(data) {
+  return request({
+    url: '/br/activity/order/receiver',
+    method: 'put',
+    data
+  })
+}
+export const addrs = _.map(province, i => {
+  return {
+    value: i.name,
+    label: i.name,
+    children: _.map(city[i.id + ''], (j) => {
+      return {
+        value: j.name,
+        label: j.name,
+        children: _.map(county[j.id + ''], (m) => {
+          return {
+            value: m.name,
+            label: m.name
+          }
+        })
+      }
+    })
+  }
+})

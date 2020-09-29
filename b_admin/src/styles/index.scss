@@ -198,3 +198,19 @@ aside {
     padding-top: 20px;
   }
 }
+.custom-dialog.fullbody {
+  .el-dialog__body{
+    margin: 0;
+    padding: 20px 0 0 0;
+  }
+}
+.el-rate.big {
+  .el-rate__icon {
+    font-size: 24px;
+  }
+}
+.el-checkbox-button.none_border {
+  span{
+    border: none !important;
+  }
+}
