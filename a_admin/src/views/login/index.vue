@@ -10,20 +10,17 @@
         label-position="left"
       >
         <div class="title-container">
-          <h3 class="title">
-            账号登录
-            <span>成就每一个品牌</span>
-          </h3>
+          <h3 class="title">账号登录</h3>
         </div>
 
         <el-form-item class="username" prop="username">
           <span class="prefix">
-            <svg-icon icon-class="user" /> +86
+            <svg-icon icon-class="user" />
           </span>
           <el-input
             ref="username"
             v-model="loginForm.username"
-            placeholder="手机号"
+            placeholder="账号"
             name="username"
             type="text"
           />
@@ -38,7 +35,7 @@
             ref="password"
             v-model="loginForm.password"
             :type="passwordType"
-            placeholder="请输入密码"
+            placeholder="密码"
             name="password"
             @keyup.enter.native="handleLogin"
           />
@@ -46,10 +43,6 @@
             <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
           </span>
         </el-form-item>
-        <div class="bar">
-          <el-checkbox v-model="checked">15天内自动登录</el-checkbox>
-          <router-link :to="{path:'/resetpass'}">忘记密码</router-link>
-        </div>
 
         <el-button
           type="primary"
@@ -235,7 +228,6 @@ $light_gray: #eee;
         width: 70%;
       }
       .prefix {
-        border-right: 1px solid #666;
         padding-right: 8px;
         color: #333;
       }
@@ -245,10 +237,10 @@ $light_gray: #eee;
         width: 80%;
       }
     }
-    .bar{
+    .bar {
       margin-top: -8px;
       margin-bottom: 32px;
-      a{
+      a {
         float: right;
         font-size: 14px;
         color: #333;

@@ -146,7 +146,7 @@ export const asyncRoutes = [
     path: '/activity',
     component: Layout,
     redirect: '/activity/index',
-    name: 'Account',
+    name: 'Activity',
     meta: { title: '活动管理', icon: 'table' },
     children: [
       {
@@ -169,20 +169,6 @@ export const asyncRoutes = [
         name: 'issue-table',
         meta: { title: '问题管理', icon: 'table' }
       }
-      // {
-      //   path: 'create',
-      //   component: () => import('@/views/activity/create'),
-      //   name: 'activity-create',
-      //   hidden: true,
-      //   meta: { title: 'Create' }
-      // },
-      // {
-      //   path: 'order',
-      //   component: () => import('@/views/activity/orders'),
-      //   name: 'activity-order',
-      //   hidden: true,
-      //   meta: { title: 'Order' }
-      // }
     ]
   },
   {

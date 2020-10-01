@@ -44,3 +44,31 @@ export function updateBloggerState(data) {
     data
   })
 }
+
+export function fetchActivityList(query) {
+  return request({
+    url: '/sys/activity/list',
+    method: 'get',
+    params: query
+  })
+}
+export function updateActivityState(data) {
+  return request({
+    url: '/sys/activity/status',
+    method: 'put',
+    data
+  })
+}
+export function fetchActivity(id) {
+  return request({
+    url: '/sys/activity/' + id,
+    method: 'get'
+  })
+}
+export function updateActivity(data) {
+  return request({
+    url: '/sys/activity',
+    method: 'put',
+    data
+  })
+}
