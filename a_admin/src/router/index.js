@@ -158,6 +158,21 @@ export const asyncRoutes = [
     ]
   },
   {
+    path: '/order',
+    component: Layout,
+    redirect: '/order/index',
+    name: 'Order',
+    meta: { title: '业务管理', icon: 'table' },
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/activity/order'),
+        name: 'order-table',
+        meta: { title: '订单管理', icon: 'table' }
+      }
+    ]
+  },
+  {
     path: '/issue',
     component: Layout,
     redirect: '/issue/index',

@@ -134,7 +134,9 @@
       </div>
       <div class="row">
         <h5>悬赏金额：</h5>
-        <p>{{ data.reward }}</p>
+        <div>
+          <p>{{ data.reward }} <span style="color:red" @click="onCancelReward">取消发放</span></p>
+        </div>
       </div>
       <div class="row">
         <h5>悬赏结算：</h5>
@@ -446,6 +448,10 @@ export default {
         .catch((e) => {
           this.data.update = false
         })
+    },
+    onCancelReward() {
+      // const id = this.id
+      this.$message({ message: '未实现', type: 'error' })
     },
     loadData(id) {
       this.data = DefObj

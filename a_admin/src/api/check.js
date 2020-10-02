@@ -72,3 +72,24 @@ export function updateActivity(data) {
     data
   })
 }
+
+export function fetchOrderList(query) {
+  return request({
+    url: '/sys/activity/order/list',
+    method: 'get',
+    params: query
+  })
+}
+export function closeOrder(data) {
+  return request({
+    url: '/sys/activity/order/close',
+    method: 'put',
+    data
+  })
+}
+export function fetchDeposit(id) {
+  return request({
+    url: '/sys/activity/order/' + id + '/diposit',
+    method: 'get'
+  })
+}

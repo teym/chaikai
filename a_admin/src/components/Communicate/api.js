@@ -46,7 +46,7 @@ export function uploadFile(f) {
 
 export function fetchOrder(id) {
   return request({
-    url: '/br/activity/order/' + id,
+    url: '/sys/activity/order/' + id,
     method: 'get'
   })
 }
