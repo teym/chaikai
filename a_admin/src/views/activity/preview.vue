@@ -31,9 +31,9 @@
             </li>
           </ul>
         </div>
-        <div class="hot">
+        <!-- <div class="hot">
           <img src="/static/images/detail_hot.png" alt="hot">
-        </div>
+        </div> -->
       </div>
       <div class="detail">
         <div class="tab">
@@ -80,16 +80,16 @@
           </div>
           <div class="text">
             <div class="row center">
-              <img src="/static/images/detail_dot_l.png" alt="dot_l">
+              <!-- <img src="/static/images/detail_dot_l.png" alt="dot_l"> -->
               <p>产品详情</p>
-              <img src="/static/images/detail_dot_r.png" alt="dot_l">
+              <!-- <img src="/static/images/detail_dot_r.png" alt="dot_l"> -->
             </div>
             <div v-html="data.goods.detail" />
           </div>
         </div>
         <div v-if="tab===2" class="block task">
           <div class="rule">
-            <img src="/static/images/detail_tip.png" alt="tip">
+            <img src="@/assets/images/detail_tip.png" alt="tip">
           </div>
           <div class="row just line">
             <h5>合作方式</h5>
@@ -192,11 +192,11 @@ function diffTime(date) {
 }
 
 const CHS = {
-  1: { img: '/static/images/channel_wb.png' },
-  2: { img: '/static/images/channel_bi.png' },
-  4: { img: '/static/images/channel_xhs.png' },
-  8: { img: '/static/images/channel_dy.png' },
-  16: { img: '/static/images/channel_ks.png' }
+  1: { img: require('@/assets/images/channel_wb.png') },
+  2: { img: require('@/assets/images/channel_bi.png') },
+  4: { img: require('@/assets/images/channel_xhs.png') },
+  8: { img: require('@/assets/images/channel_dy.png') },
+  16: { img: require('@/assets/images/channel_ks.png') }
 }
 export function mapChannel(channels) {
   return channels.map((i) => Object.assign({}, i, CHS[i.platformId]))
@@ -264,6 +264,9 @@ export default {
 </script>
 
 <style scoped>
+ul{
+  padding-inline-start: 0;
+}
 .container {
   width: 100%;
   position: relative;
@@ -278,36 +281,36 @@ export default {
 
 .content {
   flex: 1;
-  padding-bottom: 88rpx;
+  padding-bottom: 44px;
   background-color: #f5f5f5;
   position: relative;
 }
 .stop {
   position: absolute;
-  width: 280rpx;
-  height: 280rpx;
-  border-radius: 140rpx;
+  width: 140px;
+  height: 140px;
+  border-radius: 70px;
   background-color: rgba(0, 0, 0, 0.4);
   display: flex;
   align-items: center;
   justify-content: center;
-  left: 235rpx;
-  top: 235rpx;
+  left: 117px;
+  top: 117px;
   color: white;
-  font-size: 44rpx;
+  font-size: 22px;
   font-weight: 500;
 }
 .banners {
-  width: 750rpx;
-  height: 750rpx;
+  width: 375px;
+  height: 375px;
 }
 .banner {
-  width: 750rpx;
-  height: 750rpx;
+  width: 375px;
+  height: 375px;
 }
 .banner img {
-  width: 750rpx;
-  height: 750rpx;
+  width: 375px;
+  height: 375px;
 }
 .row {
   display: flex;
@@ -318,66 +321,73 @@ export default {
   justify-content: space-between;
 }
 .info {
-  padding: 24rpx;
+  padding: 12px;
   background-color: white;
 }
 h4 {
-  font-size: 32rpx;
-  line-height: 44rpx;
+  font-size: 16px;
+  line-height: 22px;
   color: #494c5e;
   font-weight: 400;
+  margin: 0;
+  padding: 0;
 }
 h5 {
-  font-size: 28rpx;
+  font-size: 14px;
   font-weight: 500;
   color: #494c5e;
+  margin: 0;
+  padding: 0;
 }
 .info .row {
-  margin: 16rpx 0 0 0;
+  margin: 8px 0 0 0;
 }
 .info .row span {
-  font-size: 24rpx;
+  font-size: 12px;
   color: #7b7f8e;
 }
 .info .count p {
   color: #ff8e3b;
-  font-size: 44rpx;
+  font-size: 22px;
   font-weight: 400;
-  margin-right: 32rpx;
+  margin-right: 16px;
+  margin: 0;
+  padding: 0;
 }
 .info .count p span {
   color: #ff8e3b;
   font-weight: normal;
 }
 .info .channel span {
-  font-size: 28rpx;
+  font-size: 14px;
   color: #494c5e;
 }
 .info .channel ul {
   display: flex;
   flex-direction: row;
+  list-style: none;
 }
 .info .channel ul img {
-  width: 44rpx;
-  height: 44rpx;
-  margin: 0 -8rpx;
+  width: 22px;
+  height: 22px;
+  margin: 0 -4px;
 }
 .info .hot {
-  padding: 24rpx 0 0 0;
+  padding: 12px 0 0 0;
 }
 .info .hot img {
-  width: 702rpx;
-  height: 128rpx;
+  width: 351px;
+  height: 64px;
 }
 .detail {
-  margin: 24rpx 0 0 0;
+  margin: 12px 0 0 0;
   background-color: white;
-  padding-bottom: 48rpx;
+  padding-bottom: 24px;
 }
 .detail .tab {
   display: flex;
   flex-direction: row;
-  border-bottom: 1rpx solid #f5f5f5;
+  border-bottom: 1px solid #f5f5f5;
 }
 .detail .tab div {
   flex: 1;
@@ -386,14 +396,14 @@ h5 {
   align-items: center;
 }
 .detail .tab div p {
-  font-size: 28rpx;
+  font-size: 14px;
   color: #494c5e;
-  margin: 24rpx 0;
+  margin: 12px 0;
 }
 .detail .tab div span {
-  width: 64rpx;
+  width: 32px;
   color: white;
-  height: 4rpx;
+  height: 2px;
 }
 .detail .tab .active p {
   color: #ff8e3b !important;
@@ -404,31 +414,33 @@ h5 {
 .desc .brand {
   display: flex;
   flex-direction: row;
-  margin: 24rpx;
+  margin: 12px;
 }
 .desc .brand img {
-  width: 72rpx;
-  height: 72rpx;
-  border-radius: 36rpx;
+  width: 36px;
+  height: 36px;
+  border-radius: 18px;
   background-color: #f5f5f5;
 }
 .desc .brand div {
-  margin-left: 16rpx;
+  margin-left: 8px;
 }
 
 .desc .brand p {
-  font-size: 24rpx;
-  line-height: 40rpx;
+  font-size: 12px;
+  line-height: 20px;
   color: #7b7f8e;
   position: relative;
+  margin: 0;
+  padding: 0;
 }
 .desc .brand .collapse {
-  max-height: 80rpx;
+  max-height: 40px;
 }
 .desc .brand p span {
   color: #ff8e3b;
-  font-size: 24rpx;
-  line-height: 40rpx;
+  font-size: 12px;
+  line-height: 20px;
   background-color: white;
 }
 .desc .brand p .float {
@@ -437,85 +449,89 @@ h5 {
   bottom: 0;
 }
 .desc .guide {
-  padding: 0 24rpx;
-  margin: 24rpx 0;
+  padding: 0 12px;
+  margin: 12px 0;
 }
 .desc .guide ul {
   background-color: #f5f5f5;
-  border-radius: 12rpx;
-  margin-top: 24rpx;
+  border-radius: 6px;
+  margin-top: 12px;
+  list-style: none;
 }
 .desc .guide li {
   color: #7b7f8e;
-  font-size: 24rpx;
-  padding: 20rpx;
-  border-bottom: 1rpx solid #ebebeb;
+  font-size: 12px;
+  padding: 10px;
+  border-bottom: 1px solid #ebebeb;
 }
 .desc .ship {
-  padding: 0 24rpx;
+  padding: 0 12px;
 }
 .desc .ship h5 span {
-  font-size: 24rpx;
+  font-size: 12px;
   color: #c1c6cb;
   font-weight: normal;
-  margin-left: 16rpx;
+  margin-left: 8px;
 }
 .desc .ship p {
-  margin: 24rpx 0;
-  font-size: 24rpx;
+  margin: 12px 0;
+  font-size: 12px;
   color: #7b7f8e;
-  line-height: 40rpx;
+  line-height: 20px;
 }
 .desc .text .row {
   justify-content: center;
-  margin-bottom: 16rpx;
+  margin-bottom: 8px;
 }
 .desc .text .row img {
-  width: 56rpx;
-  height: 32rpx;
+  width: 28px;
+  height: 16px;
 }
 .desc .text .row p {
-  font-size: 28rpx;
+  font-size: 14px;
   color: #494c5e;
   font-weight: 500;
-  margin: 0 12rpx;
+  margin: 0 6px;
 }
 .task {
-  padding: 0 24rpx;
+  padding: 0 12px;
 }
 .task .rule {
-  padding: 24rpx 0 0 0;
+  padding: 12px 0 0 0;
 }
 .task .rule img {
-  width: 702rpx;
-  height: 128rpx;
+  width: 351px;
+  height: 64px;
 }
 .task .round-btn {
-  font-size: 24rpx;
+  font-size: 12px;
   color: #ff8e3b;
   font-weight: 500;
   background-color: #ff8e3b2e;
-  height: 48rpx;
-  border-radius: 24rpx;
-  padding: 0 24rpx;
+  height: 24px;
+  border-radius: 12px;
+  padding: 0 12px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 .task .line {
-  margin-top: 12rpx;
+  margin-top: 6px;
   align-items: flex-start;
 }
 .task .line h6 {
-  font-size: 24rpx;
+  font-size: 12px;
   color: #494c5e;
+  margin: 0;
+  padding: 0;
 }
 .task .line p {
-  font-size: 24rpx;
+  font-size: 12px;
   color: #494c5e;
   font-weight: 400;
   flex: 1;
   text-align: right;
+  margin: 0;
 }
 .task .line p span {
   color: #ff8e3b;
@@ -533,23 +549,23 @@ h5 {
   background-color: white;
   left: 0;
   bottom: 0;
-  width: 750rpx;
-  height: 96rpx;
+  width: 375px;
+  height: 48px;
   z-index: 10;
 }
 .btn {
-  height: 80rpx;
-  border-radius: 40rpx;
+  height: 40px;
+  border-radius: 20px;
   background-color: #ff8e3b;
   color: white;
-  font-size: 30rpx;
+  font-size: 15px;
   font-weight: 500;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 .bar .btn {
-  margin: 8rpx 58rpx;
+  margin: 4px 29px;
   flex: 1;
 }
 .pop {

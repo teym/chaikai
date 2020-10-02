@@ -17,7 +17,7 @@ function mapHeaders (headers) {
 //   return { timestamp, sign: s }
 // }
 const conf = {
-  host: 'http://192.168.100.5:8888/api',
+  host: 'http://apartest.ckgift.cn/api',
   token: '',
   base: {}
 }

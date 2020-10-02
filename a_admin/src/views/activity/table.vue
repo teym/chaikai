@@ -260,7 +260,7 @@
         <el-button type="primary" @click="onSave">确定</el-button>
       </div>
     </el-dialog>
-    <el-dialog width="60%" title="预览" :visible.sync="previewVisible">
+    <el-dialog width="415px" title="预览" :visible.sync="previewVisible">
       <preview v-if="detail" :item="detail" />
     </el-dialog>
   </div>
