@@ -65,6 +65,12 @@ export function updateAddress(data) {
     data
   })
 }
+export function cancelReward(id) {
+  return request({
+    url: '/sys/activity/order/' + id + '/cancelReward',
+    method: 'put'
+  })
+}
 export const addrs = _.map(province, i => {
   return {
     value: i.name,
