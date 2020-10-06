@@ -317,7 +317,7 @@ export default {
       const obj = Object.assign({}, this.listQuery)
       obj[['', 'brActivityId', 'title', 'brandName'][obj.searchType]] =
         obj.searchKey
-      fetchActivityList(clearQueryObject(this.listQuery, true)).then(
+      fetchActivityList(clearQueryObject(obj, true)).then(
         ({ data }) => {
           this.list = data.data
           this.total = data.pager.count

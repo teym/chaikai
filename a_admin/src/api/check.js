@@ -93,3 +93,19 @@ export function fetchDeposit(id) {
     method: 'get'
   })
 }
+
+export function fetchIssueList(query) {
+  return request({
+    url: '/sys/activity/order/ticket/list',
+    method: 'get',
+    params: query
+  })
+}
+
+export function fetchServeList(query) {
+  return request({
+    url: '/sys/finance/subscribe/list',
+    method: 'get',
+    params: query
+  })
+}

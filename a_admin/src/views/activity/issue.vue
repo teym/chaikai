@@ -21,30 +21,6 @@
         @keyup.enter.native="handleFilter"
       />
       <el-select
-        v-model="listQuery.coopType"
-        size="mini"
-        class="filter-item"
-        style="width: 160px; margin-left: 16px"
-      >
-        <el-option v-for="(i, j) in coopTypes" :key="j" :value="j" :label="i" />
-      </el-select>
-      <el-select
-        v-model="listQuery.depositStatusCode"
-        size="mini"
-        class="filter-item"
-        style="width: 120px; margin-left: 16px"
-      >
-        <el-option v-for="(i, j) in depositStatus" :key="j" :value="j" :label="i" />
-      </el-select>
-      <el-select
-        v-model="listQuery.rewardStatusCode"
-        size="mini"
-        class="filter-item"
-        style="width: 120px; margin-left: 16px"
-      >
-        <el-option v-for="(i, j) in rewardStatus" :key="j" :value="j" :label="i" />
-      </el-select>
-      <el-select
         v-model="listQuery.statusCode"
         size="mini"
         class="filter-item"
@@ -71,7 +47,12 @@
       highlight-current-row
       style="width: 100%"
     >
-      <el-table-column label="订单编号">
+      <el-table-column label="问题编号" width="80">
+        <template slot-scope="{ row }">
+          <span>{{ row.ticket.id }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="订单编号" width="80">
         <template slot-scope="{ row }">
           <span>{{ row.id }}</span>
         </template>
@@ -91,41 +72,23 @@
           <span>{{ row.activity.company.name }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="合作方式" align="center">
+      <el-table-column label="投诉理由" align="center" style="width:360">
         <template slot-scope="{ row }">
-          <span>{{ coopTypes[row.coopSubType] }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="押金|状态" align="center">
-        <template slot-scope="{ row }">
-          <span>{{ row.depositInfo.amount }}<br> {{ depositStatus[row.depositInfo.statusCode] }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="悬赏|状态" align="center">
-        <template slot-scope="{ row }">
-          <span>
-            {{ row.reward }}
+          <span v-for="(i, j) in row.ticket.items" :key="j">
+            {{ i.content }}
             <br>
-            {{ rewardStatus[row.rewardStatusCode] }}
           </span>
         </template>
       </el-table-column>
-      <el-table-column label="状态" align="center">
+      <el-table-column label="状态" align="center" width="120">
         <template slot-scope="{ row }">
           <span>{{ status[row.statusCode] }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="操作" align="center" width="240" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" width="120" class-name="small-padding fixed-width">
         <template slot-scope="{ row }">
-          <el-button size="mini" @click="handleDetail(row)">订单详情</el-button>
-          <el-button size="mini" @click="handleDeposit(row)">押金详情</el-button>
-          <el-button
-            v-if="row.statusCode === 5 || row.statusCode === 6"
-            size="mini"
-            type="primary"
-            @click="handleClose(row)"
-          >关闭</el-button>
+          <el-button size="mini" @click="handleDetail(row)">{{ row.statusCode !== 3 ? "查看" : '去处理' }}</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -185,7 +148,7 @@
 </template>
 
 <script>
-import { fetchOrderList, closeOrder, fetchDeposit } from '@/api/check'
+import { fetchIssueList } from '@/api/check'
 // import moment from 'moment'
 import { clearQueryObject } from '@/utils/index'
 import waves from '@/directive/waves' // waves directive
@@ -215,13 +178,13 @@ export default {
       },
       status: [
         '全部',
-        '待审核',
-        '待缴押金',
-        '待发货',
-        '待收货',
-        '待测评',
-        '已测评',
-        '已关闭'
+        '待修改',
+        '待确认',
+        '小二审核中',
+        '待重评',
+        '已修改',
+        '已取消',
+        '已违规'
       ],
       coopTypes: ['全部', '接受悬赏', '接受悬赏/博主报价', '免费置换'],
       depositStatus: ['全部', '未缴押金', '已冻结', '已解冻', '已扣除'],
@@ -245,7 +208,7 @@ export default {
           obj.searchType
         ]
       ] = obj.searchKey
-      fetchOrderList(clearQueryObject(obj, true)).then(
+      fetchIssueList(clearQueryObject(obj, true)).then(
         ({ data }) => {
           this.list = data.data
           this.total = data.pager.count
@@ -261,28 +224,8 @@ export default {
       this.listQuery.page = 1
       this.getList()
     },
-
-    handleClose(row) {
-      this.$prompt('请输入拒绝理由').then((r) => {
-        closeOrder({
-          id: row.id,
-          rejectReason: r.value
-        }).then(() => {
-          this.$message({ message: '操作成功', type: 'success' })
-        })
-      })
-    },
-    handleDeposit(row) {
-      this.loadDeposit(row.id)
-      this.depositVisable = true
-    },
     handleDetail(row) {
       window.showCommunicate(row.id)
-    },
-    loadDeposit(id) {
-      fetchDeposit(id).then((r) => {
-        this.detail = r.data
-      })
     }
   }
 }

@@ -317,9 +317,11 @@
             </div>
           </div>
         </div>
-        <div v-if="data.ticket.statusCode === 2 || data.ticket.statusCode === 3" class="row">
-          <el-button size="mini" :loading="data.update" @click="updateState(1)">未达要求</el-button>
-          <el-button size="mini" type="primary" :loading="data.update" @click="updateState(5)">确认修改</el-button>
+        <div class="row">
+          <el-button size="mini" :loading="data.update" @click="updateState(1)">继续修改</el-button>
+          <el-button size="mini" :loading="data.update" @click="updateState(7)">判定违规</el-button>
+          <el-button size="mini" :loading="data.update" @click="updateState(5)">修改完成</el-button>
+          <el-button size="mini" :loading="data.update" @click="updateState(6)">取消投诉</el-button>
         </div>
       </div>
     </div>
@@ -354,7 +356,7 @@ const DefObj = {
   update: false
 }
 export default {
-  props: { id: String },
+  props: { id: { type: String, default: '' }},
   data() {
     return {
       active: 1,

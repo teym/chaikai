@@ -169,128 +169,60 @@ export const asyncRoutes = [
         component: () => import('@/views/activity/order'),
         name: 'order-table',
         meta: { title: '订单管理', icon: 'table' }
-      }
-    ]
-  },
-  {
-    path: '/issue',
-    component: Layout,
-    redirect: '/issue/index',
-    name: 'Issue',
-    children: [
+      },
       {
-        path: 'index',
-        component: () => import('@/views/issue/table'),
+        path: 'issue',
+        component: () => import('@/views/activity/issue'),
         name: 'issue-table',
-        meta: { title: '问题管理', icon: 'table' }
+        meta: { title: '订单问题', icon: 'table' }
+      },
+      {
+        path: 'serve',
+        component: () => import('@/views/activity/serve'),
+        name: 'serve-table',
+        meta: { title: '服务订购', icon: 'table' }
       }
     ]
   },
   {
-    path: '/user',
+    path: '/finance',
     component: Layout,
-    redirect: '/user/index',
-    name: 'User',
-    meta: { title: '账号信息', icon: 'table' },
+    redirect: '/finance/index',
+    name: 'Finance',
+    meta: { title: '财务管理', icon: 'table' },
     children: [
       {
         path: 'index',
-        component: () => import('@/views/profile/index'),
-        name: 'profile-table',
-        meta: { title: '账号信息', icon: 'table' }
+        component: () => import('@/views/finance/index'),
+        name: 'invoice-table',
+        meta: { title: '开票申请', icon: 'table' }
       },
       {
-        path: 'create',
-        component: () => import('@/views/profile/create'),
-        name: 'profile-create',
-        meta: { title: '企业认证', icon: 'table' }
-      },
-      {
-        path: 'auth',
-        component: () => import('@/views/profile/auth'),
-        name: 'profile-auth',
-        meta: { title: '品牌授权', icon: 'table' }
-      },
-      {
-        path: 'buy',
-        component: () => import('@/views/profile/buy'),
-        name: 'profile-buy',
-        meta: { title: '服务订购', icon: 'table' }
+        path: 'bwithdraw',
+        component: () => import('@/views/finance/bwithdraw'),
+        name: 'bwithdraw-table',
+        meta: { title: '品牌方提现', icon: 'table' }
       },
       {
         path: 'topup',
-        component: () => import('@/views/profile/topup'),
-        name: 'profile-topup',
-        meta: { title: '账户充值', icon: 'table' }
+        component: () => import('@/views/finance/topup'),
+        name: 'topup-table',
+        meta: { title: '品牌方充值', icon: 'table' }
       },
       {
-        path: 'balance',
-        component: () => import('@/views/profile/balance'),
-        name: 'profile-balance',
-        meta: { title: '账户余额', icon: 'table' }
+        path: 'cwithdraw',
+        component: () => import('@/views/finance/cwithdraw'),
+        name: 'cwithdraw-table',
+        meta: { title: '达人提现', icon: 'table' }
       },
       {
-        path: 'withdraw',
-        component: () => import('@/views/profile/withdraw'),
-        name: 'profile-withdraw',
-        meta: { title: '账户提现', icon: 'table' }
-      },
-      {
-        path: 'invoice',
-        component: () => import('@/views/profile/invoice'),
-        name: 'profile-invoice',
-        meta: { title: '开发票', icon: 'table' }
-      },
-      {
-        path: 'invoices',
-        component: () => import('@/views/profile/invoices'),
-        name: 'profile-invoices',
-        meta: { title: '开票记录', icon: 'table' }
-      },
-      {
-        path: 'history',
-        component: () => import('@/views/profile/history'),
-        name: 'profile-history',
-        meta: { title: '订购记录', icon: 'table' }
+        path: 'gift',
+        component: () => import('@/views/finance/gift'),
+        name: 'gift-table',
+        meta: { title: '打款赠送', icon: 'table' }
       }
     ]
   },
-  // {
-  //   path: '/table',
-  //   component: Layout,
-  //   redirect: '/table/complex-table',
-  //   name: 'Table',
-  //   meta: {
-  //     title: 'Table',
-  //     icon: 'table'
-  //   },
-  //   children: [
-  //     {
-  //       path: 'dynamic-table',
-  //       component: () => import('@/views/table/dynamic-table/index'),
-  //       name: 'DynamicTable',
-  //       meta: { title: 'Dynamic Table' }
-  //     },
-  //     {
-  //       path: 'drag-table',
-  //       component: () => import('@/views/table/drag-table'),
-  //       name: 'DragTable',
-  //       meta: { title: 'Drag Table' }
-  //     },
-  //     {
-  //       path: 'inline-edit-table',
-  //       component: () => import('@/views/table/inline-edit-table'),
-  //       name: 'InlineEditTable',
-  //       meta: { title: 'Inline Edit' }
-  //     },
-  //     {
-  //       path: 'complex-table',
-  //       component: () => import('@/views/table/complex-table'),
-  //       name: 'ComplexTable',
-  //       meta: { title: 'Complex Table' }
-  //     }
-  //   ]
-  // },
   {
     path: '/error',
     component: Layout,

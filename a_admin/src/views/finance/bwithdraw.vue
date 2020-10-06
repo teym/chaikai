@@ -71,43 +71,24 @@
       highlight-current-row
       style="width: 100%"
     >
-      <el-table-column label="订单编号">
+      <el-table-column label="提现单号">
         <template slot-scope="{ row }">
           <span>{{ row.id }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="用户昵称" align="center">
+      <el-table-column label="公司名称" align="center">
         <template slot-scope="{ row }">
-          <span>{{ row.blogger.nickname }}</span>
+          <span>{{ row.name }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="活动名称" align="center">
+      <el-table-column label="申请时间" align="center">
         <template slot-scope="{ row }">
           <span>{{ row.activity.title }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="公司名称" align="center">
+      <el-table-column label="提现金额" align="center">
         <template slot-scope="{ row }">
-          <span>{{ row.activity.company.name }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="合作方式" align="center">
-        <template slot-scope="{ row }">
-          <span>{{ coopTypes[row.coopSubType] }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="押金|状态" align="center">
-        <template slot-scope="{ row }">
-          <span>{{ row.depositInfo.amount }}<br> {{ depositStatus[row.depositInfo.statusCode] }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="悬赏|状态" align="center">
-        <template slot-scope="{ row }">
-          <span>
-            {{ row.reward }}
-            <br>
-            {{ rewardStatus[row.rewardStatusCode] }}
-          </span>
+          <span>{{ row.amount }}</span>
         </template>
       </el-table-column>
       <el-table-column label="状态" align="center">
@@ -119,13 +100,6 @@
       <el-table-column label="操作" align="center" width="240" class-name="small-padding fixed-width">
         <template slot-scope="{ row }">
           <el-button size="mini" @click="handleDetail(row)">订单详情</el-button>
-          <el-button size="mini" @click="handleDeposit(row)">押金详情</el-button>
-          <el-button
-            v-if="row.statusCode === 5 || row.statusCode === 6"
-            size="mini"
-            type="primary"
-            @click="handleClose(row)"
-          >关闭</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -185,7 +159,7 @@
 </template>
 
 <script>
-import { fetchOrderList, closeOrder, fetchDeposit } from '@/api/check'
+import { fetchBWithdrawList, closeOrder, fetchDeposit } from '@/api/finance'
 // import moment from 'moment'
 import { clearQueryObject } from '@/utils/index'
 import waves from '@/directive/waves' // waves directive
@@ -239,13 +213,7 @@ export default {
   methods: {
     getList() {
       this.listLoading = true
-      const obj = Object.assign({}, this.listQuery)
-      obj[
-        ['', 'orderId', 'activityTitle', 'companyName', 'bloggerName'][
-          obj.searchType
-        ]
-      ] = obj.searchKey
-      fetchOrderList(clearQueryObject(obj, true)).then(
+      fetchBWithdrawList(clearQueryObject(this.listQuery, true)).then(
         ({ data }) => {
           this.list = data.data
           this.total = data.pager.count

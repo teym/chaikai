@@ -53,7 +53,7 @@ export function fetchOrder(id) {
 
 export function updateIssueState(data) {
   return request({
-    url: '/ticket/ao',
+    url: '/sys/activity/order/ticket',
     method: 'put',
     data
   })
