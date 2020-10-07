@@ -120,7 +120,7 @@
 </template>
 
 <script>
-import { fetchCompanyList, updateCompanyState } from '@/api/check'
+import { fetchCompanyList } from '@/api/accounts'
 import { clearQueryObject } from '@/utils/index'
 import waves from '@/directive/waves' // waves directive
 import { mapGetters } from 'vuex'
@@ -176,29 +176,29 @@ export default {
     handlePreview(row) {
       this.previewUrl = row.businessLicense
       this.preview = true
-    },
-    handleAction(row, state) {
-      if (state === 3) {
-        this.$confirm('确认通过?').then((r) => {
-          updateCompanyState({ id: row.id, statusCode: state }).then((r) => {
-            row.statusCode = state
-            this.$message({ message: '操作成功', type: 'success' })
-          })
-        })
-      } else {
-        this.$prompt('请输入拒绝理由').then((r) => {
-          updateCompanyState({
-            id: row.id,
-            statusCode: state,
-            rejectReason: r.value
-          }).then(() => {
-            row.statusCode = state
-            row.rejectReason = r.value
-            this.$message({ message: '操作成功', type: 'success' })
-          })
-        })
-      }
     }
+    // handleAction(row, state) {
+    //   if (state === 3) {
+    //     this.$confirm('确认通过?').then((r) => {
+    //       updateCompanyState({ id: row.id, statusCode: state }).then((r) => {
+    //         row.statusCode = state
+    //         this.$message({ message: '操作成功', type: 'success' })
+    //       })
+    //     })
+    //   } else {
+    //     this.$prompt('请输入拒绝理由').then((r) => {
+    //       updateCompanyState({
+    //         id: row.id,
+    //         statusCode: state,
+    //         rejectReason: r.value
+    //       }).then(() => {
+    //         row.statusCode = state
+    //         row.rejectReason = r.value
+    //         this.$message({ message: '操作成功', type: 'success' })
+    //       })
+    //     })
+    //   }
+    // }
   }
 }
 </script>

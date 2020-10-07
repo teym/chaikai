@@ -1,56 +1,24 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-select
-        v-model="listQuery.searchType"
-        size="mini"
-        class="filter-item"
-        style="width: 100px"
-      >
-        <el-option :value="1" label="订单ID" />
-        <el-option :value="2" label="活动名称" />
-        <el-option :value="3" label="公司名称" />
-        <el-option :value="4" label="用户昵称" />
-      </el-select>
       <el-input
-        v-model="listQuery.searchKey"
-        placeholder="请输入"
+        v-model="listQuery.companyName"
+        placeholder="请输入公司名称"
         style="width: 160px;"
         size="mini"
         class="filter-item"
         @keyup.enter.native="handleFilter"
       />
       <el-select
-        v-model="listQuery.coopType"
-        size="mini"
-        class="filter-item"
-        style="width: 160px; margin-left: 16px"
-      >
-        <el-option v-for="(i, j) in coopTypes" :key="j" :value="j" :label="i" />
-      </el-select>
-      <el-select
-        v-model="listQuery.depositStatusCode"
-        size="mini"
-        class="filter-item"
-        style="width: 120px; margin-left: 16px"
-      >
-        <el-option v-for="(i, j) in depositStatus" :key="j" :value="j" :label="i" />
-      </el-select>
-      <el-select
-        v-model="listQuery.rewardStatusCode"
-        size="mini"
-        class="filter-item"
-        style="width: 120px; margin-left: 16px"
-      >
-        <el-option v-for="(i, j) in rewardStatus" :key="j" :value="j" :label="i" />
-      </el-select>
-      <el-select
         v-model="listQuery.statusCode"
         size="mini"
         class="filter-item"
         style="width: 120px;margin-left: 16px"
       >
-        <el-option v-for="(item, i) in status" :key="i" :value="i" :label="item" />
+        <el-option :value="-1" label="全部" />
+        <el-option :value="0" label="处理中" />
+        <el-option :value="2" label="提现成功" />
+        <el-option :value="4" label="已拒绝" />
       </el-select>
 
       <el-button
@@ -78,12 +46,12 @@
       </el-table-column>
       <el-table-column label="公司名称" align="center">
         <template slot-scope="{ row }">
-          <span>{{ row.name }}</span>
+          <span>{{ row.company.name }}</span>
         </template>
       </el-table-column>
       <el-table-column label="申请时间" align="center">
         <template slot-scope="{ row }">
-          <span>{{ row.activity.title }}</span>
+          <span>{{ row.date }}</span>
         </template>
       </el-table-column>
       <el-table-column label="提现金额" align="center">
@@ -97,7 +65,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="操作" align="center" width="240" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="{ row }">
           <el-button size="mini" @click="handleDetail(row)">订单详情</el-button>
         </template>
@@ -111,56 +79,68 @@
       :limit.sync="listQuery.size"
       @pagination="getList"
     />
-    <el-dialog width="60%" title="押金" :visible.sync="depositVisable">
+    <el-dialog width="60%" title="开票详情" :visible.sync="detailVisable">
       <div v-if="detail" class="detail">
-        <h3>押金信息</h3>
         <div class="row">
-          <h4>押金金额:</h4>
-          <p>{{ detail.amount }}</p>
+          <h4>提现状态:</h4>
+          <p>{{ status[detail.statusCode] }}</p>
         </div>
         <div class="row">
-          <h4>押金余额:</h4>
-          <p>{{ detail.remainingAmount }}</p>
+          <h4>申请时间:</h4>
+          <p>{{ detail.date }}</p>
         </div>
         <div class="row">
-          <h4>押金状态:</h4>
-          <p>{{ depositStatus[detail.statusCode] }}</p>
+          <h4>提现单号:</h4>
+          <p>{{ detail.orderNo }}</p>
         </div>
         <div class="row">
-          <h4>状态描述:</h4>
-          <p />
+          <h4>企业ID:</h4>
+          <p>{{ detail.company.id }}</p>
         </div>
-        <h3>明细</h3>
-        <el-table :data="detail.records" border fit>
-          <el-table-column label="类型" align="center">
-            <template slot-scope="{ row }">
-              <span>{{ row.intro }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column label="详情" align="center">
-            <template slot-scope="{ row }">
-              <span>{{ row.intro }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column label="产生时间" align="center">
-            <template slot-scope="{ row }">
-              <span>{{ row.gmtCreate }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column label="罚款金额" align="center">
-            <template slot-scope="{ row }">
-              <span>{{ row.raeType === 1 ? '+' : '-' }}{{ row.amount }}</span>
-            </template>
-          </el-table-column>
-        </el-table>
+        <div class="row">
+          <h4>企业名称:</h4>
+          <p>{{ detail.company.name }}</p>
+        </div>
+        <div class="row">
+          <h4>提现理由:</h4>
+          <p>{{ detail.withdraw.remark }}</p>
+        </div>
+        <div class="row">
+          <h4>退款方式:</h4>
+          <p>{{ ['','支付宝','银行卡'][detail.withdraw.type] }}</p>
+        </div>
+        <div v-if="detail.withdraw.type === 1" class="row">
+          <h4>账号名称:</h4>
+          <p>{{ detail.withdraw.alipayAccountName }}</p>
+        </div>
+        <div v-if="detail.withdraw.type === 1" class="row">
+          <h4>支付宝账号:</h4>
+          <p>{{ detail.withdraw.alipayAccount }}</p>
+        </div>
+        <div v-if="detail.withdraw.type === 2" class="row">
+          <h4>账号名称:</h4>
+          <p>{{ detail.withdraw.bandAccountName }}</p>
+        </div>
+        <div v-if="detail.withdraw.type === 2" class="row">
+          <h4>银行名称:</h4>
+          <p>{{ detail.withdraw.bandName }}</p>
+        </div>
+        <div v-if="detail.withdraw.type === 2" class="row">
+          <h4>银行卡号:</h4>
+          <p>{{ detail.withdraw.bandCardNo }}</p>
+        </div>
+      </div>
+      <div slot="footer">
+        <el-button @click="handleClose">拒绝提现</el-button>
+        <el-button type="primary" @click="handleSuccess">提现成功</el-button>
       </div>
     </el-dialog>
   </div>
 </template>
 
 <script>
-import { fetchBWithdrawList, closeOrder, fetchDeposit } from '@/api/finance'
-// import moment from 'moment'
+import { fetchBWithdrawList, updateBWithdraw } from '@/api/finance'
+import moment from 'moment'
 import { clearQueryObject } from '@/utils/index'
 import waves from '@/directive/waves' // waves directive
 import { mapGetters } from 'vuex'
@@ -180,27 +160,11 @@ export default {
       listQuery: {
         page: 1,
         size: 20,
-        searchType: 1,
-        searchKey: '',
-        statusCode: 0,
-        coopType: 0,
-        depositStatusCode: 0,
-        rewardStatusCode: 0
+        companyName: '',
+        statusCode: -1
       },
-      status: [
-        '全部',
-        '待审核',
-        '待缴押金',
-        '待发货',
-        '待收货',
-        '待测评',
-        '已测评',
-        '已关闭'
-      ],
-      coopTypes: ['全部', '接受悬赏', '接受悬赏/博主报价', '免费置换'],
-      depositStatus: ['全部', '未缴押金', '已冻结', '已解冻', '已扣除'],
-      rewardStatus: ['全部', '待发放', '已发放', '已取消'],
-      depositVisable: false,
+      status: ['处理中', '等待支付', '成功', '失败', '已拒绝', '已关闭'],
+      detailVisable: false,
       detail: null
     }
   },
@@ -213,44 +177,56 @@ export default {
   methods: {
     getList() {
       this.listLoading = true
-      fetchBWithdrawList(clearQueryObject(this.listQuery, true)).then(
-        ({ data }) => {
-          this.list = data.data
-          this.total = data.pager.count
+      const obj = Object.assign({}, this.listQuery)
+      if (parseInt(obj.statusCode) < 0) {
+        obj.statusCode = undefined
+      }
+      fetchBWithdrawList(clearQueryObject(obj)).then(({ data }) => {
+        this.list = data.data.map((i) =>
+          Object.assign(i, {
+            date: moment(i.gmtCreate).format('YYYY-MM-DD HH:mm:dd')
+          })
+        )
+        this.total = data.pager.count
 
-          // Just to simulate the time of the request
-          setTimeout(() => {
-            this.listLoading = false
-          }, 1.5 * 1000)
-        }
-      )
+        // Just to simulate the time of the request
+        setTimeout(() => {
+          this.listLoading = false
+        }, 1.5 * 1000)
+      })
     },
     handleFilter() {
       this.listQuery.page = 1
       this.getList()
     },
 
-    handleClose(row) {
+    handleClose() {
       this.$prompt('请输入拒绝理由').then((r) => {
-        closeOrder({
-          id: row.id,
-          rejectReason: r.value
+        updateBWithdraw({
+          id: this.detail.id,
+          rejectReason: r.value,
+          statusCode: 4
         }).then(() => {
+          this.detailVisable = false
+          this.detail.statusCode = 2
+          this.detail.rejectReason = r.value
           this.$message({ message: '操作成功', type: 'success' })
         })
       })
     },
-    handleDeposit(row) {
-      this.loadDeposit(row.id)
-      this.depositVisable = true
+    handleSuccess() {
+      updateBWithdraw({
+        id: this.detail.id,
+        statusCode: 2
+      }).then(() => {
+        this.detail.statusCode = 2
+        this.detailVisable = false
+        this.$message({ message: '操作成功', type: 'success' })
+      })
     },
     handleDetail(row) {
-      window.showCommunicate(row.id)
-    },
-    loadDeposit(id) {
-      fetchDeposit(id).then((r) => {
-        this.detail = r.data
-      })
+      this.detail = row
+      this.detailVisable = true
     }
   }
 }

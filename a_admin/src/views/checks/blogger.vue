@@ -58,7 +58,7 @@
     >
       <el-table-column label="用户ID">
         <template slot-scope="{ row }">
-          <span>{{ row.id }}</span>
+          <span>{{ row.account.id }}</span>
         </template>
       </el-table-column>
       <el-table-column label="用户昵称" align="center">

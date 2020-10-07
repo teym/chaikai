@@ -129,7 +129,7 @@
 </template>
 
 <script>
-import { fetchBloggerList, updateBloggerState } from '@/api/check'
+import { fetchBloggerList } from '@/api/accounts'
 import { clearQueryObject } from '@/utils/index'
 import { Channels } from '@/utils/constant'
 import waves from '@/directive/waves' // waves directive
@@ -189,28 +189,28 @@ export default {
       this.previewUrl = url
       this.preview = true
     },
-    handleAction(row, state) {
-      if (state === 3) {
-        this.$confirm('确认通过?').then((r) => {
-          updateBloggerState({ id: row.id, statusCode: state }).then((r) => {
-            row.statusCode = state
-            this.$message({ message: '操作成功', type: 'success' })
-          })
-        })
-      } else {
-        this.$prompt('请输入拒绝理由').then((r) => {
-          updateBloggerState({
-            id: row.id,
-            statusCode: state,
-            rejectReason: r.value
-          }).then(() => {
-            row.statusCode = state
-            row.rejectReason = r.value
-            this.$message({ message: '操作成功', type: 'success' })
-          })
-        })
-      }
-    },
+    // handleAction(row, state) {
+    //   if (state === 3) {
+    //     this.$confirm('确认通过?').then((r) => {
+    //       updateBloggerState({ id: row.id, statusCode: state }).then((r) => {
+    //         row.statusCode = state
+    //         this.$message({ message: '操作成功', type: 'success' })
+    //       })
+    //     })
+    //   } else {
+    //     this.$prompt('请输入拒绝理由').then((r) => {
+    //       updateBloggerState({
+    //         id: row.id,
+    //         statusCode: state,
+    //         rejectReason: r.value
+    //       }).then(() => {
+    //         row.statusCode = state
+    //         row.rejectReason = r.value
+    //         this.$message({ message: '操作成功', type: 'success' })
+    //       })
+    //     })
+    //   }
+    // },
     handleDetail(item) {
       console.log(item.name)
     }

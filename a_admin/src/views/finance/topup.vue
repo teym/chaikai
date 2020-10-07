@@ -7,10 +7,9 @@
         class="filter-item"
         style="width: 100px"
       >
-        <el-option :value="1" label="订单ID" />
-        <el-option :value="2" label="活动名称" />
-        <el-option :value="3" label="公司名称" />
-        <el-option :value="4" label="用户昵称" />
+        <el-option :value="1" label="公司名称" />
+        <el-option :value="2" label="订单编号" />
+        <el-option :value="3" label="交易单号" />
       </el-select>
       <el-input
         v-model="listQuery.searchKey"
@@ -20,37 +19,26 @@
         class="filter-item"
         @keyup.enter.native="handleFilter"
       />
-      <el-select
-        v-model="listQuery.coopType"
+      <el-date-picker
+        v-model="listQuery.timeRange"
         size="mini"
         class="filter-item"
-        style="width: 160px; margin-left: 16px"
-      >
-        <el-option v-for="(i, j) in coopTypes" :key="j" :value="j" :label="i" />
-      </el-select>
-      <el-select
-        v-model="listQuery.depositStatusCode"
-        size="mini"
-        class="filter-item"
-        style="width: 120px; margin-left: 16px"
-      >
-        <el-option v-for="(i, j) in depositStatus" :key="j" :value="j" :label="i" />
-      </el-select>
-      <el-select
-        v-model="listQuery.rewardStatusCode"
-        size="mini"
-        class="filter-item"
-        style="width: 120px; margin-left: 16px"
-      >
-        <el-option v-for="(i, j) in rewardStatus" :key="j" :value="j" :label="i" />
-      </el-select>
+        style="margin-left: 16px"
+        type="daterange"
+        range-separator="至"
+        start-placeholder="开始日期"
+        end-placeholder="结束日期"
+      />
       <el-select
         v-model="listQuery.statusCode"
         size="mini"
         class="filter-item"
         style="width: 120px;margin-left: 16px"
       >
-        <el-option v-for="(item, i) in status" :key="i" :value="i" :label="item" />
+        <el-option :value="-1" label="全部" />
+        <el-option :value="0" label="待支付" />
+        <el-option :value="2" label="已成功" />
+        <el-option :value="5" label="已关闭" />
       </el-select>
 
       <el-button
@@ -60,6 +48,13 @@
         size="mini"
         @click="handleFilter"
       >筛选</el-button>
+      <el-button
+        class="filter-item"
+        style="float:right"
+        type="primary"
+        size="mini"
+        @click="detailVisable = true"
+      >新增充值</el-button>
     </div>
 
     <el-table
@@ -76,56 +71,45 @@
           <span>{{ row.id }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="用户昵称" align="center">
+      <el-table-column label="交易单号">
         <template slot-scope="{ row }">
-          <span>{{ row.blogger.nickname }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="活动名称" align="center">
-        <template slot-scope="{ row }">
-          <span>{{ row.activity.title }}</span>
+          <span>{{ row.orderNo }}</span>
         </template>
       </el-table-column>
       <el-table-column label="公司名称" align="center">
         <template slot-scope="{ row }">
-          <span>{{ row.activity.company.name }}</span>
+          <span>{{ row.company.name }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="合作方式" align="center">
+      <el-table-column label="充值金额" align="center">
         <template slot-scope="{ row }">
-          <span>{{ coopTypes[row.coopSubType] }}</span>
+          <span>{{ row.amount }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="押金|状态" align="center">
+      <el-table-column label="支付类型" align="center">
         <template slot-scope="{ row }">
-          <span>{{ row.depositInfo.amount }}<br> {{ depositStatus[row.depositInfo.statusCode] }}</span>
+          <span>{{ ['','支付宝','银行卡'][row.recharge.type] }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="悬赏|状态" align="center">
+      <el-table-column label="充值方式" align="center">
         <template slot-scope="{ row }">
-          <span>
-            {{ row.reward }}
-            <br>
-            {{ rewardStatus[row.rewardStatusCode] }}
-          </span>
+          <span>{{ ['','在线支付','线下打款'][row.recharge.payType] }}</span>
+        </template>
+      </el-table-column>
+
+      <el-table-column label="申请时间" align="center">
+        <template slot-scope="{ row }">
+          <span>{{ row.date }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="备注" align="center">
+        <template slot-scope="{ row }">
+          <span>{{ row.recharge.remark }}</span>
         </template>
       </el-table-column>
       <el-table-column label="状态" align="center">
         <template slot-scope="{ row }">
           <span>{{ status[row.statusCode] }}</span>
-        </template>
-      </el-table-column>
-
-      <el-table-column label="操作" align="center" width="240" class-name="small-padding fixed-width">
-        <template slot-scope="{ row }">
-          <el-button size="mini" @click="handleDetail(row)">订单详情</el-button>
-          <el-button size="mini" @click="handleDeposit(row)">押金详情</el-button>
-          <el-button
-            v-if="row.statusCode === 5 || row.statusCode === 6"
-            size="mini"
-            type="primary"
-            @click="handleClose(row)"
-          >关闭</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -137,56 +121,78 @@
       :limit.sync="listQuery.size"
       @pagination="getList"
     />
-    <el-dialog width="60%" title="押金" :visible.sync="depositVisable">
-      <div v-if="detail" class="detail">
-        <h3>押金信息</h3>
+    <el-dialog width="60%" title="新增充值" :visible.sync="detailVisable">
+      <div class="detail">
         <div class="row">
-          <h4>押金金额:</h4>
-          <p>{{ detail.amount }}</p>
+          <h4>交易单号:</h4>
+          <div>
+            <el-input v-model="detail.tradeNo" size="mini" />
+          </div>
         </div>
         <div class="row">
-          <h4>押金余额:</h4>
-          <p>{{ detail.remainingAmount }}</p>
+          <h4>充值时间:</h4>
+          <div>
+            <el-date-picker v-model="detail.date" size="mini" type="datetime" placeholder="选择日期时间" />
+          </div>
         </div>
         <div class="row">
-          <h4>押金状态:</h4>
-          <p>{{ depositStatus[detail.statusCode] }}</p>
+          <h4>账户ID:</h4>
+          <div>
+            <el-input v-model="detail.brAccountId" size="mini" placeholder="请输入企业ID" />
+          </div>
         </div>
         <div class="row">
-          <h4>状态描述:</h4>
-          <p />
+          <h4>充值金额:</h4>
+          <div>
+            <el-input v-model="detail.amount" size="mini" />
+          </div>
         </div>
-        <h3>明细</h3>
-        <el-table :data="detail.records" border fit>
-          <el-table-column label="类型" align="center">
-            <template slot-scope="{ row }">
-              <span>{{ row.intro }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column label="详情" align="center">
-            <template slot-scope="{ row }">
-              <span>{{ row.intro }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column label="产生时间" align="center">
-            <template slot-scope="{ row }">
-              <span>{{ row.gmtCreate }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column label="罚款金额" align="center">
-            <template slot-scope="{ row }">
-              <span>{{ row.raeType === 1 ? '+' : '-' }}{{ row.amount }}</span>
-            </template>
-          </el-table-column>
-        </el-table>
+        <div class="row">
+          <h4>支付方式:</h4>
+          <div>
+            <el-select
+              v-model="detail.recharge.type"
+              size="mini"
+              class="filter-item"
+              style="width: 100px"
+            >
+              <el-option :value="1" label="支付宝" />
+              <el-option :value="2" label="银联" />
+            </el-select>
+          </div>
+        </div>
+        <div class="row">
+          <h4>支付类型:</h4>
+          <div>
+            <el-select
+              v-model="detail.recharge.payType"
+              size="mini"
+              class="filter-item"
+              style="width: 100px"
+            >
+              <el-option :value="1" label="线上支付" />
+              <el-option :value="2" label="线下打款" />
+            </el-select>
+          </div>
+        </div>
+        <div class="row">
+          <h4>备注:</h4>
+          <div>
+            <el-input v-model="detail.recharge.remark" size="mini" type="textarea" />
+          </div>
+        </div>
+      </div>
+      <div slot="footer">
+        <el-button @click="detailVisable = false">取消</el-button>
+        <el-button type="primary" @click="handleSuccess">确认提交</el-button>
       </div>
     </el-dialog>
   </div>
 </template>
 
 <script>
-import { fetchOrderList, closeOrder, fetchDeposit } from '@/api/check'
-// import moment from 'moment'
+import { fetchTopupList, addTopup } from '@/api/finance'
+import moment from 'moment'
 import { clearQueryObject } from '@/utils/index'
 import waves from '@/directive/waves' // waves directive
 import { mapGetters } from 'vuex'
@@ -206,28 +212,28 @@ export default {
       listQuery: {
         page: 1,
         size: 20,
+        type: 102,
         searchType: 1,
         searchKey: '',
         statusCode: 0,
-        coopType: 0,
-        depositStatusCode: 0,
-        rewardStatusCode: 0
+        timeRange: []
       },
-      status: [
-        '全部',
-        '待审核',
-        '待缴押金',
-        '待发货',
-        '待收货',
-        '待测评',
-        '已测评',
-        '已关闭'
-      ],
-      coopTypes: ['全部', '接受悬赏', '接受悬赏/博主报价', '免费置换'],
-      depositStatus: ['全部', '未缴押金', '已冻结', '已解冻', '已扣除'],
-      rewardStatus: ['全部', '待发放', '已发放', '已取消'],
-      depositVisable: false,
-      detail: null
+      status: ['处理中', '等待支付', '成功', '失败', '已拒绝', '已关闭'],
+      detailVisable: false,
+      detail: {
+        amount: 0,
+        tradeNo: '',
+        brAccountId: '',
+        date: '',
+        recharge: {
+          description: '',
+          type: 1,
+          payType: 1,
+          remark: ''
+        },
+        raeType: 1,
+        type: 102
+      }
     }
   },
   computed: {
@@ -240,48 +246,49 @@ export default {
     getList() {
       this.listLoading = true
       const obj = Object.assign({}, this.listQuery)
-      obj[
-        ['', 'orderId', 'activityTitle', 'companyName', 'bloggerName'][
-          obj.searchType
-        ]
-      ] = obj.searchKey
-      fetchOrderList(clearQueryObject(obj, true)).then(
-        ({ data }) => {
-          this.list = data.data
-          this.total = data.pager.count
+      obj[['key', 'companyName', 'id', 'orderNo'][this.listQuery.searchType]] =
+        obj.searchKey
+      if (obj.timeRange.length > 0) {
+        obj.startTime = moment(this.listQuery.timeRange[0]).format(
+          'YYYY-MM-DD HH:mm:ss'
+        )
+        obj.endTime = moment(this.listQuery.timeRange[0]).format(
+          'YYYY-MM-DD HH:mm:ss'
+        )
+        obj.timeRange = ''
+      }
+      if (parseInt(obj.statusCode) < 0) {
+        obj.statusCode = undefined
+      }
+      fetchTopupList(clearQueryObject(obj, true)).then(({ data }) => {
+        this.list = data.data.map((i) =>
+          Object.assign(i, {
+            date: moment(i.gmtCreate).format('YYYY-MM-DD HH:mm:ss')
+          })
+        )
+        this.total = data.pager.count
 
-          // Just to simulate the time of the request
-          setTimeout(() => {
-            this.listLoading = false
-          }, 1.5 * 1000)
-        }
-      )
+        // Just to simulate the time of the request
+        setTimeout(() => {
+          this.listLoading = false
+        }, 1.5 * 1000)
+      })
     },
     handleFilter() {
       this.listQuery.page = 1
       this.getList()
     },
-
-    handleClose(row) {
-      this.$prompt('请输入拒绝理由').then((r) => {
-        closeOrder({
-          id: row.id,
-          rejectReason: r.value
-        }).then(() => {
-          this.$message({ message: '操作成功', type: 'success' })
-        })
-      })
-    },
-    handleDeposit(row) {
-      this.loadDeposit(row.id)
-      this.depositVisable = true
-    },
-    handleDetail(row) {
-      window.showCommunicate(row.id)
-    },
-    loadDeposit(id) {
-      fetchDeposit(id).then((r) => {
-        this.detail = r.data
+    handleCompany() {},
+    handleSuccess() {
+      addTopup(
+        Object.assign(
+          { payTime: moment(this.detail.date).format('YYYY-MM-DD HH:mm:ss') },
+          this.detail
+        )
+      ).then(() => {
+        this.$message({ message: '操作成功', type: 'success' })
+        this.detailVisable = false
+        this.getList()
       })
     }
   }
@@ -324,6 +331,7 @@ export default {
   .row {
     display: flex;
     flex-direction: row;
+    margin-top: 12px;
     h4 {
       width: 80px;
       margin: 0;
@@ -343,6 +351,12 @@ export default {
     }
     .el-radio {
       margin-top: 6px;
+    }
+    .el-input {
+      width: 280px;
+    }
+    div {
+      flex: 1;
     }
   }
 }
