@@ -6,20 +6,20 @@ import { county } from './county'
 
 export function fetchList(query) {
   return request({
-    url: '/chat/br/room/list',
+    url: '/chat/sys/room/record/list',
     method: 'get',
     params: query
   })
 }
 export function fetchStat() {
   return request({
-    url: '/chat/br/unread',
+    url: '/chat/sys/unread',
     method: 'get'
   })
 }
 export function fetchHistory(query) {
   return request({
-    url: '/chat/br/room/record/list',
+    url: '/chat/sys/room/record/list',
     method: 'get',
     params: query
   })
@@ -27,7 +27,7 @@ export function fetchHistory(query) {
 
 export function createHistory(data) {
   return request({
-    url: '/chat/br/record',
+    url: '/chat/sys/record',
     method: 'post',
     data
   })

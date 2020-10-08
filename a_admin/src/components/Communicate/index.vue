@@ -163,7 +163,7 @@ export default {
     }
   },
   created() {
-    // this.loadList(1)
+    this.loadList(1)
     window.showCommunicate = (id) => {
       this.showDetail = true
       this.active = id
