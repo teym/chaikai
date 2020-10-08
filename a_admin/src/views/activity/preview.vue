@@ -2,8 +2,8 @@
   <div class="container">
     <div class="content">
       <el-carousel class="banners">
-        <el-carousel-item v-for="(item, index) in banners" :key="index" :index="index">
-          <img :src="item" alt="banner" mode="aspectFill">
+        <el-carousel-item v-for="(i, j) in banners" :key="j" :index="j">
+          <img :src="i" alt="banner" mode="aspectFill">
         </el-carousel-item>
       </el-carousel>
       <div v-if="data.statusCode > 5" class="stop">报名结束</div>
@@ -33,7 +33,7 @@
         </div>
         <!-- <div class="hot">
           <img src="/static/images/detail_hot.png" alt="hot">
-        </div> -->
+        </div>-->
       </div>
       <div class="detail">
         <div class="tab">
@@ -122,7 +122,10 @@
           <div v-if="topics.length > 0" class="row just line">
             <h6 @click="tip=true">账号话题Ⓢ</h6>
             <div>
-              <p v-for="(c, i) in topics" :key="i">{{ c.platformName }}@{{ c.nickname }}#{{ c.topic }}</p>
+              <p
+                v-for="(c, i) in topics"
+                :key="i"
+              >{{ c.platformName }}@{{ c.nickname }}#{{ c.topic }}</p>
             </div>
           </div>
           <div v-if="data.discountInfo" class="row just line">
@@ -203,7 +206,7 @@ export function mapChannel(channels) {
 }
 
 export default {
-  props: ['item'],
+  props: { item: { type: Object }},
   data() {
     return {
       data: {
@@ -264,7 +267,7 @@ export default {
 </script>
 
 <style scoped>
-ul{
+ul {
   padding-inline-start: 0;
 }
 .container {

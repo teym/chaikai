@@ -29,8 +29,14 @@ export function fetchBloggerFinance(query) {
 }
 export function fetchCompanyList(query) {
   return request({
-    url: '/sys/company/list',
+    url: '/sys/account/br/list',
     method: 'get',
     params: query
+  })
+}
+export function unbindCompany(id) {
+  return request({
+    url: '/sys/account/br/brand/' + id,
+    method: 'delete'
   })
 }
