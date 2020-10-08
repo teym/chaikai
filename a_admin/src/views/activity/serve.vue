@@ -106,12 +106,12 @@
           <h4>订购状态:</h4>
           <p>{{ status[detail.statusCode] }}</p>
         </div>
-        <div v-if="detail.recharge" class="row">
+        <div v-if="detail.serverOrder" class="row">
           <h4>订购详情:</h4>
           <div>
-            <p>{{ detail.recharge.description }}</p>
+            <p>订购次数 {{ detail.serverOrder.amount }}次</p>
             <p>支付金额 {{ detail.amount }}</p>
-            <p>支付方式 {{ ['', '支付宝', '银行卡'][detail.recharge.payType] }}</p>
+            <p>支付方式 {{ ['', '支付宝', '余额'][detail.serverOrder.type] }}</p>
             <p>支付单号 {{ detail.orderNo }}</p>
           </div>
         </div>

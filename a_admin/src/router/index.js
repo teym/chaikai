@@ -224,6 +224,33 @@ export const asyncRoutes = [
     ]
   },
   {
+    path: '/other',
+    component: Layout,
+    redirect: '/other/index',
+    name: 'Other',
+    meta: { title: '工具配置', icon: 'table' },
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/other/index'),
+        name: 'banner-table',
+        meta: { title: '轮播图', icon: 'table' }
+      },
+      {
+        path: 'activity',
+        component: () => import('@/views/other/activity'),
+        name: 'activi-table',
+        meta: { title: '活动插图', icon: 'table' }
+      },
+      {
+        path: 'publish',
+        component: () => import('@/views/other/publish'),
+        name: 'publish-table',
+        meta: { title: '公告管理', icon: 'table' }
+      }
+    ]
+  },
+  {
     path: '/error',
     component: Layout,
     redirect: 'noRedirect',

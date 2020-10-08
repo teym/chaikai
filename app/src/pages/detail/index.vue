@@ -40,8 +40,8 @@
             </li>
           </ul>
         </div>
-        <div class="hot">
-          <img src="/static/images/detail_hot.png" alt="hot" />
+        <div class="hot" v-if="hot" @click="onHot(hot)">
+          <img :src="hot.url" alt="hot" />
         </div>
       </div>
       <div class="detail">
@@ -97,7 +97,7 @@
           </div>
         </div>
         <div class="block task" v-if="tab===2">
-          <div class="rule">
+          <div class="rule" @click="onRule">
             <img src="/static/images/detail_tip.png" alt="tip" />
           </div>
           <div class="row just line">
@@ -212,6 +212,7 @@ export default {
       active: {},
       pop: false,
       tip: false,
+      hot: null,
       userChannels: new Set()
     }
   },
@@ -238,6 +239,11 @@ export default {
   methods: {
     loadData () {
       const {id} = router(this).params()
+      request.get('/banner/list', {page: 1, size: 1, type: 2, valid: true, brActivityId: id}).then(({json: {data}}) => {
+        this.hot = data[0]
+      }).catch(e => {
+        console.log(e)
+      })
       request.get('/bl/activity/' + id).then(({json: {data}}) => {
         this.data = data
         this.banners = [data.picUrl]
@@ -296,6 +302,23 @@ export default {
         router(this).push('/pages/check/main', {id: this.data.id, select: _.map(this.active, (v) => (v.originId)).sort().join(',')})
       } else {
         uiapi.toast('请选择商品规格')
+      }
+    },
+    onRule () {
+      this.onHot({linkType: 2, link: 'https://www/baidu.com'})
+    },
+    onHot (item) {
+      if (!item) {
+        return
+      }
+      if (item.linkType === 1) {
+        const [page, query] = item.link.split('?')
+        const params = query ? _.object(query.split('&').map(i => i.split('=').map(j => decodeURIComponent(j)))) : {}
+        console.log('banner', page, params)
+        router(this).push(page, params)
+      } else {
+        router(this).push('/pages/web/main', {url: item.link})
+        console.log('banner', '/pages/web/main', {url: item.link})
       }
     }
   }
