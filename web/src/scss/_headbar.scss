@@ -12,6 +12,15 @@ header.headbar {
         margin: 0;
         padding: 0;
     }
+    .btn{
+        display: inline-block;
+        background-image: url("../assets/img/head-btn.png");
+        width: 100px;
+        height: 35px;
+        color: white;
+        font-size: 14px;
+        line-height: 35px;
+    }
 
     .content{
         .text{

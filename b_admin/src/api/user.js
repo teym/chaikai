@@ -8,6 +8,13 @@ export function login(data) {
     data
   })
 }
+export function loginCode(data) {
+  return request({
+    url: '/sys/login/qywx',
+    method: 'post',
+    data
+  })
+}
 export function regist(data) {
   return request({
     url: '/br/auth/register',

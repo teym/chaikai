@@ -9,17 +9,36 @@
 // import LoginFrame from './components/frame'
 
 export default {
-  name: 'Login',
+  name: "Login",
   data() {
     return {
       loading: false,
-      code: ''
-    }
+      code: "",
+    };
   },
   mounted() {
-    this.code = this.$route.query.code
-  }
-}
+    //http://brandtest.ckgift.cn/?code=54r7QdMQbguTBQVWaBQhspO5QdfucBdATxDQxHM1k-c&state=brandTest#/sso
+    if (window.location.search) {
+      window.location = "/#/sso" + window.location.search;
+      console.log("redir");
+    } else {
+      const { code, state } = this.$route.query;
+      console.log("login", code, state);
+      this.$store
+        .dispatch("user/loginCode", { code, state })
+        .then(() => {
+          this.$router.push({
+            path: this.redirect || "/",
+            query: this.otherQuery,
+          });
+          this.loading = false;
+        })
+        .catch(() => {
+          this.loading = false;
+        });
+    }
+  },
+};
 </script>
 
 <style lang="scss">
