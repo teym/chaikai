@@ -3,6 +3,7 @@
     <transition name="sidebarLogoFade">
       <router-link key="expand" class="sidebar-logo-link" to="/user/index">
         <img v-if="logo" :src="avatar || logo" class="sidebar-logo">
+        <p>{{ name }}</p>
       </router-link>
     </transition>
   </div>
@@ -20,7 +21,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['avatar'])
+    ...mapGetters(['avatar', 'name'])
   }
 }
 </script>
@@ -39,7 +40,7 @@ export default {
   position: relative;
   width: 100%;
   height: 120px;
-  line-height: 50px;
+  // line-height: 50px;
   padding: 35px 0;
   background: #2b2f3a;
   text-align: center;
@@ -70,6 +71,12 @@ export default {
     .sidebar-logo {
       margin-right: 0px;
     }
+  }
+  p{
+    font-size: 14px;
+    line-height: 20px;
+    color: white;
+    margin: 0;
   }
 }
 </style>
