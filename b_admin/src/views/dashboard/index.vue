@@ -1,5 +1,8 @@
 <template>
-  <div class="dashboard-container">
+  <div class="dashboard-container" v-if="xiaoer && telephone === 'no'">
+    <p style="text-align:center">请选择需要代理的企业</p>
+  </div>
+  <div v-else class="dashboard-container">
     <notice />
     <el-row class="tools" :gutter="20">
       <el-col :span="12">
@@ -8,23 +11,23 @@
           <el-row>
             <el-col :span="12">
               <div @click="handelCreate">
-                <img src="@/assets/images/dash_create.png">
+                <img src="@/assets/images/dash_create.png" />
                 创建商品
               </div>
             </el-col>
             <el-col :span="12">
               <div @click="handleActivity">
-                <img src="@/assets/images/dash_activity.png"> 发布活动
+                <img src="@/assets/images/dash_activity.png" /> 发布活动
               </div>
             </el-col>
             <el-col :span="12">
               <div @click="handleAuth">
-                <img src="@/assets/images/dash_auth.png">认证授权
+                <img src="@/assets/images/dash_auth.png" />认证授权
               </div>
             </el-col>
             <el-col :span="12">
               <div @click="handleInvoice">
-                <img src="@/assets/images/dash_invoice.png">申请开票
+                <img src="@/assets/images/dash_invoice.png" />申请开票
               </div>
             </el-col>
           </el-row>
@@ -52,59 +55,59 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-import notice from './components/notice'
+import { mapGetters } from "vuex";
+import notice from "./components/notice";
 
 export default {
-  name: 'Dashboard',
+  name: "Dashboard",
   components: { notice },
   data() {
-    return {}
+    return {};
   },
   computed: {
-    ...mapGetters(['roles', 'statusCode', 'brandCount'])
+    ...mapGetters(["roles", "statusCode", "brandCount", "xiaoer", "telephone"]),
   },
   methods: {
     handelCreate() {
       if (this.checkStat()) {
-        this.$router.push('/goods/create')
+        this.$router.push("/goods/create");
       }
     },
     checkStat() {
       if (this.statusCode !== 3) {
-        this.$alert('无法创建商品，为保障品牌合作规范，请先完成企业认证').then(
+        this.$alert("无法创建商品，为保障品牌合作规范，请先完成企业认证").then(
           (r) => {
-            if (r === 'confirm') {
-              this.$router.push('/user/create')
+            if (r === "confirm") {
+              this.$router.push("/user/create");
             }
           }
-        )
-        return false
+        );
+        return false;
       } else if (this.brandCount === 0) {
-        this.$alert('无法创建商品，为保障品牌合作规范，请先完成品牌授权').then(
+        this.$alert("无法创建商品，为保障品牌合作规范，请先完成品牌授权").then(
           (r) => {
-            if (r === 'confirm') {
-              this.$router.push('/user/auth')
+            if (r === "confirm") {
+              this.$router.push("/user/auth");
             }
           }
-        )
-        return false
+        );
+        return false;
       }
-      return true
+      return true;
     },
     handleActivity() {
       if (this.checkStat()) {
-        this.$router.push('/activity/create')
+        this.$router.push("/activity/create");
       }
     },
     handleAuth() {
-      this.$router.push('/user/create')
+      this.$router.push("/user/create");
     },
     handleInvoice() {
-      this.$router.push('/user/invoice')
-    }
-  }
-}
+      this.$router.push("/user/invoice");
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>

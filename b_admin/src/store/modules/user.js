@@ -94,6 +94,7 @@ const actions = {
 
   // get user info
   getInfo({ commit, state }) {
+    console.log(state);
     return new Promise((resolve, reject) => {
       Promise.all([getInfo(), fetchStat(), fetchPv({ page: 1, size: 5 }), fetchFinance()]).then(([r1, r2, r3, r4]) => {
         const { roles, company, avatar, telephone } = r1.data || {}
@@ -116,7 +117,21 @@ const actions = {
 
         resolve(Object.assign({}, r1.data, { statusCode, brandCount: count }))
       }).catch(error => {
-        reject(error)
+        console.log(error);
+        if (state.xiaoer) {
+          commit('SET_ROLES', ['admin'])
+          commit('SET_NAME', 'no')
+          commit('SET_AVATAR', 'no')
+          commit('SET_INTRODUCTION', 'no')
+          commit('SET_STATUS', 0)
+          commit('SET_BRAND_COUNT', 0)
+          commit('SET_AMOUNT', 0)
+          commit('SET_ACTIVITY', 0)
+
+          resolve(Object.assign({ roles: ['admin'], company: 'no', avatar: 'no', telephone: 'no', statusCode: 0, brandCount: 0 }))
+        } else {
+          reject(error)
+        }
       })
     })
   },
