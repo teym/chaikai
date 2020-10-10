@@ -2,7 +2,7 @@
   <div class="navbar">
     <breadcrumb id="breadcrumb-container" class="breadcrumb-container" />
     <div class="right-menu">
-      <search id="header-search" class="right-menu-item" />
+      <!-- <search id="header-search" class="right-menu-item" />
       <el-popover class="right-menu-item" placement="bottom" width="200" trigger="hover">
         <img
           slot="reference"
@@ -25,12 +25,12 @@
             </el-col>
           </el-row>
         </div>
-      </el-popover>
-      <div class="right-menu-item menu-noti" @click="handelMessage">
+      </el-popover> -->
+      <!-- <div class="right-menu-item menu-noti" @click="handelMessage">
         <el-badge is-dot class="nav_img_box">
           <img class="nav_img_icon" src="@/assets/images/nav_noti.png" alt="setting">
         </el-badge>
-      </div>
+      </div> -->
       <el-dropdown class="right-menu-item">
         <img class="nav_img_box nav_img_icon" src="@/assets/images/nav_setting.png" alt="setting">
         <el-dropdown-menu slot="dropdown">
@@ -40,7 +40,7 @@
           <el-dropdown-item @click.native="logout">退出登陆</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
-      <el-button type="text" class="right-menu-item menu-help" @click="onHelp">帮助</el-button>
+      <!-- <el-button type="text" class="right-menu-item menu-help" @click="onHelp">帮助</el-button> -->
     </div>
     <Communicate ref="communicate" />
   </div>
@@ -49,13 +49,12 @@
 <script>
 import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
-import Search from '@/components/HeaderSearch'
+// import Search from '@/components/HeaderSearch'
 import Communicate from '@/components/Communicate'
 
 export default {
   components: {
     Breadcrumb,
-    Search,
     Communicate
   },
   computed: {

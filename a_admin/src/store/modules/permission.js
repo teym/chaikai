@@ -1,4 +1,6 @@
 import { asyncRoutes, constantRoutes } from '@/router'
+import { getRoutes } from '@/api/role'
+import _ from 'underscore'
 
 /**
  * Use meta.role to determine if the current user has permission
@@ -48,16 +50,50 @@ const mutations = {
 
 const actions = {
   generateRoutes({ commit }, roles) {
-    return new Promise(resolve => {
-      let accessedRoutes
-      if (roles.includes('admin')) {
-        accessedRoutes = asyncRoutes || []
-      } else {
-        accessedRoutes = filterAsyncRoutes(asyncRoutes, roles)
-      }
+    // return new Promise(resolve => {
+    //   let accessedRoutes
+    //   if (roles.includes('admin')) {
+    //     accessedRoutes = asyncRoutes || []
+    //   } else {
+    //     accessedRoutes = filterAsyncRoutes(asyncRoutes, roles)
+    //   }
+    //   commit('SET_ROUTES', accessedRoutes)
+    //   resolve(accessedRoutes)
+    // })
+    // {
+    //   path: '/error',
+    //   component: Layout,
+    //   redirect: 'noRedirect',
+    //   name: 'ErrorPages',
+    //   hidden: true,
+    //   children: [
+    //     {
+    //       path: '401',
+    //       component: () => import('@/views/error-page/401'),
+    //       name: 'Page401',
+    //       meta: { title: '401', noCache: true }
+    //     },
+    //     {
+    //       path: '404',
+    //       component: () => import('@/views/error-page/404'),
+    //       name: 'Page404',
+    //       meta: { title: '404', noCache: true }
+    //     }
+    //   ]
+    // }
+    return getRoutes().then(r => {
+      // asyncRoutes.filter(i=>)
+      const as = r.data.filter(i => i.displayName).map(i => ([i.displayName, { obj: i, ch: _.object((i.list || []).map(j => [j.displayName, j])) }]))
+      const accessedRoutes = asyncRoutes.filter((i) => (i.path !== '*' && !as[i.path])).map(i => Object.assign(i, { children: (i.children || []).filter(j => !((as[i.path] || {}).ch || {})[j.path]) }))
+      // console.log(as, accessedRoutes)
       commit('SET_ROUTES', accessedRoutes)
-      resolve(accessedRoutes)
+      return accessedRoutes
     })
+    // .catch(e => {
+    //   console.log(e);
+    //   commit('SET_ROUTES', asyncRoutes)
+    //   return asyncRoutes
+    // })
   }
 }
 
