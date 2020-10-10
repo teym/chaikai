@@ -60,6 +60,11 @@ export const constantRoutes = [
     hidden: true
   },
   {
+    path: '/sso',
+    component: () => import('@/views/login/sso'),
+    hidden: true
+  },
+  {
     path: '/auth-redirect',
     component: () => import('@/views/login/auth-redirect'),
     hidden: true
