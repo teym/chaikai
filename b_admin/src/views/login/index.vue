@@ -152,7 +152,7 @@ export default {
               })
               this.loading = false
             })
-            .catch(() => {
+            .catch((e) => {
               this.loading = false
             })
         } else {

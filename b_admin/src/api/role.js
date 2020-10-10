@@ -36,3 +36,18 @@ export function deleteRole(id) {
     method: 'delete'
   })
 }
+
+export function getAgents(query) {
+  return request({
+    url: '/sys/agent/list',
+    method: 'get',
+    params: query
+  })
+}
+export function changeAgent(data) {
+  return request({
+    url: '/sys/agent',
+    method: 'post',
+    data
+  })
+}

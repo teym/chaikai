@@ -12,7 +12,8 @@ const state = {
   statusCode: 0,
   brandCount: 0,
   amount: 0,
-  activity: 0
+  activity: 0,
+  xiaoer: false
 }
 
 const mutations = {
@@ -42,6 +43,9 @@ const mutations = {
   },
   SET_ACTIVITY: (state, activity) => {
     state.activity = activity
+  },
+  SET_XIAOER: (state, xiaoer) => {
+    state.xiaoer = xiaoer
   }
 }
 
@@ -60,11 +64,12 @@ const actions = {
     })
   },
   // user login
-  loginCode({commit}, codes) {
+  loginCode({ commit }, codes) {
     return new Promise((resolve, reject) => {
       loginCode(codes).then(response => {
         const { data } = response
         commit('SET_TOKEN', data.token)
+        commit('SET_XIAOER', true)
         setToken(data.token)
         resolve()
       }).catch(error => {
@@ -93,7 +98,7 @@ const actions = {
       Promise.all([getInfo(), fetchStat(), fetchPv({ page: 1, size: 5 }), fetchFinance()]).then(([r1, r2, r3, r4]) => {
         const { roles, company, avatar, telephone } = r1.data || {}
 
-        commit('SET_ROLES', roles)
+        commit('SET_ROLES', roles || ['admin'])
         commit('SET_NAME', company)
         commit('SET_AVATAR', avatar)
         commit('SET_INTRODUCTION', telephone)

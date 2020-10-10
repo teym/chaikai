@@ -2,7 +2,7 @@
   <div class="navbar">
     <breadcrumb id="breadcrumb-container" class="breadcrumb-container" />
     <div class="right-menu">
-      <search id="header-search" class="right-menu-item" />
+      <search v-if="xiaoer" id="header-search" class="right-menu-item" />
       <el-popover class="right-menu-item" placement="bottom" width="200" trigger="hover">
         <img
           slot="reference"
@@ -59,7 +59,7 @@ export default {
     Communicate
   },
   computed: {
-    ...mapGetters(['amount', 'activity'])
+    ...mapGetters(['amount', 'activity', 'xiaoer'])
   },
   methods: {
     // toggleSideBar() {

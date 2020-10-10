@@ -12,6 +12,7 @@ const getters = {
   statusCode: state => state.user.statusCode,
   brandCount: state => state.user.brandCount,
   amount: state => state.user.amount,
+  xiaoer: state => state.user.xiaoer,
   activity: state => state.user.activity,
   permission_routes: state => state.permission.routes,
   errorLogs: state => state.errorLog.logs
