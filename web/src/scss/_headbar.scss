@@ -1,0 +1,77 @@
+// Styling for the masthead
+
+header.headbar {
+    // replace the masthead.jpg image in the /assets/img directory to change the image
+    // if the image name change, make sure to update the url path below!
+    background-image: url("../assets/img/head-3.png");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: scroll;
+    background-size: cover;
+    h2{
+        margin: 0;
+        padding: 0;
+    }
+
+    .content{
+        .text{
+            margin-top: 56px;
+            margin-right: 36px;
+            background-color: #2F3442;
+            padding: 54px 75px 36px 108px;
+            h3 {
+                margin: 12px 0;
+                padding: 0;
+            }
+            .line{
+                width: 60px;
+                background-color: #FFD30C;
+                height: 2px;
+            }
+            p {
+                margin: 0;
+                padding: 0;
+                font-size: 16px;
+                line-height: 30px;
+                max-width: 390px;
+            }
+        }
+    }
+    .content.img{
+        .app{
+            height: 88%;
+            width: auto;
+        }
+        .channel{
+            width: 44px;
+            height: 44px;
+            border-radius: 22px;
+            object-fit: fill;
+            margin: 0 -4px;
+        }
+        .channel:nth-of-type(1){
+            z-index: 1;
+        }
+        .channel:nth-of-type(2){
+            z-index: 2;
+        }
+        .channel:nth-of-type(3){
+            z-index: 3;
+        }
+        .channel:nth-of-type(4){
+            z-index: 4;
+        }
+        .channel:nth-of-type(5){
+            z-index: 5;
+        }
+        .channel:nth-of-type(6){
+            z-index: 6;
+        }
+        span.channel{
+            background-color: #2F3442;
+            color: white;
+            font-size: 12px;
+            line-height: 44px;
+        }
+    }
+}
