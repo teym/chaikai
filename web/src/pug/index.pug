@@ -53,26 +53,27 @@ html(lang='en')
 
 
         // About
-        section.about.page-section.screen
-            .h-100.d-flex.f-row
-                .content
+        section.about.page-section.screen.main_bg
+            .h-100.d-flex.f-row.mt-4.pt-4
+                .content.left
                     .text.text-white
-                        h3 拆开是什么？
-                        .line
-                        br
-                        br
-                        p 近年来，品牌内容营销逐渐替代昂贵的淘系流量和传统广告
-                        br
-                        p 毛戈平、完美日记、三顿半等大量新锐国潮品牌纷纷崛起
-                        br
-                        p 我们携手众多达人真实测评了数十万+产品，助力品牌提升市场影响力
-                        br
-                        p 让内容营销变得更简单，让每次拆开快递都是一种惊喜
-                        br
-                        br
-                        img(src="assets/img/shubiao.png", alt="")
-                        p Opening is a surprise
-                .content.img
+                        .d-inline-block.space
+                            p
+                        .d-inline-block.dec
+                            h3 拆开是什么？
+                            .line
+                            br
+                            p 近年来，品牌内容营销逐渐替代昂贵的淘系流量和传统广告
+                            br
+                            p 毛戈平、完美日记、三顿半等大量新锐国潮品牌纷纷崛起
+                            br
+                            p 我们携手众多达人真实测评了数十万+产品，助力品牌提升市场影响力
+                            br
+                            p 让内容营销变得更简单，让每次拆开快递都是一种惊喜
+                            br
+                            img(src="assets/img/shubiao.png", alt="")
+                            p Opening is a surprise
+                .content.right
                     img.app(src="assets/img/app-2.png", alt="")
                     .text-center
                         img.channel(src="assets/img/channel-wb.png", alt="")
@@ -83,63 +84,64 @@ html(lang='en')
                         span.d-inline-block.channel 更多
 
         // Services
-        section#services.page-section.screen
-            .container
-                header.headbar.text-white
+        section.services.page-section.screen.main_bg
+            header.headbar.text-white
+                .container.pt-4.pb-4
                     h2 甄选好物试用，新锐大牌合作
-                    .row
-                        span.btn 申请使用
-                        img.arraw(src="assets/img/head-right.png", alt="")
-                        span.btn 品牌发货
-                        img.arraw(src="assets/img/head-right.png", alt="")
-                        span.btn 产品试用
-                        img.arraw(src="assets/img/head-right.png", alt="")
-                        span.btn 体验反馈
-                        img.arraw(src="assets/img/head-right.png", alt="")
-                        span.btn 获得悬赏
-                .row
-                    .content
-                        h4 臻选正品大牌
-                        p 潮流美妆、新品个护、优选美食、新鲜爆品统统免费带回家
-                        h4 多种合作模式
-                        p 达人报价、接受悬赏、免费置换、排名悬赏、定向邀约、收录奖励和粉丝福利等，多种悬赏合作方式等你解锁
-                        h4 新锐品牌合作
-                        p 每日10点大牌活动上新，更多新锐品牌活动火热排期中
-                        h4 平台合作保障
-                        p 官方严格把控品牌入驻标准，保障合作全过程，鼓励达人真实体验，坚持内容创意自由
-                    .content
-                        img(src="assets/img/app-3.png", alt="")
+                    .btns
+                        span 申请使用
+                        img(src="assets/img/head-right.png", alt="")
+                        span 品牌发货
+                        img(src="assets/img/head-right.png", alt="")
+                        span 产品试用
+                        img(src="assets/img/head-right.png", alt="")
+                        span 体验反馈
+                        img(src="assets/img/head-right.png", alt="")
+                        span 获得悬赏
+            .container.d-flex.flex-row.mt-5.pt-4
+                .content.pt-5.left
+                    h4 臻选正品大牌
+                    p 潮流美妆、新品个护、优选美食、新鲜爆品统统免费带回家
+                    h4 多种合作模式
+                    p 达人报价、接受悬赏、免费置换、排名悬赏、定向邀约、收录奖励和粉丝福利等，多种悬赏合作方式等你解锁
+                    h4 新锐品牌合作
+                    p 每日10点大牌活动上新，更多新锐品牌活动火热排期中
+                    h4 平台合作保障
+                    p 官方严格把控品牌入驻标准，保障合作全过程，鼓励达人真实体验，坚持内容创意自由
+                .content.right
+                    img.app(src="assets/img/app-3.png", alt="")
 
         // Portfolio
-        div#portfolio.page-section.bg-primary
-            .container
-                header.headbar
+        section.portfolio.page-section.screen.main_bg
+            header.headbar.text-white
+                .container.pt-4.pb-4
                     h2 海量达人资源   成就每一个品牌
-                    .row
-                        span.btn 发布活动
-                        img.arraw(src="assets/img/head-right.png", alt="")
-                        span.btn 活动报名
-                        img.arraw(src="assets/img/head-right.png", alt="")
-                        span.btn 挑选达人
-                        img.arraw(src="assets/img/head-right.png", alt="")
-                        span.btn 获得推广
-                        img.arraw(src="assets/img/head-right.png", alt="")
-                        span.btn 合作评价
-                .row
-                    .box
-                        img(src="assets/img/app-4-1.png", alt="")
-                        p 海量优质的达人资源，合作性价比高，赋能品牌合作降本提效
-                    .box
-                        img(src="assets/img/app-4-2.png", alt="")
-                        p 个性化Brief，定制全渠道营销方案，帮助品牌精准匹配达人，广告投放ROI更高
-                    .box
-                        img(src="assets/img/app-4-3.png", alt="")
-                        p 官方保障合作全过程，及时回收作品内容，实时监控推广效果，严重违规平台承诺赔付产品价值
-                    
-        // Footer
-        footer.bg-light.py-5
+                    .btns
+                        span 发布活动
+                        img(src="assets/img/head-right.png", alt="")
+                        span 活动报名
+                        img(src="assets/img/head-right.png", alt="")
+                        span 挑选达人
+                        img(src="assets/img/head-right.png", alt="")
+                        span 获得推广
+                        img(src="assets/img/head-right.png", alt="")
+                        span 合作评价
             .container
-                .small.text-center.text-muted 邮箱:brand@ckgift.cn   Copyright © 2020 浙ICP备2020030707号-1
+                div.mt-5.pt-5
+                    .d-flex.flex-row
+                        .box
+                            img(src="assets/img/app-4-1.png", alt="")
+                            p 海量优质的达人资源，合作性价比高，赋能品牌合作降本提效
+                        .box
+                            img(src="assets/img/app-4-2.png", alt="")
+                            p 个性化Brief，定制全渠道营销方案，帮助品牌精准匹配达人，广告投放ROI更高
+                        .box
+                            img(src="assets/img/app-4-3.png", alt="")
+                            p 官方保障合作全过程，及时回收作品内容，实时监控推广效果，严重违规平台承诺赔付产品价值
+            // Footer
+            footer.bg-white.py-4.w-100
+                .small.text-center 邮箱:brand@ckgift.cn   Copyright © 2020 浙ICP备2020030707号-1        
+        
 
         // Bootstrap core JS
         script(src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js')

@@ -38,8 +38,15 @@ hr.light {
 //- Page section styling
 
 .page-section {
-    padding: 6rem 0 0 0;
+    padding-top: $navbar-height;
 }
 .screen{
     height: 100vh;
+}
+.main_bg{
+    background-image: url("../assets/img/bg-2.png");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: scroll;
+    background-size: cover;
 }

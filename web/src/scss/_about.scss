@@ -1,41 +1,42 @@
 // Styling for the masthead
 
 section.about {
-    // replace the masthead.jpg image in the /assets/img directory to change the image
-    // if the image name change, make sure to update the url path below!
-    background-image: url("../assets/img/bg-2.png");
-    background-position: center;
-    background-repeat: no-repeat;
-    background-attachment: scroll;
-    background-size: cover;
-    .content{
+    .content.left{
+        width: 40%;
         .text{
             margin-top: 56px;
             margin-right: 36px;
             background-color: #2F3442;
-            padding: 54px 75px 36px 108px;
-            h3 {
-                margin: 12px 0;
-                padding: 0;
+            padding: 54px 0 36px 0;
+            .space{
+                width: 20%;
             }
-            .line{
-                width: 60px;
-                background-color: #FFD30C;
-                height: 2px;
-            }
-            p {
-                margin: 0;
-                padding: 0;
-                font-size: 16px;
-                line-height: 30px;
-                max-width: 390px;
+            .dec{
+                width: 70%;
+                h3 {
+                    margin: 12px 0;
+                    padding: 0;
+                }
+                .line{
+                    width: 60px;
+                    background-color: #FFD30C;
+                    height: 2px;
+                }
+                p {
+                    margin: 0;
+                    padding: 0;
+                    font-size: 16px;
+                    line-height: 30px;
+                }
             }
         }
     }
-    .content.img{
+    .content.right{
+        width: 60%;
         .app{
-            height: 88%;
-            width: auto;
+            width: 88%;
+            max-height: 88%;
+            height: auto;
         }
         .channel{
             width: 44px;

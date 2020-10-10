@@ -11,76 +11,20 @@ header.headbar {
     h2{
         margin: 0;
         padding: 0;
+        font-size: 28px;
     }
-    .btn{
-        display: inline-block;
-        background-image: url("../assets/img/head-btn.png");
-        width: 100px;
-        height: 35px;
-        color: white;
-        font-size: 14px;
-        line-height: 35px;
-    }
-
-    .content{
-        .text{
-            margin-top: 56px;
-            margin-right: 36px;
-            background-color: #2F3442;
-            padding: 54px 75px 36px 108px;
-            h3 {
-                margin: 12px 0;
-                padding: 0;
-            }
-            .line{
-                width: 60px;
-                background-color: #FFD30C;
-                height: 2px;
-            }
-            p {
-                margin: 0;
-                padding: 0;
-                font-size: 16px;
-                line-height: 30px;
-                max-width: 390px;
-            }
-        }
-    }
-    .content.img{
-        .app{
-            height: 88%;
-            width: auto;
-        }
-        .channel{
-            width: 44px;
-            height: 44px;
-            border-radius: 22px;
-            object-fit: fill;
-            margin: 0 -4px;
-        }
-        .channel:nth-of-type(1){
-            z-index: 1;
-        }
-        .channel:nth-of-type(2){
-            z-index: 2;
-        }
-        .channel:nth-of-type(3){
-            z-index: 3;
-        }
-        .channel:nth-of-type(4){
-            z-index: 4;
-        }
-        .channel:nth-of-type(5){
-            z-index: 5;
-        }
-        .channel:nth-of-type(6){
-            z-index: 6;
-        }
-        span.channel{
-            background-color: #2F3442;
+    .btns{
+        margin: 24px 0 0 0;
+        span{
+            display: inline-block;
+            background-image: url("../assets/img/head-btn.png");
+            width: 100px;
+            height: 35px;
             color: white;
-            font-size: 12px;
-            line-height: 44px;
+            font-size: 14px;
+            line-height: 35px;
+            text-align: center;
         }
     }
+    
 }

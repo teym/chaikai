@@ -13,18 +13,26 @@ header.masthead {
     .title{
         margin-top: 80px;
     }
-    .qrs{
-        margin-top: 70px;
-        .qr{
-            margin-right: 78px;
-            p{
-                margin: 10px 0;
-                font-size: 14px;
+    .app{
+        width: 40%;
+        height: auto;
+        object-fit: cover;
+    }
+    .content{
+        width: 60%;
+        .qrs{
+            margin-top: 70px;
+            .qr{
+                margin-right: 78px;
+                p{
+                    margin: 10px 0;
+                    font-size: 14px;
+                }
             }
         }
-    }
-    .desc{
-        margin-top: 30px;
+        .desc{
+            margin-top: 30px;
+        }
     }
     @include media-breakpoint-up(lg) {
         height: 100vh;
