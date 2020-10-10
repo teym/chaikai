@@ -17,7 +17,26 @@ export default {
     }
   },
   mounted() {
-    this.code = this.$route.query.code
+    // http://brandtest.ckgift.cn/?code=54r7QdMQbguTBQVWaBQhspO5QdfucBdATxDQxHM1k-c&state=brandTest#/sso
+    if (window.location.search) {
+      window.location = '/#/sso' + window.location.search
+      console.log('redir')
+    } else {
+      const { code, state } = this.$route.query
+      console.log('login', code, state)
+      this.$store
+        .dispatch('user/loginCode', { code, state })
+        .then(() => {
+          this.$router.push({
+            path: this.redirect || '/',
+            query: this.otherQuery
+          })
+          this.loading = false
+        })
+        .catch(() => {
+          this.loading = false
+        })
+    }
   }
 }
 </script>

@@ -50,7 +50,7 @@ export const constantRoutes = [
     hidden: true
   },
   {
-    path: '/regist',
+    path: '/sso',
     component: () => import('@/views/login/create'),
     hidden: true
   },
