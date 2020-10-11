@@ -263,7 +263,7 @@ export default {
       const ids = this.$refs.tree.getCheckedNodes()
       this.detailLoading = true
       updateRoleUser({
-        roleId: this.detail.id,
+        roleId: this.detail.roleId,
         userIds: ids.map((i) => i.id)
       })
         .then((r) => {
