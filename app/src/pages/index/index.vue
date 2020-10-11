@@ -60,14 +60,10 @@ import _ from 'underscore'
 import navbar from '@/components/navbar'
 import {router, request} from '@/utils/index'
 
-const ImgUrl = 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1600427730668&di=07620f900465606f5579258a46d132ba&imgtype=0&src=http%3A%2F%2Fd.hiphotos.baidu.com%2Fzhidao%2Fpic%2Fitem%2F0e2442a7d933c895ca486665d51373f0820200fd.jpg'
 export default {
   data () {
     return {
-      banners: [1, 2, 3].map(i => ({
-        url: 'http://www.baidu.com',
-        img: ImgUrl
-      })),
+      banners: [],
       datas: [[], []],
       page: 1,
       loading: false,
@@ -96,7 +92,7 @@ export default {
   methods: {
     loadData (page) {
       if (page === 1) {
-        request.get('/banner/list', {page: 1, size: 20, type: 1, valid: true}).then(({json: {data}}) => {
+        request.get('/sys/banner/list', {page: 1, size: 20, type: 1, valid: true}).then(({json: {data}}) => {
           this.banners = data
         }).catch(e => {
           console.log(e)

@@ -239,7 +239,7 @@ export default {
   methods: {
     loadData () {
       const {id} = router(this).params()
-      request.get('/banner/list', {page: 1, size: 1, type: 2, valid: true, brActivityId: id}).then(({json: {data}}) => {
+      request.get('/sys/banner/list', {page: 1, size: 1, type: 2, valid: true, brActivityId: id}).then(({json: {data}}) => {
         this.hot = data[0]
       }).catch(e => {
         console.log(e)

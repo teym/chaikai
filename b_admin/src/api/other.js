@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function fetchNotiList() {
   return request({
-    url: '/announcement/list',
+    url: '/sys/announcement/list',
     method: 'get'
   })
 }
