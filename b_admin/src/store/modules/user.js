@@ -94,7 +94,6 @@ const actions = {
 
   // get user info
   getInfo({ commit, state }) {
-    console.log(state);
     return new Promise((resolve, reject) => {
       Promise.all([getInfo(), fetchStat(), fetchPv({ page: 1, size: 5 }), fetchFinance()]).then(([r1, r2, r3, r4]) => {
         const { roles, company, avatar, telephone } = r1.data || {}

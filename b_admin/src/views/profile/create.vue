@@ -108,7 +108,7 @@ export default {
       tempRoute: {}
     }
   },
-  created() {
+  mounted() {
     this.fetchData()
   },
   methods: {
