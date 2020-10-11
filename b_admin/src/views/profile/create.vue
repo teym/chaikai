@@ -50,7 +50,9 @@
             placeholder="请输入微信号"
           />
         </el-form-item>
-        <el-button :loading="loading" type="primary" @click="submitForm">提交审核</el-button>
+        <el-button :loading="loading" type="primary" @click="submitForm"
+          >提交审核</el-button
+        >
         <!-- <el-button
           type="primary"
           @click="submitForm"
@@ -118,7 +120,7 @@ export default {
         contact: [{ validator: validateRequire }],
         contactWechat: [{ validator: validateRequire }],
         creditCode: [{ validator: validateRequire }],
-        businessLicense: [{ validator: validateSourceUri }],
+        // businessLicense: [{ validator: validateSourceUri }],
       },
       tempRoute: {},
     };
@@ -146,24 +148,25 @@ export default {
     },
     submitForm() {
       // if (this.stat.statusCode === 1 || this.stat.statusCode === 4) {
-      this.$refs.postForm.validate((valid, e) => {
-        if (valid) {
-          this.loading = true;
-          auth(Object.assign({}, this.postForm)).then((r) => {
-            this.$notify({
-              title: "成功",
-              message: "提交成功",
-              type: "success",
-              duration: 2000,
-            });
-            this.tip = true;
-            this.loading = false;
-          });
-        } else {
-          console.log("error submit!!", e);
-          return false;
-        }
+      // this.$refs.postForm.validate((valid, e) => {
+      //   if (valid) {
+      this.loading = true;
+      console.log(Object.assign(this.postForm));
+      auth(Object.assign({}, this.postForm)).then((r) => {
+        this.$notify({
+          title: "成功",
+          message: "提交成功",
+          type: "success",
+          duration: 2000,
+        });
+        this.tip = true;
+        this.loading = false;
       });
+      //   } else {
+      //     console.log("error submit!!", e);
+      //     return false;
+      //   }
+      // });
       // }
     },
   },
