@@ -92,7 +92,7 @@ export default {
   methods: {
     loadData (page) {
       if (page === 1) {
-        request.get('/sys/banner/list', {page: 1, size: 20, type: 1, valid: true}).then(({json: {data}}) => {
+        request.get('/banner/list', {page: 1, size: 20, type: 1, valid: true}).then(({json: {data}}) => {
           this.banners = data
         }).catch(e => {
           console.log(e)
