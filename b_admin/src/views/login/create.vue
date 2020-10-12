@@ -151,7 +151,7 @@ export default {
           { required: true, trigger: "blur", validator: validatePassword },
         ],
       },
-      checked: true,
+      checked: false,
       passwordType: "password",
       loading: false,
       showDialog: false,
