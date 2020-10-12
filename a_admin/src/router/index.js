@@ -117,7 +117,7 @@ export const asyncRoutes = [
         path: 'blogger',
         component: () => import('@/views/checks/blogger'),
         name: 'blogger-create',
-        meta: { title: '博主认证', icon: 'table' }
+        meta: { title: '达人认证', icon: 'table' }
       }
     ]
   },

@@ -1,10 +1,19 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
+      <el-select
+        v-model="listQuery.searchType"
+        size="mini"
+        class="filter-item"
+        style="width: 90px"
+      >
+        <el-option :value="1" label="用户ID" />
+        <el-option :value="2" label="用户昵称" />
+      </el-select>
       <el-input
-        v-model="listQuery.name"
-        placeholder="请输入博主名称"
-        style="width: 200px; margin-left: 16px"
+        v-model="listQuery.searchKey"
+        placeholder="请输入"
+        style="width: 200px"
         size="mini"
         class="filter-item"
         @keyup.enter.native="handleFilter"
@@ -149,7 +158,8 @@ export default {
       listQuery: {
         page: 1,
         size: 20,
-        name: undefined,
+        searchType: 1,
+        searchKey: '',
         statusCode: 0,
         platformId: 0
       },
@@ -168,17 +178,17 @@ export default {
   methods: {
     getList() {
       this.listLoading = true
-      fetchBloggerList(clearQueryObject(this.listQuery, true)).then(
-        ({ data }) => {
-          this.list = data.data
-          this.total = data.pager.count
+      const obj = Object.assign({}, this.listQuery)
+      obj[['', 'blAccountId', 'nickname'][obj.searchType]] = obj.searchKey
+      fetchBloggerList(clearQueryObject(obj, true)).then(({ data }) => {
+        this.list = data.data
+        this.total = data.pager.count
 
-          // Just to simulate the time of the request
-          setTimeout(() => {
-            this.listLoading = false
-          }, 1.5 * 1000)
-        }
-      )
+        // Just to simulate the time of the request
+        setTimeout(() => {
+          this.listLoading = false
+        }, 1.5 * 1000)
+      })
     },
     handleFilter() {
       this.listQuery.page = 1
