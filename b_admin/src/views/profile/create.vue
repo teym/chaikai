@@ -50,13 +50,9 @@
             placeholder="请输入微信号"
           />
         </el-form-item>
-        <el-button :loading="loading" type="primary" @click="submitForm"
-          >提交审核</el-button
-        >
-        <!-- <el-button
-          type="primary"
-          @click="submitForm"
-        >{{ (["","提交审核","审核中","已通过","提交审核"])[stat.statusCode || 1] }}</el-button> -->
+        <el-button type="primary" @click="submitForm">{{
+          ["", "提交审核", "审核中", "已通过", "提交审核"][stat.statusCode || 1]
+        }}</el-button>
       </div>
     </el-form>
   </div>
@@ -120,7 +116,7 @@ export default {
         contact: [{ validator: validateRequire }],
         contactWechat: [{ validator: validateRequire }],
         creditCode: [{ validator: validateRequire }],
-        // businessLicense: [{ validator: validateSourceUri }],
+        businessLicense: [{ validator: validateSourceUri }],
       },
       tempRoute: {},
     };
@@ -137,8 +133,6 @@ export default {
           for (const key in defaultForm) {
             this.postForm[key] = this.stat[key] || "";
           }
-          // this.postForm.businessLicense =
-          // "https://gd2.alicdn.com/imgextra/i1/831279688/TB2HmVucrsTMeJjy1zbXXchlVXa_!!831279688.jpg_400x400.jpg";
           this.loading = false;
         })
         .catch((err) => {
@@ -147,27 +141,26 @@ export default {
         });
     },
     submitForm() {
-      // if (this.stat.statusCode === 1 || this.stat.statusCode === 4) {
-      // this.$refs.postForm.validate((valid, e) => {
-      //   if (valid) {
-      this.loading = true;
-      console.log(Object.assign(this.postForm));
-      auth(Object.assign({}, this.postForm)).then((r) => {
-        this.$notify({
-          title: "成功",
-          message: "提交成功",
-          type: "success",
-          duration: 2000,
+      if (this.stat.statusCode === 1 || this.stat.statusCode === 4) {
+        this.$refs.postForm.validate((valid, e) => {
+          if (valid) {
+            this.loading = true;
+            auth(Object.assign({}, this.postForm)).then((r) => {
+              this.$notify({
+                title: "成功",
+                message: "提交成功",
+                type: "success",
+                duration: 2000,
+              });
+              this.tip = true;
+              this.loading = false;
+            });
+          } else {
+            console.log("error submit!!", e);
+            return false;
+          }
         });
-        this.tip = true;
-        this.loading = false;
-      });
-      //   } else {
-      //     console.log("error submit!!", e);
-      //     return false;
-      //   }
-      // });
-      // }
+      }
     },
   },
 };
