@@ -95,18 +95,18 @@
       <el-table-column label="操作" align="center" width="240" class-name="small-padding fixed-width">
         <template slot-scope="{ row }">
           <el-button
-            v-if="row.statusCode === 1"
+            v-if="row.statusCode === 2"
             type="primary"
             size="mini"
             @click="handleAction(row, 3)"
           >通过</el-button>
-          <el-button v-if="row.statusCode === 1" size="mini" @click="handleAction(row, 2)">拒绝</el-button>
-          <br v-if="row.statusCode === 1">
-          <el-button v-if="row.statusCode !== 2" size="mini" @click="handlePreview(row)">预览</el-button>
-          <el-button v-if="row.statusCode !== 2" size="mini" @click="handleDetail(row)">详情</el-button>
-          <br v-if="row.statusCode !== 2">
+          <el-button v-if="row.statusCode === 2" size="mini" @click="handleAction(row, 2)">拒绝</el-button>
+          <br v-if="row.statusCode === 2">
+          <el-button v-if="row.statusCode >= 2" size="mini" @click="handlePreview(row)">预览</el-button>
+          <el-button v-if="row.statusCode >= 2" size="mini" @click="handleDetail(row)">详情</el-button>
+          <br v-if="row.statusCode >= 2">
           <el-button
-            v-if="row.statusCode === 4"
+            v-if="row.statusCode === 45"
             size="mini"
             type="primary"
             @click="handleAction(row, 5)"
