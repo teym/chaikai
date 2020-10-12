@@ -30,9 +30,7 @@
         </el-form-item>
 
         <el-form-item class="username" prop="username">
-          <span class="prefix">
-            <svg-icon icon-class="user" />+86
-          </span>
+          <span class="prefix"> <svg-icon icon-class="user" />+86 </span>
           <el-input
             ref="username"
             v-model="loginForm.username"
@@ -55,7 +53,9 @@
               type="text"
             />
           </el-form-item>
-          <el-button plain type="info" @click="handleCode">{{ count > 0 ? `${count}后再试` :'获取验证码' }}</el-button>
+          <el-button plain type="info" @click="handleCode">{{
+            count > 0 ? `${count}后再试` : "获取验证码"
+          }}</el-button>
         </div>
 
         <el-form-item class="password" prop="password">
@@ -72,175 +72,187 @@
             @keyup.enter.native="handleLogin"
           />
           <span @click="showPwd">
-            <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
+            <svg-icon
+              :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'"
+            />
           </span>
         </el-form-item>
         <div class="bar">
           <el-checkbox v-model="checked">已阅读并同意</el-checkbox>
           <a>《品牌入住协议》</a>
-          <router-link class="right" :to="{path:'/login'}">有账号，去登陆</router-link>
+          <router-link class="right" :to="{ path: '/login' }"
+            >有账号，去登陆</router-link
+          >
         </div>
 
         <el-button
           type="primary"
           :loading="loading"
-          style="width:100%;margin-bottom:30px;"
+          style="width: 100%; margin-bottom: 30px"
           @click.native.prevent="handleLogin"
-        >注册</el-button>
+          >注册</el-button
+        >
       </el-form>
     </login-frame>
   </div>
 </template>
 
 <script>
-import LoginFrame from './components/frame'
-import { validPhone, validCode } from '@/utils/validate'
-import { getCode } from '@/api/user'
+import LoginFrame from "./components/frame";
+import { validPhone, validCode } from "@/utils/validate";
+import { getCode } from "@/api/user";
 
 export default {
-  name: 'Login',
+  name: "Login",
   components: { LoginFrame },
   data() {
     const validateName = (rule, value, callback) => {
       if (!value.length > 0) {
-        callback(new Error('公司名不能为空'))
+        callback(new Error("公司名不能为空"));
       } else {
-        callback()
+        callback();
       }
-    }
+    };
     const validateUsername = (rule, value, callback) => {
       if (!validPhone(value)) {
-        callback(new Error('错误的手机号码'))
+        callback(new Error("错误的手机号码"));
       } else {
-        callback()
+        callback();
       }
-    }
+    };
     const validatePassword = (rule, value, callback) => {
       if (value.length < 6) {
-        callback(new Error('密码不能少于6位'))
+        callback(new Error("密码不能少于6位"));
       } else {
-        callback()
+        callback();
       }
-    }
+    };
     const validateCode = (rule, value, callback) => {
       if (!validCode(value)) {
-        callback(new Error('验证码为6位数字'))
+        callback(new Error("验证码为6位数字"));
       } else {
-        callback()
+        callback();
       }
-    }
+    };
     return {
       loginForm: {
-        name: '',
-        username: '',
-        code: '',
-        password: ''
+        name: "",
+        username: "",
+        code: "",
+        password: "",
       },
       loginRules: {
-        name: [{ required: true, trigger: 'blur', validator: validateName }],
+        name: [{ required: true, trigger: "blur", validator: validateName }],
         username: [
-          { required: true, trigger: 'blur', validator: validateUsername }
+          { required: true, trigger: "blur", validator: validateUsername },
         ],
-        code: [{ required: true, trigger: 'blur', validator: validateCode }],
+        code: [{ required: true, trigger: "blur", validator: validateCode }],
         password: [
-          { required: true, trigger: 'blur', validator: validatePassword }
-        ]
+          { required: true, trigger: "blur", validator: validatePassword },
+        ],
       },
       checked: true,
-      passwordType: 'password',
+      passwordType: "password",
       loading: false,
       showDialog: false,
       redirect: undefined,
       count: 0,
-      otherQuery: {}
-    }
+      otherQuery: {},
+    };
   },
   watch: {
     $route: {
-      handler: function(route) {
-        const query = route.query
+      handler: function (route) {
+        const query = route.query;
         if (query) {
-          this.redirect = query.redirect
-          this.otherQuery = this.getOtherQuery(query)
+          this.redirect = query.redirect;
+          this.otherQuery = this.getOtherQuery(query);
         }
       },
-      immediate: true
-    }
+      immediate: true,
+    },
   },
   mounted() {
-    if (this.loginForm.name === '') {
-      this.$refs.name.focus()
-    } else if (this.loginForm.username === '') {
-      this.$refs.username.focus()
-    } else if (this.loginForm.password === '') {
-      this.$refs.password.focus()
+    if (this.loginForm.name === "") {
+      this.$refs.name.focus();
+    } else if (this.loginForm.username === "") {
+      this.$refs.username.focus();
+    } else if (this.loginForm.password === "") {
+      this.$refs.password.focus();
     }
   },
   destroyed() {
-    clearTimeout(this.timer)
+    clearTimeout(this.timer);
   },
   methods: {
     showPwd() {
-      if (this.passwordType === 'password') {
-        this.passwordType = ''
+      if (this.passwordType === "password") {
+        this.passwordType = "";
       } else {
-        this.passwordType = 'password'
+        this.passwordType = "password";
       }
       this.$nextTick(() => {
-        this.$refs.password.focus()
-      })
+        this.$refs.password.focus();
+      });
     },
     handleTimer() {
       this.timer = setTimeout(() => {
-        this.count -= 1
+        this.count -= 1;
         if (this.count > 0) {
-          this.handleTimer()
+          this.handleTimer();
         }
-      }, 1000)
+      }, 1000);
     },
     handleCode() {
-      if (this.count > 0) return
-      if (!validPhone(this.loginForm.username)) return
-      this.count = 59
-      this.handleTimer()
+      if (this.count > 0) return;
+      if (!validPhone(this.loginForm.username)) return;
+      this.count = 59;
+      this.handleTimer();
 
-      getCode(this.loginForm.username, 101)
+      getCode(this.loginForm.username, 101);
       // .catch((e) => {
       //   this.$notify({ message: "发送失败，请稍后再试" });
       // });
     },
     handleLogin() {
+      if (!this.checked) {
+        this.$message({
+          message: "请先阅读并同意《品牌入住协议》",
+          type: "error",
+        });
+        return;
+      }
       this.$refs.loginForm.validate((valid) => {
         if (valid) {
-          this.loading = true
+          this.loading = true;
           this.$store
-            .dispatch('user/regist', this.loginForm)
+            .dispatch("user/regist", this.loginForm)
             .then(() => {
               this.$router.push({
-                path: this.redirect || '/',
-                query: this.otherQuery
-              })
-              this.loading = false
+                path: this.redirect || "/",
+                query: this.otherQuery,
+              });
+              this.loading = false;
             })
             .catch(() => {
-              this.loading = false
-            })
+              this.loading = false;
+            });
         } else {
-          console.log('error submit!!')
-          return false
+          console.log("error submit!!");
+          return false;
         }
-      })
+      });
     },
     getOtherQuery(query) {
       return Object.keys(query).reduce((acc, cur) => {
-        if (cur !== 'redirect') {
-          acc[cur] = query[cur]
+        if (cur !== "redirect") {
+          acc[cur] = query[cur];
         }
-        return acc
-      }, {})
-    }
-  }
-}
+        return acc;
+      }, {});
+    },
+  },
+};
 </script>
 
 <style lang="scss">
