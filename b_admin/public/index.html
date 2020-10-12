@@ -1,30 +1,34 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <meta name="renderer" content="webkit">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-    <link rel="icon" href="<%= BASE_URL %>favicon.ico">
-    <title><%= webpackConfig.name %></title>
-    <script type='text/javascript'>
-      (function(a, b, c, d, e, j, s) {
-          a[d] = a[d] || function() {
-              (a[d].a = a[d].a || []).push(arguments)
-          };
-          j = b.createElement(c),
-              s = b.getElementsByTagName(c)[0];
-          j.async = true;
-          j.charset = 'UTF-8';
-          j.src = 'https://static.meiqia.com/widget/loader.js';
-          s.parentNode.insertBefore(j, s);
-      })(window, document, 'script', '_MEIQIA');
-      _MEIQIA('entId', 249463);
-      _MEIQIA('withoutBtn');
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="renderer" content="webkit">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <link rel="icon" href="<%= BASE_URL %>favicon.ico">
+  <title><%= webpackConfig.name %></title>
+  <script src="//rescdn.qqmail.com/node/ww/wwopenmng/js/sso/wwLogin-1.0.0.js"></script>
+  <script type='text/javascript'>
+    (function (a, b, c, d, e, j, s) {
+      a[d] = a[d] || function () {
+        (a[d].a = a[d].a || []).push(arguments)
+      };
+      j = b.createElement(c),
+        s = b.getElementsByTagName(c)[0];
+      j.async = true;
+      j.charset = 'UTF-8';
+      j.src = 'https://static.meiqia.com/widget/loader.js';
+      s.parentNode.insertBefore(j, s);
+    })(window, document, 'script', '_MEIQIA');
+    _MEIQIA('entId', 249463);
+    _MEIQIA('withoutBtn');
   </script>
-  </head>
-  <body>
-    <div id="app"></div>
-    <!-- built files will be auto injected -->
-  </body>
+</head>
+
+<body>
+  <div id="app"></div>
+  <!-- built files will be auto injected -->
+</body>
+
 </html>
