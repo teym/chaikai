@@ -181,12 +181,12 @@
         <h3>活动设置</h3>
         <div class="row">
           <h4>私密活动:</h4>
-          <el-checkbox :checked="detail.displayType" label="1">备选项</el-checkbox>
+          <el-checkbox :checked="detail.displayType" label="" />
         </div>
         <div class="row">
           <h4>收货地限制:</h4>
           <div>
-            <el-checkbox :checked="detail.extension.receiveAreaLimit" label="1">备选项</el-checkbox>
+            <el-checkbox :checked="detail.extension.receiveAreaLimit" label="" />
             <div v-if="detail.extension.receiveAreaLimit">
               <p>{{ detail.extension.receiveAreas[0].type === 1 ? '不可收货':'可收货' }}</p>
               <p>{{ detail.extension.receiveAreas.map(i=>((i.province||'') + (i.city || ''))).join(', ') }}</p>
@@ -340,8 +340,8 @@ export default {
       this.loadDetail(row.id)
     },
     handleAction(row, state) {
-      if (state === 3 || state === 5) {
-        this.$confirm(state === 3 ? '确认通过?' : '确认关闭?').then((r) => {
+      if (state === 4 || state === 6) {
+        this.$confirm(state === 4 ? '确认通过?' : '确认关闭?').then((r) => {
           updateActivityState({ id: row.id, statusCode: state }).then((r) => {
             row.statusCode = state
             this.$message({ message: '操作成功', type: 'success' })
