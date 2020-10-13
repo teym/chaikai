@@ -72,7 +72,7 @@ export default {
     },
     handleSubmit() {
       this.loading = true
-      buyAlipay({ amount: this.num, type: 'RECHARGE' })
+      buyAlipay({ amount: this.num, type: 'BR_RECHARGE' })
         .then((r) => {
           this.loading = false
           this.tmp = r.data.body.replace('<form ', '<form target="_blank"')

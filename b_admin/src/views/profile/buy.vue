@@ -78,7 +78,7 @@ export default {
             this.loading = false
           })
       } else {
-        buyAlipay({ amount: this.num * 399, type: 'SERVER_ORDER' })
+        buyAlipay({ amount: this.num * 399, type: 'BR_SERVICE_ORDER' })
           .then((r) => {
             this.tmp = r.data.body.replace('<form ', '<form target="_blank"')
             this.$nextTick().then((r) => {
