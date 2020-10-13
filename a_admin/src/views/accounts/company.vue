@@ -226,7 +226,7 @@ export default {
         size: 20,
         searchType: 1,
         searchKey: '',
-        companyStatus: 0,
+        companyStatus: 3,
         timeRange: []
       },
       status: ['全部', '未认证', '审核中', '已认证', '已拒绝'],

@@ -36,7 +36,8 @@
             <el-input
               v-model="detail.remark"
               size="mini"
-              :disabled="detail.roleId"
+              maxlength="10"
+              show-word-limit
             />
           </div>
         </div>
@@ -242,6 +243,20 @@ export default {
       })
     },
     onProSave() {
+      const obj = Object.assign({}, this.detail)
+      obj.remark = obj.remark.trim()
+      if (obj.menuIdList.length <= 0) {
+        this.$message({ message: '请选择权限', type: 'error' })
+        return
+      }
+      if (obj.remark.length <= 0) {
+        this.$message({ message: '请输入角色名称', type: 'error' })
+        return
+      }
+      if (obj.remark.length > 10) {
+        this.$message({ message: '角色名称最多10个字符', type: 'error' })
+        return
+      }
       this.detailLoading = true;
       (this.detail.roleId ? updateRole : addRole)(this.detail)
         .then((r) => {
@@ -261,6 +276,10 @@ export default {
     },
     onRolSave() {
       const ids = this.$refs.tree.getCheckedNodes()
+      if (ids.length <= 0) {
+        this.$message({ message: '请选择人员', type: 'error' })
+        return
+      }
       this.detailLoading = true
       updateRoleUser({
         roleId: this.detail.roleId,

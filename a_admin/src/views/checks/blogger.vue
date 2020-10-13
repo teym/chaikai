@@ -160,7 +160,7 @@ export default {
         size: 20,
         searchType: 1,
         searchKey: '',
-        statusCode: 0,
+        statusCode: 2,
         platformId: 0
       },
       channels: Channels,

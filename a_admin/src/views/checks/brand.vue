@@ -164,7 +164,7 @@ export default {
         page: 1,
         size: 20,
         name: undefined,
-        statusCode: 0
+        statusCode: 2
       },
       status: ['全部', '未认证', '审核中', '已认证', '已拒绝'],
       preview: false,
