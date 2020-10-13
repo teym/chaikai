@@ -93,13 +93,15 @@ export default {
     const validatePassword = (rule, value, callback) => {
       if (value.length < 6) {
         callback(new Error('密码不能少于6位'))
+      }else if (value.length > 21){
+        callback(new Error('密码不能大于21位'))
       } else {
         callback()
       }
     }
     const validateCode = (rule, value, callback) => {
       if (!validCode(value)) {
-        callback(new Error('验证码为4位数字'))
+        callback(new Error('验证码为6位数字'))
       } else {
         callback()
       }

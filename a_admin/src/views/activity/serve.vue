@@ -8,7 +8,7 @@
         style="width: 100px"
       >
         <el-option :value="1" label="订单ID" />
-        <el-option :value="3" label="公司名称" />
+        <el-option :value="2" label="公司名称" />
       </el-select>
       <el-input
         v-model="listQuery.searchKey"
