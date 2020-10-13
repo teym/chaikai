@@ -37,7 +37,7 @@ export default {
         id: 'sso_qr',
         appid: 'ww9bd117a014bf30bf',
         agentid: '1000015',
-        redirect_uri: encodeURIComponent('http://brandtest.ckgift.cn/#/sso'),
+        redirect_uri: encodeURIComponent('http://admintest.ckgift.cn/#/sso'),
         state: 'adminTest',
         href: ''
       })

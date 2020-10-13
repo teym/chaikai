@@ -279,14 +279,14 @@ export default {
           this.listQuery.searchType
         ]
       ] = obj.searchKey
-      if (obj.timeRange.length > 0) {
+      if (obj.timeRange && obj.timeRange.length > 0) {
         obj.startTime = moment(this.listQuery.timeRange[0]).format(
           'YYYY-MM-DD HH:mm:ss'
         )
-        obj.endTime = moment(this.listQuery.timeRange[0]).format(
+        obj.endTime = moment(this.listQuery.timeRange[1]).format(
           'YYYY-MM-DD HH:mm:ss'
         )
-        obj.timeRange = ''
+        obj.timeRange = null
       }
       fetchCompanyList(clearQueryObject(obj, true)).then(({ data }) => {
         this.list = data.data.map((i) =>
