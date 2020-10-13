@@ -6,7 +6,7 @@
         <el-input
           v-model="listQuery.key"
           placeholder="请输入活动名称"
-          style="width: 200px;"
+          style="width: 200px"
           class="filter-item"
           @keyup.enter.native="handleFilter"
         />
@@ -17,25 +17,37 @@
           type="primary"
           icon="el-icon-edit"
           @click="handleCreate"
-        >创建活动</el-button>
+          >创建活动</el-button
+        >
       </div>
       <div class="row">
-        <el-menu :default-active="''" class="el-menu-demo" mode="horizontal" @select="handleSelect">
+        <el-menu
+          :default-active="''"
+          class="el-menu-demo"
+          mode="horizontal"
+          @select="handleSelect"
+        >
           <el-menu-item :index="''">
             全部
             <span v-if="stat.total > 0" class="pill">{{ stat.total }}</span>
           </el-menu-item>
-          <el-menu-item index="SIGNING_UP">
+          <el-menu-item index="5">
             报名中
-            <span v-if="stat.signingUp > 0" class="pill">{{ stat.signingUp }}</span>
+            <span v-if="stat.signingUp > 0" class="pill">{{
+              stat.signingUp
+            }}</span>
           </el-menu-item>
-          <el-menu-item index="NOT_STARTED">
+          <el-menu-item index="4">
             未开始
-            <span v-if="stat.notStarted > 0" class="pill">{{ stat.notStarted }}</span>
+            <span v-if="stat.notStarted > 0" class="pill">{{
+              stat.notStarted
+            }}</span>
           </el-menu-item>
-          <el-menu-item index="SIGN_UP_CLOSED">
+          <el-menu-item index="6">
             报名结束
-            <span v-if="stat.signUpClosed > 0" class="pill">{{ stat.signUpClosed }}</span>
+            <span v-if="stat.signUpClosed > 0" class="pill">{{
+              stat.signUpClosed
+            }}</span>
           </el-menu-item>
         </el-menu>
       </div>
@@ -48,100 +60,115 @@
       border
       fit
       highlight-current-row
-      style="width: 100%;"
+      style="width: 100%"
     >
       <el-table-column label="商品名称" width="260">
-        <template slot-scope="{row}">
+        <template slot-scope="{ row }">
           <div class="info">
-            <img :src="row.picUrl" alt="pic">
+            <img :src="row.picUrl" alt="pic" />
             <span>{{ row.title }}</span>
           </div>
         </template>
       </el-table-column>
       <el-table-column label="待审核">
-        <template slot-scope="{row}">
+        <template slot-scope="{ row }">
           <span>{{ row.pendingEvaNum }}</span>
         </template>
       </el-table-column>
       <el-table-column label="待缴押金">
-        <template slot-scope="{row}">
+        <template slot-scope="{ row }">
           <span>{{ row.notPayDepositNum }}</span>
         </template>
       </el-table-column>
       <el-table-column label="待发货">
-        <template slot-scope="{row}">
+        <template slot-scope="{ row }">
           <span>{{ row.undeliveredNum }}</span>
         </template>
       </el-table-column>
       <el-table-column label="待评测">
-        <template slot-scope="{row}">
+        <template slot-scope="{ row }">
           <span>{{ row.unevaluatedNum }}</span>
         </template>
       </el-table-column>
       <el-table-column label="已评测">
-        <template slot-scope="{row}">
+        <template slot-scope="{ row }">
           <span>{{ row.evaluatedNum }}</span>
         </template>
       </el-table-column>
       <el-table-column label="报名时间" width="160">
-        <template slot-scope="{row}">
+        <template slot-scope="{ row }">
           <span>
             {{ row.regStartTime }}
-            <br>
+            <br />
             {{ row.regEndTime }}
           </span>
         </template>
       </el-table-column>
       <el-table-column label="活动状态">
-        <template slot-scope="{row}">
-          <span>{{ ["","待提交","待排期","已拒绝","未开始","报名中","报名结束"][row.statusCode] }}</span>
+        <template slot-scope="{ row }">
+          <span>{{
+            ["", "待提交", "待排期", "已拒绝", "未开始", "报名中", "报名结束"][
+              row.statusCode
+            ]
+          }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" width="230" class-name="small-padding fixed-width">
-        <template slot-scope="{row,$index}">
+      <el-table-column
+        label="操作"
+        align="center"
+        width="230"
+        class-name="small-padding fixed-width"
+      >
+        <template slot-scope="{ row, $index }">
           <el-button
             v-if="row.statusCode === 1 || row.statusCode === 3"
             type="text"
             size="mini"
             @click="handleUpdate(row)"
-          >编辑</el-button>
+            >编辑</el-button
+          >
           <el-button
             v-if="row.statusCode === 1 || row.statusCode === 3"
             type="text"
             size="mini"
-            @click="handleDelete(row,$index)"
-          >删除</el-button>
+            @click="handleDelete(row, $index)"
+            >删除</el-button
+          >
           <el-button
             v-if="row.statusCode === 5 || row.statusCode === 6"
             type="text"
             size="mini"
             @click="handleOrder(row)"
-          >活动订单</el-button>
+            >活动订单</el-button
+          >
           <el-button
             v-if="row.statusCode === 5 || row.statusCode === 6"
             type="text"
             size="mini"
             @click="handleOrder(row)"
-          >预览订单</el-button>
-          <br v-if="row.statusCode === 5 || row.statusCode === 6">
+            >预览订单</el-button
+          >
+          <br v-if="row.statusCode === 5 || row.statusCode === 6" />
           <el-button
             v-if="row.statusCode >= 4"
             type="text"
             size="mini"
-            @click="handleOrder(row)"
-          >复制订单</el-button>
+            @click="handleCopy(row)"
+            >复制活动</el-button
+          >
           <el-button
             v-if="row.statusCode === 4 || row.statusCode === 5"
             type="text"
             size="mini"
             @click="handleAddOrder(row)"
-          >增加名额</el-button>
+            >增加名额</el-button
+          >
         </template>
       </el-table-column>
     </el-table>
 
     <pagination
-      v-show="total>0"
+      v-show="total > 0"
       :total="total"
       :page.sync="listQuery.page"
       :limit.sync="listQuery.size"
@@ -166,20 +193,26 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="formVisible = false">取消</el-button>
-        <el-button :loading="formLoading" type="primary" @click="handleAddNumber">确定</el-button>
+        <el-button
+          :loading="formLoading"
+          type="primary"
+          @click="handleAddNumber"
+          >确定</el-button
+        >
       </div>
     </el-dialog>
   </div>
 </template>
 
 <script>
-import { fetchList, fetchStat, updateData } from '@/api/activities'
-import { mapGetters } from 'vuex'
-import waves from '@/directive/waves' // waves directive
-import Pagination from '@/components/Pagination' // secondary package based on el-pagination
+import { fetchList, fetchStat, updateData, removeData } from "@/api/activities";
+import { mapGetters } from "vuex";
+import waves from "@/directive/waves"; // waves directive
+import Pagination from "@/components/Pagination"; // secondary package based on el-pagination
+import { clearQueryObject } from "@/utils/index";
 
 export default {
-  name: 'ComplexTable',
+  name: "ComplexTable",
   components: { Pagination },
   directives: { waves },
   data() {
@@ -192,107 +225,123 @@ export default {
       listQuery: {
         page: 1,
         size: 10,
-        key: undefined
+        statusCode: '',
+        key: undefined,
       },
-      activeIndex: '',
       detail: {},
       append: 0,
       formVisible: false,
-      formLoading: false
-    }
+      formLoading: false,
+    };
   },
   computed: {
-    ...mapGetters(['name', 'avatar', 'telephone', 'statusCode', 'brandCount'])
+    ...mapGetters(["name", "avatar", "telephone", "statusCode", "brandCount"]),
   },
   created() {
-    this.getTabs()
-    this.getList()
+    this.getTabs();
+    this.getList();
   },
   methods: {
     getTabs() {
       fetchStat()
         .then((r) => {
-          this.stat = r.data
+          this.stat = r.data;
         })
-        .catch((e) => {})
+        .catch((e) => {});
     },
     getList() {
-      this.listLoading = true
-      fetchList(this.listQuery)
+      this.listLoading = true;
+      fetchList(clearQueryObject(this.listQuery, true))
         .then((response) => {
-          this.list = response.data.data
-          this.total = response.data.pager.count
+          this.list = response.data.data;
+          this.total = response.data.pager.count;
 
           setTimeout(() => {
-            this.listLoading = false
-          }, 1.5 * 1000)
+            this.listLoading = false;
+          }, 1.5 * 1000);
         })
         .catch((e) => {
-          this.listLoading = false
-        })
+          this.listLoading = false;
+        });
     },
     handleSelect(e) {
-      this.activeIndex = e
-      this.handleFilter()
+      this.listQuery.statusCode = e;
+      this.handleFilter();
     },
     handleFilter() {
-      this.listQuery.page = 1
-      this.getList()
+      this.listQuery.page = 1;
+      this.getList();
     },
     handleCreate() {
       if (this.statusCode !== 3) {
-        this.$alert('无法创建商品，为保障品牌合作规范，请先完成企业认证').then(
+        this.$alert("无法创建商品，为保障品牌合作规范，请先完成企业认证").then(
           (r) => {
-            if (r === 'confirm') {
-              this.$router.push('/user/create')
+            if (r === "confirm") {
+              this.$router.push("/user/create");
             }
           }
-        )
+        );
       } else if (this.brandCount === 0) {
-        this.$alert('无法创建商品，为保障品牌合作规范，请先完成品牌授权').then(
+        this.$alert("无法创建商品，为保障品牌合作规范，请先完成品牌授权").then(
           (r) => {
-            if (r === 'confirm') {
-              this.$router.push('/user/auth')
+            if (r === "confirm") {
+              this.$router.push("/user/auth");
             }
           }
-        )
+        );
       } else {
-        this.$router.push('/activity/create')
+        this.$router.push("/activity/create");
       }
     },
     handleOrder(row) {
-      this.$router.push({ path: '/activity/order', query: { id: row.id }})
+      this.$router.push({ path: "/activity/order", query: { id: row.id } });
+    },
+    handleCopy(row) {
+      this.$router.push({
+        path: "/activity/create",
+        query: { id: row.id, copy: true },
+      });
     },
     handleUpdate(row) {
-      this.$router.push({ path: '/activity/create', query: { id: row.id }})
+      this.$router.push({ path: "/activity/create", query: { id: row.id } });
     },
     handleAddOrder(row) {
-      this.detail = row
-      this.formVisible = true
+      this.detail = row;
+      this.formVisible = true;
     },
     handleAddNumber() {
-      this.formLoading = true
+      this.formLoading = true;
       updateData({ id: this.detail.id, totalNum: this.append })
         .then((r) => {
-          this.formLoading = false
-          this.formVisible = false
-          this.getList()
+          this.formLoading = false;
+          this.formVisible = false;
+          this.getList();
         })
         .catch((e) => {
-          this.formLoading = false
-        })
+          this.formLoading = false;
+        });
     },
     handleDelete(row, index) {
-      this.$notify({
-        title: 'Success',
-        message: 'Delete Successfully',
-        type: 'success',
-        duration: 2000
-      })
-      this.list.splice(index, 1)
-    }
-  }
-}
+      this.$confirm(
+        "确认删除活动" + row.title + ",将无法恢复",
+        "删除活动",
+        {}
+      ).then((r) => {
+        if (r === "confirm") {
+          removeData(row.id).then((r) => {
+            this.$notify({
+              title: "提示",
+              message: "删除成功",
+              type: "success",
+              duration: 2000,
+            });
+            this.getList();
+          });
+        }
+      });
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>

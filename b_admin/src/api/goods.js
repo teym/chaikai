@@ -66,11 +66,31 @@ export function createPv(data) {
     data
   })
 }
+export function getPv(id) {
+  return request({
+    url: '/br/account/brand/' + id,
+    method: 'get'
+  })
+}
+export function updatePv(data) {
+  return request({
+    url: '/br/account/brand',
+    method: 'post',
+    data
+  })
+}
 
 export function submitPv(data) {
   return request({
     url: '/br/account/brand/submit',
     method: 'post',
     data
+  })
+}
+
+export function removePv(id) {
+  return request({
+    url: '/br/account/brand/' + id,
+    method: 'delete'
   })
 }

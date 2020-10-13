@@ -27,7 +27,7 @@ service.interceptors.request.use(
   },
   error => {
     // do something with request error
-    console.log(error) // for debug
+    console.log('error', error) // for debug
     return Promise.reject(error)
   }
 )
@@ -49,6 +49,9 @@ service.interceptors.response.use(
 
     // if the custom code is not 20000, it is judged as an error.
     if (res.code !== 200) {
+      if (LoginFlag) {
+        return res
+      }
       Message({
         message: res.msg || '网络错误，请稍后重试',
         type: 'error',
@@ -72,17 +75,17 @@ service.interceptors.response.use(
           LoginFlag = false
         })
       }
-      return Promise.reject(new Error(res.message || 'Error'))
+      return Promise.reject(new Error(res.msg || 'Error'))
     } else {
       return res
     }
   },
-  error => {
-    console.log('err' + error) // for debug
+  (error) => {
+    console.log('err', error.response.data) // for debug
     Message({
-      message: error.message,
+      message: error.response.data.msg || error.message,
       type: 'error',
-      duration: 5 * 1000
+      duration: 2 * 1000
     })
     return Promise.reject(error)
   }
