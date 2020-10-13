@@ -103,7 +103,7 @@ const actions = {
         commit('SET_AVATAR', avatar)
         commit('SET_INTRODUCTION', telephone)
 
-        const { statusCode } = r2.data || {}
+        const { statusCode, contactWechat, contact } = r2.data || {}
         commit('SET_STATUS', statusCode)
 
         const { count } = r3.data.pager || {}
@@ -113,6 +113,13 @@ const actions = {
 
         commit('SET_AMOUNT', totalAmount || 0)
         commit('SET_ACTIVITY', activityAmount || 0)
+
+        window._MEIQIA('metadata', {
+          tel: telephone,
+          name: company,
+          weixin: contactWechat,
+          contact: contact
+        })
 
         resolve(Object.assign({}, r1.data, { statusCode, brandCount: count }))
       }).catch(error => {
