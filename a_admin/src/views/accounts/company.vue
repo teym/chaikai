@@ -1,7 +1,12 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-select v-model="listQuery.searchType" size="mini" class="filter-item" style="width:96px">
+      <el-select
+        v-model="listQuery.searchType"
+        size="mini"
+        class="filter-item"
+        style="width: 96px"
+      >
         <el-option :value="1" label="手机号" />
         <el-option :value="2" label="账户ID" />
         <el-option :value="3" label="企业名称" />
@@ -18,9 +23,14 @@
         v-model="listQuery.companyStatus"
         size="mini"
         class="filter-item"
-        style="width:90px; margin-left: 16px"
+        style="width: 90px; margin-left: 16px"
       >
-        <el-option v-for="(item, i) in status" :key="i" :value="i" :label="item" />
+        <el-option
+          v-for="(item, i) in status"
+          :key="i"
+          :value="i"
+          :label="item"
+        />
       </el-select>
 
       <el-date-picker
@@ -66,7 +76,7 @@
       </el-table-column>
       <el-table-column label="授权品牌" align="center">
         <template slot-scope="{ row }">
-          <span>{{ row.brands.map(i=>i.name).join('|') }}</span>
+          <span>{{ row.brands.map((i) => i.name).join("|") }}</span>
         </template>
       </el-table-column>
       <el-table-column label="账户余额" align="center">
@@ -99,7 +109,12 @@
       :limit.sync="listQuery.size"
       @pagination="getList"
     />
-    <el-dialog width="80%" title="达人详情" :visible.sync="detailVisable" append-to-body>
+    <el-dialog
+      width="80%"
+      title="达人详情"
+      :visible.sync="detailVisable"
+      append-to-body
+    >
       <div v-if="detail" class="detail">
         <div class="row">
           <h4>账户ID:</h4>
@@ -124,7 +139,10 @@
         <div class="row">
           <h4>营业执照:</h4>
           <div>
-            <el-button size="mini" @click="onPreview(detail.companyInfo.businessLicense)">查看</el-button>
+            <el-button
+              size="mini"
+              @click="onPreview(detail.companyInfo.businessLicense)"
+            >查看</el-button>
           </div>
         </div>
         <div class="row">
@@ -156,7 +174,7 @@
           </el-table-column>
           <el-table-column label="品牌LOGO" width="90" align="center">
             <template slot-scope="{ row }">
-              <img :src="row.logo" style="width:60px;height:60px">
+              <img :src="row.logo" style="width: 60px; height: 60px">
             </template>
           </el-table-column>
           <el-table-column label="品牌故事">
@@ -166,12 +184,17 @@
           </el-table-column>
           <el-table-column label="商标证书" align="center">
             <template slot-scope="{ row }">
-              <el-button size="mini" @click="onPreview(row.trademarkRegistration)">查看</el-button>
+              <el-button
+                size="mini"
+                @click="onPreview(row.trademarkRegistration)"
+              >查看</el-button>
             </template>
           </el-table-column>
           <el-table-column label="品牌关系" align="center">
             <template slot-scope="{ row }">
-              <span>{{ ({'1':'品牌方','2':'代理商'})[row.relationType] }}</span>
+              <span>{{
+                { "1": "品牌方", "2": "代理商" }[row.relationType]
+              }}</span>
             </template>
           </el-table-column>
           <el-table-column label="品牌授权资质" align="center">
@@ -196,7 +219,12 @@
           </el-table-column>
         </el-table>
       </div>
-      <el-dialog width="60%" title="预览" :visible.sync="previewVisable" append-to-body>
+      <el-dialog
+        width="60%"
+        title="预览"
+        :visible.sync="previewVisable"
+        append-to-body
+      >
         <img style="width: 100%" :src="preview" alt="img">
       </el-dialog>
     </el-dialog>
@@ -237,7 +265,7 @@ export default {
     }
   },
   // computed: {
-  //   ...mapGetters(["name", "avatar", "telephone"]),
+  //   ...mapGetters(['name', 'avatar', 'telephone'])
   // },
   created() {
     this.getList()

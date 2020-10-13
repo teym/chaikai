@@ -40,10 +40,10 @@
         style="margin-left: 16px"
       >
         <el-option
-          v-for="(item, i) in status"
+          v-for="(item, i) in stateOp"
           :key="i"
-          :value="i"
-          :label="item"
+          :value="item.v"
+          :label="item.l"
         />
       </el-select>
 
@@ -170,6 +170,11 @@ export default {
     }
   },
   computed: {
+    stateOp() {
+      return this.status
+        .map((i, j) => ({ v: j, l: i }))
+        .filter((i) => i.v !== 1)
+    },
     ...mapGetters(['name', 'avatar', 'telephone'])
   },
   created() {
