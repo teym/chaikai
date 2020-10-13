@@ -93,7 +93,7 @@
       <el-table-column label="状态" align="center">
         <template slot-scope="{ row }">
           <span>{{ status[row.statusCode] }}</span>
-          <span v-if="row.statusCode === 4"><br>{{ row.rejectReason }}</span>
+          <span v-if="row.statusCode === 3"><br>{{ row.rejectReason }}</span>
         </template>
       </el-table-column>
       <el-table-column label="提交时间" align="center">
@@ -113,12 +113,12 @@
             v-if="row.statusCode === 1"
             type="primary"
             size="mini"
-            @click="handleAction(row, 3)"
+            @click="handleAction(row, 2)"
           >通过</el-button>
           <el-button
             v-if="row.statusCode === 1"
             size="mini"
-            @click="handleAction(row, 4)"
+            @click="handleAction(row, 3)"
           >拒绝</el-button>
         </template>
       </el-table-column>
@@ -160,20 +160,18 @@ export default {
         size: 20,
         searchType: 1,
         searchKey: '',
-        statusCode: 2,
+        statusCode: 1,
         platformId: 0
       },
       channels: Channels,
-      status: ['全部', '未认证', '审核中', '已认证', '已拒绝'],
+      status: ['全部', '审核中', '已认证', '已拒绝'],
       preview: false,
       previewUrl: ''
     }
   },
   computed: {
     stateOp() {
-      return this.status
-        .map((i, j) => ({ v: j, l: i }))
-        .filter((i) => i.v !== 1)
+      return this.status.map((i, j) => ({ v: j, l: i }))
     },
     ...mapGetters(['name', 'avatar', 'telephone'])
   },
@@ -205,7 +203,7 @@ export default {
       this.preview = true
     },
     handleAction(row, state) {
-      if (state === 3) {
+      if (state === 2) {
         this.$confirm('确认通过?').then((r) => {
           updateBloggerState({ id: row.id, statusCode: state }).then((r) => {
             row.statusCode = state

@@ -1,16 +1,21 @@
 <template>
   <div class="createPost-container">
-    <el-form ref="postForm" :model="postForm" :rules="rules" class="form-container">
+    <el-form
+      ref="postForm"
+      :model="postForm"
+      :rules="rules"
+      class="form-container"
+    >
       <div class="createPost-main-container">
         <el-form-item
           prop="brand"
-          style="margin-bottom: 30px;max-width:640px"
+          style="margin-bottom: 30px; max-width: 640px"
           label-width="90px"
           label="商品品牌:"
         >
           <el-select v-model="postForm.brand.id" placeholder="请选择品牌">
             <el-option
-              v-for="(item,index) in brandListOptions"
+              v-for="(item, index) in brandListOptions"
               :key="index"
               :label="item.name"
               :value="item.id"
@@ -19,16 +24,19 @@
         </el-form-item>
         <el-form-item
           prop="importUrl"
-          style="margin-bottom: 30px;max-width:640px"
+          style="margin-bottom: 30px; max-width: 640px"
           label-width="90px"
           label="商品链接:"
         >
-          <el-input v-model="postForm.importUrl" placeholder="请输入淘宝/天猫的售卖链接" />
+          <el-input
+            v-model="postForm.importUrl"
+            placeholder="请输入淘宝/天猫的售卖链接"
+          />
           <el-button type="text" @click="handleImport">快速导入</el-button>
         </el-form-item>
         <el-form-item
           prop="price"
-          style="margin-bottom: 30px;max-width:360px"
+          style="margin-bottom: 30px; max-width: 360px"
           label-width="90px"
           label="商品价值:"
         >
@@ -37,15 +45,20 @@
         </el-form-item>
         <el-form-item
           prop="title"
-          style="margin-bottom: 30px;max-width:640px"
+          style="margin-bottom: 30px; max-width: 640px"
           label-width="90px"
           label="商品名称:"
         >
-          <el-input v-model="postForm.title" placeholder="请输入商品名称" maxlength="10" show-word-limit />
+          <el-input
+            v-model="postForm.title"
+            placeholder="请输入商品名称"
+            maxlength="10"
+            show-word-limit
+          />
         </el-form-item>
         <el-form-item
           prop="picUrl"
-          style="margin-bottom: 30px;max-width:720px"
+          style="margin-bottom: 30px; max-width: 720px"
           label-width="90px"
           label="商品头图:"
         >
@@ -53,7 +66,7 @@
         </el-form-item>
         <el-form-item
           prop="skuGroups"
-          style="margin-bottom: 30px;max-width:840px"
+          style="margin-bottom: 30px; max-width: 840px"
           label-width="90px"
           label="商品规格:"
         >
@@ -66,7 +79,11 @@
                 <span>规格值</span>
               </el-col>
             </el-row>
-            <el-row v-for="(sku, i) in postForm.skuGroups" :key="i" :gutter="32">
+            <el-row
+              v-for="(sku, i) in postForm.skuGroups"
+              :key="i"
+              :gutter="32"
+            >
               <el-col :span="8" class="label">
                 <el-autocomplete
                   v-model="sku.name"
@@ -74,16 +91,24 @@
                   :fetch-suggestions="handleSkuSuggestions"
                   placeholder="请输入内容"
                 />
-                <el-icon class="el-icon-circle-close" @click="handleRemoveSku(i)" />
+                <el-icon
+                  class="el-icon-circle-close"
+                  @click="handleRemoveSku(i)"
+                />
               </el-col>
               <el-col :span="16" class="value">
                 <el-row :gutter="8">
                   <el-col v-for="(s, j) in sku.skuList" :key="j" :span="8">
                     <el-input v-model="s.name" />
-                    <el-icon class="el-icon-circle-close" @click="handleRemoveSkuValue(sku, j)" />
+                    <el-icon
+                      class="el-icon-circle-close"
+                      @click="handleRemoveSkuValue(sku, j)"
+                    />
                   </el-col>
                   <el-col :span="8">
-                    <el-button type="text" @click="handleAddSkuValue(sku)">添加规格值</el-button>
+                    <el-button type="text" @click="handleAddSkuValue(sku)"
+                      >添加规格值</el-button
+                    >
                   </el-col>
                 </el-row>
               </el-col>
@@ -97,11 +122,14 @@
           prop="detail"
           label-width="90px"
           label="商品详情:"
-          style="margin-bottom: 30px;max-width:840px"
+          style="margin-bottom: 30px; max-width: 840px"
         >
           <Tinymce ref="editor" v-model="postForm.detail" :height="400" />
         </el-form-item>
-        <el-form-item label-width="90px" style="margin-bottom: 30px;max-width:840px">
+        <el-form-item
+          label-width="90px"
+          style="margin-bottom: 30px; max-width: 840px"
+        >
           <el-button type="primary" @click="handleSubmit">保存</el-button>
         </el-form-item>
       </div>
@@ -110,224 +138,224 @@
 </template>
 
 <script>
-import Tinymce from '@/components/Tinymce'
-import Upload from '@/components/Upload/SingleImage3'
-import { validURL } from '@/utils/validate'
+import Tinymce from "@/components/Tinymce";
+import Upload from "@/components/Upload/SingleImage3";
+import { validURL } from "@/utils/validate";
 import {
   fetchData,
   fetchSkus,
   importData,
   createData,
   updateData,
-  fetchPv
-} from '@/api/goods'
+  fetchPv,
+} from "@/api/goods";
 
 const defaultForm = {
   brand: { id: 0 },
-  importUrl: '',
-  price: '',
-  title: '',
+  importUrl: "",
+  price: "",
+  title: "",
   itemId: 0,
-  picUrl: '',
-  detail: '',
-  skuGroups: []
-}
+  picUrl: "",
+  detail: "",
+  skuGroups: [],
+};
 
 export default {
-  name: 'ArticleDetail',
+  name: "ArticleDetail",
   components: {
     Tinymce,
-    Upload
+    Upload,
   },
   props: {
     isEdit: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   data() {
     const validateRequire = (rule, value, callback) => {
-      if (value === '') {
+      if (value === "") {
         this.$message({
-          message: rule.field + '为必传项',
-          type: 'error'
-        })
-        callback(new Error(rule.field + '为必传项'))
+          message: rule.field + "为必传项",
+          type: "error",
+        });
+        callback(new Error(rule.field + "为必传项"));
       } else {
-        callback()
+        callback();
       }
-    }
+    };
     const validateNumber = (rule, value, callback) => {
       if (!(parseFloat(value) > 0)) {
         this.$message({
-          message: '请填写正确的数字',
-          type: 'error'
-        })
-        callback(new Error('请填写正确的数字'))
+          message: "请填写正确的数字",
+          type: "error",
+        });
+        callback(new Error("请填写正确的数字"));
       } else {
-        callback()
+        callback();
       }
-    }
+    };
     const validateSourceUri = (rule, value, callback) => {
-      if (validURL(value || '')) {
-        callback()
+      if (validURL(value || "")) {
+        callback();
       } else {
         this.$message({
-          message: '外链url填写不正确',
-          type: 'error'
-        })
-        callback(new Error('外链url填写不正确'))
+          message: "外链url填写不正确",
+          type: "error",
+        });
+        callback(new Error("外链url填写不正确"));
       }
-    }
+    };
     return {
       postForm: Object.assign({}, defaultForm),
       loading: false,
       brandListOptions: [],
       rules: {
         brand: [{ validator: validateRequire }],
-        importUrl: [{ validator: validateSourceUri, trigger: 'blur' }],
-        price: [{ validator: validateNumber, trigger: 'blur' }],
-        title: [{ validator: validateRequire, trigger: 'blur' }],
+        importUrl: [{ validator: validateSourceUri, trigger: "blur" }],
+        price: [{ validator: validateNumber, trigger: "blur" }],
+        title: [{ validator: validateRequire, trigger: "blur" }],
         content: [{ validator: validateRequire }],
         skuGroups: [{ validator: validateRequire }],
-        picUrl: [{ validator: validateSourceUri }]
-      }
-    }
+        picUrl: [{ validator: validateSourceUri }],
+      },
+    };
   },
   created() {
-    const id = this.$route.query && this.$route.query.id
+    const id = this.$route.query && this.$route.query.id;
     if (id) {
-      this.fetchData(id)
+      this.fetchData(id);
     }
-    this.fetchPv()
+    this.fetchPv();
     // this.fetchSkus();
   },
   methods: {
     fetchData(id) {
       fetchData(id).then((r) => {
-        const d = r.data || defaultForm
+        const d = r.data || defaultForm;
         if (!d.skuGroups) {
-          d.skuGroups = []
+          d.skuGroups = [];
         }
-        this.postForm = d
-      })
+        this.postForm = d;
+      });
     },
     fetchPv() {
       fetchPv({ page: 1, size: 50 }).then((r) => {
-        this.brandListOptions = r.data.data
+        this.brandListOptions = r.data.data;
         if (this.postForm.brand.id === 0) {
-          this.postForm.brand.id = (this.brandListOptions[0] || {}).id || 0
+          this.postForm.brand.id = (this.brandListOptions[0] || {}).id || 0;
         }
-      })
+      });
     },
     handleImport() {
-      this.loading = true
+      this.loading = true;
       importData({ url: this.postForm.importUrl })
         .then(({ data }) => {
           if (this.postForm.itemId && this.postForm.itemId !== data.itemId) {
-            this.loading = false
-            this.$message({ message: '非同一商品不可导入', type: 'error' })
-            return
+            this.loading = false;
+            this.$message({ message: "非同一商品不可导入", type: "error" });
+            return;
           }
           const imgs = data.descImgs
             .map((i) => `<img style="width:100%" src="${i}"/>`)
-            .join('')
+            .join("");
           const d = {
             title: data.title || this.postForm.title,
             picUrl: data.images[0] || this.postForm.picUrl,
             detail:
               data.descImgs && data.descImgs.length > 0
-                ? '<p>' + imgs + '</p>'
+                ? "<p>" + imgs + "</p>"
                 : this.postForm.picUrl,
-            itemId: data.itemId || 0
-          }
-          this.postForm = Object.assign({}, this.postForm, d)
-          this.loading = false
+            itemId: data.itemId || 0,
+          };
+          this.postForm = Object.assign({}, this.postForm, d);
+          this.loading = false;
         })
         .catch((e) => {
-          this.loading = false
-        })
+          this.loading = false;
+        });
     },
     fetchSkus() {
       fetchSkus().then((r) => {
-        this.skus = r.data
-      })
+        this.skus = r.data;
+      });
     },
     handleAddSku() {
       this.postForm.skuGroups.splice(this.postForm.skuGroups.length, 0, {
-        name: '',
-        skuList: []
-      })
+        name: "",
+        skuList: [],
+      });
     },
     handleRemoveSku(index) {
-      this.postForm.skuGroups.splice(index, 1)
+      this.postForm.skuGroups.splice(index, 1);
     },
     handleAddSkuValue(sku) {
-      sku.skuList = sku.skuList.concat({ name: '' })
+      sku.skuList = sku.skuList.concat({ name: "" });
     },
     handleRemoveSkuValue(sku, index) {
-      sku.skuList.splice(index, 1)
+      sku.skuList.splice(index, 1);
     },
     handleSkuSuggestions(queryString, cb) {
       var all = [
-        '颜色',
-        '尺寸',
-        '尺码',
-        '款式',
-        '套装',
-        '净含量',
-        '容量',
-        '口味'
-      ]
+        "颜色",
+        "尺寸",
+        "尺码",
+        "款式",
+        "套装",
+        "净含量",
+        "容量",
+        "口味",
+      ];
       var rest = queryString
         ? all.filter((i) => i.indexOf(queryString) === 0)
-        : all
-      cb(rest.map((i) => ({ value: i })))
+        : all;
+      cb(rest.map((i) => ({ value: i })));
     },
     handleSubmit() {
       this.$refs.postForm.validate((valid, e) => {
         if (valid) {
-          this.loading = true
-          const id = this.$route.query && this.$route.query.id
+          this.loading = true;
+          const id = this.$route.query && this.$route.query.id;
           if (!id) {
             createData(Object.assign({}, this.postForm))
               .then((r) => {
                 this.$notify({
-                  title: '成功',
-                  message: '保存成功',
-                  type: 'success',
-                  duration: 2000
-                })
-                this.loading = false
-                this.$router.push('/goods/index')
+                  title: "成功",
+                  message: "保存成功",
+                  type: "success",
+                  duration: 2000,
+                });
+                this.loading = false;
+                this.$router.push("/goods/index");
               })
               .catch((e) => {
-                this.loading = false
-              })
+                this.loading = false;
+              });
           } else {
             updateData(Object.assign({ id }, this.postForm))
               .then((r) => {
                 this.$notify({
-                  title: '成功',
-                  message: '保存成功',
-                  type: 'success',
-                  duration: 2000
-                })
-                this.loading = false
-                this.$router.push('/goods/index')
+                  title: "成功",
+                  message: "保存成功",
+                  type: "success",
+                  duration: 2000,
+                });
+                this.loading = false;
+                this.$router.push("/goods/index");
               })
               .catch((e) => {
-                this.loading = false
-              })
+                this.loading = false;
+              });
           }
         } else {
-          console.log(e)
-          return false
+          console.log(e);
+          return false;
         }
-      })
-    }
-  }
-}
+      });
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>

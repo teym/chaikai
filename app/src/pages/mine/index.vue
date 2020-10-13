@@ -77,7 +77,7 @@
           <img class="right" src="/static/images/arrow_right.png" alt="right">
         </div>
       </div>
-      <button open-type="contact" session-from="weapp" class="btn-row row just margin2-t margin2-b">
+      <button open-type="contact" :session-from="session" class="btn-row row just margin2-t margin2-b">
         <p class="middle light">联系客服</p>
         <div class="row i-center">
           <img class="right" src="/static/images/arrow_right.png" alt="right">
@@ -104,6 +104,7 @@ export default {
         score: 0,
         areas: []
       },
+      session: '',
       amount: 0,
       channels: []
     }
@@ -135,6 +136,10 @@ export default {
       request.get('/bl/account').then(({json: {data}}) => {
         this.user = data
         this.channels = mapChannel(data.channels).filter(i => i.statusCode === 3)
+        this.session = JSON.stringify({tel: data.telephone,
+          name: data.nickname,
+          weixin: data.wechatNo,
+          contact: data.realName})
       }).catch(e => {
         uiapi.toast(e.info)
       })
@@ -158,35 +163,35 @@ export default {
 </script>
 
 <style scoped>
-.bg{
+.bg {
   width: 750rpx;
   height: 400rpx;
   z-index: 0;
 }
-.navbar{
+.navbar {
   width: 100%;
   height: 100%;
 }
-.navbar span{
+.navbar span {
   color: white;
   font-size: 44rpx;
 }
-.content{
+.content {
   z-index: 1;
 }
-.info .logo{
+.info .logo {
   width: 96rpx;
   height: 96rpx;
   border-radius: 48rpx;
   border: 2rpx solid white;
 }
-.info h5{
+.info h5 {
   color: white;
 }
-.info p{
+.info p {
   color: white;
 }
-.channel li{
+.channel li {
   height: 44rpx;
 }
 .channel li img {
@@ -194,33 +199,33 @@ export default {
   height: 44rpx;
   margin: 0 -8rpx;
 }
-.end{
+.end {
   align-items: flex-end;
 }
-.right{
+.right {
   width: 32rpx;
   height: 32rpx;
 }
-.round{
+.round {
   margin-top: 52rpx;
   padding-top: 70rpx;
   border-radius: 40rpx 40rpx 0 0;
 }
-.icons{
+.icons {
   margin-bottom: 48rpx;
 }
-.icons img{
+.icons img {
   width: 64rpx;
   height: 64rpx;
 }
-button.btn-row{
+button.btn-row {
   border: 0;
   background-color: white;
   border-radius: 0;
   padding-left: 0;
   padding-right: 0;
 }
-button.btn-row::after{
+button.btn-row::after {
   border: none;
 }
 </style>

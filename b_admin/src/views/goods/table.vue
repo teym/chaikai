@@ -133,7 +133,7 @@ export default {
       }
     },
     handleUpdate(row) {
-      this.$router.push({ path: '/goods/create', query: { id: row.itemId }})
+      this.$router.push({ path: '/goods/create', query: { id: row.id }})
     },
     handleDelete(row, index) {
       this.$confirm(
