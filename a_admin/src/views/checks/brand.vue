@@ -2,7 +2,7 @@
   <div class="app-container">
     <div class="filter-container">
       <el-input
-        v-model="listQuery.compay"
+        v-model="listQuery.companyName"
         placeholder="请输入企业名称"
         style="width: 200px"
         size="mini"
@@ -163,7 +163,7 @@ export default {
       listQuery: {
         page: 1,
         size: 20,
-        name: undefined,
+        companyName: undefined,
         statusCode: 2
       },
       status: ['全部', '未认证', '审核中', '已认证', '已拒绝'],
