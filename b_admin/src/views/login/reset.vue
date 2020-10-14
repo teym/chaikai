@@ -12,14 +12,12 @@
         <div class="title-container">
           <h3 class="title">
             找回密码
-            <router-link :to="{path:'/login'}">返回登录</router-link>
+            <router-link :to="{ path: '/login' }">返回登录</router-link>
           </h3>
         </div>
 
         <el-form-item class="username" prop="username">
-          <span class="prefix">
-            <svg-icon icon-class="user" />+86
-          </span>
+          <span class="prefix"> <svg-icon icon-class="user" />+86 </span>
           <el-input
             ref="username"
             v-model="loginForm.username"
@@ -42,7 +40,9 @@
               type="text"
             />
           </el-form-item>
-          <el-button plain type="info" @click="handleCode">{{ count > 0 ? `${count}后再试` :'获取验证码' }}</el-button>
+          <el-button plain type="info" @click="handleCode">{{
+            count > 0 ? `${count}后再试` : "获取验证码"
+          }}</el-button>
         </div>
 
         <el-form-item class="password" prop="password">
@@ -59,160 +59,167 @@
             @keyup.enter.native="handleLogin"
           />
           <span @click="showPwd">
-            <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
+            <svg-icon
+              :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'"
+            />
           </span>
         </el-form-item>
 
         <el-button
           type="primary"
           :loading="loading"
-          style="width:100%;margin-bottom:30px;"
+          style="width: 100%; margin-bottom: 30px"
           @click.native.prevent="handleLogin"
-        >登录</el-button>
+          >登录</el-button
+        >
       </el-form>
     </login-frame>
   </div>
 </template>
 
 <script>
-import LoginFrame from './components/frame'
-import { validPhone, validCode } from '@/utils/validate'
-import { reset, getCode } from '@/api/user'
+import LoginFrame from "./components/frame";
+import { validPhone, validCode } from "@/utils/validate";
+import { reset, getCode } from "@/api/user";
 
 export default {
-  name: 'Login',
+  name: "Login",
   components: { LoginFrame },
   data() {
     const validateUsername = (rule, value, callback) => {
       if (!validPhone(value)) {
-        callback(new Error('错误的手机号码'))
+        callback(new Error("错误的手机号码"));
       } else {
-        callback()
+        callback();
       }
-    }
+    };
     const validatePassword = (rule, value, callback) => {
       if (value.length < 6) {
-        callback(new Error('密码不能少于6位'))
-      }else if (value.length > 21){
-        callback(new Error('密码不能大于21位'))
+        callback(new Error("密码不能少于6位"));
+      } else if (value.length > 21) {
+        callback(new Error("密码不能大于21位"));
       } else {
-        callback()
+        callback();
       }
-    }
+    };
     const validateCode = (rule, value, callback) => {
       if (!validCode(value)) {
-        callback(new Error('验证码为6位数字'))
+        callback(new Error("验证码为6位数字"));
       } else {
-        callback()
+        callback();
       }
-    }
+    };
     return {
       loginForm: {
-        username: '',
-        code: '',
-        password: ''
+        username: "",
+        code: "",
+        password: "",
       },
       loginRules: {
         username: [
-          { required: true, trigger: 'blur', validator: validateUsername }
+          { required: true, trigger: "blur", validator: validateUsername },
         ],
-        code: [{ required: true, trigger: 'blur', validator: validateCode }],
+        code: [{ required: true, trigger: "blur", validator: validateCode }],
         password: [
-          { required: true, trigger: 'blur', validator: validatePassword }
-        ]
+          { required: true, trigger: "blur", validator: validatePassword },
+        ],
       },
       checked: true,
-      passwordType: 'password',
+      passwordType: "password",
       loading: false,
       count: 0,
       showDialog: false,
       redirect: undefined,
-      otherQuery: {}
-    }
+      otherQuery: {},
+    };
   },
   watch: {
     $route: {
-      handler: function(route) {
-        const query = route.query
+      handler: function (route) {
+        const query = route.query;
         if (query) {
-          this.redirect = query.redirect
-          this.otherQuery = this.getOtherQuery(query)
+          this.redirect = query.redirect;
+          this.otherQuery = this.getOtherQuery(query);
         }
       },
-      immediate: true
-    }
+      immediate: true,
+    },
   },
   destroyed() {
-    clearTimeout(this.timer)
+    clearTimeout(this.timer);
   },
   mounted() {
-    if (this.loginForm.username === '') {
-      this.$refs.username.focus()
-    } else if (this.loginForm.password === '') {
-      this.$refs.password.focus()
+    if (this.loginForm.username === "") {
+      this.$refs.username.focus();
+    } else if (this.loginForm.password === "") {
+      this.$refs.password.focus();
     }
   },
   methods: {
     showPwd() {
-      if (this.passwordType === 'password') {
-        this.passwordType = ''
+      if (this.passwordType === "password") {
+        this.passwordType = "";
       } else {
-        this.passwordType = 'password'
+        this.passwordType = "password";
       }
       this.$nextTick(() => {
-        this.$refs.password.focus()
-      })
+        this.$refs.password.focus();
+      });
     },
     handleTimer() {
       this.timer = setTimeout(() => {
-        this.count -= 1
+        this.count -= 1;
         if (this.count > 0) {
-          this.handleTimer()
+          this.handleTimer();
         }
-      }, 1000)
+      }, 1000);
     },
     handleCode() {
-      if (this.count > 0) return
-      if (!validPhone(this.loginForm.username)) return
-      this.count = 59
-      this.handleTimer()
+      if (this.count > 0) return;
+      if (!validPhone(this.loginForm.username)) return;
+      this.count = 59;
+      this.handleTimer();
 
-      getCode(this.loginForm.username, 101)
-      // .catch((e) => {
-      //   this.$notify({ message: "发送失败，请稍后再试" });
-      // });
+      getCode(this.loginForm.username, 101).catch((e) => {
+        clearTimeout(this.timer);
+        this.count = 0;
+      });
     },
     handleLogin() {
       this.$refs.loginForm.validate((valid) => {
         if (valid) {
-          this.loading = true
+          this.loading = true;
           reset({
             telephone: this.loginForm.username,
             password: this.loginForm.password,
-            code: this.loginForm.code
-          }).then((res) => {
-            this.$notify({ message: '重置成功，请重新登陆' })
-            this.$router.push({
-              path: '/login'
-            })
-            this.loading = false
+            code: this.loginForm.code,
           })
+            .then((res) => {
+              this.$notify({ message: "重置成功，请重新登陆" });
+              this.$router.push({
+                path: "/login",
+              });
+              this.loading = false;
+            })
+            .catch((e) => {
+              this.loading = false;
+            });
         } else {
-          console.log('error submit!!')
-          return false
+          console.log("error submit!!");
+          return false;
         }
-      })
+      });
     },
     getOtherQuery(query) {
       return Object.keys(query).reduce((acc, cur) => {
-        if (cur !== 'redirect') {
-          acc[cur] = query[cur]
+        if (cur !== "redirect") {
+          acc[cur] = query[cur];
         }
-        return acc
-      }, {})
-    }
-  }
-}
+        return acc;
+      }, {});
+    },
+  },
+};
 </script>
 
 <style lang="scss">

@@ -808,23 +808,24 @@ export default {
           }),
         }
       );
-      const id = this.$route.query && this.$route.query.id;
+      const { id, copy } = this.$route.query || {};
 
       this.$refs.postForm.validate((valid) => {
         if (valid) {
           this.loading = true;
-          var t = !id ? createData(obj) : updateData(obj);
+          var t = copy || !id ? createData(obj) : updateData(obj);
           if (submit) {
             t = t.then((r) => submitData(id || r.data));
           }
           t.then((r) => {
             this.$notify({
               title: "成功",
-              message: "发布文章成功",
+              message: "发布活动成功",
               type: "success",
               duration: 2000,
             });
             this.loading = false;
+            this.$router.push({ path: "/activity/index" });
           }).catch((e) => {
             this.loading = false;
           });

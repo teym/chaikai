@@ -211,10 +211,10 @@ export default {
       this.count = 59;
       this.handleTimer();
 
-      getCode(this.loginForm.username, 101);
-      // .catch((e) => {
-      //   this.$notify({ message: "发送失败，请稍后再试" });
-      // });
+      getCode(this.loginForm.username, 101).catch((e) => {
+        clearTimeout(this.timer);
+        this.count = 0;
+      });
     },
     handleLogin() {
       if (!this.checked) {

@@ -2,14 +2,14 @@
   <div class="create-container">
     <div v-if="tip" class="tip">
       <div>
-        <img src="@/assets/images/user_done.png" alt="done">
+        <img src="@/assets/images/user_done.png" alt="done" />
         <h1>已提交和审核</h1>
         <p>
           审核通过后，将通过短信进行通知
-          <br>为加快小二审核效率，
-          <router-link
-            :to="{ path: '/user/auth' }"
-          >请完成最后一步品牌授权</router-link>，即可招募博主
+          <br />为加快小二审核效率，
+          <router-link :to="{ path: '/user/auth' }"
+            >请完成最后一步品牌授权</router-link
+          >，即可招募博主
         </p>
         <el-button size="mini">新增品牌授权</el-button>
       </div>
@@ -57,64 +57,62 @@
         >
           <Upload v-model="postForm.qualification" />
         </el-form-item>
-        <el-button
-          :loading="loading"
-          type="primary"
-          @click="submitForm"
-        >提交审核</el-button>
+        <el-button :loading="loading" type="primary" @click="submitForm"
+          >提交审核</el-button
+        >
       </div>
     </el-form>
   </div>
 </template>
 
 <script>
-import Upload from '@/components/Upload/SingleImage3'
-import { validURL } from '@/utils/validate'
-import { fetchPv, createPv, submitPv } from '@/api/goods'
+import Upload from "@/components/Upload/SingleImage3";
+import { validURL } from "@/utils/validate";
+import { getPv, createPv, updatePv, submitPv } from "@/api/goods";
 
 const defaultForm = {
-  name: '',
-  logo: '',
-  story: '',
-  trademarkRegistration: '',
-  qualification: '',
-  relationType: '1'
-}
+  name: "",
+  logo: "",
+  story: "",
+  trademarkRegistration: "",
+  qualification: "",
+  relationType: "1",
+};
 
 export default {
-  name: 'ArticleDetail',
+  name: "ArticleDetail",
   components: {
-    Upload
+    Upload,
   },
   props: {
     isEdit: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   data() {
     const validateRequire = (rule, value, callback) => {
-      if (value === '') {
+      if (value === "") {
         this.$message({
-          message: rule.field + '为必传项',
-          type: 'error'
-        })
-        callback(new Error(rule.field + '为必传项'))
+          message: rule.field + "为必传项",
+          type: "error",
+        });
+        callback(new Error(rule.field + "为必传项"));
       } else {
-        callback()
+        callback();
       }
-    }
+    };
     const validateSourceUri = (rule, value, callback) => {
       if (validURL(value)) {
-        callback()
+        callback();
       } else {
         this.$message({
-          message: '外链url填写不正确',
-          type: 'error'
-        })
-        callback(new Error('外链url填写不正确'))
+          message: "外链url填写不正确",
+          type: "error",
+        });
+        callback(new Error("外链url填写不正确"));
       }
-    }
+    };
     return {
       postForm: Object.assign({}, defaultForm),
       loading: false,
@@ -125,59 +123,60 @@ export default {
         relationType: [{ validator: validateRequire }],
         logo: [{ validator: validateSourceUri }],
         trademarkRegistration: [{ validator: validateSourceUri }],
-        qualification: [{ validator: validateSourceUri }]
-      }
-    }
+        qualification: [{ validator: validateSourceUri }],
+      },
+    };
   },
   created() {
-    const id = this.$route.query && this.$route.query.id
+    const id = this.$route.query && this.$route.query.id;
     if (id) {
-      this.fetchData(id)
+      this.fetchData(id);
     }
-    this.tempRoute = Object.assign({}, this.$route)
+    this.tempRoute = Object.assign({}, this.$route);
   },
   methods: {
     fetchData(id) {
-      fetchPv({ id, page: 1, size: 1 })
+      getPv(id)
         .then((response) => {
-          this.postForm = response.data.data[0]
+          this.postForm = response.data;
         })
         .catch((err) => {
-          console.log(err)
-        })
+          console.log(err);
+        });
     },
     submitForm() {
       this.$refs.postForm.validate((valid) => {
         if (valid) {
-          this.loading = true
-          const id = this.$route.params && this.$route.params.id
+          this.loading = true;
+          const id = this.$route.params && this.$route.params.id;
 
           if (!id) {
             createPv(Object.assign({}, this.postForm))
               .then((r) => {
-                this.loading = false
-                this.tip = true
+                this.loading = false;
+                this.tip = true;
               })
               .catch((e) => {
-                this.loading = false
-              })
+                this.loading = false;
+              });
           } else {
+            updatePv(Object.assign({}, this.postForm));
             submitPv(Object.assign({}, this.postForm))
               .then((r) => {
-                this.loading = false
-                this.tip = true
+                this.loading = false;
+                this.tip = true;
               })
               .catch((e) => {
-                this.loading = false
-              })
+                this.loading = false;
+              });
           }
         } else {
-          return false
+          return false;
         }
-      })
-    }
-  }
-}
+      });
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>
