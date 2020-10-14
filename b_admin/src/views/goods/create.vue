@@ -58,11 +58,17 @@
         </el-form-item>
         <el-form-item
           prop="picUrl"
-          style="margin-bottom: 30px; max-width: 720px"
+          style="margin-bottom: 30px; max-width: 1024px"
           label-width="90px"
           label="商品头图:"
         >
-          <Upload v-model="postForm.picUrl" />
+          <Upload
+            :url="conf.url"
+            :headers="conf.headers"
+            :count="7"
+            :limit="conf.limit"
+            v-model="postForm.picUrl"
+          />
         </el-form-item>
         <el-form-item
           prop="skuGroups"
@@ -139,7 +145,7 @@
 
 <script>
 import Tinymce from "@/components/Tinymce";
-import Upload from "@/components/Upload/SingleImage3";
+import Upload from "@/components/Upload/SingleImage2";
 import { validURL } from "@/utils/validate";
 import {
   fetchData,
@@ -149,6 +155,7 @@ import {
   updateData,
   fetchPv,
 } from "@/api/goods";
+import { getConf } from "@/api/oss";
 
 const defaultForm = {
   brand: { id: 0 },
@@ -156,7 +163,7 @@ const defaultForm = {
   price: "",
   title: "",
   itemId: 0,
-  picUrl: "",
+  picUrl: [],
   detail: "",
   skuGroups: [],
 };
@@ -196,8 +203,19 @@ export default {
         callback();
       }
     };
+    // const validateSourceUri = (rule, value, callback) => {
+    //   if (validURL(value || "")) {
+    //     callback();
+    //   } else {
+    //     this.$message({
+    //       message: "外链url填写不正确",
+    //       type: "error",
+    //     });
+    //     callback(new Error("外链url填写不正确"));
+    //   }
+    // };
     const validateSourceUri = (rule, value, callback) => {
-      if (validURL(value || "")) {
+      if (!value || validURL(value || "")) {
         callback();
       } else {
         this.$message({
@@ -207,6 +225,7 @@ export default {
         callback(new Error("外链url填写不正确"));
       }
     };
+    const upload = getConf();
     return {
       postForm: Object.assign({}, defaultForm),
       loading: false,
@@ -218,7 +237,21 @@ export default {
         title: [{ validator: validateRequire, trigger: "blur" }],
         content: [{ validator: validateRequire }],
         skuGroups: [{ validator: validateRequire }],
-        picUrl: [{ validator: validateSourceUri }],
+        // picUrl: [{ validator: validateSourceUri }],
+      },
+      conf: {
+        url: upload.url,
+        headers: upload.headers,
+        limit: {
+          type: {
+            list: ["image/png", "image/jpg", "image/jpeg"],
+            tip: "请上传png/jpg格式的图片",
+          },
+          size: {
+            size: 3 * 1024 * 1024,
+            tip: "请上传小于3M的图片",
+          },
+        },
       },
     };
   },
