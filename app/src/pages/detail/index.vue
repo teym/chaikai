@@ -249,7 +249,7 @@ export default {
           data.goods.brandInfo = {}
         }
         this.data = data
-        this.banners = [data.picUrl]
+        this.banners = data.goods.banners || [data.picUrl]
         this.channels = mapChannel(data.extension.channels)
         this.topics = _.filter(this.channels, i => i.topic)
         this.keywords = data.extension.keywords ? data.extension.keywords.split(' ') : []

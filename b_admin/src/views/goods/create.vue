@@ -67,7 +67,7 @@
             :headers="conf.headers"
             :count="7"
             :limit="conf.limit"
-            v-model="postForm.picUrl"
+            v-model="postForm.banners"
           />
         </el-form-item>
         <el-form-item
@@ -163,7 +163,8 @@ const defaultForm = {
   price: "",
   title: "",
   itemId: 0,
-  picUrl: [],
+  picUrl: "",
+  banners: [],
   detail: "",
   skuGroups: [],
 };
@@ -295,11 +296,11 @@ export default {
             .join("");
           const d = {
             title: data.title || this.postForm.title,
-            picUrl: data.images[0] || this.postForm.picUrl,
+            banners: data.images || this.postForm.banners,
             detail:
               data.descImgs && data.descImgs.length > 0
                 ? "<p>" + imgs + "</p>"
-                : this.postForm.picUrl,
+                : this.postForm.detail,
             itemId: data.itemId || 0,
           };
           this.postForm = Object.assign({}, this.postForm, d);
@@ -350,6 +351,7 @@ export default {
         if (valid) {
           this.loading = true;
           const id = this.$route.query && this.$route.query.id;
+          this.postForm.picUrl = this.postForm.banners[0] || "";
           if (!id) {
             createData(Object.assign({}, this.postForm))
               .then((r) => {

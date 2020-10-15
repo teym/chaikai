@@ -39,7 +39,13 @@
           style="margin-bottom: 30px"
           label="营业执照:"
         >
-          <Upload v-model="postForm.businessLicense" />
+          <Upload
+            :url="conf.url"
+            :headers="conf.headers"
+            :count="7"
+            :limit="conf.limit"
+            v-model="postForm.businessLicense"
+          />
         </el-form-item>
         <el-form-item label="联系人:" prop="contact">
           <el-input v-model="postForm.contact" placeholder="请输入联系人" />
@@ -62,6 +68,7 @@
 import Upload from "@/components/Upload/SingleImage3";
 import { validURL } from "@/utils/validate";
 import { fetchStat, auth } from "@/api/user";
+import { getConf } from "@/api/oss";
 // import { searchUser } from '@/api/remote-search'
 
 const defaultForm = {
@@ -106,6 +113,7 @@ export default {
         callback(new Error("外链url填写不正确"));
       }
     };
+    const upload = getConf();
     return {
       postForm: Object.assign({}, defaultForm),
       loading: false,
@@ -119,6 +127,20 @@ export default {
         businessLicense: [{ validator: validateSourceUri }],
       },
       tempRoute: {},
+      conf: {
+        url: upload.url,
+        headers: upload.headers,
+        limit: {
+          type: {
+            list: ["image/png", "image/jpg", "image/jpeg"],
+            tip: "请上传png/jpg格式的图片",
+          },
+          size: {
+            size: 3 * 1024 * 1024,
+            tip: "请上传小于3M的图片",
+          },
+        },
+      },
     };
   },
   mounted() {

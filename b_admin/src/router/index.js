@@ -150,6 +150,7 @@ export const asyncRoutes = [
         path: 'qorder',
         component: () => import('@/views/activity/qorders'),
         name: 'activity-qorder',
+        hidden: true,
         meta: { title: '候选订单', icon: 'table' }
       }
     ]

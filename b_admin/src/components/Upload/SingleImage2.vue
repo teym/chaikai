@@ -55,7 +55,7 @@ export default {
     },
     limit: {
       type: Object,
-      default: {},
+      default: ()=>({}),
     },
   },
   data() {

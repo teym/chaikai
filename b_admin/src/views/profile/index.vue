@@ -34,7 +34,7 @@
         <el-table-column label="状态" align="left">
           <template slot-scope="{ row }">
             <span>{{
-              ["UNKNOW", "未认证", "审核中", "已认证", "已拒绝"][row.statusCode]
+              ["", "未认证", "审核中", "已认证", "已拒绝"][row.statusCode]
             }}</span>
             <span v-if="row.statusCode === 4" class="reason">
               <br />

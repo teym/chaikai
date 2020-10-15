@@ -5,7 +5,7 @@
       <el-input
         v-model="listQuery.key"
         placeholder="请输入商品名称"
-        style="margin-left:12px;width: 200px"
+        style="margin-left: 12px; width: 200px"
         size="mini"
         class="filter-item"
         clearable
@@ -66,6 +66,7 @@
         </template>
       </el-table-column>
       <div slot="empty" class="empty">
+        <img src="@/assets/images/goods_empty.png" alt="empty" />
         <p>暂无商品</p>
       </div>
     </el-table>
@@ -203,6 +204,13 @@ export default {
     vertical-align: middle;
     margin: 0;
     padding: 0;
+  }
+  .empty{
+    padding: 48px 0;
+    p{
+      margin: 0;
+      color: #999;
+    }
   }
 }
 </style>

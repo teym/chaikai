@@ -27,7 +27,13 @@
           <el-input v-model="postForm.name" placeholder="请输入品牌名称" />
         </el-form-item>
         <el-form-item prop="logo" style="margin-bottom: 30px" label="品牌LOGO:">
-          <Upload v-model="postForm.logo" />
+          <Upload
+            :url="conf.url"
+            :headers="conf.headers"
+            :count="7"
+            :limit="conf.limit"
+            v-model="postForm.logo"
+          />
         </el-form-item>
         <el-form-item label="品牌故事:" prop="story">
           <el-input
@@ -41,10 +47,19 @@
           style="margin-bottom: 30px"
           label="商标注册书:"
         >
-          <Upload v-model="postForm.trademarkRegistration" />
+          <Upload
+            :url="conf.url"
+            :headers="conf.headers"
+            :count="7"
+            :limit="conf.limit"
+            v-model="postForm.trademarkRegistration"
+          />
         </el-form-item>
         <el-form-item label="品牌关系:" prop="relationType">
-          <el-radio-group v-model="postForm.relationType">
+          <el-radio-group
+            v-model="postForm.relationType"
+            :disabled="postForm.statusCode === 3 || postForm.statusCode === 2"
+          >
             <el-radio :label="'1'">品牌方</el-radio>
             <el-radio :label="'2'">代理商</el-radio>
           </el-radio-group>
@@ -55,10 +70,24 @@
           style="margin-bottom: 30px"
           label="品牌授权资质:"
         >
-          <Upload v-model="postForm.qualification" />
+          <Upload
+            :url="conf.url"
+            :headers="conf.headers"
+            :count="7"
+            :limit="conf.limit"
+            v-model="postForm.qualification"
+          />
         </el-form-item>
-        <el-button :loading="loading" type="primary" @click="submitForm"
-          >提交审核</el-button
+        <el-button
+          :loading="loading"
+          type="primary"
+          :disabled="postForm.statusCode === 3 || postForm.statusCode === 2"
+          @click="submitForm"
+          >{{
+            ["", "提交审核", "审核中", "已认证", "提交审核"][
+              postForm.statusCode || 1
+            ]
+          }}</el-button
         >
       </div>
     </el-form>
@@ -69,6 +98,7 @@
 import Upload from "@/components/Upload/SingleImage3";
 import { validURL } from "@/utils/validate";
 import { getPv, createPv, updatePv, submitPv } from "@/api/goods";
+import { getConf } from "@/api/oss";
 
 const defaultForm = {
   name: "",
@@ -113,6 +143,7 @@ export default {
         callback(new Error("外链url填写不正确"));
       }
     };
+    const upload = getConf();
     return {
       postForm: Object.assign({}, defaultForm),
       loading: false,
@@ -124,6 +155,20 @@ export default {
         logo: [{ validator: validateSourceUri }],
         trademarkRegistration: [{ validator: validateSourceUri }],
         qualification: [{ validator: validateSourceUri }],
+      },
+      conf: {
+        url: upload.url,
+        headers: upload.headers,
+        limit: {
+          type: {
+            list: ["image/png", "image/jpg", "image/jpeg"],
+            tip: "请上传png/jpg格式的图片",
+          },
+          size: {
+            size: 3 * 1024 * 1024,
+            tip: "请上传小于3M的图片",
+          },
+        },
       },
     };
   },
