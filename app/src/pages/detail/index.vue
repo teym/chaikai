@@ -245,6 +245,9 @@ export default {
         console.log(e)
       })
       request.get('/bl/activity/' + id).then(({json: {data}}) => {
+        if (!data.goods.brandInfo) {
+          data.goods.brandInfo = {}
+        }
         this.data = data
         this.banners = [data.picUrl]
         this.channels = mapChannel(data.extension.channels)

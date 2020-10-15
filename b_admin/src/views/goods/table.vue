@@ -65,8 +65,8 @@
           >
         </template>
       </el-table-column>
-      <div slot="empty">
-        
+      <div slot="empty" class="empty">
+        <p>暂无商品</p>
       </div>
     </el-table>
 

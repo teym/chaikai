@@ -246,13 +246,14 @@ export default {
   methods: {
     loadData () {
       const {id, select} = router(this).params()
+      console.log('check', id, select)
       request.get('/bl/activity/' + id).then(({json: {data}}) => {
         this.data = data
         // this.channels = mapChannel(data.extension.channels)
         this.topics = _.filter(this.channels, i => i.topic)
         this.keywords = data.extension.keywords ? data.extension.keywords.split(' ') : []
         this.otherReq = data.extension.otherReq ? data.extension.otherReq.split('+').map(i => ({'1': '产品和达人同框露脸', '2': '使用前后效果对比', '3': '提供评测原图使用权'}[i])) : []
-        this.sku = data.goods.skuUnionList.find(i => i.skuIdUnion === select)
+        this.sku = data.goods.skuUnionList.find(i => i.skuIdUnion === select) || {}
         this.type = data.cooperationType === 3 ? 3 : 1
       }).catch(e => {
         uiapi.toast(e.info)
