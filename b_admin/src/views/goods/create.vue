@@ -97,6 +97,8 @@
                   class="inline-input"
                   :fetch-suggestions="handleSkuSuggestions"
                   placeholder="请输入内容"
+                  maxlength="10"
+                  show-word-limit
                 >
                   <div slot="suffix" class="input_remove">
                     <div class="box" @click="handleRemoveSku(i)">
@@ -108,7 +110,7 @@
               <el-col :span="16" class="value">
                 <el-row :gutter="8">
                   <el-col v-for="(s, j) in sku.skuList" :key="j" :span="8">
-                    <el-input v-model="s.name">
+                    <el-input v-model="s.name" maxlength="10" show-word-limit>
                       <div slot="suffix" class="input_remove">
                         <div class="box" @click="handleRemoveSkuValue(sku, j)">
                           <el-icon class="el-icon-circle-close" />
@@ -188,12 +190,12 @@ export default {
   },
   data() {
     const validateRequire = (rule, value, callback) => {
-      if (value === "") {
+      if (!value || value.length === 0) {
         this.$message({
-          message: rule.field + "为必传项",
+          message: rule.name + "为必传项",
           type: "error",
         });
-        callback(new Error(rule.field + "为必传项"));
+        callback(new Error(rule.name + "为必传项"));
       } else {
         callback();
       }
@@ -240,9 +242,12 @@ export default {
         brand: [{ validator: validateRequire }],
         importUrl: [{ validator: validateSourceUri, trigger: "blur" }],
         price: [{ validator: validateNumber, trigger: "blur" }],
-        title: [{ validator: validateRequire, trigger: "blur" }],
+        title: [
+          { validator: validateRequire, trigger: "blur", name: "商品标题" },
+        ],
         content: [{ validator: validateRequire }],
         skuGroups: [{ validator: validateRequire }],
+        banners: [{ validator: validateRequire, name: "商品图片" }],
         // picUrl: [{ validator: validateSourceUri }],
       },
       conf: {
