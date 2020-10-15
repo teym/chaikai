@@ -177,7 +177,7 @@
         width="120"
       >
         <template slot-scope="{ row }">
-          <span>{{ ["", "接受悬赏", "博主报价"][row.activity.cooperationType] }}¥{{
+          <span>{{ ["", "接受悬赏", "达人报价"][row.activity.cooperationType] }}¥{{
             row.reward
           }}</span>
         </template>
@@ -377,7 +377,7 @@
         <h6>请选择您要投诉的测评（只支持正式测评）</h6>
         <p class="light">
           以下为官方接受的所有测评问题 |
-          不合理的问题博主有权选择忽视，两天后官方会介入审核您的投诉
+          不合理的问题达人有权选择忽视，两天后官方会介入审核您的投诉
         </p>
         <el-row>
           <el-col :span="8">

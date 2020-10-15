@@ -89,7 +89,7 @@
         width="120"
       >
         <template slot-scope="{row}">
-          <span>{{ ['','接受悬赏',"博主报价"][row.activity.cooperationType] }}¥{{ row.reward }}</span>
+          <span>{{ ['','接受悬赏',"达人报价"][row.activity.cooperationType] }}¥{{ row.reward }}</span>
         </template>
       </el-table-column>
       <el-table-column

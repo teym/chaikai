@@ -58,7 +58,7 @@
       <h5 class="middle dark blod">申请信息</h5>
       <div class="row margin-t">
         <p class="small light">合作方式：</p>
-        <p class="small light flex">{{['', '接受悬赏','博主报价','免费置换'][data.coopSubType]}}</p>
+        <p class="small light flex">{{['', '接受悬赏','达人报价','免费置换'][data.coopSubType]}}</p>
       </div>
       <div class="row margin-t">
         <p class="small light">合作渠道：</p>

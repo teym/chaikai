@@ -98,7 +98,7 @@
     <div v-if="active === 2" class="content task">
       <div class="row">
         <h5>合作方式：</h5>
-        <p>{{ ["", "接受悬赏", "博主报价", "免费置换"][data.coopSubType] }}</p>
+        <p>{{ ["", "接受悬赏", "达人报价", "免费置换"][data.coopSubType] }}</p>
       </div>
       <div class="row">
         <h5>悬赏金额：</h5>

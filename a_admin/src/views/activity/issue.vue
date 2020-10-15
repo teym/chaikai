@@ -193,7 +193,7 @@ export default {
         '已取消',
         '已违规'
       ],
-      coopTypes: ['全部', '接受悬赏', '接受悬赏/博主报价', '免费置换'],
+      coopTypes: ['全部', '接受悬赏', '接受悬赏/达人报价', '免费置换'],
       depositStatus: ['全部', '未缴押金', '已冻结', '已解冻', '已扣除'],
       rewardStatus: ['全部', '待发放', '已发放', '已取消'],
       depositVisable: false,

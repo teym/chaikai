@@ -131,12 +131,13 @@ export const asyncRoutes = [
         path: 'index',
         component: () => import('@/views/activity/table'),
         name: 'activity-table',
-        meta: { title: '活动列表', icon: 'table' }
+        meta: { title: '活动管理', icon: 'table' }
       },
       {
         path: 'create',
         component: () => import('@/views/activity/create'),
         name: 'activity-create',
+        hidden: true,
         meta: { title: '发布活动', icon: 'table' }
       },
       {

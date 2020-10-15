@@ -9,7 +9,7 @@
           <br />为加快小二审核效率，
           <router-link :to="{ path: '/user/auth' }"
             >请完成最后一步品牌授权</router-link
-          >，即可招募博主
+          >，即可招募达人
         </p>
         <el-button size="mini" @click="$router.push('/user/auth')"
           >新增品牌授权</el-button
@@ -44,6 +44,7 @@
             :headers="conf.headers"
             :count="7"
             :limit="conf.limit"
+            tip="请上传小于5M的图片，支持图片格式：jpg,jpeg,png"
             v-model="postForm.businessLicense"
           />
         </el-form-item>
@@ -94,10 +95,10 @@ export default {
     const validateRequire = (rule, value, callback) => {
       if (value === "") {
         this.$message({
-          message: rule.field + "为必传项",
+          message: rule.name + "为必传项",
           type: "error",
         });
-        callback(new Error(rule.field + "为必传项"));
+        callback(new Error(rule.name + "为必传项"));
       } else {
         callback();
       }
@@ -120,10 +121,10 @@ export default {
       tip: false,
       stat: {},
       rules: {
-        name: [{ validator: validateRequire }],
-        contact: [{ validator: validateRequire }],
-        contactWechat: [{ validator: validateRequire }],
-        creditCode: [{ validator: validateRequire }],
+        name: [{ validator: validateRequire, name: "公司名称" }],
+        contact: [{ validator: validateRequire, name: "联系人" }],
+        contactWechat: [{ validator: validateRequire, name: "微信号" }],
+        creditCode: [{ validator: validateRequire, name: "统一社会信用代码" }],
         businessLicense: [{ validator: validateSourceUri }],
       },
       tempRoute: {},

@@ -48,7 +48,7 @@
             v-if="data.cooperationType === 2"
             :class="{red: type === 2, red_bg: type === 2, light: type !== 2, light_bg: type !== 2}"
             class="small row center pad-l pad-r round-btn margin-l"
-          >博主报价</li>
+          >达人报价</li>
         </ul>
       </div>
 

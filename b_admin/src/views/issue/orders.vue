@@ -27,7 +27,7 @@
       highlight-current-row
       style="width: 100%;"
     >
-      <el-table-column label="博主" min-width="150px">
+      <el-table-column label="达人" min-width="150px">
         <template slot-scope="{row}">
           <span>{{ row.title }}</span>
         </template>

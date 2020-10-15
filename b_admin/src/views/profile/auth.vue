@@ -9,7 +9,7 @@
           <br />为加快小二审核效率，
           <router-link :to="{ path: '/user/auth' }"
             >请完成最后一步品牌授权</router-link
-          >，即可招募博主
+          >，即可招募达人
         </p>
         <el-button size="mini">新增品牌授权</el-button>
       </div>
@@ -39,7 +39,7 @@
           <el-input
             v-model="postForm.story"
             type="textarea"
-            placeholder="请输入您的品牌故事，帮助博主和粉丝更好了解贵品牌"
+            placeholder="请输入您的品牌故事，帮助达人和粉丝更好了解贵品牌"
           />
         </el-form-item>
         <el-form-item
@@ -133,6 +133,7 @@ export default {
       }
     };
     const validateSourceUri = (rule, value, callback) => {
+      console.log("check", value);
       if (validURL(value)) {
         callback();
       } else {

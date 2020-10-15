@@ -17,7 +17,7 @@
     <div class="flex white_bg round pad2-l pad2-r">
       <h5 class="middle blod dark margin2-t">如何获得悬赏</h5>
       <div class="list">
-        <p class="small light margin-t">报名参加活动，合作模式选择【接受悬赏】【达人报价】，博主完成合作任务后，可获得一定的悬赏</p>
+        <p class="small light margin-t">报名参加活动，合作模式选择【接受悬赏】【达人报价】，达人完成合作任务后，可获得一定的悬赏</p>
       </div>
       <h5 class="middle blod dark margin2-t">规则说明</h5>
       <div class="list">

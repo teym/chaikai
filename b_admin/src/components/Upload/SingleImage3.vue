@@ -12,7 +12,7 @@
       :class="{ full: full }"
     >
       <i class="el-icon-plus"></i>
-      <p slot="tip">请上传大于700 * 700像素，小于3M的图片</p>
+      <p v-if="tip" class="tip" slot="tip">{{tip}}</p>
     </el-upload>
     <el-dialog :visible.sync="previewVisible" width="60%">
       <img width="100%" :src="previewUrl" alt="preview" />
@@ -49,9 +49,13 @@ export default {
       type: String,
       default: "",
     },
+    tip: {
+      type: String,
+      default: "",
+    },
     limit: {
       type: Object,
-      default: ()=>({}),
+      default: () => ({}),
     },
   },
   data() {
@@ -92,11 +96,10 @@ export default {
       this.emitInput();
     },
     emitInput() {
-      console.log(
-        "change",
-        this.list.map((i) => (i.response ? i.response.data : i.url))
-      );
-      this.$emit("input", (this.list[0] || {}).url || "");
+      const i = this.list[0] || {};
+      const url = (i.response ? i.response.data : i.url) || "";
+      console.log("change", url);
+      this.$emit("input", url);
       this.full = this.list.length >= this.count;
     },
     beforeUpload(file, i) {
@@ -119,5 +122,8 @@ export default {
 <style lang="scss">
 .full .el-upload {
   display: none;
+}
+.tip{
+  margin: 0;
 }
 </style>

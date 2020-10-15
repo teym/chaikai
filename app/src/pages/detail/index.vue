@@ -102,7 +102,7 @@
           </div>
           <div class="row just line">
             <h5>合作方式</h5>
-            <div class="round-btn">{{['', '接受悬赏', '接受悬赏/博主报价', '免费置换'][data.cooperationType]}}</div>
+            <div class="round-btn">{{['', '接受悬赏', '接受悬赏/达人报价', '免费置换'][data.cooperationType]}}</div>
           </div>
           <div class="row just line">
             <h5>合作要求</h5>

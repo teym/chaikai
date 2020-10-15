@@ -299,7 +299,7 @@ export default {
         coopType: 0
       },
       status: ['全部', '待提交', '待排期', '已拒绝', '未开始', '报名中', '报名结束'],
-      coopTypes: ['全部', '接受悬赏', '接受悬赏/博主报价', '免费置换'],
+      coopTypes: ['全部', '接受悬赏', '接受悬赏/达人报价', '免费置换'],
       detailVisible: false,
       detail: null,
       previewVisible: false

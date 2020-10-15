@@ -52,7 +52,7 @@
           <el-input
             v-model="postForm.title"
             placeholder="请输入商品名称"
-            maxlength="10"
+            maxlength="30"
             show-word-limit
           />
         </el-form-item>
@@ -67,6 +67,7 @@
             :headers="conf.headers"
             :count="7"
             :limit="conf.limit"
+            tip="请上传大于700 * 700像素，小于3M的图片"
             v-model="postForm.banners"
           />
         </el-form-item>
@@ -96,20 +97,24 @@
                   class="inline-input"
                   :fetch-suggestions="handleSkuSuggestions"
                   placeholder="请输入内容"
-                />
-                <el-icon
-                  class="el-icon-circle-close"
-                  @click="handleRemoveSku(i)"
-                />
+                >
+                  <div slot="suffix" class="input_remove">
+                    <div class="box" @click="handleRemoveSku(i)">
+                      <el-icon class="el-icon-circle-close" />
+                    </div>
+                  </div>
+                </el-autocomplete>
               </el-col>
               <el-col :span="16" class="value">
                 <el-row :gutter="8">
                   <el-col v-for="(s, j) in sku.skuList" :key="j" :span="8">
-                    <el-input v-model="s.name" />
-                    <el-icon
-                      class="el-icon-circle-close"
-                      @click="handleRemoveSkuValue(sku, j)"
-                    />
+                    <el-input v-model="s.name">
+                      <div slot="suffix" class="input_remove">
+                        <div class="box" @click="handleRemoveSkuValue(sku, j)">
+                          <el-icon class="el-icon-circle-close" />
+                        </div>
+                      </div>
+                    </el-input>
                   </el-col>
                   <el-col :span="8">
                     <el-button type="text" @click="handleAddSkuValue(sku)"
@@ -249,8 +254,8 @@ export default {
             tip: "请上传png/jpg格式的图片",
           },
           size: {
-            size: 3 * 1024 * 1024,
-            tip: "请上传小于3M的图片",
+            size: 5 * 1024 * 1024,
+            tip: "请上传小于5M的图片",
           },
         },
       },
@@ -295,7 +300,7 @@ export default {
             .map((i) => `<img style="width:100%" src="${i}"/>`)
             .join("");
           const d = {
-            title: data.title || this.postForm.title,
+            title: (data.title || this.postForm.title).substring(0, 30),
             banners: data.images || this.postForm.banners,
             detail:
               data.descImgs && data.descImgs.length > 0
@@ -322,12 +327,14 @@ export default {
       });
     },
     handleRemoveSku(index) {
+      console.log("remove sku", index);
       this.postForm.skuGroups.splice(index, 1);
     },
     handleAddSkuValue(sku) {
       sku.skuList = sku.skuList.concat({ name: "" });
     },
     handleRemoveSkuValue(sku, index) {
+      console.log("remove sku value", sku, index);
       sku.skuList.splice(index, 1);
     },
     handleSkuSuggestions(queryString, cb) {
@@ -417,17 +424,22 @@ export default {
             .el-autocomplete {
               width: 100%;
             }
-            .el-icon-circle-close {
-              font-size: 16px;
-              position: absolute;
-              right: 0;
-              top: -6px;
-              display: none;
-            }
-          }
-          .el-col:hover {
-            .el-icon-circle-close {
-              display: block;
+            .input_remove {
+              position: relative;
+              width: 10px;
+              height: 100%;
+              .box {
+                position: absolute;
+                left: 5px;
+                top: -20px;
+                padding: 2px;
+                width: 20px;
+                height: 20px;
+                .el-icon-circle-close {
+                  font-size: 16px;
+                  line-height: 20px;
+                }
+              }
             }
           }
           .head {

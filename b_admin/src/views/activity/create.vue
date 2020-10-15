@@ -5,7 +5,7 @@
         <div class="form-container">
           <p>基本信息</p>
           <el-form-item
-            prop="brand"
+            prop="goods"
             style="margin-bottom: 30px"
             label-width="110px"
             label="活动商品:"
@@ -25,7 +25,7 @@
             </div>
           </el-form-item>
           <el-form-item
-            prop="brand"
+            prop="skus"
             style="margin-bottom: 30px"
             label-width="110px"
             label="商品规格:"
@@ -40,6 +40,7 @@
             </el-select>
           </el-form-item>
           <el-form-item
+            prop="title"
             style="margin-bottom: 30px"
             label-width="110px"
             label="活动名称:"
@@ -55,7 +56,19 @@
             label-width="110px"
             label="报名时间:"
           >
+            <span slot="label" for="bloggerPublishTime">
+              报名时间:
+              <el-popover
+                placement="bottom"
+                width="300"
+                trigger="click"
+                content="达人将于报名期间提交合作申请"
+              >
+                <el-icon slot="reference" class="el-icon-question" />
+              </el-popover>
+            </span>
             <el-date-picker
+              prop="regTime"
               v-model="postForm.regTime"
               type="daterange"
               range-separator="至"
@@ -65,12 +78,15 @@
             />
           </el-form-item>
           <el-form-item
+            prop="totalNum"
             style="margin-bottom: 30px"
             label-width="110px"
             label="活动名额:"
           >
             <el-input-number
               v-model="postForm.totalNum"
+              :min="1"
+              :max="99"
               placeholder="活动名额"
             />
           </el-form-item>
@@ -112,7 +128,7 @@
                 placement="bottom"
                 width="300"
                 trigger="click"
-                content="私密活动将不在小程序公开申请，需手动转发邀约博主参加"
+                content="私密活动将不在小程序公开申请，需手动转发邀约达人参加"
               >
                 <el-icon slot="reference" class="el-icon-question" />
               </el-popover>
@@ -135,7 +151,7 @@
                 placement="bottom"
                 width="300"
                 trigger="click"
-                content="若博主收货地址不符，无法申请活动"
+                content="若达人收货地址不符，无法申请活动"
               >
                 <el-icon slot="reference" class="el-icon-question" />
               </el-popover>
@@ -174,15 +190,20 @@
         <div class="form-container">
           <p>合作任务</p>
           <el-form-item
+            prop="channels"
             style="margin-bottom: 30px"
             label-width="110px"
             label="报名渠道:"
           >
             <el-checkbox-group v-model="postForm.channels" @change="onChannels">
               <el-checkbox :label="0">不限</el-checkbox>
-              <el-checkbox v-for="i in channelList" :key="i.id" :label="i.id">{{
-                i.name
-              }}</el-checkbox>
+              <el-checkbox
+                v-for="i in channelList"
+                :key="i.id"
+                :label="i.id"
+                :disabled="postForm.extension.contentType === 1 && i.id > 4"
+                >{{ i.name }}</el-checkbox
+              >
             </el-checkbox-group>
           </el-form-item>
           <el-form-item
@@ -192,11 +213,11 @@
           >
             <el-radio-group v-model="postForm.cooperationType">
               <el-radio-button :label="1">接受悬赏</el-radio-button>
-              <el-radio-button :label="2">接受悬赏/博主报价</el-radio-button>
+              <el-radio-button :label="2">接受悬赏/达人报价</el-radio-button>
               <el-radio-button :label="3">免费置换</el-radio-button>
             </el-radio-group>
             <div class="tip_desc">
-              --博主测评内容需满足
+              --达人测评内容需满足
               <a>《基础合作规范》</a>
               <br />--品牌方可提出：[图片数量]、[视频长度]等合作要求，每增加一项，悬赏金额保底价将相应提高
               <a>《合作要求价格表》</a>
@@ -223,9 +244,16 @@
             label-width="170px"
             label="内容形式:"
           >
-            <el-radio-group v-model="postForm.extension.contentType">
+            <el-radio-group
+              v-model="postForm.extension.contentType"
+              @change="handleContentType"
+            >
               <el-radio-button :label="0">无要求</el-radio-button>
-              <el-radio-button :label="1">图文</el-radio-button>
+              <el-radio-button
+                :label="1"
+                :disabled="postForm.channels.filter((i) => i > 4).length > 0"
+                >图文</el-radio-button
+              >
               <el-radio-button :label="2">视频</el-radio-button>
             </el-radio-group>
           </el-form-item>
@@ -299,7 +327,7 @@
                 placement="bottom"
                 width="300"
                 trigger="click"
-                content="博主可在正文或评论中添加优惠信息，小红书暂不支持携带优惠信息"
+                content="达人可在正文或评论中添加优惠信息，小红书暂不支持携带优惠信息"
               >
                 <el-icon slot="reference" class="el-icon-question" />
               </el-popover>
@@ -322,15 +350,35 @@
                 placement="bottom"
                 width="300"
                 trigger="click"
-                content="博主需在测评正文中添加关键词"
+                content="达人需在测评正文中添加关键词"
               >
                 <el-icon slot="reference" class="el-icon-question" />
               </el-popover>
             </span>
-            <el-input
+            <div>
+              <el-input
+                style="width: 30%; margin-right: 8px"
+                v-for="(k, i) in postForm.keywords"
+                :key="i"
+                v-model="k.txt"
+              >
+                <div slot="suffix" class="input_remove">
+                  <div class="box" @click="handleRemoveKeyword(i)">
+                    <el-icon class="el-icon-circle-close" />
+                  </div>
+                </div>
+              </el-input>
+              <el-button
+                v-if="postForm.keywords.length < 3"
+                @click="handleAddKeywords"
+              >
+                添加
+              </el-button>
+            </div>
+            <!-- <el-input
               v-model="postForm.extension.keywords"
-              placeholder="博主需在测评正文中添加关键词"
-            />
+              placeholder="达人需在测评正文中添加关键词"
+            /> -->
           </el-form-item>
           <el-form-item
             prop="bloggerPublishTime"
@@ -352,7 +400,7 @@
             <el-date-picker
               v-model="postForm.extension.bloggerPublishTime"
               type="date"
-              placeholder="指定博主发布测评时间"
+              placeholder="指定达人发布测评时间"
             />
           </el-form-item>
           <el-form-item
@@ -466,15 +514,18 @@
       <el-form label-width="60px">
         <el-form-item v-for="i in topics" :key="i.id" :label="i.platformName">
           <el-input
+            v-if="i.id !== 2"
             v-model="i.nickname"
             placeholder="@账号"
             style="width: 50%; padding-right: 8px"
           />
           <el-input
+            v-if="i.id !== 2"
             v-model="i.topic"
             placeholder="#话题"
             style="width: 50%; padding-left: 8px"
           />
+          <p style="margin: 0" v-else>暂不支持</p>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -505,15 +556,16 @@ const defaultForm = {
   title: "",
   totalNum: 5,
   guidelines: [{ txt: "" }],
-  displayType: 0,
+  displayType: false,
   recvAreaType: 1,
   cooperationType: 1,
-  channels: [0].concat(Channels.map((i) => i.id)),
+  channels: Channels.filter((i) => i.id <= 4).map((i) => i.id),
   topics: [],
+  keywords: [],
   extension: {
     channels: [],
-    articleType: 0,
-    contentType: 0,
+    articleType: 1,
+    contentType: 1,
     receiveAreaLimit: false,
     receiveAreas: [],
     minWordNum: 0,
@@ -539,17 +591,17 @@ export default {
     },
   },
   data() {
-    // const validateRequire = (rule, value, callback) => {
-    //   if (value === '') {
-    //     this.$message({
-    //       message: rule.field + '为必传项',
-    //       type: 'error'
-    //     })
-    //     callback(new Error(rule.field + '为必传项'))
-    //   } else {
-    //     callback()
-    //   }
-    // }
+    const validateRequire = (rule, value, callback) => {
+      if (!value) {
+        this.$message({
+          message: rule.name + "为必传项",
+          type: "error",
+        });
+        callback(new Error(rule.name + "为必传项"));
+      } else {
+        callback();
+      }
+    };
     // const validateSourceUri = (rule, value, callback) => {
     //   if (value) {
     //     if (validURL(value)) {
@@ -565,6 +617,28 @@ export default {
     //     callback()
     //   }
     // }
+    const validateNumberRequire = (rule, value, callback) => {
+      if (parseFloat(value) < 0) {
+        this.$message({
+          message: rule.name + "需大于0",
+          type: "error",
+        });
+        callback(new Error(rule.name + "需大于0"));
+      } else {
+        callback();
+      }
+    };
+    const validateArrayRequire = (rule, value, callback) => {
+      if (!((value || {}).length || 0) > 0) {
+        this.$message({
+          message: rule.name + "为必传项",
+          type: "error",
+        });
+        callback(new Error(rule.name + "为必传项"));
+      } else {
+        callback();
+      }
+    };
     const validateAmount = (rule, value, callback) => {
       const v = parseInt(value);
       if (v >= 0 && v >= this.minAmount) {
@@ -590,7 +664,23 @@ export default {
       loading: false,
       brandListOptions: [],
       rules: {
+        goods: [
+          { validator: validateRequire, trigger: "blur", name: "活动名称" },
+        ],
+        skus: [{ validator: validateArrayRequire, name: "商品规格" }],
+        title: [
+          { validator: validateRequire, trigger: "blur", name: "活动名称" },
+        ],
+        totalNum: [
+          {
+            validator: validateNumberRequire,
+            trigger: "blur",
+            name: "活动名额",
+          },
+        ],
         reward: [{ validator: validateAmount, trigger: "blur" }],
+        regTime: [{ validator: validateArrayRequire, name: "报名时间" }],
+        channels: [{ validator: validateArrayRequire, name: "推广渠道" }],
       },
       channelList: Channels,
       goodsFormVisible: false,
@@ -637,8 +727,8 @@ export default {
         ] +
         (this.postForm.extension.topic ? 30 : 0) +
         (this.postForm.extension.discountInfo ? 30 : 0) +
-        (this.postForm.extension.keywords
-          ? this.postForm.extension.keywords.split("").length * 30
+        (this.postForm.keywords.length > 0
+          ? this.postForm.keywords.length * 30
           : 0) +
         (this.postForm.extension.bloggerPublishTime ? 30 : 0) +
         (this.postForm.extension.otherReq.indexOf(1) >= 0 ? 10 : 0) +
@@ -672,6 +762,8 @@ export default {
         .then((r) => {
           const obj = Object.assign({}, defaultForm, r);
 
+          obj.displayType = obj.displayType === 1;
+
           obj.regTime = [r.regStartTime, r.regEndTime];
           if (!r.extension.channelLimit) {
             obj.channels = Channels.map((i) => i.id);
@@ -694,6 +786,9 @@ export default {
             .map((i) => parseInt(i))
             .filter((i) => i > 0 && i <= 3);
           obj.guidelines = r.guidelines.map((i) => ({ txt: i }));
+          obj.keywords = obj.extension.keywords
+            ? obj.extension.keywords.split(" ").map((txt) => ({ txt }))
+            : [];
           this.postForm = obj;
         })
         .catch((err) => {
@@ -735,10 +830,23 @@ export default {
     handleGoodsPage(p) {
       this.fetchPv(p);
     },
+    handleContentType(e) {
+      if (e === 1) {
+        this.postForm.channels = this.postForm.channels.filter((i) => i <= 4);
+      }
+    },
     handleTypeChange(e) {
       if (e === 0 && this.postForm.extension.minPicNum === 2) {
         this.postForm.extension.minPicNum = 0;
       }
+    },
+    handleAddKeywords() {
+      this.postForm.keywords.splice(this.postForm.keywords.length, 0, {
+        txt: "",
+      });
+    },
+    handleRemoveKeyword(i) {
+      this.postForm.keywords.splice(i, 1);
     },
     onCancel() {
       this.$router.back();
@@ -746,7 +854,16 @@ export default {
     onChannels(e) {
       const last = [].concat(e).pop();
       if (last === 0) {
-        e.splice(0, e.length, 0, ...Channels.map((i) => i.id));
+        console.log(last, this.postForm.extension.contentType);
+        if (this.postForm.extension.contentType === 1) {
+          e.splice(
+            0,
+            e.length,
+            ...Channels.filter((i) => i.id <= 4).map((i) => i.id)
+          );
+        } else {
+          e.splice(0, e.length, 0, ...Channels.map((i) => i.id));
+        }
       } else {
         if (e.filter((i) => i !== 0).length >= Channels.length) {
           e.splice(0, e.length, 0, ...Channels.map((i) => i.id));
@@ -805,6 +922,7 @@ export default {
             }),
             channelLimit: this.postForm.channels.indexOf("0") < 0,
             otherReq: this.postForm.extension.otherReq.join("+"),
+            keywords: this.postForm.keywords.map((i) => i.txt).join(" "),
           }),
         }
       );
@@ -986,6 +1104,23 @@ export default {
   a {
     color: #4244ff;
     text-decoration: underline;
+  }
+}
+.input_remove {
+  position: relative;
+  width: 10px;
+  height: 100%;
+  .box {
+    position: absolute;
+    left: 5px;
+    top: -20px;
+    padding: 2px;
+    width: 20px;
+    height: 20px;
+    .el-icon-circle-close {
+      font-size: 16px;
+      line-height: 20px;
+    }
   }
 }
 </style>
