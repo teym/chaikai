@@ -36,6 +36,13 @@
         size="mini"
         @click="handleFilter"
       >筛选</el-button>
+      <el-button
+        class="filter-item"
+        style="margin-left: 16px"
+        type="primary"
+        size="mini"
+        @click="handleExport"
+      >导出</el-button>
     </div>
 
     <el-table
@@ -223,6 +230,9 @@ export default {
     handleFilter() {
       this.listQuery.page = 1
       this.getList()
+    },
+    handleExport() {
+
     },
     handleDetail(row) {
       window.showCommunicate(row.id)

@@ -24,7 +24,7 @@
           <img :src="item.img" :alt="item.platformName">
           <p class="dark middle margin-l">{{item.platformName}}</p>
           <div class="flex"></div>
-          <span class="light small">{{['','审核中','拒绝',''][item.statusCode]}}</span>
+          <span class="light small">{{['','审核中', '已拒绝', '已通过'][item.statusCode]}}</span>
           <img class="right" src="/static/images/arrow_right.png" alt="right">
         </li>
       </ul>
@@ -91,18 +91,18 @@ export default {
 </script>
 
 <style scoped>
-.channel img{
+.channel img {
   width: 56rpx;
   height: 56rpx;
 }
-.channel .right{
+.channel .right {
   width: 32rpx;
   height: 32rpx;
 }
-.channel .light{
-  color: #C1C6CB;
+.channel .light {
+  color: #c1c6cb;
 }
-.channel li{
-  border-bottom: 1rpx solid #F5F5F5;
+.channel li {
+  border-bottom: 1rpx solid #f5f5f5;
 }
 </style>

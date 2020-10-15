@@ -88,7 +88,7 @@ export const constantRoutes = [
         path: 'dashboard',
         component: () => import('@/views/dashboard/index'),
         name: 'Dashboard',
-        meta: { title: '后台首页', icon: 'dashboard', affix: true }
+        meta: { title: '后台首页', icon: 'home', affix: true }
       }
     ]
   }
@@ -109,7 +109,7 @@ export const asyncRoutes = [
         path: 'index',
         component: () => import('@/views/goods/table'),
         name: 'goods-table',
-        meta: { title: '商品管理', icon: 'table' }
+        meta: { title: '商品管理', icon: 'goods' }
       },
       {
         path: 'create',
@@ -125,7 +125,7 @@ export const asyncRoutes = [
     component: Layout,
     redirect: '/activity/index',
     name: 'Activity',
-    meta: { title: '活动管理', icon: 'table' },
+    meta: { title: '活动管理', icon: 'activity' },
     children: [
       {
         path: 'index',
@@ -143,6 +143,7 @@ export const asyncRoutes = [
         path: 'order',
         component: () => import('@/views/activity/orders'),
         name: 'activity-order',
+        hidden: true,
         meta: { title: '活动订单', icon: 'table' }
       },
       {
@@ -163,7 +164,7 @@ export const asyncRoutes = [
         path: 'index',
         component: () => import('@/views/issue/table'),
         name: 'issue-table',
-        meta: { title: '问题管理', icon: 'table' }
+        meta: { title: '问题管理', icon: 'issue' }
       }
       // {
       //   path: 'create',
@@ -186,7 +187,7 @@ export const asyncRoutes = [
     component: Layout,
     redirect: '/user/index',
     name: 'User',
-    meta: { title: '账号信息', icon: 'table' },
+    meta: { title: '账号信息', icon: 'profile' },
     children: [
       {
         path: 'index',

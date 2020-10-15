@@ -52,7 +52,7 @@ function request (method, url, header, body) {
     }
     throw json
   }).catch(e => {
-    if (!e.info) { e.info = '请求出错' }
+    if (!e.info) { e.info = e.msg || '请求出错' }
     throw e
   })
 }
@@ -94,7 +94,7 @@ function uploadFile (path, file) {
     }
     throw json
   }).catch(e => {
-    if (!e.info) { e.info = '请求出错' }
+    if (!e.info) { e.info = e.msg || '请求出错' }
     throw e
   })
 }

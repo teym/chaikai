@@ -5,11 +5,14 @@
       <el-input
         v-model="listQuery.key"
         placeholder="请输入商品名称"
-        style="width: 200px"
+        style="margin-left:12px;width: 200px"
         size="mini"
         class="filter-item"
+        clearable
         @keyup.enter.native="handleFilter"
-      />
+      >
+        <el-icon slot="prefix" class="el-icon-search el-input__icon" />
+      </el-input>
 
       <el-button
         class="filter-item"
@@ -62,6 +65,9 @@
           >
         </template>
       </el-table-column>
+      <div slot="empty">
+        
+      </div>
     </el-table>
 
     <pagination

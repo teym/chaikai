@@ -113,12 +113,12 @@
             v-if="row.statusCode === 1"
             type="primary"
             size="mini"
-            @click="handleAction(row, 2)"
+            @click="handleAction(row, 3)"
           >通过</el-button>
           <el-button
             v-if="row.statusCode === 1"
             size="mini"
-            @click="handleAction(row, 3)"
+            @click="handleAction(row, 2)"
           >拒绝</el-button>
         </template>
       </el-table-column>
@@ -164,7 +164,7 @@ export default {
         platformId: 0
       },
       channels: Channels,
-      status: ['全部', '审核中', '已认证', '已拒绝'],
+      status: ['全部', '审核中', '已拒绝', '已认证'],
       preview: false,
       previewUrl: ''
     }
@@ -203,7 +203,7 @@ export default {
       this.preview = true
     },
     handleAction(row, state) {
-      if (state === 2) {
+      if (state === 3) {
         this.$confirm('确认通过?').then((r) => {
           updateBloggerState({ id: row.id, statusCode: state }).then((r) => {
             row.statusCode = state

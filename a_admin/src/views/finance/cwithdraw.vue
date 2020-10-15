@@ -47,6 +47,13 @@
         size="mini"
         @click="handleFilter"
       >筛选</el-button>
+      <el-button
+        class="filter-item"
+        style="margin-left: 16px"
+        type="primary"
+        size="mini"
+        @click="handleExport"
+      >导出</el-button>
       <!-- <el-button
         class="filter-item"
         style="float:right"
