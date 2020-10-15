@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="18px" viewBox="0 0 16 18" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 61.2 (89653) - https://sketch.com -->
+    <title>icon_问题管理</title>
+    <desc>Created with Sketch.</desc>
+    <g id="设计规范" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g transform="translate(-206.000000, -2586.000000)" id="编组">
+            <g transform="translate(184.000000, 2331.000000)">
+                <g id="编组-7备份" transform="translate(0.000000, 236.000000)">
+                    <g id="icon_问题管理" transform="translate(20.026316, 18.000000)">
+                        <rect id="矩形" x="0" y="0" width="20" height="20"></rect>
+                        <g id="s-order" transform="translate(1.500000, 1.000000)" fill="#FFFFFF" fill-rule="nonzero" opacity="0.7">
+                            <path d="M12.6316326,2.11394565 L16.0746598,2.11394565 L16.0746598,17.9518706 L0.92534022,17.9518706 L0.92534022,2.11394565 L4.36836739,2.11394565 L4.36836739,3.49115652 L12.6316326,3.49115652 L12.6316326,2.11394565 Z M3.67976196,9 L13.320238,9 L13.320238,7.62278913 L3.67976196,7.62278913 L3.67976196,9 Z M3.67976196,14.5088435 L13.320238,14.5088435 L13.320238,13.1316326 L3.67976196,13.1316326 L3.67976196,14.5088435 Z M5.74557826,2.11394565 L5.74557826,0.0481293508 L11.2544217,0.0481293508 L11.2544217,2.11394565 L5.74557826,2.11394565 Z" id="形状"></path>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
