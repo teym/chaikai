@@ -189,6 +189,7 @@ export const asyncRoutes = [
     component: Layout,
     redirect: '/user/index',
     name: 'User',
+    hidden: true,
     meta: { title: '账号信息', icon: 'profile' },
     children: [
       {

@@ -1,6 +1,6 @@
 <template>
   <div class="dashboard-container" v-if="xiaoer && telephone === 'no'">
-    <p style="text-align:center">请选择需要代理的企业</p>
+    <p style="text-align: center">请选择需要代理的企业</p>
   </div>
   <div v-else class="dashboard-container">
     <notice />
@@ -38,12 +38,16 @@
           <h3>待办事项</h3>
           <el-row>
             <el-col :span="12">
-              <span>2</span> 待确认
-              <el-icon class="el-icon-arrow-right" />
+              <router-link to="/issue/index">
+                <span>2</span> 待确认
+                <el-icon class="el-icon-arrow-right" />
+              </router-link>
             </el-col>
             <el-col :span="12">
-              <span>2</span> 待发货
-              <el-icon class="el-icon-arrow-right" />
+              <router-link to="/activity/index">
+                <span>2</span> 待发货
+                <el-icon class="el-icon-arrow-right" />
+              </router-link>
             </el-col>
             <el-col class="title" :span="12">订单问题</el-col>
             <el-col class="title" :span="12">活动订单</el-col>

@@ -95,10 +95,10 @@ export default {
     const validateRequire = (rule, value, callback) => {
       if (value === "") {
         this.$message({
-          message: rule.name + "为必传项",
+          message: rule.msg,
           type: "error",
         });
-        callback(new Error(rule.name + "为必传项"));
+        callback(new Error(rule.msg));
       } else {
         callback();
       }
@@ -108,10 +108,10 @@ export default {
         callback();
       } else {
         this.$message({
-          message: "外链url填写不正确",
+          message: rule.msg,
           type: "error",
         });
-        callback(new Error("外链url填写不正确"));
+        callback(new Error(rule.msg));
       }
     };
     const upload = getConf();
@@ -121,11 +121,17 @@ export default {
       tip: false,
       stat: {},
       rules: {
-        name: [{ validator: validateRequire, name: "公司名称" }],
-        contact: [{ validator: validateRequire, name: "联系人" }],
-        contactWechat: [{ validator: validateRequire, name: "微信号" }],
-        creditCode: [{ validator: validateRequire, name: "统一社会信用代码" }],
-        businessLicense: [{ validator: validateSourceUri }],
+        name: [{ validator: validateRequire, msg: "请输入公司名称" }],
+        contact: [{ validator: validateRequire, msg: "请输入联系人姓名" }],
+        contactWechat: [
+          { validator: validateRequire, msg: "请输入联系人微信号" },
+        ],
+        creditCode: [
+          { validator: validateRequire, msg: "请输入的统一社会信用代码" },
+        ],
+        businessLicense: [
+          { validator: validateSourceUri, msg: "请上传营业执照" },
+        ],
       },
       tempRoute: {},
       conf: {

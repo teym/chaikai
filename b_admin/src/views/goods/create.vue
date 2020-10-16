@@ -13,13 +13,18 @@
           label-width="90px"
           label="商品品牌:"
         >
-          <el-select v-model="postForm.brand.id" placeholder="请选择品牌">
+          <el-select
+            v-model="postForm.brand.id"
+            placeholder="请选择品牌"
+            @change="onBrand"
+          >
             <el-option
               v-for="(item, index) in brandListOptions"
               :key="index"
               :label="item.name"
               :value="item.id"
             />
+            <el-option label="新增 品牌授权" :value="0"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item
@@ -40,7 +45,13 @@
           label-width="90px"
           label="商品价值:"
         >
-          <el-input-number :min="0.01" :max="99999999" :step="0.01" v-model="postForm.price" placeholder="请输入产品价值" />
+          <el-input-number
+            :min="0.01"
+            :max="99999999"
+            :step="0.01"
+            v-model="postForm.price"
+            placeholder="请输入产品价值"
+          />
           <span> 元</span>
         </el-form-item>
         <el-form-item
@@ -246,7 +257,7 @@ export default {
           { validator: validateRequire, trigger: "blur", name: "商品标题" },
         ],
         content: [{ validator: validateRequire }],
-        skuGroups: [{ validator: validateRequire, name:'商品规格' }],
+        skuGroups: [{ validator: validateRequire, name: "商品规格" }],
         banners: [{ validator: validateRequire, name: "商品图片" }],
         // picUrl: [{ validator: validateSourceUri }],
       },
@@ -324,6 +335,12 @@ export default {
       fetchSkus().then((r) => {
         this.skus = r.data;
       });
+    },
+    onBrand(e) {
+      if (e === 0) {
+        this.postForm.brand = {};
+        this.$router.push("/user/auth");
+      }
     },
     handleAddSku() {
       this.postForm.skuGroups.splice(this.postForm.skuGroups.length, 0, {

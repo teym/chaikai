@@ -54,7 +54,7 @@
         />
         <el-dropdown-menu slot="dropdown">
           <el-dropdown-item>
-            <router-link to="/profile/index">账号信息</router-link>
+            <router-link to="/user/index">账号信息</router-link>
           </el-dropdown-item>
           <el-dropdown-item @click.native="logout">退出登陆</el-dropdown-item>
         </el-dropdown-menu>
