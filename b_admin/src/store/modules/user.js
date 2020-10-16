@@ -57,7 +57,9 @@ const actions = {
         const { data } = response
         commit('SET_TOKEN', data.token)
         setToken(data.token)
-        resolve()
+        setTimeout(() => {
+          resolve()
+        }, 200);
       }).catch(error => {
         console.log(error);
         reject(error)
@@ -71,7 +73,9 @@ const actions = {
         const { data } = response
         commit('SET_TOKEN', data.token)
         setToken(data.token)
-        resolve()
+        setTimeout(() => {
+          resolve()
+        }, 200);
       }).catch(error => {
         console.log(error);
         reject(error)
@@ -86,7 +90,9 @@ const actions = {
         const { data } = response
         commit('SET_TOKEN', data.token)
         setToken(data.token)
-        resolve()
+        setTimeout(() => {
+          resolve()
+        }, 200);
       }).catch(error => {
         console.log(error);
         reject(error)
@@ -173,7 +179,9 @@ const actions = {
       commit('SET_TOKEN', '')
       commit('SET_ROLES', [])
       removeToken()
-      resolve()
+      setTimeout(() => {
+        resolve()
+      }, 200);
     })
   },
 
