@@ -15,24 +15,13 @@ export default {
   },
   mounted() {
     const { code, state } = this.$route.query;
-    if (code) {
+    if (this.login()) {
       console.log("login", code, state);
-      this.$store
-        .dispatch("user/loginCode", { code, state })
-        .then(() => {
-          this.$router.push({
-            path: this.redirect || "/",
-            query: this.otherQuery,
-          });
-          this.loading = false;
-        })
-        .catch(() => {
-          this.loading = false;
-        });
     } else if (window.location.search) {
       window.location = "/#/sso" + window.location.search;
       setTimeout(() => {
-        location.reload();
+        // location.reload();
+        this.login();
       }, 100);
       console.log("redir");
     } else {
@@ -47,6 +36,28 @@ export default {
         href: "",
       });
     }
+  },
+  methods: {
+    login() {
+      const { code, state } = this.$route.query;
+      if (code) {
+        console.log("login", code, state);
+        this.$store
+          .dispatch("user/loginCode", { code, state })
+          .then(() => {
+            this.$router.push({
+              path: this.redirect || "/",
+              query: this.otherQuery,
+            });
+            this.loading = false;
+          })
+          .catch(() => {
+            this.loading = false;
+          });
+        return true;
+      }
+      return false;
+    },
   },
 };
 </script>
