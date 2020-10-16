@@ -104,6 +104,10 @@ const actions = {
   getInfo({ commit, state }) {
     return new Promise((resolve, reject) => {
       Promise.all([getInfo(), fetchStat(), fetchPv({ page: 1, size: 5 }), fetchFinance()]).then(([r1, r2, r3, r4]) => {
+        console.log(r1);
+        if (r1.code === 20003) {
+          throw r1
+        }
         const { roles, company, avatar, telephone } = r1.data || {}
         const xiaoer = window.location.search.indexOf('sso') > 0;
         commit('SET_XIAOER', xiaoer)
@@ -134,7 +138,9 @@ const actions = {
         resolve(Object.assign({}, r1.data, { statusCode, brandCount: count, roles: roles || ['admin'] }))
       }).catch(error => {
         console.log(error);
-        if (state.xiaoer) {
+        const xiaoer = window.location.search.indexOf('sso') > 0;
+        if (error.code === 20003 && xiaoer) {
+          commit('SET_XIAOER', xiaoer)
           commit('SET_ROLES', ['admin'])
           commit('SET_NAME', 'no')
           commit('SET_AVATAR', 'no')
