@@ -3,36 +3,55 @@
     <breadcrumb id="breadcrumb-container" class="breadcrumb-container" />
     <div class="right-menu">
       <search v-if="xiaoer" id="header-search" class="right-menu-item" />
-      <el-popover class="right-menu-item" placement="bottom" width="200" trigger="hover">
+      <el-popover
+        class="right-menu-item"
+        placement="bottom"
+        width="200"
+        trigger="hover"
+      >
         <img
           slot="reference"
           class="nav_img_icon"
           src="@/assets/images/nav_account.png"
           alt="setting"
-        >
+        />
         <div class="account">
           <h5>账户资产</h5>
           <el-row :gutter="20">
             <el-col :span="12">
-              <span>{{ activity }}</span>次
+              <span>{{ activity }}</span
+              >次
               <p>置换活动</p>
-              <el-button size="mini" round @click="$router.push('/user/buy')">增加次数</el-button>
+              <el-button size="mini" round @click="$router.push('/user/buy')"
+                >增加次数</el-button
+              >
             </el-col>
             <el-col :span="12">
-              <span>{{ amount }}</span>元
+              <span>{{ amount }}</span
+              >元
               <p>账户余额</p>
-              <el-button size="mini" round @click="$router.push('/user/topup')">充值金额</el-button>
+              <el-button size="mini" round @click="$router.push('/user/topup')"
+                >充值金额</el-button
+              >
             </el-col>
           </el-row>
         </div>
       </el-popover>
       <div class="right-menu-item menu-noti" @click="handelMessage">
         <el-badge is-dot class="nav_img_box">
-          <img class="nav_img_icon" src="@/assets/images/nav_noti.png" alt="setting">
+          <img
+            class="nav_img_icon"
+            src="@/assets/images/nav_noti.png"
+            alt="setting"
+          />
         </el-badge>
       </div>
       <el-dropdown class="right-menu-item">
-        <img class="nav_img_box nav_img_icon" src="@/assets/images/nav_setting.png" alt="setting">
+        <img
+          class="nav_img_box nav_img_icon"
+          src="@/assets/images/nav_setting.png"
+          alt="setting"
+        />
         <el-dropdown-menu slot="dropdown">
           <el-dropdown-item>
             <router-link to="/profile/index">账号信息</router-link>
@@ -40,43 +59,55 @@
           <el-dropdown-item @click.native="logout">退出登陆</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
-      <el-button type="text" class="right-menu-item menu-help" @click="onHelp">帮助</el-button>
+      <router-link v-if="xiaoer" class="right-menu-item menu-help" to="/sso"
+        >授权</router-link
+      >
+      <el-button
+        v-else
+        type="text"
+        class="right-menu-item menu-help"
+        @click="onHelp"
+        >帮助</el-button
+      >
     </div>
     <Communicate ref="communicate" />
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-import Breadcrumb from '@/components/Breadcrumb'
-import Search from '@/components/HeaderSearch'
-import Communicate from '@/components/Communicate'
+import { mapGetters } from "vuex";
+import Breadcrumb from "@/components/Breadcrumb";
+import Search from "@/components/HeaderSearch";
+import Communicate from "@/components/Communicate";
 
 export default {
   components: {
     Breadcrumb,
     Search,
-    Communicate
+    Communicate,
+  },
+  data() {
+    return {};
   },
   computed: {
-    ...mapGetters(['amount', 'activity', 'xiaoer'])
+    ...mapGetters(["amount", "activity", "xiaoer"]),
   },
   methods: {
     // toggleSideBar() {
     //   this.$store.dispatch("app/toggleSideBar");
     // },
     async logout() {
-      await this.$store.dispatch('user/logout')
-      this.$router.push(`/login?redirect=${this.$route.fullPath}`)
+      await this.$store.dispatch("user/logout");
+      this.$router.push(`/login?redirect=${this.$route.fullPath}`);
     },
     handelMessage() {
-      this.$refs.communicate.show()
+      this.$refs.communicate.show();
     },
     onHelp() {
-      window._MEIQIA('showPanel')
-    }
-  }
-}
+      window._MEIQIA("showPanel");
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>
