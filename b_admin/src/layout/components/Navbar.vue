@@ -59,14 +59,7 @@
           <el-dropdown-item @click.native="logout">退出登陆</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
-      <router-link v-if="xiaoer" class="right-menu-item menu-help" to="/sso"
-        >授权</router-link
-      >
-      <el-button
-        v-else
-        type="text"
-        class="right-menu-item menu-help"
-        @click="onHelp"
+      <el-button type="text" class="right-menu-item menu-help" @click="onHelp"
         >帮助</el-button
       >
     </div>
