@@ -39,13 +39,13 @@
           <el-row>
             <el-col :span="12">
               <router-link to="/issue/index">
-                <span>2</span> 待确认
+                <span>{{ stat.ticketToBeConfirmed }}</span> 待确认
                 <el-icon class="el-icon-arrow-right" />
               </router-link>
             </el-col>
             <el-col :span="12">
               <router-link to="/activity/index">
-                <span>2</span> 待发货
+                <span>{{ stat.orderToBeDelivered }}</span> 待发货
                 <el-icon class="el-icon-arrow-right" />
               </router-link>
             </el-col>
@@ -60,16 +60,27 @@
 
 <script>
 import { mapGetters } from "vuex";
+import { fetchDash } from "@/api/user";
 import notice from "./components/notice";
 
 export default {
   name: "Dashboard",
   components: { notice },
   data() {
-    return {};
+    return {
+      stat: {
+        orderToBeDelivered: 0,
+        ticketToBeConfirmed: 0,
+      },
+    };
   },
   computed: {
     ...mapGetters(["roles", "statusCode", "brandCount", "xiaoer", "telephone"]),
+  },
+  mounted() {
+    fetchDash().then(({ data }) => {
+      this.stat = data;
+    });
   },
   methods: {
     handelCreate() {

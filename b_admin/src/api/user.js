@@ -52,6 +52,13 @@ export function fetchFinance() {
   })
 }
 
+export function fetchDash() {
+  return request({
+    url: '/br/home/stat',
+    method: 'get'
+  })
+}
+
 export function fetchHistory(query) {
   return request({
     url: '/br/account/finance/record/list',
