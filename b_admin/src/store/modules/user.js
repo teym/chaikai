@@ -69,7 +69,6 @@ const actions = {
       loginCode(codes).then(response => {
         const { data } = response
         commit('SET_TOKEN', data.token)
-        commit('SET_XIAOER', true)
         setToken(data.token)
         resolve()
       }).catch(error => {
@@ -97,6 +96,8 @@ const actions = {
     return new Promise((resolve, reject) => {
       Promise.all([getInfo(), fetchStat(), fetchPv({ page: 1, size: 5 }), fetchFinance()]).then(([r1, r2, r3, r4]) => {
         const { roles, company, avatar, telephone } = r1.data || {}
+        const xiaoer = window.location.search.indexOf('sso') > 0;
+        commit('SET_XIAOER', xiaoer)
 
         commit('SET_ROLES', roles || ['admin'])
         commit('SET_NAME', company)

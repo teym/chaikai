@@ -18,7 +18,7 @@ export default {
     if (this.login()) {
       console.log("login", code, state);
     } else if (window.location.search) {
-      window.location = "/#/sso" + window.location.search;
+      window.location = "/?sso=1#/sso" + window.location.search;
       setTimeout(() => {
         // location.reload();
         this.login();
