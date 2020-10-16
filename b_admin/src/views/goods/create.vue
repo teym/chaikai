@@ -246,7 +246,7 @@ export default {
           { validator: validateRequire, trigger: "blur", name: "商品标题" },
         ],
         content: [{ validator: validateRequire }],
-        skuGroups: [{ validator: validateRequire }],
+        skuGroups: [{ validator: validateRequire, name:'商品规格' }],
         banners: [{ validator: validateRequire, name: "商品图片" }],
         // picUrl: [{ validator: validateSourceUri }],
       },
@@ -285,7 +285,7 @@ export default {
       });
     },
     fetchPv() {
-      fetchPv({ page: 1, size: 50 }).then((r) => {
+      fetchPv({ page: 1, size: 50, statusCode: 3 }).then((r) => {
         this.brandListOptions = r.data.data;
         if (this.postForm.brand.id === 0) {
           this.postForm.brand.id = (this.brandListOptions[0] || {}).id || 0;
