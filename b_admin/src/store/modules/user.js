@@ -59,6 +59,7 @@ const actions = {
         setToken(data.token)
         resolve()
       }).catch(error => {
+        console.log(error);
         reject(error)
       })
     })
@@ -72,6 +73,7 @@ const actions = {
         setToken(data.token)
         resolve()
       }).catch(error => {
+        console.log(error);
         reject(error)
       })
     })
@@ -86,6 +88,7 @@ const actions = {
         setToken(data.token)
         resolve()
       }).catch(error => {
+        console.log(error);
         reject(error)
       })
     })
@@ -158,6 +161,7 @@ const actions = {
 
         resolve()
       }).catch(error => {
+        console.log(error);
         reject(error)
       })
     })
