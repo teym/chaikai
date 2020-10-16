@@ -148,7 +148,12 @@
           label="商品详情:"
           style="margin-bottom: 30px; max-width: 840px"
         >
-          <Tinymce ref="editor" v-model="postForm.detail" :height="400" />
+          <Tinymce
+            :upload="conf"
+            ref="editor"
+            v-model="postForm.detail"
+            :height="400"
+          />
         </el-form-item>
         <el-form-item
           label-width="90px"

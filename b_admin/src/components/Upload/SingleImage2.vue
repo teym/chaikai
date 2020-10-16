@@ -2,6 +2,7 @@
   <div>
     <el-upload
       :action="url"
+      :headers="headers"
       :file-list="list"
       list-type="picture-card"
       :before-upload="beforeUpload"

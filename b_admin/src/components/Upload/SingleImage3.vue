@@ -2,6 +2,7 @@
   <div>
     <el-upload
       :action="url"
+      :headers="headers"
       :file-list="list"
       list-type="picture-card"
       :before-upload="beforeUpload"
@@ -12,7 +13,7 @@
       :class="{ full: full }"
     >
       <i class="el-icon-plus"></i>
-      <p v-if="tip" class="tip" slot="tip">{{tip}}</p>
+      <p v-if="tip" class="tip" slot="tip">{{ tip }}</p>
     </el-upload>
     <el-dialog :visible.sync="previewVisible" width="60%">
       <img width="100%" :src="previewUrl" alt="preview" />
@@ -123,7 +124,7 @@ export default {
 .full .el-upload {
   display: none;
 }
-.tip{
+.tip {
   margin: 0;
 }
 </style>
