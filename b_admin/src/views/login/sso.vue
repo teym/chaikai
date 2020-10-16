@@ -13,6 +13,11 @@ export default {
       code: "",
     };
   },
+  watch: {
+    "$route.query": function () {
+      console.log("change", this.$router.query);
+    },
+  },
   mounted() {
     const { code, state } = this.$route.query;
     if (this.login()) {

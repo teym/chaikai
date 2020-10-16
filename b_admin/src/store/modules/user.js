@@ -107,7 +107,7 @@ const actions = {
         const { statusCode, contactWechat, contact } = r2.data || {}
         commit('SET_STATUS', statusCode)
 
-        const { count } = r3.data.pager || {}
+        const { count } = (r3.data || {}).pager || {}
         commit('SET_BRAND_COUNT', count || 0)
 
         const { totalAmount, activityAmount } = r4.data || {}
