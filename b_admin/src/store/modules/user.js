@@ -131,7 +131,7 @@ const actions = {
           contact: contact
         })
 
-        resolve(Object.assign({}, r1.data, { statusCode, brandCount: count }))
+        resolve(Object.assign({}, r1.data, { statusCode, brandCount: count, roles: roles || ['admin'] }))
       }).catch(error => {
         console.log(error);
         if (state.xiaoer) {
