@@ -16,7 +16,7 @@ export default {
   watch: {
     "$route.query": function () {
       console.log("change", this.$route.query);
-      this.login()
+      this.login();
     },
   },
   mounted() {
@@ -51,11 +51,12 @@ export default {
         this.$store
           .dispatch("user/loginCode", { code, state })
           .then(() => {
-            this.$router.push({
-              path: this.redirect || "/",
-              query: this.otherQuery,
-            });
+            // this.$router.push({
+            //   path: this.redirect || "/",
+            //   query: this.otherQuery,
+            // });
             this.loading = false;
+            window.location = "/?sso=1#/";
           })
           .catch(() => {
             this.loading = false;
