@@ -23,7 +23,10 @@ export default {
     const { code, state } = this.$route.query;
     if (this.login()) {
       console.log("login", code, state);
-    } else if (window.location.search) {
+    } else if (
+      window.location.search &&
+      window.location.search.indexOf("code=") > 0
+    ) {
       window.location = "/?sso=1#/sso" + window.location.search;
       // setTimeout(() => {
       //   // location.reload();
