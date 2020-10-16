@@ -11,16 +11,17 @@
             label="活动商品:"
           >
             <el-button
-              v-if="!postForm.goods"
               icon="el-icon-plus"
               @click="handleSelectGoods"
               >选择商品</el-button
             >
-            <div v-else class="goods_p" @click="handleSelectGoods">
-              <img :src="postForm.goods.picUrl" alt="pic" />
-              <div>
-                <p>{{ postForm.goods.title }}</p>
-                <span>{{ postForm.goods.price }}</span>
+            <div v-if="postForm.goods" class="goods_p">
+              <div class="box">
+                <img :src="postForm.goods.picUrl" alt="pic" />
+                <div>
+                  <p>{{ postForm.goods.title }}</p>
+                  <span>价值：{{ postForm.goods.price }}</span>
+                </div>
               </div>
             </div>
           </el-form-item>
@@ -995,20 +996,37 @@ export default {
     }
 
     .goods_p {
-      img {
-        width: 70px;
-        height: 70px;
-      }
-      div {
-        display: inline-block;
-        p {
-          font-size: 14px;
-          margin: 0;
-          padding: 0;
+      display: flex;
+      flex-direction: row;
+      margin-top: 22px;
+      .box {
+        display: flex;
+        flex-direction: row;
+        border: 1px solid #c0c4cc;
+        border-radius: 4px;
+        padding: 12px;
+        img {
+          width: 70px;
+          height: 70px;
         }
-        span {
-          font-size: 12px;
-          color: #4244ff;
+        div {
+          flex: 1;
+          margin-left: 12px;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          p {
+            font-size: 14px;
+            line-height: 20px;
+            margin: 8px 8px 0 0;
+            padding: 0;
+            color: #3E3E3E;
+          }
+          span {
+            font-size: 12px;
+            line-height: 16px;
+            color: #4244ff;
+          }
         }
       }
     }
