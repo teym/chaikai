@@ -33,7 +33,7 @@ export default {
       window.location = "/#/sso" + window.location.search;
       setTimeout(() => {
         location.reload();
-      }, 1);
+      }, 100);
       console.log("redir");
     } else {
       window.WwLogin({
