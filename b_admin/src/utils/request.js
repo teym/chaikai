@@ -61,6 +61,9 @@ service.interceptors.response.use(
       if (LoginFlag) {
         return res
       }
+      if (res.code === 20003) {
+        return res
+      }
       Message({
         message: res.msg || '网络错误，请稍后重试',
         type: 'error',
