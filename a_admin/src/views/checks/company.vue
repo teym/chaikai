@@ -92,13 +92,13 @@
       >
         <template slot-scope="{ row }">
           <el-button
-            v-if="row.statusCode === 1"
+            v-if="row.statusCode === 2"
             type="primary"
             size="mini"
             @click="handleAction(row, 3)"
           >通过</el-button>
           <el-button
-            v-if="row.statusCode === 1"
+            v-if="row.statusCode === 2"
             size="mini"
             @click="handleAction(row, 4)"
           >拒绝</el-button>
