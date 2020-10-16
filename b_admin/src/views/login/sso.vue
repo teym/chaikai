@@ -15,7 +15,8 @@ export default {
   },
   watch: {
     "$route.query": function () {
-      console.log("change", this.$router.query);
+      console.log("change", this.$route.query);
+      this.login()
     },
   },
   mounted() {
@@ -24,10 +25,10 @@ export default {
       console.log("login", code, state);
     } else if (window.location.search) {
       window.location = "/?sso=1#/sso" + window.location.search;
-      setTimeout(() => {
-        // location.reload();
-        this.login();
-      }, 100);
+      // setTimeout(() => {
+      //   // location.reload();
+      //   this.login();
+      // }, 100);
       console.log("redir");
     } else {
       window.WwLogin({
