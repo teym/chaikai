@@ -31,13 +31,18 @@ export default {
         });
     } else if (window.location.search) {
       window.location = "/#/sso" + window.location.search;
+      setTimeout(() => {
+        location.reload();
+      }, 1);
       console.log("redir");
     } else {
       window.WwLogin({
         id: "sso_qr",
         appid: "ww9bd117a014bf30bf",
         agentid: "1000016",
-        redirect_uri: encodeURIComponent("http://brandtest.ckgift.cn/#/sso"),
+        redirect_uri: encodeURIComponent(
+          `${location.protocol}//${location.host}/#/sso`
+        ),
         state: "brandTest",
         href: "",
       });

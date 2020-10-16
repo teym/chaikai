@@ -10,9 +10,7 @@
             label-width="110px"
             label="活动商品:"
           >
-            <el-button
-              icon="el-icon-plus"
-              @click="handleSelectGoods"
+            <el-button icon="el-icon-plus" @click="handleSelectGoods"
               >选择商品</el-button
             >
             <div v-if="postForm.goods" class="goods_p">
@@ -478,12 +476,17 @@
         <el-row :gutter="20" justify="center" :loading="goods.loading">
           <el-col v-for="(g, i) in goods.list" :key="i" :span="4">
             <div class="info" @click="handleGoods(g)">
-              <img :src="g.picUrl" alt="pic" />
-              <p>{{ g.title }}</p>
+              <div class="img">
+                <img :src="g.picUrl" alt="pic" />
+              </div>
+              <div class="txt">
+                <span>{{ g.title }}</span>
+              </div>
+              <div class="mask" v-if="g.activityAlive">活动进行中</div>
             </div>
           </el-col>
         </el-row>
-        <el-pagination
+        <pagination
           layout="total, prev, pager, next"
           :page-size="10"
           :total="goods.total"
@@ -563,6 +566,7 @@ import {
 } from "@/api/activities";
 import { Channels } from "@/utils/constant";
 import address from "./components/address";
+import Pagination from "@/components/Pagination"; // secondary package based on el-pagination
 import moment from "moment";
 
 const defaultForm = {
@@ -599,6 +603,7 @@ export default {
   name: "ArticleDetail",
   components: {
     "a-address": address,
+    Pagination,
   },
   props: {
     isEdit: {
@@ -838,8 +843,10 @@ export default {
       }
     },
     handleGoods(goods) {
-      this.postForm.goods = goods;
-      this.goodsFormVisible = false;
+      if (!goods.activityAlive) {
+        this.postForm.goods = goods;
+        this.goodsFormVisible = false;
+      }
     },
     handleFilter() {
       this.fetchPv(1);
@@ -1020,7 +1027,7 @@ export default {
             line-height: 20px;
             margin: 8px 8px 0 0;
             padding: 0;
-            color: #3E3E3E;
+            color: #3e3e3e;
           }
           span {
             font-size: 12px;
@@ -1080,16 +1087,42 @@ export default {
       background-color: #f2f3f7;
       border-radius: 4px;
       text-align: center;
-      img {
-        width: 94%;
-        height: auto;
-        max-height: 120px;
+      padding: 2px;
+      position: relative;
+      .img {
+        width: 84%;
+        padding-bottom: 75%;
+        position: relative;
+        margin: 12px auto;
+        img {
+          position: absolute;
+          left: 0;
+          top: 0;
+          width: 100%;
+          height: 100%;
+        }
       }
-      p {
-        text-align: center;
-        font-size: 12px;
-        margin: 0;
-        padding: 0;
+      .txt {
+        width: 84%;
+        margin: 0 auto 12px auto;
+        height: 32px;
+        overflow: hidden;
+        span {
+          font-size: 12px;
+          line-height: 16px;
+        }
+      }
+      .mask {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
       }
     }
   }
