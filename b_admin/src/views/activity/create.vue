@@ -48,10 +48,11 @@
             <el-input
               v-model="postForm.title"
               placeholder="请输入品牌名+空格+商品名称"
-              maxlength="30"
+              :maxlength="30"
             />
           </el-form-item>
           <el-form-item
+            prop="regTime"
             style="margin-bottom: 30px"
             label-width="110px"
             label="报名时间:"
@@ -68,7 +69,6 @@
               </el-popover>
             </span>
             <el-date-picker
-              prop="regTime"
               v-model="postForm.regTime"
               type="daterange"
               range-separator="至"
@@ -99,7 +99,7 @@
               <el-input
                 v-model="line.txt"
                 placeholder="请输入测评指引"
-                maxlength="20"
+                :maxlength="20"
                 style="margin-bottom: 8px"
                 show-word-limit
               />
@@ -216,11 +216,24 @@
               <el-radio-button :label="2">接受悬赏/达人报价</el-radio-button>
               <el-radio-button :label="3">免费置换</el-radio-button>
             </el-radio-group>
-            <div class="tip_desc">
+            <div class="tip_desc" v-if="postForm.cooperationType === 1">
               --达人测评内容需满足
               <a>《基础合作规范》</a>
               <br />--品牌方可提出：[图片数量]、[视频长度]等合作要求，每增加一项，悬赏金额保底价将相应提高
               <a>《合作要求价格表》</a>
+            </div>
+            <div class="tip_desc" v-if="postForm.cooperationType === 2">
+              --达人测评内容需满足
+              <a>《基础合作规范》</a>
+              <br />--品牌方可提出：[图片数量]、[视频长度]等合作要求，每增加一项，悬赏金额保底价将相应提高
+              <a>《合作要求价格表》</a>
+              <br />
+              --支持优质达人报价完成合作要求
+            </div>
+            <div class="tip_desc" v-if="postForm.cooperationType === 3">
+              --达人测评内容需满足
+              <a>《基础合作规范》</a>
+              <br />--品牌方无法提出：[合作篇幅]、[内容形式]、[图片数量]、[视频长度]等要求,并消耗一次置换活动次数
             </div>
           </el-form-item>
           <el-form-item
@@ -335,7 +348,7 @@
             <el-input
               v-model="postForm.extension.discountInfo"
               placeholder="请填写需要露出的优惠信息"
-              maxlength="150"
+              :maxlength="150"
             />
           </el-form-item>
           <el-form-item
@@ -361,6 +374,8 @@
                 v-for="(k, i) in postForm.keywords"
                 :key="i"
                 v-model="k.txt"
+                :maxlength="10"
+                show-word-limit
               >
                 <div slot="suffix" class="input_remove">
                   <div class="box" @click="handleRemoveKeyword(i)">
@@ -629,6 +644,7 @@ export default {
       }
     };
     const validateArrayRequire = (rule, value, callback) => {
+      console.log(rule.name, value);
       if (!((value || {}).length || 0) > 0) {
         this.$message({
           message: rule.name + "为必传项",
@@ -890,46 +906,46 @@ export default {
       this.topicFormVisible = false;
     },
     submitForm(submit) {
-      var obj = Object.assign(
-        {},
-        this.postForm,
-        {
-          guidelines: this.postForm.guidelines.map((i) => i.txt),
-          displayType: this.postForm.displayType ? 1 : 0,
-          regStartTime: moment(this.postForm.regTime[0]).format(
-            "YYYY-MM-DD HH:mm:ss"
-          ),
-          regEndTime: moment(this.postForm.regTime[1]).format(
-            "YYYY-MM-DD HH:mm:ss"
-          ),
-        },
-        {
-          goods: Object.assign({}, this.postForm.goods, {
-            skuUnionList: this.postForm.goods.skuUnionList.filter(
-              (i) => this.postForm.skus.indexOf(i.skuIdUnion) >= 0
-            ),
-          }),
-        },
-        {
-          extension: Object.assign({}, this.postForm.extension, {
-            receiveAreaLimit: this.postForm.extension.receiveAreas.length > 0,
-            receiveAreas: this.postForm.extension.receiveAreas.map((i) =>
-              Object.assign({}, i, { type: this.postForm.recvAreaType })
-            ),
-            channels: this.postForm.channels.map((id) => {
-              const topic = this.postForm.topics.find((i) => i.id === id);
-              return Object.assign({}, topic || {}, { platformId: id });
-            }),
-            channelLimit: this.postForm.channels.indexOf("0") < 0,
-            otherReq: this.postForm.extension.otherReq.join("+"),
-            keywords: this.postForm.keywords.map((i) => i.txt).join(" "),
-          }),
-        }
-      );
-      const { id, copy } = this.$route.query || {};
-
       this.$refs.postForm.validate((valid) => {
         if (valid) {
+          var obj = Object.assign(
+            {},
+            this.postForm,
+            {
+              guidelines: this.postForm.guidelines.map((i) => i.txt),
+              displayType: this.postForm.displayType ? 1 : 0,
+              regStartTime: moment(this.postForm.regTime[0]).format(
+                "YYYY-MM-DD HH:mm:ss"
+              ),
+              regEndTime: moment(this.postForm.regTime[1]).format(
+                "YYYY-MM-DD HH:mm:ss"
+              ),
+            },
+            {
+              goods: Object.assign({}, this.postForm.goods, {
+                skuUnionList: this.postForm.goods.skuUnionList.filter(
+                  (i) => this.postForm.skus.indexOf(i.skuIdUnion) >= 0
+                ),
+              }),
+            },
+            {
+              extension: Object.assign({}, this.postForm.extension, {
+                receiveAreaLimit:
+                  this.postForm.extension.receiveAreas.length > 0,
+                receiveAreas: this.postForm.extension.receiveAreas.map((i) =>
+                  Object.assign({}, i, { type: this.postForm.recvAreaType })
+                ),
+                channels: this.postForm.channels.map((id) => {
+                  const topic = this.postForm.topics.find((i) => i.id === id);
+                  return Object.assign({}, topic || {}, { platformId: id });
+                }),
+                channelLimit: this.postForm.channels.indexOf("0") < 0,
+                otherReq: this.postForm.extension.otherReq.join("+"),
+                keywords: this.postForm.keywords.map((i) => i.txt).join(" "),
+              }),
+            }
+          );
+          const { id, copy } = this.$route.query || {};
           this.loading = true;
           var t = copy || !id ? createData(obj) : updateData(obj);
           if (submit) {
@@ -1107,12 +1123,14 @@ export default {
   }
 }
 .input_remove {
-  position: relative;
-  width: 10px;
+  width: 100%;
   height: 100%;
+  position: absolute;
+  right: 0;
+  top: 0;
   .box {
     position: absolute;
-    left: 5px;
+    right: -15px;
     top: -20px;
     padding: 2px;
     width: 20px;

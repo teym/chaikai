@@ -41,7 +41,7 @@
           </p>
         </template>
       </el-table-column>
-      <el-table-column label="品牌" width="150" align="center">
+      <el-table-column label="品牌" align="center">
         <template slot-scope="{ row }">
           <span class="info">{{ (row.brand || {}).name }}</span>
         </template>

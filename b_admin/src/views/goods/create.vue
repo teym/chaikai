@@ -40,8 +40,8 @@
           label-width="90px"
           label="商品价值:"
         >
-          <el-input v-model="postForm.price" placeholder="请输入产品价值" />
-          <span>元</span>
+          <el-input-number :min="0.01" :max="99999999" :step="0.01" v-model="postForm.price" placeholder="请输入产品价值" />
+          <span> 元</span>
         </el-form-item>
         <el-form-item
           prop="title"
@@ -52,7 +52,7 @@
           <el-input
             v-model="postForm.title"
             placeholder="请输入商品名称"
-            maxlength="30"
+            :maxlength="30"
             show-word-limit
           />
         </el-form-item>
@@ -97,7 +97,7 @@
                   class="inline-input"
                   :fetch-suggestions="handleSkuSuggestions"
                   placeholder="请输入内容"
-                  maxlength="10"
+                  :maxlength="10"
                   show-word-limit
                 >
                   <div slot="suffix" class="input_remove">
@@ -110,7 +110,7 @@
               <el-col :span="16" class="value">
                 <el-row :gutter="8">
                   <el-col v-for="(s, j) in sku.skuList" :key="j" :span="8">
-                    <el-input v-model="s.name" maxlength="10" show-word-limit>
+                    <el-input v-model="s.name" :maxlength="10" show-word-limit>
                       <div slot="suffix" class="input_remove">
                         <div class="box" @click="handleRemoveSkuValue(sku, j)">
                           <el-icon class="el-icon-circle-close" />
@@ -430,12 +430,14 @@ export default {
               width: 100%;
             }
             .input_remove {
-              position: relative;
-              width: 10px;
+              width: 100%;
               height: 100%;
+              position: absolute;
+              right: 0;
+              top: 0;
               .box {
                 position: absolute;
-                left: 5px;
+                right: -15px;
                 top: -20px;
                 padding: 2px;
                 width: 20px;
