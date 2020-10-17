@@ -68,7 +68,7 @@
           />
         </el-form-item>
         <el-form-item
-          prop="picUrl"
+          prop="banners"
           style="margin-bottom: 30px; max-width: 1024px"
           label-width="90px"
           label="商品头图:"
@@ -206,6 +206,7 @@ export default {
   },
   data() {
     const validateRequire = (rule, value, callback) => {
+      console.log(rule.name, value);
       if (!value || value.length === 0) {
         this.$message({
           message: rule.name + "为必传项",
@@ -255,13 +256,13 @@ export default {
       loading: false,
       brandListOptions: [],
       rules: {
-        brand: [{ validator: validateRequire, name: "品牌" }],
+        brand: [{ validator: validateRequire, name: "商品品牌" }],
         importUrl: [{ validator: validateSourceUri, trigger: "blur" }],
         price: [{ validator: validateNumber, trigger: "blur" }],
         title: [
           { validator: validateRequire, trigger: "blur", name: "商品标题" },
         ],
-        content: [{ validator: validateRequire }],
+        detail: [{ validator: validateRequire, name: "商品详情" }],
         skuGroups: [{ validator: validateRequire, name: "商品规格" }],
         banners: [{ validator: validateRequire, name: "商品图片" }],
       },
