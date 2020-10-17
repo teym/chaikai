@@ -35,15 +35,15 @@
     >
       <el-table-column label="商品名称">
         <template slot-scope="{ row }">
-          <p class="info">
+          <div class="info">
             <img :src="row.picUrl" alt="pic" class="pic" />
             <span>{{ row.title }}</span>
-          </p>
+          </div>
         </template>
       </el-table-column>
       <el-table-column label="品牌" align="center">
         <template slot-scope="{ row }">
-          <span class="info">{{ (row.brand || {}).name }}</span>
+          <span>{{ (row.brand || {}).name }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -199,15 +199,15 @@ export default {
       border-radius: 4px;
       margin-right: 8px;
     }
-    font-size: 14px;
-    color: #666;
-    vertical-align: middle;
-    margin: 0;
-    padding: 0;
+    span {
+      font-size: 14px;
+      color: #666;
+      flex: 1;
+    }
   }
-  .empty{
+  .empty {
     padding: 48px 0;
-    p{
+    p {
       margin: 0;
       color: #999;
     }

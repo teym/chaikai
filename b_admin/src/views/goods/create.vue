@@ -180,17 +180,17 @@ import {
 } from "@/api/goods";
 import { getConf } from "@/api/oss";
 
-const defaultForm = {
+const defaultForm = () => ({
   brand: { id: 0 },
   importUrl: "",
-  price: "",
+  price: undefined,
   title: "",
   itemId: 0,
   picUrl: "",
   banners: [],
   detail: "",
   skuGroups: [],
-};
+});
 
 export default {
   name: "ArticleDetail",
@@ -251,7 +251,7 @@ export default {
     };
     const upload = getConf();
     return {
-      postForm: Object.assign({}, defaultForm),
+      postForm: defaultForm(),
       loading: false,
       brandListOptions: [],
       rules: {
@@ -282,7 +282,7 @@ export default {
       },
     };
   },
-  created() {
+  mounted() {
     const id = this.$route.query && this.$route.query.id;
     if (id) {
       this.fetchData(id);
@@ -293,7 +293,7 @@ export default {
   methods: {
     fetchData(id) {
       fetchData(id).then((r) => {
-        const d = r.data || defaultForm;
+        const d = r.data || defaultForm();
         if (!d.skuGroups) {
           d.skuGroups = [];
         }

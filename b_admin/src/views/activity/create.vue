@@ -976,6 +976,9 @@ export default {
           );
           const { id, copy } = this.$route.query || {};
           this.loading = true;
+          if (copy) {
+            obj.statusCode = 1;
+          }
           var t = copy || !id ? createData(obj) : updateData(obj);
           if (submit) {
             t = t.then((r) => submitData(id || r.data));
