@@ -224,21 +224,33 @@
             </el-radio-group>
             <div class="tip_desc" v-if="postForm.cooperationType === 1">
               --达人测评内容需满足
-              <a>《基础合作规范》</a>
+              <a
+                href="https://www.yuque.com/docs/share/e005dc55-8a78-4411-a811-aa51ae1b23db?"
+                target="_blank"
+                >《基础合作规范》</a
+              >
               <br />--品牌方可提出：[图片数量]、[视频长度]等合作要求，每增加一项，悬赏金额保底价将相应提高
-              <a>《合作要求价格表》</a>
+              <a @click="priceVisable = true">《合作要求价格表》</a>
             </div>
             <div class="tip_desc" v-if="postForm.cooperationType === 2">
               --达人测评内容需满足
-              <a>《基础合作规范》</a>
+              <a
+                href="https://www.yuque.com/docs/share/e005dc55-8a78-4411-a811-aa51ae1b23db?"
+                target="_blank"
+                >《基础合作规范》</a
+              >
               <br />--品牌方可提出：[图片数量]、[视频长度]等合作要求，每增加一项，悬赏金额保底价将相应提高
-              <a>《合作要求价格表》</a>
+              <a @click="priceVisable = true">《合作要求价格表》</a>
               <br />
               --支持优质达人报价完成合作要求
             </div>
             <div class="tip_desc" v-if="postForm.cooperationType === 3">
               --达人测评内容需满足
-              <a>《基础合作规范》</a>
+              <a
+                href="https://www.yuque.com/docs/share/e005dc55-8a78-4411-a811-aa51ae1b23db?"
+                target="_blank"
+                >《基础合作规范》</a
+              >
               <br />--品牌方无法提出：[合作篇幅]、[内容形式]、[图片数量]、[视频长度]等要求,并消耗一次置换活动次数
             </div>
           </el-form-item>
@@ -380,7 +392,7 @@
                 v-for="(k, i) in postForm.keywords"
                 :key="i"
                 v-model="k.txt"
-                :maxlength="10"
+                :maxlength="5"
                 show-word-limit
               >
                 <div slot="suffix" class="input_remove">
@@ -569,6 +581,37 @@
         <el-button type="primary" @click="handleAddTopic">确定</el-button>
       </div>
     </el-dialog>
+    <el-dialog
+      custom-class="custom-dialog"
+      title="合作要求价格表"
+      :visible.sync="priceVisable"
+      width="820px"
+    >
+      <el-table :data="priceTable" border fit style="width: 100%">
+        <el-table-column label="合作要求" width="120">
+          <template slot-scope="{ row }">
+            <span>{{ row.title }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="悬赏最低价累加">
+          <template slot-scope="{ row }">
+            <div class="split">
+              <div>
+                <pre>{{ row.data[0] }}</pre>
+              </div>
+              <div v-if="row.data.length > 1">
+                <pre>{{ row.data[1] }}</pre>
+              </div>
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column label="说明" width="230">
+          <template slot-scope="{ row }">
+            <span>{{ row.desc }}</span>
+          </template>
+        </el-table-column>
+      </el-table>
+    </el-dialog>
   </div>
 </template>
 
@@ -742,6 +785,41 @@ export default {
         },
       },
       topicFormVisible: false,
+      priceVisable: false,
+      priceTable: [
+        {
+          title: "合作篇幅",
+          data: ["单篇|100"],
+          desc: "合作篇幅选中“无需求”时，禁选最低图片数9张",
+        },
+        { title: "测评形式", data: ["限定图文|30", "限定视频|100"], desc: "" },
+        {
+          title: "最低字数",
+          data: ["200字|25", "400字|120"],
+          desc: "测评形式需限定图文",
+        },
+        {
+          title: "最低图片数",
+          data: ["6张|25", "9张|50"],
+          desc: "测评形式需限定图文",
+        },
+        {
+          title: "视频时长",
+          data: ["15秒|100   30秒|200   1分钟|300   2分钟|400"],
+          desc: "测评形式需限定视频",
+        },
+        { title: "账号话题", data: ["30"], desc: "" },
+        { title: "优惠信息", data: ["30"], desc: "" },
+        { title: "附带关键词", data: ["30/个"], desc: "" },
+        { title: "发布时间", data: ["30"], desc: "" },
+        {
+          title: "其它要求",
+          data: [
+            "产品和达人同框露脸|10\n使用前后效果对比|20\n提供评测原图使用权|30",
+          ],
+          desc: "",
+        },
+      ],
     };
   },
   computed: {
@@ -1227,6 +1305,24 @@ export default {
     width: 22px;
     height: 22px;
     margin-left: 8px;
+  }
+}
+.split {
+  display: flex;
+  flex-direction: row;
+  div {
+    flex: 1;
+    text-align: center;
+    align-self: stretch;
+    pre {
+      font-size: 14px;
+      color: #606266;
+      margin: 0;
+      font-weight: 400;
+    }
+  }
+  div:nth-of-type(2) {
+    border-left: 1px solid #dfe6ec;
   }
 }
 </style>

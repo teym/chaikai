@@ -57,6 +57,11 @@
             placeholder="请输入微信号"
           />
         </el-form-item>
+
+        <el-form-item label="" v-if="stat.statusCode == 4">
+          <div class="reason">{{ stat.rejectReason }}</div>
+        </el-form-item>
+
         <el-button type="primary" @click="submitForm">{{
           ["", "提交审核", "审核中", "已通过", "提交审核"][stat.statusCode || 1]
         }}</el-button>
@@ -234,6 +239,15 @@ export default {
     .el-button {
       margin: 8px 0;
     }
+  }
+  .reason {
+    background-color: #fff1f0;
+    border: 1px solid #ffa39e;
+    border-radius: 2px;
+    padding: 8px 12px;
+    color: #ec5a52;
+    font-size: 14px;
+    line-height: 20px;
   }
 }
 </style>

@@ -209,10 +209,10 @@ export default {
       console.log(rule.name, value);
       if (!value || value.length === 0) {
         this.$message({
-          message: rule.name + "为必传项",
+          message: "请输入" + rule.name,
           type: "error",
         });
-        callback(new Error(rule.name + "为必传项"));
+        callback(new Error("请输入" + rule.name));
       } else {
         callback();
       }
@@ -257,8 +257,8 @@ export default {
       brandListOptions: [],
       rules: {
         brand: [{ validator: validateRequire, name: "商品品牌" }],
-        importUrl: [{ validator: validateSourceUri, trigger: "blur" }],
-        price: [{ validator: validateNumber, trigger: "blur" }],
+        importUrl: [{ validator: validateSourceUri }],
+        price: [{ validator: validateNumber }],
         title: [
           { validator: validateRequire, trigger: "blur", name: "商品标题" },
         ],
