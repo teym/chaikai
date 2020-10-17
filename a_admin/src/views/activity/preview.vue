@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <div class="content">
+    <!-- <div class="content">
       <el-carousel class="banners">
         <el-carousel-item v-for="(i, j) in banners" :key="j" :index="j">
           <img :src="i" alt="banner" mode="aspectFill">
@@ -31,9 +31,6 @@
             </li>
           </ul>
         </div>
-        <!-- <div class="hot">
-          <img src="/static/images/detail_hot.png" alt="hot">
-        </div>-->
       </div>
       <div class="detail">
         <div class="tab">
@@ -80,9 +77,7 @@
           </div>
           <div class="text">
             <div class="row center">
-              <!-- <img src="/static/images/detail_dot_l.png" alt="dot_l"> -->
               <p>产品详情</p>
-              <!-- <img src="/static/images/detail_dot_r.png" alt="dot_l"> -->
             </div>
             <div v-html="data.goods.detail" />
           </div>
@@ -149,7 +144,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
     <!-- <div class="bar">
       <div class="btn" @click="onOk">{{data.statusCode > 5 ? '报名结束' :'立即申请'}}</div>
     </div>-->

@@ -16,9 +16,13 @@ export const Channels = [
   { id: 16, name: '快手' }
 ]
 export const ChannelIcons = {
-  '1': { icon: '@/assets/images/channel_wb.png', name: '微博' },
-  '2': { icon: '@/assets/images/channel_bi.png', name: 'B站' },
-  '4': { icon: '@/assets/images/channel_xhs.png', name: '小红书' },
-  '8': { icon: '@/assets/images/channel_dy.png', name: '抖音' },
-  '16': { icon: '@/assets/images/channel_ks.png', name: '快手' }
+  '1': { icon: require('@/assets/images/channel_wb.png'), name: '微博' },
+  '2': { icon: require('@/assets/images/channel_bi.png'), name: 'B站' },
+  '4': { icon: require('@/assets/images/channel_xhs.png'), name: '小红书' },
+  '8': { icon: require('@/assets/images/channel_dy.png'), name: '抖音' },
+  '16': { icon: require('@/assets/images/channel_ks.png'), name: '快手' }
+}
+
+export function mapChannel(cs) {
+  return cs.map(i => Object.assign({}, i, ChannelIcons[i.platformId || i.id]))
 }

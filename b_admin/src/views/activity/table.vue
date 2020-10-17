@@ -8,8 +8,11 @@
           placeholder="请输入活动名称"
           style="width: 200px"
           class="filter-item"
+          clearable
           @keyup.enter.native="handleFilter"
-        />
+        >
+          <el-icon slot="prefix" class="el-icon-search el-input__icon" />
+        </el-input>
 
         <el-button
           class="filter-item"
@@ -95,12 +98,12 @@
           <span>{{ row.evaluatedNum }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="报名时间" width="160">
+      <el-table-column label="报名时间" width="188">
         <template slot-scope="{ row }">
           <span>
-            {{ row.regStartTime }}
-            <br />
-            {{ row.regEndTime }}
+            {{ row.regStartTime.substring(0, 10) }}
+            -
+            {{ row.regEndTime.substring(0, 10) }}
           </span>
         </template>
       </el-table-column>
@@ -114,6 +117,7 @@
         </template>
       </el-table-column>
       <el-table-column
+        fixed="right"
         label="操作"
         align="center"
         width="230"
@@ -205,7 +209,13 @@
 </template>
 
 <script>
-import { fetchList, fetchStat, updateData, removeData } from "@/api/activities";
+import {
+  fetchList,
+  fetchStat,
+  updateData,
+  removeData,
+  updateNum,
+} from "@/api/activities";
 import { mapGetters } from "vuex";
 import waves from "@/directive/waves"; // waves directive
 import Pagination from "@/components/Pagination"; // secondary package based on el-pagination
@@ -225,7 +235,7 @@ export default {
       listQuery: {
         page: 1,
         size: 10,
-        statusCode: '',
+        statusCode: "",
         key: undefined,
       },
       detail: {},
@@ -311,7 +321,7 @@ export default {
     },
     handleAddNumber() {
       this.formLoading = true;
-      updateData({ id: this.detail.id, totalNum: this.append })
+      updateNum({ id: this.detail.id, quota: this.append })
         .then((r) => {
           this.formLoading = false;
           this.formVisible = false;
@@ -387,9 +397,11 @@ export default {
   img {
     width: 90px;
     height: 90px;
+    border-radius: 4px;
   }
   span {
     flex: 1;
+    margin-left: 8px;
   }
 }
 </style>

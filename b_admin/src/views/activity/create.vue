@@ -201,8 +201,15 @@
                 :key="i.id"
                 :label="i.id"
                 :disabled="postForm.extension.contentType === 1 && i.id > 4"
-                >{{ i.name }}</el-checkbox
-              >
+                ><span>
+                  <img
+                    style="width: 22px; height: 22px; vertical-align: middle"
+                    :src="i.icon"
+                    alt="icon"
+                  />
+                  {{ i.name }}</span
+                >
+              </el-checkbox>
             </el-checkbox-group>
           </el-form-item>
           <el-form-item
@@ -528,23 +535,33 @@
       custom-class="custom-dialog"
       title="账号话题"
       :visible.sync="topicFormVisible"
-      width="420px"
+      width="820px"
     >
-      <el-form label-width="60px">
+      <el-form label-width="80px">
         <el-form-item v-for="i in topics" :key="i.id" :label="i.platformName">
+          <div slot="label" class="topic_label">
+            <el-checkbox
+              :disabled="i.id === 2"
+              v-model="i.checked"
+            ></el-checkbox>
+            <img :src="i.icon" :alt="i.platformName" />
+          </div>
           <el-input
             v-if="i.id !== 2"
             v-model="i.nickname"
-            placeholder="@账号"
+            placeholder="请输入账号昵称"
             style="width: 50%; padding-right: 8px"
-          />
+          >
+            <div slot="prepend">账号@</div>
+          </el-input>
           <el-input
             v-if="i.id !== 2"
             v-model="i.topic"
-            placeholder="#话题"
+            placeholder="请输入话题名称"
             style="width: 50%; padding-left: 8px"
-          />
-          <p style="margin: 0" v-else>暂不支持</p>
+            ><div slot="prepend">话题#</div></el-input
+          >
+          <p style="margin: 0; width: 50%" v-else>暂不支持</p>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -564,7 +581,7 @@ import {
   submitData,
   updateData,
 } from "@/api/activities";
-import { Channels } from "@/utils/constant";
+import { Channels, ChannelIcons, mapChannel } from "@/utils/constant";
 import address from "./components/address";
 import Pagination from "@/components/Pagination"; // secondary package based on el-pagination
 import moment from "moment";
@@ -704,7 +721,7 @@ export default {
         regTime: [{ validator: validateArrayRequire, name: "报名时间" }],
         channels: [{ validator: validateArrayRequire, name: "推广渠道" }],
       },
-      channelList: Channels,
+      channelList: mapChannel(Channels),
       goodsFormVisible: false,
       goods: {
         page: 0,
@@ -801,7 +818,7 @@ export default {
             obj.extension.receiveAreas = [];
           }
           obj.topics = []
-            .concat(r.extension.channels || [])
+            .concat(mapChannel(r.extension.channels || []))
             .filter((i) => i.nickname && i.topic);
           obj.extension.otherReq = (r.extension.otherReq || "")
             .split("+")
@@ -812,6 +829,7 @@ export default {
             ? obj.extension.keywords.split(" ").map((txt) => ({ txt }))
             : [];
           this.postForm = obj;
+          console.log(ChannelIcons);
         })
         .catch((err) => {
           console.log(err);
@@ -897,20 +915,23 @@ export default {
       }
     },
     onShowTopicForm() {
-      this.topics = Channels.filter(
-        (i) => this.postForm.channels.indexOf(i.id) >= 0
-      ).map((i) => {
-        const obj = this.postForm.topics.find((j) => j.id === i.id);
-        return Object.assign(
-          { nickname: "", topic: "", platformName: i.name },
-          i,
-          obj || {}
-        );
-      });
+      this.topics = mapChannel(Channels)
+        .filter((i) => this.postForm.channels.indexOf(i.id) >= 0)
+        .map((i) => {
+          const obj = this.postForm.topics.find((j) => j.id === i.id);
+          return Object.assign(
+            { nickname: "", topic: "", platformName: i.name },
+            i,
+            obj || {},
+            { checked: !!obj }
+          );
+        });
       this.topicFormVisible = true;
     },
     handleAddTopic() {
-      this.postForm.topics = this.topics.filter((i) => i.nickname && i.topic);
+      this.postForm.topics = this.topics.filter(
+        (i) => i.checked && i.nickname && i.topic
+      );
       this.topicFormVisible = false;
     },
     submitForm(submit) {
@@ -1190,6 +1211,19 @@ export default {
       font-size: 16px;
       line-height: 20px;
     }
+  }
+}
+.topic_label {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #dcdfe6;
+  border-radius: 4px;
+  img {
+    width: 22px;
+    height: 22px;
+    margin-left: 8px;
   }
 }
 </style>

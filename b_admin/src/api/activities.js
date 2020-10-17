@@ -76,6 +76,13 @@ export function updateData(data) {
     data
   })
 }
+export function updateNum(data) {
+  return request({
+    url: '/br/activity/quota',
+    method: 'put',
+    data
+  })
+}
 
 export function submitData(id) {
   return request({
