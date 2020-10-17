@@ -260,7 +260,7 @@ export default {
         importUrl: [{ validator: validateSourceUri }],
         price: [{ validator: validateNumber }],
         title: [
-          { validator: validateRequire, trigger: "blur", name: "商品标题" },
+          { validator: validateRequire, trigger: "blur", name: "商品名称" },
         ],
         detail: [{ validator: validateRequire, name: "商品详情" }],
         skuGroups: [{ validator: validateRequire, name: "商品规格" }],
@@ -275,8 +275,8 @@ export default {
             tip: "请上传png/jpg格式的图片",
           },
           size: {
-            size: 5 * 1024 * 1024,
-            tip: "请上传小于5M的图片",
+            size: 3 * 1024 * 1024,
+            tip: "请上传小于3M的图片",
           },
         },
       },

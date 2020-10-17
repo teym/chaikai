@@ -184,7 +184,7 @@
       :visible.sync="formVisible"
       width="420px"
     >
-      <el-form label-width="60px">
+      <el-form label-width="80px">
         <el-form-item label="活动名额">
           <span>{{ detail.totalNum }}</span>
         </el-form-item>
@@ -192,7 +192,7 @@
           <span>{{ detail.remainingNum }}</span>
         </el-form-item>
         <el-form-item label="增加名额">
-          <el-input v-model="append" placeholder="#话题" />
+          <el-input-number v-model="append" :min='1' :max='99' placeholder="请输入名额" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -317,6 +317,7 @@ export default {
     },
     handleAddOrder(row) {
       this.detail = row;
+      this.append = undefined;
       this.formVisible = true;
     },
     handleAddNumber() {
