@@ -243,10 +243,10 @@ export default {
         callback();
       } else {
         this.$message({
-          message: "外链url填写不正确",
+          message: "请输入淘宝/天猫链接",
           type: "error",
         });
-        callback(new Error("外链url填写不正确"));
+        callback(new Error("请输入淘宝/天猫链接"));
       }
     };
     const upload = getConf();
@@ -255,7 +255,7 @@ export default {
       loading: false,
       brandListOptions: [],
       rules: {
-        brand: [{ validator: validateRequire }],
+        brand: [{ validator: validateRequire, name: "品牌" }],
         importUrl: [{ validator: validateSourceUri, trigger: "blur" }],
         price: [{ validator: validateNumber, trigger: "blur" }],
         title: [
@@ -264,7 +264,6 @@ export default {
         content: [{ validator: validateRequire }],
         skuGroups: [{ validator: validateRequire, name: "商品规格" }],
         banners: [{ validator: validateRequire, name: "商品图片" }],
-        // picUrl: [{ validator: validateSourceUri }],
       },
       conf: {
         url: upload.url,
