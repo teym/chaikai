@@ -63,8 +63,10 @@
           />
         </el-select>
         <div class="right">
-          <span>活动名额: {{ stat["0"] }} 已通过: {{ stat["2"] }} 已候选:
-            {{ stat["8"] }}</span>
+          <span
+            >活动名额: {{ stat["0"] }} 已通过: {{ stat["2"] }} 已候选:
+            {{ stat["8"] }}</span
+          >
           <el-button
             type="primary"
             size="mini"
@@ -74,17 +76,16 @@
                 query: { id: listQuery.brActivityId },
               })
             "
-          >候选名单{{ stat["8"] }}</el-button>
+            >候选名单{{ stat["8"] }}</el-button
+          >
         </div>
       </div>
       <div v-show="listQuery.statusCode === '3'" class="row row2">
         <div class="place" />
         <div class="right">
-          <el-button
-            type="primary"
-            size="mini"
-            @click="handleShip"
-          >批量发货</el-button>
+          <el-button type="primary" size="mini" @click="handleShip"
+            >批量发货</el-button
+          >
         </div>
       </div>
     </div>
@@ -101,7 +102,7 @@
       <el-table-column label="达人">
         <template slot-scope="{ row }">
           <div class="info">
-            <img :src="row.blogger.avatar" alt="pic">
+            <img :src="row.blogger.avatar" alt="pic" />
             <div>
               <p>
                 {{ row.blogger.nickname }}
@@ -112,7 +113,8 @@
                   v-for="(i, j) in row.blogger.areas"
                   :key="j"
                   class="pill"
-                >{{ i.name }}</span>
+                  >{{ i.name }}</span
+                >
               </p>
             </div>
           </div>
@@ -122,7 +124,7 @@
         <template slot-scope="{ row }">
           <span>
             规格：{{ row.goodsSku }}
-            <br>
+            <br />
             申请理由：{{ row.applyReason }}
           </span>
         </template>
@@ -134,7 +136,7 @@
       >
         <template slot-scope="{ row }">
           <div v-for="c in row.channels" :key="c.platformId" class="channel">
-            <img :src="channelIcons['' + c.platformId].icon">
+            <img :src="channelIcons['' + c.platformId].icon" />
             <span>{{ channelIcons[c.platformId + ""].name }}</span>
           </div>
         </template>
@@ -148,7 +150,7 @@
             target="_blank"
             :href="c.url"
           >
-            <img :src="channelIcons[c.platformId + ''].icon" alt="">
+            <img :src="channelIcons[c.platformId + ''].icon" alt="" />
             <span>{{ c.type === 1 ? "正式" : "追加" }}</span>
             <span>活动量{{ c.activeAmount }}</span>
           </a>
@@ -162,50 +164,52 @@
         <template slot-scope="{ row }">
           <span v-for="c in row.channels" :key="c.platformId">
             {{ c.fansCount }}
-            <br>
+            <br />
           </span>
         </template>
       </el-table-column>
       <el-table-column
         v-if="
           listQuery.statusCode === '1' ||
-            listQuery.statusCode === '2' ||
-            listQuery.statusCode === '6' ||
-            listQuery.statusCode === '7'
+          listQuery.statusCode === '2' ||
+          listQuery.statusCode === '6' ||
+          listQuery.statusCode === '7'
         "
         label="合作方式"
         width="120"
       >
         <template slot-scope="{ row }">
-          <span>{{ ["", "接受悬赏", "达人报价"][row.activity.cooperationType] }}¥{{
-            row.reward
-          }}</span>
+          <span
+            >{{ ["", "接受悬赏", "达人报价"][row.activity.cooperationType] }}¥{{
+              row.reward
+            }}</span
+          >
         </template>
       </el-table-column>
       <el-table-column
         v-if="
           listQuery.statusCode === '3' ||
-            listQuery.statusCode === '4' ||
-            listQuery.statusCode === '5'
+          listQuery.statusCode === '4' ||
+          listQuery.statusCode === '5'
         "
         label="收货信息"
       >
         <template slot-scope="{ row }">
           <span>
             收货人：{{ (row.receiver || {}).name }}
-            <br>
+            <br />
             手机号码：{{ (row.receiver || {}).telephone }}
-            <br>
+            <br />
             收货地址：{{
               ((row.receiver || {}).province || "") +
-                ((row.receiver || {}).city || "") +
-                ((row.receiver || {}).county || "") +
-                ((row.receiver || {}).address || "")
+              ((row.receiver || {}).city || "") +
+              ((row.receiver || {}).county || "") +
+              ((row.receiver || {}).address || "")
             }}
-            <br>
+            <br />
             物流信息：{{
               ((row.receiver || {}).logisticsPlatform || "") +
-                ((row.receiver || {}).logisticsNo || "")
+              ((row.receiver || {}).logisticsNo || "")
             }}
           </span>
         </template>
@@ -238,13 +242,13 @@
                 "3": "已取消",
               }[row.rewardStatusCode + ""]
             }}</strong>
-            <br>
+            <br />
             {{
               row.rewardStatusCode === 1
                 ? "还剩" + row.deadlineText + "自动发放"
                 : row.rewardStatusCode === 3
-                  ? "测评违规/不符合悬赏规范，已退回至品牌方"
-                  : ""
+                ? "测评违规/不符合悬赏规范，已退回至品牌方"
+                : ""
             }}
           </span>
         </template>
@@ -260,13 +264,13 @@
                 "4": "已扣除",
               }[row.depositStatus + ""]
             }}</strong>
-            <br>
+            <br />
             {{
               listQuery.statusCode === "2"
                 ? "押金支付还剩" + row.deadlineText + ",超时将视作放弃名额"
                 : listQuery.statusCode === "3"
-                  ? "发布测评后15天自动退还"
-                  : ""
+                ? "发布测评后15天自动退还"
+                : ""
             }}
           </span>
         </template>
@@ -284,43 +288,52 @@
               v-if="listQuery.statusCode === '1'"
               size="mini"
               @click="handleAction(row, 'REJECT')"
-            >拒绝</el-button>
+              >拒绝</el-button
+            >
             <el-button
               v-if="listQuery.statusCode === '1'"
               size="mini"
               type="primary"
               @click="handleAction(row, 'PASS')"
-            >通过</el-button>
+              >通过</el-button
+            >
             <el-button
               v-if="listQuery.statusCode === '1'"
               size="mini"
               type="primary"
               :icon="row.candidate ? 'el-icon-checked' : 'el-icon-plus'"
               @click="handleAction(row, 'CANDIDATE')"
-            >{{ row.candidate ? "已" : "" }}候选</el-button>
+              >{{ row.candidate ? "已" : "" }}候选</el-button
+            >
             <el-button
               v-if="
                 listQuery.statusCode === '3' ||
-                  listQuery.statusCode === '4' ||
-                  listQuery.statusCode === '5'
+                listQuery.statusCode === '4' ||
+                listQuery.statusCode === '5'
               "
               size="mini"
               type="primary"
               @click="handleDetail(row)"
-            >订单详情</el-button>
+              >订单详情</el-button
+            >
             <el-button
-              v-if="listQuery.statusCode === '6' && row.ticketStatusCode !== 5 && row.ticketStatusCode !== 7"
+              v-if="
+                listQuery.statusCode === '6' &&
+                row.ticketStatusCode !== 5 &&
+                row.ticketStatusCode !== 7
+              "
               size="mini"
               :type="row.ticketStatusCode > 0 ? '' : 'primary'"
               @click="handleComplain(row)"
-            >{{ row.ticketStatusCode > 0 ? "投诉处理中" : "投诉" }}
+              >{{ row.ticketStatusCode > 0 ? "投诉处理中" : "投诉" }}
             </el-button>
             <el-button
               v-if="listQuery.statusCode === '6' && !row.scoreInfo"
               size="mini"
               type="primary"
               @click="handleCommend(row)"
-            >评价</el-button>
+              >评价</el-button
+            >
             <el-button
               v-if="
                 listQuery.statusCode === '4' || listQuery.statusCode === '5'
@@ -328,7 +341,8 @@
               size="mini"
               type="primary"
               @click="handleShip(row)"
-            >查看物流</el-button>
+              >查看物流</el-button
+            >
           </div>
           <div
             v-if="listQuery.statusCode === '1' && row.candidate"
@@ -365,7 +379,7 @@
               <el-form-item style="">
                 <el-checkbox :disabled="c.type !== 1" :label="c.id">
                   <span class="ceping">
-                    <img :src="channelIcons[c.platformId + ''].icon" alt="">
+                    <img :src="channelIcons[c.platformId + ''].icon" alt="" />
                     <span>{{ c.type === 1 ? "正式" : "追加" }}</span>
                     <span>活动量{{ c.activeAmount }}</span>
                   </span>
@@ -400,7 +414,8 @@
                   marginTop: row.title ? '8px' : '0',
                 }"
                 :label="row.id"
-              >{{ row.content }}</el-checkbox>
+                >{{ row.content }}</el-checkbox
+              >
             </el-checkbox-group>
           </el-col>
         </el-row>
@@ -411,7 +426,8 @@
           :loading="formLoading"
           type="primary"
           @click="handleCreateComplain"
-        >发起投诉</el-button>
+          >发起投诉</el-button
+        >
       </div>
     </el-dialog>
     <el-dialog
@@ -448,7 +464,8 @@
             :key="i"
             class="check_btn none_border"
             :label="item.id"
-          >{{ item.msg }}</el-checkbox-button>
+            >{{ item.msg }}</el-checkbox-button
+          >
         </el-checkbox-group>
         <span>合作结束15天后默认好评</span>
       </div>
@@ -458,7 +475,8 @@
           :loading="formLoading"
           type="primary"
           @click="handleCreateCommend"
-        >确定</el-button>
+          >确定</el-button
+        >
       </div>
     </el-dialog>
   </div>
@@ -474,18 +492,18 @@ import {
   fetchTickets,
   fetchShip,
   fetchScope,
-  updateScope
-} from '@/api/activities'
-import { ActivityOrderStatus, Channels, ChannelIcons } from '@/utils/constant'
-import { clearQueryObject } from '@/utils/index'
-import { mapGetters } from 'vuex'
-import _ from 'underscore'
-import moment from 'moment'
-import waves from '@/directive/waves' // waves directive
-import Pagination from '@/components/Pagination' // secondary package based on el-pagination
+  updateScope,
+} from "@/api/activities";
+import { ActivityOrderStatus, Channels, ChannelIcons } from "@/utils/constant";
+import { clearQueryObject, formatDeadLine } from "@/utils/index";
+import { mapGetters } from "vuex";
+import _ from "underscore";
+import moment from "moment";
+import waves from "@/directive/waves"; // waves directive
+import Pagination from "@/components/Pagination"; // secondary package based on el-pagination
 
 export default {
-  name: 'ComplexTable',
+  name: "ComplexTable",
   components: { Pagination },
   directives: { waves },
   data() {
@@ -503,14 +521,14 @@ export default {
         brActivityId: 0,
         page: 1,
         size: 10,
-        sort: 'RECOMMEND',
-        statusCode: '1',
-        platformId: '',
-        goodsSkuUnionId: '',
-        searchType: '1',
-        searchKey: ''
+        sort: "RECOMMEND",
+        statusCode: "1",
+        platformId: "",
+        goodsSkuUnionId: "",
+        searchType: "1",
+        searchKey: "",
       },
-      activeIndex: '',
+      activeIndex: "",
       detail: {},
       append: 0,
       sels: [],
@@ -524,26 +542,26 @@ export default {
       commend: {
         value: 5,
         tags: [],
-        scopes: {}
+        scopes: {},
       },
-      scopes: []
-    }
+      scopes: [],
+    };
   },
   computed: {
-    ...mapGetters(['name', 'avatar', 'telephone', 'statusCode', 'brandCount'])
+    ...mapGetters(["name", "avatar", "telephone", "statusCode", "brandCount"]),
   },
   created() {
-    this.listQuery.brActivityId = this.$route.query && this.$route.query.id
-    this.getTabs()
-    this.getList()
-    this.getTicks()
-    this.getScope()
+    this.listQuery.brActivityId = this.$route.query && this.$route.query.id;
+    this.getTabs();
+    this.getList();
+    this.getTicks();
+    this.getScope();
   },
   methods: {
     getTabs() {
       Promise.all([
         fetchOdStat({ brActivityId: this.listQuery.brActivityId }),
-        fetchData(this.listQuery.brActivityId)
+        fetchData(this.listQuery.brActivityId),
       ])
         .then((r) => {
           this.stat = {
@@ -555,189 +573,189 @@ export default {
             5: r[0].data.toBeEvaluated,
             6: r[0].data.evaluated,
             7: r[0].data.closed,
-            8: r[0].data.candidate
-          }
+            8: r[0].data.candidate,
+          };
           this.channels = r[1].data.extension.channelLimit
             ? r[1].data.extension.channels.map((i) =>
-              Object.assign({}, i, ChannelIcons[i.platformId + ''])
-            )
-            : Channels.map((i) =>
-              Object.assign(
-                { platformName: i.name, platformId: i.id },
-                i,
-                ChannelIcons[i.id + '']
+                Object.assign({}, i, ChannelIcons[i.platformId + ""])
               )
-            )
-          this.skus = r[1].data.goods.skuUnionList
+            : Channels.map((i) =>
+                Object.assign(
+                  { platformName: i.name, platformId: i.id },
+                  i,
+                  ChannelIcons[i.id + ""]
+                )
+              );
+          this.skus = r[1].data.goods.skuUnionList;
         })
         .catch((e) => {
-          console.log(e)
-        })
+          console.log(e);
+        });
     },
     getList() {
-      this.listLoading = true
-      const obj = Object.assign({}, this.listQuery)
-      if (obj.searchType === '1') {
-        obj.orderId = obj.searchKey
+      this.listLoading = true;
+      const obj = Object.assign({}, this.listQuery);
+      if (obj.searchType === "1") {
+        obj.orderId = obj.searchKey;
       } else {
-        obj.bloggerName = obj.searchKey
+        obj.bloggerName = obj.searchKey;
       }
       fetchOdList(clearQueryObject(obj))
         .then((response) => {
           this.list = response.data.data.map((i) =>
             Object.assign(
-              { brRemark: '', deadlineText: moment(i.deadline).toNow() },
+              { brRemark: "", deadlineText: formatDeadLine(i.deadline) },
               i
             )
-          )
-          this.total = response.data.pager.count
+          );
+          this.total = response.data.pager.count;
 
           setTimeout(() => {
-            this.listLoading = false
-          }, 1.5 * 1000)
+            this.listLoading = false;
+          }, 1.5 * 1000);
         })
         .catch((e) => {
-          this.listLoading = false
-        })
+          this.listLoading = false;
+        });
     },
     getTicks() {
       fetchTickets().then(({ data }) => {
         this.reasonList = _.flatten(
           data.map((i) => {
-            i.list[0].title = i.name
-            return i.list
+            i.list[0].title = i.name;
+            return i.list;
           })
-        )
-      })
+        );
+      });
     },
     getScope() {
       fetchScope().then((r) => {
-        this.scopes = r.data
-      })
+        this.scopes = r.data;
+      });
     },
     getShip(id) {
       fetchShip(id).then((r) => {
-        this.ship = r.data
-      })
+        this.ship = r.data;
+      });
     },
     handleSelect(e) {
-      this.listQuery.statusCode = e
-      this.handleFilter()
+      this.listQuery.statusCode = e;
+      this.handleFilter();
     },
     handleFilter() {
-      this.listQuery.page = 1
-      this.getList()
+      this.listQuery.page = 1;
+      this.getList();
     },
     handleAction(row, act, tip) {
-      if (act === 'CANDIDATE') {
-        row.brRemark = ''
-        row.candidate = true
-      } else if (act === 'PASS' && !tip) {
+      if (act === "CANDIDATE") {
+        row.brRemark = "";
+        row.candidate = true;
+      } else if (act === "PASS" && !tip) {
         this.$confirm(
-          '确认通过' +
+          "确认通过" +
             row.blogger.nickname +
-            '的活动申请，并消耗账户余额' +
+            "的活动申请，并消耗账户余额" +
             row.reward +
-            '元',
+            "元",
           {
-            title: '一键通过'
+            title: "一键通过",
           }
         )
           .then((r) => {
-            if (r === 'confirm') {
-              this.handleAction(row, act, true)
+            if (r === "confirm") {
+              this.handleAction(row, act, true);
             }
           })
-          .catch((e) => {})
+          .catch((e) => {});
       } else {
-        this.listLoading = true
+        this.listLoading = true;
         updateAction({ orderId: row.id, action: act })
           .then((r) => {
-            this.getTabs()
-            this.getList()
+            this.getTabs();
+            this.getList();
           })
           .catch((e) => {
-            this.listLoading = false
-          })
+            this.listLoading = false;
+          });
       }
     },
     handleRemark(row) {
-      this.listLoading = true
+      this.listLoading = true;
       updateAction({
         orderId: row.id,
-        action: 'CANDIDATE',
+        action: "CANDIDATE",
         candidate: row.candidate,
-        remark: row.brRemark
+        remark: row.brRemark,
       })
         .then((r) => {
-          this.getTabs()
-          this.getList()
+          this.getTabs();
+          this.getList();
         })
         .catch((e) => {
-          this.listLoading = false
-        })
+          this.listLoading = false;
+        });
     },
     handleShip(row) {
-      this.shipVisible = true
-      this.getShip(row.receiver.logisticsNo)
+      this.shipVisible = true;
+      this.getShip(row.receiver.logisticsNo);
     },
     handleComplain(row) {
       if (row.ticketStatusCode > 0) {
-        this.$router.push('/issue/index')
+        this.$router.push("/issue/index");
       } else {
-        this.detail = row
-        this.formVisible = true
+        this.detail = row;
+        this.formVisible = true;
       }
     },
     handleCommend(row) {
       this.commend = {
         value: 5,
         tags: [],
-        scopes: this.scopes[4]
-      }
-      this.detail = row
-      this.commendVisible = true
+        scopes: this.scopes[4],
+      };
+      this.detail = row;
+      this.commendVisible = true;
     },
     onValue(e) {
-      this.commend.scopes = this.scopes[Math.max(e, 1) - 1]
+      this.commend.scopes = this.scopes[Math.max(e, 1) - 1];
     },
     handleCreateCommend() {
-      const value = this.commend.value
+      const value = this.commend.value;
       const list = this.commend.scopes.list
         .map((i) => Object.assign(i, { score: value + 5 }))
-        .filter((i) => this.commend.tags.indexOf(i.id) >= 0)
-      this.formLoading = true
+        .filter((i) => this.commend.tags.indexOf(i.id) >= 0);
+      this.formLoading = true;
       updateScope({
         brActivityOrderId: this.detail.id,
         itemList: list,
         score: value + 5,
-        blAccountId: this.detail.blAccountId
+        blAccountId: this.detail.blAccountId,
       })
         .then((r) => {
-          this.$message({ message: '已评价' })
-          this.formLoading = false
-          this.commendVisible = false
+          this.$message({ message: "已评价" });
+          this.formLoading = false;
+          this.commendVisible = false;
         })
         .catch((e) => {
-          this.formLoading = false
-        })
+          this.formLoading = false;
+        });
     },
     handleCreateComplain() {
       complain({
         brActivityId: this.detail.activity.id,
         brActivityOrderId: this.detail.id,
         items: this.reason.map((itemId) => ({ itemId })),
-        evaluations: this.sels.map((id) => ({ id }))
+        evaluations: this.sels.map((id) => ({ id })),
       }).then((r) => {
-        this.formVisible = false
-        this.sels = []
-        this.reason = []
-        this.detail = {}
-        this.$message({ message: '已投诉', type: 'success' })
-      })
-    }
-  }
-}
+        this.formVisible = false;
+        this.sels = [];
+        this.reason = [];
+        this.detail = {};
+        this.$message({ message: "已投诉", type: "success" });
+      });
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>

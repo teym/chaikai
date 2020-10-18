@@ -36,7 +36,8 @@
             <el-input
               v-model="detail.remark"
               size="mini"
-              maxlength="10"
+              placeholder="请输入角色名称"
+              :maxlength="10"
               show-word-limit
             />
           </div>

@@ -251,6 +251,7 @@ import {
   updateAction
 } from '@/api/activities'
 import { ActivityOrderStatus, Channels, ChannelIcons } from '@/utils/constant'
+import {formatDeadLine} from '@/utils/index'
 import { mapGetters } from 'vuex'
 import moment from 'moment'
 import waves from '@/directive/waves' // waves directive
@@ -344,7 +345,7 @@ export default {
         .then((response) => {
           this.list = response.data.data.map((i) =>
             Object.assign(
-              { brRemark: '', deadlineText: moment(i.deadline).toNow() },
+              { brRemark: '', deadlineText: formatDeadLine(i.deadline)},
               i
             )
           )
