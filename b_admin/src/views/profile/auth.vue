@@ -78,6 +78,10 @@
             v-model="postForm.qualification"
           />
         </el-form-item>
+
+        <el-form-item label="" v-if="postForm.statusCode == 4">
+          <div class="reason">{{ postForm.rejectReason }}</div>
+        </el-form-item>
         <el-button
           :loading="loading"
           type="primary"
@@ -124,24 +128,23 @@ export default {
     const validateRequire = (rule, value, callback) => {
       if (value === "") {
         this.$message({
-          message: rule.field + "为必传项",
+          message: "请填写" + rule.name,
           type: "error",
         });
-        callback(new Error(rule.field + "为必传项"));
+        callback(new Error("请填写" + rule.name));
       } else {
         callback();
       }
     };
     const validateSourceUri = (rule, value, callback) => {
-      console.log("check", value);
       if (validURL(value)) {
         callback();
       } else {
         this.$message({
-          message: "外链url填写不正确",
+          message: "请上传" + rule.name,
           type: "error",
         });
-        callback(new Error("外链url填写不正确"));
+        callback(new Error("请上传" + rule.name));
       }
     };
     const upload = getConf();
@@ -150,12 +153,14 @@ export default {
       loading: false,
       tip: false,
       rules: {
-        name: [{ validator: validateRequire }],
+        name: [{ validator: validateRequire, name: "品牌名称" }],
         story: [{}],
-        relationType: [{ validator: validateRequire }],
-        logo: [{ validator: validateSourceUri }],
-        trademarkRegistration: [{ validator: validateSourceUri }],
-        qualification: [{ validator: validateSourceUri }],
+        relationType: [{ validator: validateRequire, name: "品牌关系" }],
+        logo: [{ validator: validateSourceUri, name: "品牌LOGO" }],
+        trademarkRegistration: [
+          { validator: validateSourceUri, name: "商标注册书" },
+        ],
+        qualification: [{ validator: validateSourceUri, name: "品牌授权资质" }],
       },
       conf: {
         url: upload.url,
@@ -264,6 +269,15 @@ export default {
     .el-button {
       margin: 8px 0;
     }
+  }
+  .reason {
+    background-color: #fff1f0;
+    border: 1px solid #ffa39e;
+    border-radius: 2px;
+    padding: 8px 12px;
+    color: #ec5a52;
+    font-size: 14px;
+    line-height: 20px;
   }
 }
 </style>

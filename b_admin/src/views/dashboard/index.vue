@@ -79,7 +79,10 @@ export default {
   },
   mounted() {
     fetchDash().then(({ data }) => {
-      this.stat = data;
+      this.stat = data || {
+        orderToBeDelivered: 0,
+        ticketToBeConfirmed: 0,
+      };
     });
   },
   methods: {

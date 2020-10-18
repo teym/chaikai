@@ -111,137 +111,27 @@
     />
     <el-dialog
       width="80%"
-      title="达人详情"
+      title="企业详情"
       :visible.sync="detailVisable"
       append-to-body
     >
-      <div v-if="detail" class="detail">
-        <div class="row">
-          <h4>账户ID:</h4>
-          <p>{{ detail.id }}</p>
-        </div>
-        <div class="row">
-          <h4>手机号:</h4>
-          <p>{{ detail.telephone }}</p>
-        </div>
-        <div class="row">
-          <h4>注册时间:</h4>
-          <p>{{ detail.date }}</p>
-        </div>
-        <div class="row">
-          <h4>企业名称:</h4>
-          <p>{{ detail.company }}</p>
-        </div>
-        <div class="row">
-          <h4>统一社会信用代码:</h4>
-          <p>{{ detail.companyInfo.creditCode }}</p>
-        </div>
-        <div class="row">
-          <h4>营业执照:</h4>
-          <div>
-            <el-button
-              size="mini"
-              @click="onPreview(detail.companyInfo.businessLicense)"
-            >查看</el-button>
-          </div>
-        </div>
-        <div class="row">
-          <h4>联系人:</h4>
-          <p>{{ detail.companyInfo.contact }}</p>
-        </div>
-        <div class="row">
-          <h4>微信号:</h4>
-          <p>{{ detail.companyInfo.contactWechat }}</p>
-        </div>
-        <div class="row">
-          <h4>企业认证:</h4>
-          <p>{{ status[detail.companyInfo.statusCode] }}</p>
-        </div>
-        <div class="row">
-          <h4>账户余额:</h4>
-          <p>{{ detail.financeInfo.totalAmount }}</p>
-        </div>
-        <div class="row">
-          <h4>置换活动:</h4>
-          <p>{{ detail.financeInfo.activityAmount }}</p>
-        </div>
-        <h4>品牌授权</h4>
-        <el-table :data="detail.brands" border fit>
-          <el-table-column label="品牌名称" align="center">
-            <template slot-scope="{ row }">
-              <span>{{ row.name }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column label="品牌LOGO" width="90" align="center">
-            <template slot-scope="{ row }">
-              <img :src="row.logo" style="width: 60px; height: 60px">
-            </template>
-          </el-table-column>
-          <el-table-column label="品牌故事">
-            <template slot-scope="{ row }">
-              <span>{{ row.story }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column label="商标证书" align="center">
-            <template slot-scope="{ row }">
-              <el-button
-                size="mini"
-                @click="onPreview(row.trademarkRegistration)"
-              >查看</el-button>
-            </template>
-          </el-table-column>
-          <el-table-column label="品牌关系" align="center">
-            <template slot-scope="{ row }">
-              <span>{{
-                { "1": "品牌方", "2": "代理商" }[row.relationType]
-              }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column label="品牌授权资质" align="center">
-            <template slot-scope="{ row }">
-              <el-button
-                v-if="row.qualification"
-                size="mini"
-                @click="onPreview(row.qualification)"
-              >查看</el-button>
-              <span v-else>无</span>
-            </template>
-          </el-table-column>
-          <el-table-column label="通过时间">
-            <template slot-scope="{ row }">
-              <span>{{ row.date }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column label="操作" align="center">
-            <template slot-scope="{ row }">
-              <el-button size="mini" @click="onUnbind(row)">删除</el-button>
-            </template>
-          </el-table-column>
-        </el-table>
-      </div>
-      <el-dialog
-        width="60%"
-        title="预览"
-        :visible.sync="previewVisable"
-        append-to-body
-      >
-        <img style="width: 100%" :src="preview" alt="img">
-      </el-dialog>
+      <detail :detail="detail" />
     </el-dialog>
   </div>
 </template>
 
 <script>
-import { fetchCompanyList, unbindCompany } from '@/api/accounts'
+import { fetchCompanyList } from '@/api/accounts'
 import { clearQueryObject } from '@/utils/index'
 import waves from '@/directive/waves' // waves directive
 import moment from 'moment'
 // import { mapGetters } from 'vuex'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
+import detail from './components/company'
 
 export default {
   name: 'ComplexTable',
-  components: { Pagination },
+  components: { Pagination, detail },
   directives: { waves },
   data() {
     return {
@@ -259,9 +149,7 @@ export default {
       },
       status: ['全部', '未认证', '审核中', '已认证', '已拒绝'],
       detailVisable: false,
-      detail: null,
-      previewVisable: false,
-      preview: ''
+      detail: null
     }
   },
   // computed: {
@@ -312,27 +200,9 @@ export default {
       this.getList()
     },
 
-    onPreview(url) {
-      this.preview = url
-      this.previewVisable = true
-    },
     handleDetail(row) {
       this.detail = row
       this.detailVisable = true
-    },
-    onUnbind(row) {
-      this.$confirm(
-        `确定删除${this.detail.company}的${row.name}品牌名称，删除后需重新提交认证申请`
-      ).then((r) => {
-        unbindCompany(row.id).then((r) => {
-          const index = this.detail.brands.findIndex(
-            (i) => i.platformId === row.platformId
-          )
-          if (index >= 0) {
-            this.detail.brands.splice(index, 1)
-          }
-        })
-      })
     }
   }
 }

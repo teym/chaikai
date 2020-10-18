@@ -99,11 +99,12 @@
       </el-table-column>
       <el-table-column label="提交时间" align="center">
         <template slot-scope="{ row }">
-          <span>{{ row.gmtCreate }}</span>
+          <span>{{ row.date }}</span>
         </template>
       </el-table-column>
 
       <el-table-column
+        fixed="right"
         label="操作"
         align="center"
         width="240"
@@ -111,18 +112,18 @@
       >
         <template slot-scope="{ row }">
           <el-button
-            v-if="row.statusCode === 1"
+            v-if="row.statusCode === 2"
             type="primary"
             size="mini"
             @click="handleAction(row, 3)"
           >通过</el-button>
           <el-button
-            v-if="row.statusCode === 1"
+            v-if="row.statusCode === 2"
             size="mini"
             @click="handleAction(row, 4)"
           >拒绝</el-button>
           <el-button
-            v-if="row.statusCode === 1"
+            v-if="row.statusCode === 2"
             size="mini"
             @click="handleDetail(row)"
           >企业信息</el-button>
@@ -140,19 +141,31 @@
     <el-dialog width="60%" title="预览" :visible.sync="preview" append-to-body>
       <img style="width: 100%" :src="previewUrl" alt="img">
     </el-dialog>
+    <el-dialog
+      width="80%"
+      title="企业详情"
+      :visible.sync="detailVisable"
+      append-to-body
+    >
+      <detail :detail="detail" />
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import { fetchBrandList, updateBrandState } from '@/api/check'
+import { fetchCompanyList } from '@/api/accounts'
+
 import { clearQueryObject } from '@/utils/index'
+import moment from 'moment'
 import waves from '@/directive/waves' // waves directive
 import { mapGetters } from 'vuex'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
+import detail from '../accounts/components/company'
 
 export default {
   name: 'ComplexTable',
-  components: { Pagination },
+  components: { Pagination, detail },
   directives: { waves },
   data() {
     return {
@@ -168,7 +181,9 @@ export default {
       },
       status: ['全部', '未认证', '审核中', '已认证', '已拒绝'],
       preview: false,
-      previewUrl: ''
+      previewUrl: '',
+      detailVisable: false,
+      detail: null
     }
   },
   computed: {
@@ -187,7 +202,11 @@ export default {
       this.listLoading = true
       fetchBrandList(clearQueryObject(this.listQuery, true)).then(
         ({ data }) => {
-          this.list = data.data
+          this.list = data.data.map((i) =>
+            Object.assign(i, {
+              date: moment(i.gmtCreate).format('YYYY-MM-DD HH:mm:ss')
+            })
+          )
           this.total = data.pager.count
 
           // Just to simulate the time of the request
@@ -229,7 +248,13 @@ export default {
       }
     },
     handleDetail(item) {
-      console.log(item.name)
+      this.detail = null
+      this.detailVisable = true
+      fetchCompanyList({ page: 1, size: 1, accountId: item.brAccountId }).then(
+        (r) => {
+          this.detail = r.data.data[0]
+        }
+      )
     }
   }
 }
