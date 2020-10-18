@@ -88,6 +88,11 @@
           <span>{{ row.undeliveredNum }}</span>
         </template>
       </el-table-column>
+      <el-table-column label="待收货">
+        <template slot-scope="{ row }">
+          <span>{{ row.unreceivedNum }}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="待评测">
         <template slot-scope="{ row }">
           <span>{{ row.unevaluatedNum }}</span>
@@ -192,7 +197,12 @@
           <span>{{ detail.remainingNum }}</span>
         </el-form-item>
         <el-form-item label="增加名额">
-          <el-input-number v-model="append" :min='1' :max='99' placeholder="请输入名额" />
+          <el-input-number
+            v-model="append"
+            :min="1"
+            :max="99"
+            placeholder="请输入名额"
+          />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">

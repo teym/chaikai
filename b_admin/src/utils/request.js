@@ -71,7 +71,7 @@ service.interceptors.response.use(
       })
 
       // 50008: Illegal token; 50012: Other clients logged in; 50014: Token expired;
-      if (res.code === 20002 || res.code === 50012 || res.code === 50014) {
+      if (res.code === 20002 || res.code === 401 || res.code === 50012 || res.code === 50014) {
         // to re-login
         LoginFlag = true
         MessageBox.confirm('凭证已过期，请重新登录', '提示', {

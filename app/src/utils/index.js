@@ -25,6 +25,9 @@ export function formatTime (date) {
 
   return `${t1} ${t2}`
 }
+export function isPhoneNumber (s) {
+  return /^1[0-9]{10}$/.test(s)
+}
 export function formatMsgTime (date) {
   const m = moment(date)
   const s = m.isSame(new Date(), 'day') ? m.format('Ahh:mm') : m.format('YYYY-MM-DD HH:mm:ss')
@@ -119,6 +122,7 @@ export default {
   formatMsgTime,
   formatNumber,
   formatTime,
+  isPhoneNumber,
   mapChannel,
   makeImgMsg,
   diffTime,

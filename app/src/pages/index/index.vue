@@ -12,6 +12,9 @@
       <swiper
         class="banners"
         :indicator-dots="true"
+        :autoplay="true"
+        :interval="2000"
+        :circular="true"
         indicator-color="white"
         indicator-active-color="#FF8E3B"
         previous-margin="0"

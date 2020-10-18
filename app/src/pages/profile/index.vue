@@ -52,7 +52,7 @@
 
 <script>
 import _ from 'underscore'
-import {uiapi, request, router, api} from '@/utils/index'
+import {uiapi, request, router, api, isPhoneNumber} from '@/utils/index'
 export default {
   data () {
     return {
@@ -66,7 +66,10 @@ export default {
       active: {}
     }
   },
-
+  onShow () {
+    this.loadCode()
+    this.loadData()
+  },
   methods: {
     loadCode () {
       api.rlogin().then(r => {
@@ -112,6 +115,18 @@ export default {
       }
     },
     onSave () {
+      if (!isPhoneNumber(this.user.telephone)) {
+        return uiapi.toast('请输入正确的手机号')
+      }
+      if (!this.user.realName) {
+        return uiapi.toast('请输入真实姓名')
+      }
+      if (!this.user.wechatNo) {
+        return uiapi.toast('请输入微信号')
+      }
+      // if (_.values(this.active).length <= 0) {
+      //   return uiapi.toast('请选择垂直领域')
+      // }
       const e = uiapi.loading()
       request.put('/bl/account', Object.assign({}, this.user, {areas: _.values(this.active)})).then((r) => {
         e()
@@ -121,12 +136,6 @@ export default {
         uiapi.toast(e.info)
       })
     }
-  },
-  onShow () {
-    this.loadData()
-  },
-  created () {
-    // let app = getApp()
   }
 }
 </script>
@@ -147,15 +156,15 @@ export default {
 .sbtn {
   height: 48rpx;
   border-radius: 24rpx;
-  border: 1rpx solid #FF8E3B;
+  border: 1rpx solid #ff8e3b;
   padding: 0 24rpx;
-  color: #FF8E3B;
+  color: #ff8e3b;
 }
-.btn{
+.btn {
   height: 80rpx;
   border-radius: 40rpx;
   color: white;
-  background-color: #FF8E3B;
+  background-color: #ff8e3b;
   width: 640rpx;
   margin: 40rpx 55rpx;
 }

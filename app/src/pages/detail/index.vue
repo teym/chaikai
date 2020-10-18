@@ -157,7 +157,7 @@
       </div>
     </div>
     <div class="bar">
-      <div class="btn" @click="onOk">{{data.statusCode > 5 ? '报名结束' :'立即申请'}}</div>
+      <div class="btn" :class="{disabled: data.applied || data.statusCode > 5}" @click="onOk">{{data.applied ? '已申请' : (data.statusCode > 5 ? '报名结束' :'立即申请')}}</div>
     </div>
     <div v-if="tip" class="pop">
       <div class="pop-content bottom">
@@ -262,7 +262,7 @@ export default {
       this.active = Object.assign({}, this.active, _.object([[sku.id, item]]))
     },
     onOk () {
-      if (this.data.statusCode > 5) {
+      if (this.data.statusCode > 5 || this.data.applied) {
         return
       }
       if (!api.isLogin()) {
@@ -504,6 +504,9 @@ h5 {
   padding: 20rpx;
   border-bottom: 1rpx solid #ebebeb;
 }
+.desc .guide li:nth-last-of-type(1) {
+  border-bottom: none;
+}
 .desc .ship {
   padding: 0 24rpx;
 }
@@ -600,6 +603,9 @@ h5 {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+.btn.disabled{
+  background-color: #ff8e3b99;
 }
 .bar .btn {
   margin: 8rpx 58rpx;

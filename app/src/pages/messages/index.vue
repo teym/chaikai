@@ -47,17 +47,15 @@ export default {
   onShow () {
     if (!api.isLogin()) {
       router(this).push('/pages/login/main')
+    } else {
+      this.loadData(1)
     }
   },
   created () {
-    // let app = getApp()
     this.onUser = () => {
       this.loadData(1)
     }
     signal.add('logined', this.onUser)
-    if (api.isLogin()) {
-      this.loadData(1)
-    }
   },
   beforeDestroy () {
     signal.remove('logined', this.onUser)
@@ -83,6 +81,7 @@ export default {
       })
     },
     onGo (item) {
+      item.bloggerUnreadNum = 0
       router(this).push('/pages/message/main', {id: item.originId, room: item.id})
     }
   }

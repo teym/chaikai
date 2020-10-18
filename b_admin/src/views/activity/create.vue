@@ -605,7 +605,7 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="说明" width="230">
+        <el-table-column label="说明" width=>
           <template slot-scope="{ row }">
             <span>{{ row.desc }}</span>
           </template>
@@ -657,6 +657,7 @@ const defaultForm = {
     otherReq: [],
     awardAmount: "",
   },
+  statusCode: 1
 };
 
 export default {
@@ -875,6 +876,10 @@ export default {
             response.data.goods = r.data.data[0];
             return response.data;
           });
+          // response.data.skus = response.data.goods.skuUnionList.map(
+          //   (i) => i.skuIdUnion
+          // );
+          // return response.data;
         })
         .then((r) => {
           const obj = Object.assign({}, defaultForm, r);
