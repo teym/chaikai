@@ -116,15 +116,15 @@
             <h6>内容形式</h6>
             <p>{{['无要求', '图文', '视频'][data.extension.contentType]}}</p>
           </div>
-          <div class="row just line">
+          <div class="row just line" v-if="data.extension.minWordNum > 0">
             <h6>最低字数</h6>
             <p>{{['无要求', '200字', '400字'][data.extension.minWordNum]}}</p>
           </div>
-          <div class="row just line">
+          <div class="row just line" v-if="data.extension.minPicNum > 0">
             <h6>最低图片数</h6>
             <p>{{['无要求', '6张', '9张'][data.extension.minPicNum]}}</p>
           </div>
-          <div class="row just line">
+          <div class="row just line" v-if="data.extension.minVideoLength > 0">
             <h6>最低视频时长</h6>
             <p>{{['无要求', '15秒', '30秒', '1分钟', '2分钟'][data.extension.minVideoLength]}}</p>
           </div>
@@ -134,11 +134,11 @@
               <p v-for="(c, i) in topics" :key="i">{{c.platformName}}@{{c.nickname}}#{{c.topic}}</p>
             </div>
           </div>
-          <div v-if="data.discountInfo" class="row just line">
+          <div v-if="data.extension.discountInfo" class="row just line">
             <h6 @click="tip=true">优惠信息Ⓢ</h6>
             <p>
-              {{data.discountInfo}}
-              <span>复制</span>
+              {{data.extension.discountInfo}}
+              <span @click="onCopy(data.extension.discountInfo)">复制</span>
             </p>
           </div>
           <div v-if="keywords.length > 0" class="row just line i-center">
@@ -323,6 +323,11 @@ export default {
         router(this).push('/pages/web/main', {url: item.link})
         console.log('banner', '/pages/web/main', {url: item.link})
       }
+    },
+    onCopy (str) {
+      api.copy(str).then(r => {
+        uiapi.toast('复制成功')
+      })
     }
   }
 }
@@ -604,7 +609,7 @@ h5 {
   align-items: center;
   justify-content: center;
 }
-.btn.disabled{
+.btn.disabled {
   background-color: #ff8e3b99;
 }
 .bar .btn {
