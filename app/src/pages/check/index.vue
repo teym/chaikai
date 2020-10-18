@@ -96,17 +96,23 @@
                 <p v-for="(c, i) in topics" :key="i">{{c.platformName}}@{{c.nickname}}#{{c.topic}}</p>
               </div>
             </div>
-            <div v-if="data.discountInfo" class="row just pad-t">
+            <div v-if="data.extension.discountInfo" class="row just pad-t">
               <p class="small normal light" @click="tip=true">优惠信息Ⓢ</p>
               <div class="small medium light text-right flex">
-                {{data.discountInfo}}
-                <span>复制</span>
+                {{data.extension.discountInfo}}
+                <span @click="onCopy(data.extension.discountInfo)">复制</span>
               </div>
             </div>
             <div v-if="keywords.length > 0" class="row just pad-t">
               <p class="small normal light">附带关键词</p>
               <div class="small medium light text-right flex">
                 <p v-for="(k, i) in keywords" :key="i" class="small medium light">{{k}}</p>
+              </div>
+            </div>
+            <div v-if="data.extension.bloggerPublishTime" class="row just pad-t">
+              <p class="small normal light">发布时间</p>
+              <div class="small medium light text-right flex">
+                {{data.extension.bloggerPublishTimeStr}}
               </div>
             </div>
             <div v-if="otherReq.length > 0" class="row just pad-t">
@@ -202,6 +208,7 @@
 
 <script>
 import _ from 'underscore'
+import moment from 'moment'
 import {router, api, uiapi, request, mapChannel} from '@/utils/index'
 
 export default {
@@ -248,6 +255,7 @@ export default {
       const {id, select} = router(this).params()
       console.log('check', id, select)
       request.get('/bl/activity/' + id).then(({json: {data}}) => {
+        data.extension.bloggerPublishTimeStr = moment(data.extension.bloggerPublishTime).format('截止M月D日前')
         this.data = data
         // this.channels = mapChannel(data.extension.channels)
         this.topics = _.filter(this.channels, i => i.topic)

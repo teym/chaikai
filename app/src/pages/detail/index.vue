@@ -147,6 +147,12 @@
               <p v-for="(k, i) in keywords" :key="i" class="round-btn gray margin-l">{{k}}</p>
             </div>
           </div>
+          <div v-if="data.extension.bloggerPublishTime" class="row just line">
+            <h6>发布时间</h6>
+            <p>
+              {{data.extension.bloggerPublishTimeStr}}
+            </p>
+          </div>
           <div v-if="otherReq.length > 0" class="row just line i-center">
             <h6>其他要求</h6>
             <div>
@@ -190,6 +196,7 @@
 
 <script>
 import _ from 'underscore'
+import moment from 'moment'
 import {router, uiapi, api, request, mapChannel, diffTime} from '@/utils/index'
 
 export default {
@@ -248,6 +255,7 @@ export default {
         if (!data.goods.brandInfo) {
           data.goods.brandInfo = {}
         }
+        data.extension.bloggerPublishTimeStr = moment(data.extension.bloggerPublishTime).format('截止M月D日前')
         this.data = data
         this.banners = data.goods.banners || [data.picUrl]
         this.channels = mapChannel(data.extension.channels)

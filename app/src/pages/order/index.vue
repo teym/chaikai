@@ -182,7 +182,7 @@
 <script>
 import _ from 'underscore'
 import moment from 'moment'
-import {router, api, uiapi, request, mapChannel, formatDeadLine} from '@/utils/index'
+import {router, api, uiapi, request, mapChannel, diffTime} from '@/utils/index'
 
 export default {
   data () {
@@ -232,7 +232,7 @@ export default {
       })
     },
     mapMsg (data) {
-      const s = formatDeadLine(data.deadline)
+      const s = diffTime(data.deadline)
       switch (data.statusCode) {
         case 1:
           return `还剩${s}结束审核`

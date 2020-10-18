@@ -59,7 +59,7 @@
 <script>
 // import _ from 'underscore'
 import moment from 'moment'
-import {router, uiapi, request, mapChannel, formatDeadLine} from '@/utils/index'
+import {router, uiapi, request, mapChannel, diffTime} from '@/utils/index'
 
 export default {
   data () {
@@ -97,7 +97,7 @@ export default {
       })
     },
     mapStatus (s, t) {
-      const time = formatDeadLine(t)
+      const time = diffTime(t)
       switch (s) {
         case 1:
           return `修改测评还剩${time}，超时将由小二介入`
