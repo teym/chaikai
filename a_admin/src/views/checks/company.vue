@@ -80,7 +80,7 @@
       </el-table-column>
       <el-table-column label="提交时间" align="center">
         <template slot-scope="{ row }">
-          <span>{{ row.gmtCreate }}</span>
+          <span>{{ row.date }}</span>
         </template>
       </el-table-column>
 
@@ -122,6 +122,7 @@
 <script>
 import { fetchCompanyList, updateCompanyState } from '@/api/check'
 import { clearQueryObject } from '@/utils/index'
+import moment from 'moment'
 import waves from '@/directive/waves' // waves directive
 import { mapGetters } from 'vuex'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
@@ -163,7 +164,11 @@ export default {
       this.listLoading = true
       fetchCompanyList(clearQueryObject(this.listQuery, true)).then(
         ({ data }) => {
-          this.list = data.data
+          this.list = data.data.map((i) =>
+            Object.assign(i, {
+              date: moment(i.gmtCreate).format('YYYY-MM-DD HH:mm:ss')
+            })
+          )
           this.total = data.pager.count
 
           // Just to simulate the time of the request
