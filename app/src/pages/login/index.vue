@@ -8,7 +8,7 @@
     </div>
     <div class="flex col i-center">
       <button open-type='getUserInfo' class="btn row center middle blod" @getuserinfo="onLogin">微信授权登录</button>
-      <span class="middle light margin2-t cancel">取消登录</span>
+      <span class="middle light margin2-t cancel" @click="onCancel">取消登录</span>
     </div>
     <div class="row center pad2 bar">
       <p class="small light">登录代表已同意<span class="red">《拆开服务协议及免责声明》</span></p>
@@ -21,32 +21,39 @@
 import {api, signal, router} from '@/utils/index'
 
 export default {
+  props: {
+    embed: {
+      type: Boolean
+    }
+  },
   data () {
     return {
     }
   },
-  created () {
-    // let app = getApp()
-  },
-  onPullDownRefresh () {
-
-  },
-  onReachBottom () {
-
-  },
   methods: {
     onLogin (e) {
       api.login().then(r => {
-        signal.emit('logined')
-        router(this).pop()
+        if (!this.embed) {
+          signal.emit('logined')
+          router(this).pop()
+        } else {
+          this.$emit('logined')
+        }
       })
+    },
+    onCancel (e) {
+      if (!this.embed) {
+        router(this).replaceAll('/pages/index/main')
+      } else {
+        router(this).pop()
+      }
     }
   }
 }
 </script>
 
 <style scoped>
-.bg{
+.bg {
   width: 750rpx;
   height: 458rpx;
 }
@@ -54,18 +61,18 @@ export default {
   width: 160rpx;
   height: 160rpx;
 }
-.btn{
+.btn {
   height: 80rpx;
   border-radius: 40rpx;
-  background-color: #FF8E3B;
+  background-color: #ff8e3b;
   margin-top: 80rpx;
   width: 640rpx;
   color: white;
 }
-.cancel{
+.cancel {
   color: #999999;
 }
-.bar .light{
+.bar .light {
   color: #999999;
 }
 </style>

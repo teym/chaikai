@@ -14,7 +14,7 @@
       <el-input
         v-model="listQuery.searchKey"
         placeholder="请输入"
-        style="width: 200px;"
+        style="width: 200px"
         size="mini"
         class="filter-item"
         @keyup.enter.native="handleFilter"
@@ -33,7 +33,12 @@
         class="filter-item"
         style="margin-left: 16px"
       >
-        <el-option v-for="(item, i) in status" :key="i" :value="i" :label="item" />
+        <el-option
+          v-for="(item, i) in status"
+          :key="i"
+          :value="i"
+          :label="item"
+        />
       </el-select>
 
       <el-button
@@ -92,7 +97,12 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="操作" align="center" width="240" class-name="small-padding fixed-width">
+      <el-table-column
+        label="操作"
+        align="center"
+        width="240"
+        class-name="small-padding fixed-width"
+      >
         <template slot-scope="{ row }">
           <el-button
             v-if="row.statusCode === 2"
@@ -100,10 +110,22 @@
             size="mini"
             @click="handleAction(row, 4)"
           >通过</el-button>
-          <el-button v-if="row.statusCode === 2" size="mini" @click="handleAction(row, 3)">拒绝</el-button>
+          <el-button
+            v-if="row.statusCode === 2"
+            size="mini"
+            @click="handleAction(row, 3)"
+          >拒绝</el-button>
           <br v-if="row.statusCode === 2">
-          <el-button v-if="row.statusCode >= 2" size="mini" @click="handlePreview(row)">预览</el-button>
-          <el-button v-if="row.statusCode >= 2" size="mini" @click="handleDetail(row)">详情</el-button>
+          <el-button
+            v-if="row.statusCode >= 2"
+            size="mini"
+            @click="handlePreview(row)"
+          >预览</el-button>
+          <el-button
+            v-if="row.statusCode >= 2"
+            size="mini"
+            @click="handleDetail(row)"
+          >详情</el-button>
           <br v-if="row.statusCode >= 2">
           <el-button
             v-if="row.statusCode === 45"
@@ -158,12 +180,17 @@
         </div>
         <div class="row">
           <h4>活动规格:</h4>
-          <p>{{ detail.goods.skuUnionList.map(i=>i.name).join(', ') }}</p>
+          <p>{{ detail.goods.skuUnionList.map((i) => i.name).join(", ") }}</p>
         </div>
         <div class="row">
           <h4>测评指引:</h4>
           <div>
-            <el-input v-for="(l, j) in detail.guideList" :key="j" v-model="l.txt" size="mini">
+            <el-input
+              v-for="(l, j) in detail.guideList"
+              :key="j"
+              v-model="l.txt"
+              size="mini"
+            >
               <el-button
                 slot="append"
                 size="mini"
@@ -174,7 +201,9 @@
             <el-button
               size="mini"
               icon="el-icon-add"
-              @click="detail.guideList.splice(detail.guideList.length, 0, {txt:''})"
+              @click="
+                detail.guideList.splice(detail.guideList.length, 0, { txt: '' })
+              "
             >添加</el-button>
           </div>
         </div>
@@ -186,17 +215,36 @@
         <div class="row">
           <h4>收货地限制:</h4>
           <div>
-            <el-checkbox :checked="detail.extension.receiveAreaLimit" label="" />
+            <el-checkbox
+              :checked="detail.extension.receiveAreaLimit"
+              label=""
+            />
             <div v-if="detail.extension.receiveAreaLimit">
-              <p>{{ detail.extension.receiveAreas[0].type === 1 ? '不可收货':'可收货' }}</p>
-              <p>{{ detail.extension.receiveAreas.map(i=>((i.province||'') + (i.city || ''))).join(', ') }}</p>
+              <p>
+                {{
+                  detail.extension.receiveAreas[0].type === 1
+                    ? "不可收货"
+                    : "可收货"
+                }}
+              </p>
+              <p>
+                {{
+                  detail.extension.receiveAreas
+                    .map((i) => (i.province || "") + (i.city || ""))
+                    .join(", ")
+                }}
+              </p>
             </div>
           </div>
         </div>
         <h3>合作任务</h3>
         <div class="row">
           <h4>报名渠道:</h4>
-          <p>{{ detail.extension.channels.map(i=>i.platformName).join(', ') }}</p>
+          <p>
+            {{
+              detail.extension.channels.map((i) => i.platformName).join(", ")
+            }}
+          </p>
         </div>
         <div class="row">
           <h4>合作方式</h4>
@@ -207,31 +255,40 @@
           <div>
             <div class="row">
               <h6>合作篇幅</h6>
-              <p>{{ detail.extension.articleType > 0 ? '单篇' : '无要求' }}</p>
+              <p>{{ detail.extension.articleType > 0 ? "单篇" : "无要求" }}</p>
             </div>
             <div class="row">
               <h6>内容形式</h6>
-              <p>{{ ['无要求', '图文', '视频'][detail.extension.contentType] }}</p>
+              <p>
+                {{ ["无要求", "图文", "视频"][detail.extension.contentType] }}
+              </p>
             </div>
             <div class="row">
               <h6>最低字数</h6>
-              <p>{{ ['无要求', '200字', '400字'][detail.extension.minWordNum] }}</p>
+              <p>
+                {{ ["无要求", "200字", "400字"][detail.extension.minWordNum] }}
+              </p>
             </div>
             <div class="row">
               <h6>最低图片数</h6>
-              <p>{{ ['无要求', '6张', '9张'][detail.extension.minPicNum] }}</p>
+              <p>{{ ["无要求", "6张", "9张"][detail.extension.minPicNum] }}</p>
             </div>
             <div class="row">
               <h6>最低视频时长</h6>
-              <p>{{ ['无要求', '15秒', '30秒', '1分钟', '2分钟'][detail.extension.minVideoLength] }}</p>
+              <p>
+                {{
+                  ["无要求", "15秒", "30秒", "1分钟", "2分钟"][
+                    detail.extension.minVideoLength
+                  ]
+                }}
+              </p>
             </div>
             <div class="row">
               <h6>账号话题</h6>
               <div>
-                <p
-                  v-for="(c, i) in detail.extension.channels"
-                  :key="i"
-                >{{ c.platformName }}@{{ c.nickname }}#{{ c.topic }}</p>
+                <p v-for="(c, i) in detail.extension.channels" :key="i">
+                  {{ c.platformName }}@{{ c.nickname }}#{{ c.topic }}
+                </p>
               </div>
             </div>
             <div v-if="detail.extension.discountInfo" class="row">
@@ -245,7 +302,9 @@
             <div v-if="detail.extension.length > 0" class="row">
               <h6>其他要求</h6>
               <div>
-                <p v-for="(o, i) in detail.extension.otherReq" :key="i">{{ o }}</p>
+                <p v-for="(o, i) in detail.extension.otherReq" :key="i">
+                  {{ o }}
+                </p>
               </div>
             </div>
             <div class="row">
@@ -256,12 +315,13 @@
         </div>
       </div>
       <div slot="footer">
-        <el-button @click="detailVisible=false">取消</el-button>
+        <el-button @click="detailVisible = false">取消</el-button>
         <el-button type="primary" @click="onSave">确定</el-button>
       </div>
     </el-dialog>
     <el-dialog width="415px" title="预览" :visible.sync="previewVisible">
-      <preview v-if="detail" :item="detail" />
+      <img src="previewQR" alt="qr">
+      <p>微信扫描二维码预览活动</p>
     </el-dialog>
   </div>
 </template>
@@ -271,18 +331,18 @@ import {
   fetchActivityList,
   updateActivityState,
   fetchActivity,
-  updateActivity
+  updateActivity,
+  fetchActivityQR
 } from '@/api/check'
 import moment from 'moment'
 import { clearQueryObject } from '@/utils/index'
 import waves from '@/directive/waves' // waves directive
 import { mapGetters } from 'vuex'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
-import preview from './preview'
 
 export default {
   name: 'ComplexTable',
-  components: { Pagination, preview },
+  components: { Pagination },
   directives: { waves },
   data() {
     return {
@@ -298,11 +358,20 @@ export default {
         statusCode: 0,
         coopType: 0
       },
-      status: ['全部', '待提交', '待排期', '已拒绝', '未开始', '报名中', '报名结束'],
+      status: [
+        '全部',
+        '待提交',
+        '待排期',
+        '已拒绝',
+        '未开始',
+        '报名中',
+        '报名结束'
+      ],
       coopTypes: ['全部', '接受悬赏', '接受悬赏/达人报价', '免费置换'],
       detailVisible: false,
       detail: null,
-      previewVisible: false
+      previewVisible: false,
+      previewQR: ''
     }
   },
   computed: {
@@ -317,17 +386,15 @@ export default {
       const obj = Object.assign({}, this.listQuery)
       obj[['', 'brActivityId', 'title', 'brandName'][obj.searchType]] =
         obj.searchKey
-      fetchActivityList(clearQueryObject(obj, true)).then(
-        ({ data }) => {
-          this.list = data.data
-          this.total = data.pager.count
+      fetchActivityList(clearQueryObject(obj, true)).then(({ data }) => {
+        this.list = data.data
+        this.total = data.pager.count
 
-          // Just to simulate the time of the request
-          setTimeout(() => {
-            this.listLoading = false
-          }, 1.5 * 1000)
-        }
-      )
+        // Just to simulate the time of the request
+        setTimeout(() => {
+          this.listLoading = false
+        }, 1.5 * 1000)
+      })
     },
     handleFilter() {
       this.listQuery.page = 1
@@ -335,9 +402,9 @@ export default {
     },
 
     handlePreview(row) {
-      this.detail = null
+      this.previewQR = ''
       this.previewVisible = true
-      this.loadDetail(row.id)
+      this.loadQR(row.id)
     },
     handleAction(row, state) {
       if (state === 4 || state === 6) {
@@ -365,6 +432,11 @@ export default {
       this.detail = null
       this.detailVisible = true
       this.loadDetail(row.id)
+    },
+    loadQR(id) {
+      fetchActivityQR(id).then((r) => {
+        this.previewQR = r.data
+      })
     },
     loadDetail(id) {
       fetchActivity(id).then((r) => {

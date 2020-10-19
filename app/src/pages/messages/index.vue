@@ -5,7 +5,7 @@
         <p>消息</p>
       </div>
     </navbar>
-    <div class="content flex col">
+    <div v-if="logined" class="content flex col">
       <div v-if="datas.length === 0" class="flex col center empty">
         <img src="/static/images/message_empty.png" alt="msg">
         <p class="middle light">你还没有消息哦～</p>
@@ -23,6 +23,7 @@
         </div>
       </div>
     </div>
+    <login v-else :embed="true" @logined="onLogined"/>
   </div>
 </template>
 
@@ -30,6 +31,7 @@
 // import _ from 'underscore'
 import navbar from '@/components/navbar'
 import {router, api, signal, uiapi, request, formatMsgTime, isImgMsg} from '@/utils/index'
+import login from '../login/index'
 
 export default {
   data () {
@@ -37,23 +39,24 @@ export default {
       datas: [],
       page: 1,
       loading: false,
-      nomore: false
+      nomore: false,
+      logined: false
     }
   },
 
   components: {
-    navbar
+    navbar,
+    login
   },
-  onShow () {
-    if (!api.isLogin()) {
-      router(this).push('/pages/login/main')
-    } else {
+  mounted () {
+    if (api.isLogin()) {
       this.loadData(1)
     }
   },
   created () {
+    this.logined = api.isLogin()
     this.onUser = () => {
-      this.loadData(1)
+      this.onLogined()
     }
     signal.add('logined', this.onUser)
   },
@@ -61,7 +64,9 @@ export default {
     signal.remove('logined', this.onUser)
   },
   onPullDownRefresh () {
-    this.loadData(1)
+    if (api.isLogin()) {
+      this.loadData(1)
+    }
   },
   onReachBottom () {
     if (this.loading || this.nomore) {
@@ -70,6 +75,12 @@ export default {
     this.loadData(this.page + 1)
   },
   methods: {
+    onLogined () {
+      this.logined = api.isLogin()
+      if (this.logined) {
+        this.loadData(1)
+      }
+    },
     loadData (page) {
       request.get('/chat/bl/room/list', {page, size: 10, type: 1}).then(({json: {data}}) => {
         this.datas = (page === 1 ? [] : this.datas).concat(data.data.map(i => Object.assign(i, {date: formatMsgTime(i.lastTime), content: isImgMsg(i.lastRecord.content) ? '[图片]' : i.lastRecord.content})))
@@ -89,38 +100,38 @@ export default {
 </script>
 
 <style scoped>
-.navbar{
+.navbar {
   width: 100%;
   height: 100%;
 }
-.navbar p{
+.navbar p {
   font-size: 44rpx;
   font-weight: 500;
 }
-.item img{
+.item img {
   width: 100rpx;
   height: 100rpx;
   border-radius: 50rpx;
-  background-color: #F5F5F5;
+  background-color: #f5f5f5;
 }
-.item div{
+.item div {
   padding: 4rpx 0;
 }
-.item .right{
+.item .right {
   align-items: flex-end;
 }
-.item .date{
-  color: #7B7F8E;
+.item .date {
+  color: #7b7f8e;
 }
-.item .round{
-  background-color: #F25643;
+.item .round {
+  background-color: #f25643;
   height: 32rpx;
   font-size: 24rpx;
   color: white;
   border-radius: 16rpx;
   min-width: 32rpx;
 }
-.empty img{
+.empty img {
   width: 480rpx;
   height: 306rpx;
 }

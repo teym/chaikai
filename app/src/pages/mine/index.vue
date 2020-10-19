@@ -1,12 +1,12 @@
 <template>
-  <div class="container">
-    <img class="bg pos_a" src="/static/images/mine_bg.png" alt="bg">
-    <div class="content col flex">
-    <navbar :fixed="true">
-      <div class="navbar row i-center pad2-l">
-        <span class="dark blod">我的</span>
-      </div>
-    </navbar>
+<div class="container">
+  <img v-if="logined" class="bg pos_a" src="/static/images/mine_bg.png" alt="bg">
+  <navbar :fixed="true">
+    <div class="navbar row i-center pad2-l">
+      <span :class="{white:logined,black:!logined}" class="blod">我的</span>
+    </div>
+  </navbar>
+  <div v-if="logined" class="content col flex">
     <div class="row just info pad2-l pad2-r margin-t">
       <div class="row" @click="onRouter('profile')">
         <img class="logo" :src="user.avatar" alt="logo">
@@ -84,17 +84,20 @@
         </div>
       </button>
     </div>
-    </div>
   </div>
+  <login v-else :embed="true" @logined="onLogined"/>
+</div>
 </template>
 
 <script>
 import navbar from '@/components/navbar'
+import login from '../login/index'
 import {router, api, signal, request, mapChannel, uiapi} from '@/utils/index'
 
 export default {
   components: {
-    navbar
+    navbar,
+    login
   },
   data () {
     return {
@@ -106,7 +109,8 @@ export default {
       },
       session: '',
       amount: 0,
-      channels: []
+      channels: [],
+      logined: false
     }
   },
   computed: {
@@ -114,17 +118,15 @@ export default {
       return this.user.areas.map(i => i.name).join('|')
     }
   },
-  onShow () {
-    if (!api.isLogin()) {
-      router(this).push('/pages/login/main')
-    } else {
+  mounted () {
+    if (api.isLogin()) {
       this.loadData()
     }
   },
   created () {
-    // let app = getApp()
+    this.logined = api.isLogin()
     this.onUser = () => {
-      this.loadData()
+      this.onLogined()
     }
     signal.add('logined', this.onUser)
   },
@@ -132,6 +134,12 @@ export default {
     signal.remove('logined', this.onUser)
   },
   methods: {
+    onLogined () {
+      this.logined = api.isLogin()
+      if (this.logined) {
+        this.loadData()
+      }
+    },
     loadData () {
       request.get('/bl/account').then(({json: {data}}) => {
         this.user = data
@@ -186,7 +194,6 @@ export default {
   height: 100%;
 }
 .navbar span {
-  color: white;
   font-size: 44rpx;
 }
 .content {

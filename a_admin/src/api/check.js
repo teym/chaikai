@@ -65,6 +65,13 @@ export function fetchActivity(id) {
     method: 'get'
   })
 }
+export function fetchActivityQR(id) {
+  return request({
+    url: `/br/activity/${id}/miniapp/qrcode`,
+    method: 'get',
+    params: { path: 'pages/detail/main' }
+  })
+}
 export function updateActivity(data) {
   return request({
     url: '/sys/activity',

@@ -19,12 +19,13 @@ export default {
       totalHeight: ''
     }
   },
-  created () {
+  mounted () {
     const {statusBarHeight, platform} = mpvue.getSystemInfoSync()
     const navbarHeight = (platform === 'Android' ? 48 : 44)
     this.statusBarHeight = statusBarHeight + 'px'
     this.navbarHeight = navbarHeight + 'px'
     this.totalHeight = (statusBarHeight + navbarHeight) + 'px'
+    console.log('nav', statusBarHeight, navbarHeight)
   }
 }
 </script>

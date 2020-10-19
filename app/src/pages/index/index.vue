@@ -92,6 +92,9 @@ export default {
     }
     this.loadData(this.page + 1)
   },
+  onTabItemTap (item) {
+    console.log('tab', item)
+  },
   methods: {
     loadData (page) {
       if (page === 1) {
