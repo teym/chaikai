@@ -70,5 +70,11 @@
       "activeIcon": "static/tabs/mine-active.png"
     }],
     "position": "bottom"
+  },
+  "plugins": {
+    "meiqia": {
+      "version": "1.1.0",
+      "provider": "wx2d2cd5fd79396601"
+    }
   }
 }

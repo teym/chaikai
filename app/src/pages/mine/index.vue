@@ -140,6 +140,19 @@ export default {
           name: data.nickname,
           weixin: data.wechatNo,
           contact: data.realName})
+
+        const meiqiaPlugin = wx.requirePlugin('meiqia')
+        meiqiaPlugin.setClientInfo({
+          user_info: {
+            tel: data.telephone,
+            name: data.nickname,
+            weixin: data.wechatNo,
+            contact: data.realName
+          },
+          ent_id: '249463',
+          app_id: 'wx48bf43cf5cf1886d',
+          open_id: data.wechatOpenId
+        })
       }).catch(e => {
         uiapi.toast(e.info)
       })

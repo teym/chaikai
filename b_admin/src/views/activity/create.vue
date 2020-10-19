@@ -657,7 +657,7 @@ const defaultForm = {
     otherReq: [],
     awardAmount: "",
   },
-  statusCode: 1
+  statusCode: 1,
 };
 
 export default {
@@ -1062,9 +1062,9 @@ export default {
           if (copy) {
             obj.statusCode = 1;
           }
-          var t = copy || !id ? createData(obj) : updateData(obj);
+          var t = (copy || !id) ? createData(obj) : updateData(obj);
           if (submit) {
-            t = t.then((r) => submitData(id || r.data));
+            t = t.then((r) => submitData((copy || !id) ? r.data : id));
           }
           t.then((r) => {
             this.$notify({
