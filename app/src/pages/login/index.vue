@@ -33,8 +33,8 @@ export default {
   methods: {
     onLogin (e) {
       api.login().then(r => {
+        signal.emit('logined')
         if (!this.embed) {
-          signal.emit('logined')
           router(this).pop()
         } else {
           this.$emit('logined')
