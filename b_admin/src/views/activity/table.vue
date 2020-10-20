@@ -154,8 +154,8 @@
             v-if="row.statusCode === 5 || row.statusCode === 6"
             type="text"
             size="mini"
-            @click="handleOrder(row)"
-            >预览订单</el-button
+            @click="handlePreview(row)"
+            >预览活动</el-button
           >
           <br v-if="row.statusCode === 5 || row.statusCode === 6" />
           <el-button
@@ -215,6 +215,10 @@
         >
       </div>
     </el-dialog>
+    <el-dialog width="415px" title="预览" :visible.sync="previewVisible">
+      <img style="width: 100%" :src="previewQR" alt="qr" />
+      <p style="text-align: center">微信扫描二维码预览活动</p>
+    </el-dialog>
   </div>
 </template>
 
@@ -225,6 +229,7 @@ import {
   updateData,
   removeData,
   updateNum,
+  fetchActivityQR,
 } from "@/api/activities";
 import { mapGetters } from "vuex";
 import waves from "@/directive/waves"; // waves directive
@@ -252,6 +257,8 @@ export default {
       append: 0,
       formVisible: false,
       formLoading: false,
+      previewVisible: false,
+      previewQR: "",
     };
   },
   computed: {
@@ -320,6 +327,13 @@ export default {
       this.$router.push({
         path: "/activity/create",
         query: { id: row.id, copy: true },
+      });
+    },
+    handlePreview(row) {
+      this.previewQR = "";
+      this.previewVisible = true;
+      fetchActivityQR(row.id).then((r) => {
+        this.previewQR = r.data ? "data:image/png;base64," + r.data : "";
       });
     },
     handleUpdate(row) {

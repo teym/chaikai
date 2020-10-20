@@ -15,6 +15,14 @@ export function fetchData(id) {
   })
 }
 
+export function fetchActivityQR(id) {
+  return request({
+    url: `/br/activity/${id}/miniapp/qrcode`,
+    method: 'get',
+    params: { path: 'pages/detail/main' }
+  })
+}
+
 export function fetchIssues(query) {
   return request({
     url: '/ticket/ao/list',
