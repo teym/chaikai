@@ -2,7 +2,8 @@
   <div class="sidebar-logo-container">
     <transition name="sidebarLogoFade">
       <router-link key="expand" class="sidebar-logo-link" to="/user/index">
-        <img v-if="logo" :src="avatar || logo" class="sidebar-logo">
+        <img v-if="avatar" :src="avatar" class="sidebar-logo">
+        <img v-else src="@/assets/images/user_icon.png" class="sidebar-logo">
       </router-link>
     </transition>
   </div>
@@ -15,8 +16,6 @@ export default {
   name: 'SidebarLogo',
   data() {
     return {
-      logo:
-        'https://wpimg.wallstcn.com/69a1c46c-eb1c-4b46-8bd4-e9e686ef5251.png'
     }
   },
   computed: {
@@ -41,7 +40,6 @@ export default {
   height: 120px;
   line-height: 50px;
   padding: 35px 0;
-  background: #2b2f3a;
   text-align: center;
   overflow: hidden;
   vertical-align: middle;
