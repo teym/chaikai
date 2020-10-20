@@ -17,6 +17,7 @@
               <el-button
                 size="mini"
                 type="primary"
+                round
                 @click="handleAuth"
               >{{ (["","马上认证","查看认证","查看认证","重新认证"])[user.statusCode] }}</el-button>
             </span>

@@ -43,6 +43,6 @@ export default {
   bottom: 0;
   left: 0;
   width: 750rpx;
-  z-index: 999;
+  z-index: 9;
 }
 </style>
