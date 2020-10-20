@@ -37,7 +37,7 @@
     "borderStyle": "white",
 
     "list": [{
-      "text": "首页",
+      "text": "活动",
       "pagePath": "pages/index/main",
       "iconPath": "static/tabs/home.png",
       "selectedIconPath": "static/tabs/home-active.png"
@@ -54,7 +54,7 @@
     }],
 
     "items": [{
-      "name": "首页",
+      "name": "活动",
       "pagePath": "pages/index/main",
       "icon": "static/tabs/home.png",
       "activeIcon": "static/tabs/home-active.png"

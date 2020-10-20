@@ -754,6 +754,9 @@ export default {
         this.$message({ message: "已投诉", type: "success" });
       });
     },
+    handleDetail(row) {
+      window.showCommunicate(row.id)
+    }
   },
 };
 </script>

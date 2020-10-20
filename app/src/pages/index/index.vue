@@ -175,14 +175,17 @@ export default {
 }
 .items {
   padding: 0 20rpx;
-  margin: 24rpx 0;
+  margin: 12rpx 0;
 }
 .items .col {
   margin: 0 12rpx;
 }
 .item {
+  margin: 12rpx 0;
   border-radius: 16rpx;
   overflow: hidden;
+  background: white;
+  box-shadow: 0 4rpx 14rpx 0 rgba(193, 198, 203, 0.15);
 }
 .item .icon {
   width: 100%;

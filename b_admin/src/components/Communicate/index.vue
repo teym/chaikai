@@ -25,14 +25,14 @@
           :class="{ active: i.originId === active }"
           @click="onActive(i)"
         >
-          <img :src="i.accountInfo.avatar" alt="avatar">
+          <img :src="(i.accountInfo || {}).avatar" alt="avatar">
           <div class="col">
             <div class="row t">
-              <h5>{{ i.accountInfo.name }}</h5>
+              <h5>{{ (i.accountInfo || {}).name }}</h5>
               <span>{{ i.date }}</span>
             </div>
             <div class="row b">
-              <p>{{ i.lastRecord.content }}</p>
+              <p>{{ i.content }}</p>
               <span v-if="i.brUnreadNum > 0">{{ i.brUnreadNum }}</span>
             </div>
           </div>
@@ -51,9 +51,9 @@
             class="chat"
             :class="{ mine: item.my }"
           >
-            <img class="logo" :src="item.accountInfo.avatar" alt="logo">
+            <img class="logo" :src="(item.accountInfo || {}).avatar" alt="logo">
             <div class="col">
-              <span>{{ item.accountInfo.name }}</span>
+              <span>{{ (item.accountInfo || {}).name }}</span>
               <div>
                 <img
                   v-if="item.isImg"

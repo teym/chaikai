@@ -162,9 +162,11 @@
         </div>
       </div>
     </div>
-    <div class="bar">
-      <div class="btn" :class="{disabled: data.applied || data.statusCode > 5}" @click="onOk">{{data.applied ? '已申请' : (data.statusCode > 5 ? '报名结束' :'立即申请')}}</div>
-    </div>
+    <bar background='#FFFFFF'>
+      <div class="bar">
+        <div class="btn" :class="{disabled: data.applied || data.statusCode > 5}" @click="onOk">{{data.applied ? '已申请' : (data.statusCode > 5 ? '报名结束' :'立即申请')}}</div>
+      </div>
+    </bar>
     <div v-if="tip" class="pop">
       <div class="pop-content bottom">
         <h6>合作要求特殊说明：</h6>
@@ -197,6 +199,7 @@
 <script>
 import _ from 'underscore'
 import moment from 'moment'
+import bar from '@/components/bar'
 import {router, uiapi, api, request, mapChannel, diffTime, resetData} from '@/utils/index'
 
 function defaultData () {
@@ -224,6 +227,9 @@ function defaultData () {
 }
 
 export default {
+  components: {
+    bar
+  },
   data () {
     return defaultData()
   },
@@ -435,7 +441,10 @@ h5 {
 .info .channel ul img {
   width: 44rpx;
   height: 44rpx;
+  border-radius: 22rpx;
+  background-color: white;
   margin: 0 -8rpx;
+  border: 6rpx solid white;
 }
 .info .hot {
   padding: 24rpx 0 0 0;
@@ -604,16 +613,12 @@ h5 {
 }
 
 .bar {
-  position: fixed;
   display: flex;
   align-items: center;
   justify-content: center;
   background-color: white;
-  left: 0;
-  bottom: 0;
   width: 750rpx;
   height: 96rpx;
-  z-index: 10;
 }
 .btn {
   height: 80rpx;
