@@ -320,8 +320,8 @@
       </div>
     </el-dialog>
     <el-dialog width="415px" title="预览" :visible.sync="previewVisible">
-      <img src="previewQR" alt="qr">
-      <p>微信扫描二维码预览活动</p>
+      <img style="width:100%" :src="previewQR" alt="qr">
+      <p style="text-align:center">微信扫描二维码预览活动</p>
     </el-dialog>
   </div>
 </template>
@@ -435,7 +435,7 @@ export default {
     },
     loadQR(id) {
       fetchActivityQR(id).then((r) => {
-        this.previewQR = r.data
+        this.previewQR = r.data ? ('data:image/png;base64,' + r.data) : ''
       })
     },
     loadDetail(id) {

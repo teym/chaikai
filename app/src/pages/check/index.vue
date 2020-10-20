@@ -209,48 +209,50 @@
 <script>
 import _ from 'underscore'
 import moment from 'moment'
-import {router, api, uiapi, request, mapChannel} from '@/utils/index'
+import {router, api, uiapi, request, mapChannel, resetData} from '@/utils/index'
+
+function defaultData () {
+  return {
+    data: {
+      extension: {}
+    },
+    sku: {},
+    channels: [],
+    topics: [],
+    keywords: [],
+    otherReq: [],
+    address: null,
+    type: 1,
+    price: null,
+    pay: 1,
+    bid: 1,
+    loading: false,
+    active: {},
+    pop: false,
+    text: ''
+  }
+}
 
 export default {
   data () {
-    return {
-      data: {
-        extension: {}
-      },
-      sku: {},
-      channels: [],
-      topics: [],
-      keywords: [],
-      otherReq: [],
-      address: null,
-      type: 1,
-      price: null,
-      pay: 1,
-      bid: 1,
-      loading: false,
-      active: {},
-      pop: false,
-      text: ''
-    }
+    return defaultData()
   },
   computed: {
     reward () {
       return this.data ? this.data.reward * (this.type === 2 ? parseInt(this.bid) * 2 : 1) : 0
     }
   },
-  created () {
-    // let app = getApp()
-  },
   mounted () {
+    this.reset()
     this.loadData()
   },
   onPullDownRefresh () {
     this.loadData()
   },
-  onReachBottom () {
-
-  },
   methods: {
+    reset () {
+      resetData(this, defaultData())
+    },
     loadData () {
       const {id, select} = router(this).params()
       console.log('check', id, select)

@@ -5,6 +5,13 @@ import { mapi } from './api'
 import { muiapi } from './uiapi'
 import { msignal } from './signal'
 import moment from 'moment'
+import _ from 'underscore'
+
+export function resetData (obj, data) {
+  _.each(_.keys(data), (k) => {
+    obj[k] = data[k]
+  })
+}
 
 export function formatNumber (n) {
   const str = n.toString()
@@ -125,6 +132,7 @@ export default {
   isPhoneNumber,
   mapChannel,
   makeImgMsg,
+  resetData,
   diffTime,
   imgMsgUrl,
   isImgMsg,

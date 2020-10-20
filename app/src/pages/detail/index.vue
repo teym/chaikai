@@ -197,31 +197,35 @@
 <script>
 import _ from 'underscore'
 import moment from 'moment'
-import {router, uiapi, api, request, mapChannel, diffTime} from '@/utils/index'
+import {router, uiapi, api, request, mapChannel, diffTime, resetData} from '@/utils/index'
+
+function defaultData () {
+  return {
+    data: {
+      goods: {
+        brandInfo: {}
+      },
+      extension: {}
+    },
+    banners: [],
+    channels: [],
+    topics: [],
+    keywords: [],
+    otherReq: [],
+    loading: false,
+    tab: 1,
+    expand: false,
+    active: {},
+    pop: false,
+    tip: false,
+    hot: null,
+    userChannels: new Set()
+  }
+}
 
 export default {
   data () {
-    return {
-      data: {
-        goods: {
-          brandInfo: {}
-        },
-        extension: {}
-      },
-      banners: [],
-      channels: [],
-      topics: [],
-      keywords: [],
-      otherReq: [],
-      loading: false,
-      tab: 1,
-      expand: false,
-      active: {},
-      pop: false,
-      tip: false,
-      hot: null,
-      userChannels: new Set()
-    }
+    return defaultData()
   },
   computed: {
     leftTime () {
@@ -231,21 +235,26 @@ export default {
       return (((this.data || {}).extension || {}).receiveAreas || []).map(i => ((i.province || '') + (i.city || ''))).join(',')
     }
   },
-  created () {
-    // let app = getApp()
-  },
   mounted () {
+    this.reset()
     this.loadData()
   },
   onPullDownRefresh () {
     this.loadData()
   },
-  onReachBottom () {
-
-  },
   methods: {
+    reset () {
+      resetData(this, defaultData())
+    },
+    param () {
+      const {id, scene} = router(this).params()
+      if (id) {
+        return {id}
+      }
+      return {id: scene}
+    },
     loadData () {
-      const {id} = router(this).params()
+      const {id} = this.param()
       request.get('/banner/list', {page: 1, size: 1, type: 2, valid: true, brActivityId: id}).then(({json: {data}}) => {
         this.hot = data[0]
       }).catch(e => {

@@ -34,34 +34,36 @@
 <script>
 // import _ from 'underscore'
 import bar from '@/components/bar'
-import {router, uiapi, request, formatMsgTime, isImgMsg, imgMsgUrl, makeImgMsg} from '@/utils/index'
+import {router, uiapi, request, formatMsgTime, isImgMsg, imgMsgUrl, makeImgMsg, resetData} from '@/utils/index'
+
+function defaultData () {
+  return {
+    datas: [],
+    text: '',
+    page: 1,
+    loading: false
+  }
+}
 
 export default {
   data () {
-    return {
-      datas: [],
-      text: '',
-      page: 1,
-      loading: false
-    }
+    return defaultData()
   },
 
   components: {
     bar
   },
-  created () {
-    // let app = getApp()
-  },
   mounted () {
+    this.reset()
     this.loadData(1)
   },
   onPullDownRefresh () {
     this.loadData(1)
   },
-  onReachBottom () {
-
-  },
   methods: {
+    reset () {
+      resetData(this, defaultData())
+    },
     loadData (page) {
       const {id} = router(this).params()
       request.get('/chat/bl/room/record/list', {page, size: 10, originId: id, roomType: 1}).then(({json: {data}}) => {

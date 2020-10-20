@@ -1,8 +1,6 @@
 let gOptions = {}
-let gUcode = ''
 export function launchOptions (component) {
   let options = component && component.$root.$mp
-  let ucode = ((options || {}).query || {}).custom_params || gUcode
   let path = options && options.page && options.page.route
   if (!(options && options.query.scene)) {
     options = mpvue.getEnterOptionsSync ? mpvue.getEnterOptionsSync() : gOptions
@@ -13,17 +11,12 @@ export function launchOptions (component) {
     }
   }
 
-  let params = decodeURIComponent(options.query.scene || '').split('+')
-  if (!ucode) ucode = ((options || {}).query || {}).custom_params || gUcode
-  ucode = params[0] || ucode
-  gUcode = ucode
+  let param = decodeURIComponent(options.query.scene || '')
   switch (path) {
-    case 'pages/home/main':
-      return { ucode: ucode || 'XMTT12' }
     case 'pages/detail/main':
-      return { ucode: ucode || 'XMTT12', id: params[1] || '', type: params[2] || '' }
+      return { id: param }
   }
-  return { ucode: ucode || 'XMTT12' }
+  return {}
 }
 export function onLaunch (params) {
   if (!mpvue.getEnterOptionsSync) {
