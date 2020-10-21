@@ -175,7 +175,7 @@
                 <span
                   v-for="(i, j) in postForm.extension.receiveAreas"
                   :key="j"
-                  >{{ i.name }}</span
+                  >{{ i.province + (i.city || '') }}</span
                 >
                 <span v-if="postForm.extension.receiveAreas.length === 0"
                   >未选择地区</span
@@ -526,8 +526,8 @@
     >
       <div class="address-form">
         <p>
-          <span v-for="(a, n) in postForm.receiveAreas" :key="n" class="pill">{{
-            a.name
+          <span v-for="(a, n) in postForm.extension.receiveAreas" :key="n" class="pill">{{
+            a.province + (a.city || '')
           }}</span>
         </p>
         <h5>省份选择</h5>
@@ -605,7 +605,7 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="说明" width=>
+        <el-table-column label="说明">
           <template slot-scope="{ row }">
             <span>{{ row.desc }}</span>
           </template>
@@ -894,9 +894,7 @@ export default {
           }
           if (r.extension.receiveAreaLimit) {
             obj.recvAreaType = r.extension.receiveAreas[0].type || 1;
-            obj.extension.receiveAreas = r.extension.receiveAreas.map((i) =>
-              Object.assign({ name: i.cityId ? i.city : i.province }, i)
-            );
+            obj.extension.receiveAreas = r.extension.receiveAreas;
           } else {
             obj.extension.receiveAreas = [];
           }

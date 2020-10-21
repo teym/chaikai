@@ -10,15 +10,17 @@
             v-if="i.id !== show"
             :checked="checked(value, i)"
             @change="handleCheckAllChange(value, i)"
-          >{{ i.name }}</el-checkbox>
+            >{{ i.name }}</el-checkbox
+          >
         </el-col>
         <el-col :span="20">
           <el-row v-if="i.id !== show" :gutter="10">
-            <el-col v-for="(m,n) in i.list" :key="n" :span="4">
+            <el-col v-for="(m, n) in i.list" :key="n" :span="4">
               <el-checkbox
                 :checked="checked(value, i, m)"
                 @change="handleCheckAllChange(value, i, m)"
-              >{{ m.name }}</el-checkbox>
+                >{{ m.name }}</el-checkbox
+              >
             </el-col>
           </el-row>
         </el-col>
@@ -28,30 +30,30 @@
 </template>
 
 <script>
-import { area } from '@/utils/area'
+import { area } from "@/utils/area";
 
 export default {
-  name: 'AAddress',
+  name: "AAddress",
   props: {
     value: {
       type: Array,
-      default: () => ([])
+      default: () => [],
     },
     type: {
       type: Number,
-      default: 0
-    }
+      default: 0,
+    },
   },
   data() {
     return {
       addressKeys: Array.from(new Set(area.map((i) => i.key))).sort(),
       area: area.sort((a, b) => (a.key > b.key ? 1 : a.key < b.key ? -1 : 0)),
-      show: 0
-    }
+      show: 0,
+    };
   },
   methods: {
     handleCheckAllChange(value, p, c) {
-      var nv = value
+      var nv = value;
       if (c) {
         if (value.find((i) => i.provinceId === p.id && !i.cityId)) {
           nv = value
@@ -61,16 +63,18 @@ export default {
                 .filter((i) => i.id !== c.id)
                 .map((i) => ({
                   provinceId: p.id,
+                  province: p.name,
                   cityId: i.id,
                   type: this.type,
-                  name: i.name
+                  city: i.name,
+                  name: p.name + c.name,
                 }))
-            )
+            );
         } else {
           if (value.find((i) => i.provinceId === p.id && i.cityId === c.id)) {
             nv = value.filter(
               (i) => !(i.provinceId === p.id && i.cityId === c.id)
-            )
+            );
           } else {
             if (
               value.filter((i) => i.provinceId === p.id).length + 1 ===
@@ -82,18 +86,21 @@ export default {
                   {
                     provinceId: p.id,
                     type: this.type,
-                    name: p.name
-                  }
-                ])
+                    province: p.name,
+                    name: p.name,
+                  },
+                ]);
             } else {
               nv = value.concat([
                 {
                   provinceId: p.id,
+                  province: p.name,
                   cityId: c.id,
                   type: this.type,
-                  name: c.name
-                }
-              ])
+                  city: c.name,
+                  name: p.name + c.name,
+                },
+              ]);
             }
           }
         }
@@ -101,7 +108,7 @@ export default {
         if (
           value.filter((i) => i.provinceId === p.id && !i.cityId).length > 0
         ) {
-          nv = value.filter((i) => i.provinceId !== p.id)
+          nv = value.filter((i) => i.provinceId !== p.id);
         } else {
           nv = value
             .filter((i) => i.provinceId !== p.id)
@@ -109,25 +116,26 @@ export default {
               {
                 provinceId: p.id,
                 type: this.type,
-                name: p.name
-              }
-            ])
+                province: p.name,
+                name: p.name,
+              },
+            ]);
         }
       }
-      this.show = p.id
-      this.$emit('input', nv)
+      this.show = p.id;
+      this.$emit("input", nv);
       this.$nextTick().then(() => {
-        this.show = null
-      })
+        this.show = null;
+      });
     },
     checked(value, p, c) {
       return !!(
         value.find((i) => i.provinceId === p.id && !i.cityId) ||
         (c && value.find((i) => i.provinceId === p.id && i.cityId === c.id))
-      )
-    }
-  }
-}
+      );
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>

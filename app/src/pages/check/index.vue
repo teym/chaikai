@@ -286,6 +286,7 @@ export default {
     },
     chooseAddress () {
       uiapi.chooseAddress().then(a => {
+        console.log('address', a)
         this.address = a
       }).catch(e => {
 
@@ -298,6 +299,27 @@ export default {
         this.active = Object.assign({}, this.active, _.object([[item.platformId, item]]))
       }
     },
+    checkAddress (conf, address) {
+      if (conf.length === 0) {
+        return true
+      }
+      const isSame = (b) => {
+        const p1 = address.province.replace('省', '').replace('市', '').replace('自治区', '').replace('特别行政区', '')
+        const p2 = b.province.replace('省', '').replace('市', '').replace('自治区', '').replace('特别行政区', '')
+        const c1 = address.city.replace('市', '').replace('区', '')
+        const c2 = (b.city || '').replace('市', '').replace('区', '')
+        return p1 === p2 && (!c2 || c1 === c2)
+      }
+      const type = conf[0].type
+      if (type === 1) {
+        return !_.some(conf, isSame)
+      }
+      return _.some(conf, isSame)
+    },
+    formatAddressConf (conf) {
+      const type = conf[0].type
+      return (type === 1 ? '不' : '') + '可收货地区如下：' + conf.map(i => (i.province + (i.city || ''))).join('、')
+    },
     onOk () {
       if (!this.address) {
         uiapi.toast('请填写收货地址')
@@ -309,6 +331,14 @@ export default {
       }
       if (!this.text) {
         uiapi.toast('申请理由也很重要哦~')
+        return
+      }
+      if (!this.checkAddress(this.data.extension.receiveAreas || [], this.address)) {
+        uiapi.alert({ title: '温馨提示', content: uiapi.toast(this.formatAddressConf(this.data.extension.receiveAreas || [])) }).then(r => {
+          router(this).push('/pages/address/main')
+        }).catch(e => {
+
+        })
         return
       }
       const {id} = router(this).params()
@@ -335,7 +365,7 @@ export default {
           if (this.pay !== 1) {
             uiapi.toast('申请已提交')
           }
-          router(this).push('/pages/orders/main')
+          router(this).replace('/pages/orders/main')
         }).catch(e => {
           uiapi.toast(e.info)
           l()
