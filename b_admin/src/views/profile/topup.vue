@@ -3,7 +3,7 @@
     <div class="container">
       <el-form label-width="90px">
         <el-form-item label="充值金额">
-          <el-input v-if="type === '0'" v-model="num" style="width:180px" />
+          <el-input v-if="type === '0'" v-model="num" style="width: 180px" />
           <el-radio-group v-else v-model="type" @change="onChange">
             <el-radio-button label="1000" />
             <el-radio-button label="3000" />
@@ -30,15 +30,14 @@
           线下转账：
           <span>*转账时请备注【{$公司名称}{$账户ID}】</span>
         </p>
-        <p style="color:#FFFFFF">
+        <p style="color: #ffffff">
           线下转账：
           <span>*转账成功后将截图发送给对接您的小二</span>
         </p>
         <p class="alipay">支付宝：123012@80.com</p>
         <p class="bank">
           户名:杭州多推科技有限公司
-          <br>开户行:招商银行杭州转塘小微企业
-          <br>账号:12397012380913801
+          <br />开户行:招商银行杭州转塘小微企业 <br />账号:12397012380913801
         </p>
       </div>
     </div>
@@ -47,52 +46,52 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-import { buyAlipay } from '@/api/user'
+import { mapGetters } from "vuex";
+import { buyAlipay } from "@/api/user";
 
 export default {
-  name: 'Profile',
+  name: "Profile",
   data() {
     return {
       num: 3000,
-      type: '3000',
+      type: "3000",
       listLoading: false,
-      tmp: ''
-    }
+      tmp: "",
+    };
   },
   computed: {
-    ...mapGetters(['name', 'avatar', 'roles'])
+    ...mapGetters(["name", "avatar", "roles"]),
   },
   created() {},
   methods: {
     onChange(e) {
-      if (e !== '0') {
-        this.num = parseInt(e)
+      if (e !== "0") {
+        this.num = parseInt(e);
       }
     },
     handleSubmit() {
-      this.loading = true
-      buyAlipay({ amount: this.num, type: 'BR_RECHARGE' })
+      this.loading = true;
+      buyAlipay({ amount: this.num, payScene: "BR_RECHARGE" })
         .then((r) => {
-          this.loading = false
-          this.tmp = r.data.body.replace('<form ', '<form target="_blank"')
+          this.loading = false;
+          this.tmp = r.data.body.replace("<form ", '<form target="_blank"');
           this.$nextTick().then((r) => {
-            window.document.getElementById('bestPayForm').submit()
-          })
-          this.loading = false
-          this.$confirm('是否已完成支付？').then((r) => {
-            if (r === 'confirm') {
-              this.$store.dispatch('user/getInfo')
-              this.$router.push('/user/index')
+            window.document.getElementById("bestPayForm").submit();
+          });
+          this.loading = false;
+          this.$confirm("是否已完成支付？").then((r) => {
+            if (r === "confirm") {
+              this.$store.dispatch("user/getInfo");
+              this.$router.push("/user/index");
             }
-          })
+          });
         })
         .catch((e) => {
-          this.loading = false
-        })
-    }
-  }
-}
+          this.loading = false;
+        });
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>
