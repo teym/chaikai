@@ -1,4 +1,4 @@
-import request from '@/utils/request'
+import request,{baseConf} from '@/utils/request'
 
 export function fetchList(query) {
   return request({
@@ -136,4 +136,17 @@ export function complain(data) {
     method: 'post',
     data
   })
+}
+
+export function exportToken() {
+  return request({
+    url: '/br/activity/order/exportToken',
+    method: 'get'
+  })
+}
+export function downloadUrl(token) {
+  return baseConf().url + '/br/activity/order/export/undelivered?token=' + token 
+}
+export function importUrl() {
+  return baseConf().url + '/br/activity/order/import/undelivered'
 }

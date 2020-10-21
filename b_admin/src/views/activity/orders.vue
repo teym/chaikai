@@ -485,10 +485,21 @@
       :visible.sync="batchVisbale"
       width="520px"
     >
-      <p>步骤 １：点击<a>下载</a>发货信息表</p>
+      <p>
+        步骤 １：点击<a
+          :style="{ color: batchUrl ? '#4244ff' : '#999999' }"
+          :href="batchUrl"
+          >下载</a
+        >发货信息表
+      </p>
       <p>步骤 ２：在Excel表中填写快递单号、快递名称</p>
       <p>步骤 ３：上传已填好发货信息的Excel文件即可批量发货</p>
-      <Upload ref="upload" :url="conf.url" :headers="conf.headers" />
+      <Upload
+        v-if="batchVisbale"
+        ref="upload"
+        :url="conf.url"
+        :headers="conf.headers"
+      />
       <div slot="footer" class="dialog-footer">
         <el-button @click="batchVisbale = false">取消</el-button>
         <el-button
@@ -513,6 +524,9 @@ import {
   fetchShip,
   fetchScope,
   updateScope,
+  exportToken,
+  downloadUrl,
+  importUrl,
 } from "@/api/activities";
 import { ActivityOrderStatus, Channels, ChannelIcons } from "@/utils/constant";
 import { clearQueryObject, formatDeadLine } from "@/utils/index";
@@ -572,7 +586,7 @@ export default {
       batchUrl: "",
       batchLoading: false,
       conf: {
-        url: upload.url,
+        url: importUrl(),
         headers: upload.headers,
       },
     };
@@ -729,8 +743,15 @@ export default {
       this.batchVisbale = true;
       this.getBatchShip();
     },
-    getBatchShip(){
-
+    getBatchShip() {
+      exportToken().then((r) => {
+        if (r.data) {
+          console.log(r.data);
+          this.batchUrl = downloadUrl(r.data);
+        } else {
+          this.$message({ message: "获取下载链接失败", type: "error" });
+        }
+      });
     },
     handleBatchUpload() {
       this.batchLoading = true;
