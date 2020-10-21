@@ -1,6 +1,6 @@
 <template>
   <div class="container white_bg">
-    <div class="pad2-l pad2-r red_bg tip row i-center">
+    <div class="pad2-l pad2-r tip pos_f row i-center">
       <img src="/static/images/messge_tip.png" alt="tip">
       <p class="dark small margin-l">提示：警惕站外沟通交易，平台提供合作保障</p>
       <img src="/static/images/arrow_right.png" alt="right">
@@ -24,8 +24,8 @@
       <div class="bar row pad2-l pad2-r">
       <img class="margin-r" src="/static/images/message_order.png" alt="order" @click="onOrder">
       <img class="margin-r" src="/static/images/message_img.png" alt="img" @click="onImg">
-      <textarea auto-height class="input light_bg dark middle" v-model="text"/>
-      <div class="red_bg margin-l btn row center middle" @click="onSend">发送</div>
+      <textarea auto-height class="input light_bg dark middle" placeholder-style="color:#C1C6CB;font-size:28rpx" v-model="text" placeholder="合作期间可以发送图文消息..."/>
+      <div class="margin-l btn row center middle" :class="{red_bg: !!text, red_i_bg: !text}" @click="onSend">发送</div>
       </div>
     </bar>
   </div>
@@ -67,7 +67,7 @@ export default {
     loadData (page) {
       const {id} = router(this).params()
       request.get('/chat/bl/room/record/list', {page, size: 10, originId: id, roomType: 1}).then(({json: {data}}) => {
-        this.datas = data.data.reverse().map(i => Object.assign(i, {date: formatMsgTime(i.gmtCreate), isimg: isImgMsg(i.content), content: isImgMsg(i.content) ? imgMsgUrl(i.content) : i.content})).concat(page === 1 ? [] : this.datas)
+        this.datas = data.data.reverse().map(i => Object.assign(i, {accountInfo: i.accountInfo || {}, date: formatMsgTime(i.gmtCreate), isimg: isImgMsg(i.content), content: isImgMsg(i.content) ? imgMsgUrl(i.content) : i.content})).concat(page === 1 ? [] : this.datas)
         this.page = page
         this.loading = false
         this.nomore = data.pager.totalPages <= page
@@ -124,6 +124,9 @@ export default {
 .tip{
   width: 750rpx;
   height: 72rpx;
+  left: 0;
+  top: 0;
+  background-color: #FFDDC4;
 }
 .tip img{
   width: 32rpx;
@@ -131,6 +134,7 @@ export default {
 }
 .content{
   padding-bottom: 88rpx;
+  padding-top: 72rpx;
 }
 .item .date{
   color: #7B7F8E;
@@ -203,8 +207,13 @@ export default {
 .bar .btn {
   width: 128rpx;
   height: 64rpx;
-  background-color: #FF8E3B;
   color: white;
   border-radius: 32rpx;
+}
+.bar .red_bg{
+  background-color: #FF8E3B;
+}
+.bar .red_i_bg{
+  background-color: #FF8E3BB0;
 }
 </style>

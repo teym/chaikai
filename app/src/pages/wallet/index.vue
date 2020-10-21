@@ -4,8 +4,8 @@
     <div class="content col flex">
     <navbar :fixed="true">
       <div class="navbar row i-center">
-        <div class="flex i-center pad2-l" @click="onBack"><img src="/static/images/arrow_left.png" alt="back"></div>
-        <div class="middle flex row center">钱包收入</div>
+        <div class="flex i-center pad2-l" @click="onBack"><img src="/static/images/arrow_left_white.png" alt="back"></div>
+        <div class="big medium flex row center">钱包收入</div>
         <div class="flex"></div>
       </div>
     </navbar>
@@ -115,12 +115,12 @@ export default {
   z-index: 1;
 }
 .info {
-  padding: 24rpx;
+  padding: 8rpx 0 24rpx 0;
 }
 .info h1{
   font-size: 96rpx;
   font-weight: 500;
-  line-height: 134rpx;
+  line-height: 120rpx;
   color: white;
 }
 .info span{

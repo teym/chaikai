@@ -266,7 +266,7 @@ export default {
       }).catch(e => {
         console.log(e)
       })
-      request.get('/bl/activity/' + id).then(({json: {data}}) => {
+      request.get('/bl/activity', {id}).then(({json: {data}}) => {
         if (!data.goods.brandInfo) {
           data.goods.brandInfo = {}
         }
@@ -570,7 +570,7 @@ h5 {
   font-size: 24rpx;
   color: #ff8e3b;
   font-weight: 400;
-  background-color: rgba(255, 142, 59, 0.2);;
+  background-color: rgba(255, 142, 59, 0.2);
   height: 48rpx;
   border-radius: 24rpx;
   padding: 0 24rpx;

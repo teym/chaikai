@@ -23,11 +23,11 @@
             </li>
           </ul>
           <p v-else class="small text-right">去认证</p>
-          <img class="right margin-l" src="/static/images/arrow_right.png" alt="right">
+          <img class="right" src="/static/images/arrow_right_white.png" alt="right">
         </div>
         <div class="row i-center" @click="onScope">
           <p class="small">评分 <span class="blod">{{user.scope || 0}}</span></p>
-          <img class="right" src="/static/images/arrow_right.png" alt="right">
+          <img class="right" src="/static/images/arrow_right_white.png" alt="right">
         </div>
       </div>
     </div>
@@ -57,27 +57,27 @@
           <p class="small light margin-t">待测评</p>
         </div>
       </div>
-      <div class="row just margin2-t margin2-b" @click="onRouter('issues')">
+      <div class="row just line" @click="onRouter('issues')">
         <p class="middle light">订单问题</p>
         <div class="row i-center">
           <img class="right" src="/static/images/arrow_right.png" alt="right">
         </div>
       </div>
-      <div class="row just margin2-t margin2-b" @click="onRouter('wallet')">
+      <div class="row just line" @click="onRouter('wallet')">
         <p class="middle light">钱包收入</p>
         <div class="row i-center">
           <span class="big red blod">{{amount}}</span>
           <img class="right" src="/static/images/arrow_right.png" alt="right">
         </div>
       </div>
-      <div class="row just margin2-t margin2-b">
+      <div class="row just line">
         <p class="middle light">常见问题</p>
         <div class="row i-center">
           <span class="small light">学习平台规则</span>
           <img class="right" src="/static/images/arrow_right.png" alt="right">
         </div>
       </div>
-      <button open-type="contact" :session-from="session" class="btn-row row just margin2-t margin2-b">
+      <button class="btn-row row just line" open-type="contact" :session-from="session" >
         <p class="middle light">联系客服</p>
         <div class="row i-center">
           <img class="right" src="/static/images/arrow_right.png" alt="right">
@@ -211,6 +211,9 @@ export default {
 .info p {
   color: white;
 }
+.channel {
+  margin-right: 8rpx;
+}
 .channel li {
   height: 44rpx;
 }
@@ -221,6 +224,9 @@ export default {
 }
 .end {
   align-items: flex-end;
+}
+.line{
+  margin: 44rpx 0;
 }
 .right {
   width: 32rpx;

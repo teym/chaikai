@@ -5,20 +5,20 @@
         <p class="text-right middle dark label">
           <span class="red">*</span> 手机号码：
         </p>
-        <input class="flex middle dark input" type="text" v-model="user.telephone" placeholder="请输入手机号码" />
+        <input class="flex middle dark input" type="text" placeholder-style="color:#C1C6CB;font-size:28rpx" v-model="user.telephone" placeholder="请输入手机号码" />
         <button open-type='getPhoneNumber' class="sbtn row center small" @getphonenumber="onPhone">填写手机号</button>
       </div>
       <div class="row pad-t pad-b i-center border">
         <p class="text-right middle dark label">
           <span class="red">*</span> 真实姓名：
         </p>
-        <input class="flex middle dark input" type="text" v-model="user.realName" placeholder="请输入真实的姓名" />
+        <input class="flex middle dark input" placeholder-style="color:#C1C6CB;font-size:28rpx" type="text" v-model="user.realName" placeholder="请输入真实的姓名" />
       </div>
       <div class="row pad-t pad-b i-center border">
         <p class="text-right middle dark label">
           <span class="red">*</span> 微信号：
         </p>
-        <input class="flex middle dark input" type="text" v-model="user.wechatNo" placeholder="请输入真实的微信号码" />
+        <input class="flex middle dark input" placeholder-style="color:#C1C6CB;font-size:28rpx" type="text" v-model="user.wechatNo" placeholder="请输入真实的微信号码" />
       </div>
       <div class="row pad-t pad-b i-center">
         <p class="text-right middle dark label">垂直领域：</p>

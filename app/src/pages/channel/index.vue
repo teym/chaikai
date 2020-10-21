@@ -39,12 +39,10 @@ import {router, uiapi, request, mapChannel} from '@/utils/index'
 export default {
   data () {
     return {
+      data: {},
       bind: [],
       unbind: []
     }
-  },
-  created () {
-    // let app = getApp()
   },
   onShow () {
     this.loadData()
@@ -52,12 +50,10 @@ export default {
   onPullDownRefresh () {
     this.loadData()
   },
-  onReachBottom () {
-
-  },
   methods: {
     loadData () {
       return request.get('/bl/account').then(({json: {data}}) => {
+        this.data = data
         const channels = _.partition(mapChannel(data.channels), (i) => (i.statusCode === 3))
         this.bind = channels[0]
         this.unbind = channels[1]
@@ -66,7 +62,13 @@ export default {
       })
     },
     onGo (item) {
-      router(this).push('/pages/auth/main', item)
+      if (!this.data.telephone) {
+        uiapi.alert({ title: '温馨提示', content: '为核实认证渠道的信息真实性，请先完善个人信息', confirmText: '去完善', confirmColor: '#ff8e3b' }).then(r => {
+          router(this).replace('/pages/profile/main')
+        })
+      } else {
+        router(this).push('/pages/auth/main', item)
+      }
     },
     onUnbind (item) {
       const l = uiapi.loading()
