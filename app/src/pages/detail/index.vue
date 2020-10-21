@@ -144,7 +144,7 @@
           <div v-if="keywords.length > 0" class="row just line i-center">
             <h6>附带关键词</h6>
             <div class="row">
-              <p v-for="(k, i) in keywords" :key="i" class="round-btn gray margin-l">{{k}}</p>
+              <a v-for="(k, i) in keywords" :key="i" class="round-btn gray margin-l">{{k}}</a>
             </div>
           </div>
           <div v-if="data.extension.bloggerPublishTime" class="row just line">
@@ -299,29 +299,18 @@ export default {
       const {id} = router(this).params()
       const l = uiapi.loading()
       request.get('/bl/activity/qualification', {activityId: id}).then(({json: {data}}) => {
-        // this.channelMatch = !!data.channels
-        // this.todayNum = data.todayApplyNumRemaining
         l()
         this.pop = true
       }).catch(e => {
         l()
-        uiapi.toast(e.info)
+        if (e.code === 200009) {
+          uiapi.alert({ title: '温馨提示', content: e.info, confirmText: '去认证', confirmColor: '#ff8e3b' }).then(r => {
+            router(this).push('/pages/channel/main')
+          })
+        } else {
+          uiapi.toast(e.info)
+        }
       })
-
-      // if (!this.channelMatch) {
-      //   const s = this.channels.map(i => i.platformName).join('/')
-      //   uiapi.alert({ title: '温馨提示', content: this.channelError }).then(r => {
-      //     router(this).push('/pages/auth/main')
-      //   }).catch(e => {
-
-      //   })
-      //   return
-      // }
-      // if (this.channelMatch <= 0) {
-      //   uiapi.toast('今日申请次数已用完')
-      //   return
-      // }
-      // this.pop = true
     },
     onGo () {
       if (_.size(this.active) > 0 && _.size(this.active) === _.size(this.data.goods.skuGroupList)) {
@@ -580,8 +569,8 @@ h5 {
 .task .round-btn {
   font-size: 24rpx;
   color: #ff8e3b;
-  font-weight: 500;
-  background-color: #ff8e3b2e;
+  font-weight: 400;
+  background-color: rgba(255, 142, 59, 0.2);;
   height: 48rpx;
   border-radius: 24rpx;
   padding: 0 24rpx;
@@ -599,6 +588,7 @@ h5 {
 }
 .task .line p {
   font-size: 24rpx;
+  line-height: 40rpx;
   color: #494c5e;
   font-weight: 400;
   flex: 1;

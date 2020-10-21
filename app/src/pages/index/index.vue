@@ -106,6 +106,7 @@ export default {
         request.get('/bl/activity/qualification', {}).then(({json: {data}}) => {
           this.todayNum = data.todayApplyNumRemaining
         }).catch(e => {
+          this.todayNum = 0
           console.log(e)
         })
       }

@@ -255,7 +255,7 @@ export default {
     },
     loadData () {
       const {id, select} = router(this).params()
-      console.log('check', id, select)
+      // console.log('check', id, select)
       Promise.all([request.get('/bl/activity/' + id), request.get('/bl/account')]).then((rts) => {
         const data = rts[0].json.data
         const user = rts[1].json.data
@@ -264,7 +264,7 @@ export default {
         const sets = _.object(user.channels.map(i => [i.platformId, i.statusCode === 3]))
         this.channels = mapChannel(data.extension.channels).map(i => Object.assign(i, {available: !!sets[i.platformId]}))
         this.active = _.object(_.map(_.filter(this.channels, i => i.available), i => ([i.platformId, i])))
-        console.log(sets, this.channels, this.active)
+        // console.log(sets, this.channels, this.active)
         this.topics = _.filter(this.channels, i => i.topic)
         this.keywords = data.extension.keywords ? data.extension.keywords.split(' ') : []
         this.otherReq = data.extension.otherReq ? data.extension.otherReq.split('+').map(i => ({'1': '产品和达人同框露脸', '2': '使用前后效果对比', '3': '提供评测原图使用权'}[i])) : []
@@ -311,7 +311,7 @@ export default {
         return p1 === p2 && (!c2 || c1 === c2)
       }
       const type = conf[0].type
-      console.log(conf, address, type)
+      // console.log(conf, address, type)
       if (type === 1) {
         return !_.some(conf, isSame)
       }
