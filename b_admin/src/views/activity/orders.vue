@@ -83,7 +83,7 @@
       <div v-show="listQuery.statusCode === '3'" class="row row2">
         <div class="place" />
         <div class="right">
-          <el-button type="primary" size="mini" @click="handleShip"
+          <el-button type="primary" size="mini" @click="handleBatchShip"
             >批量发货</el-button
           >
         </div>
@@ -479,6 +479,26 @@
         >
       </div>
     </el-dialog>
+    <el-dialog
+      custom-class="custom-dialog"
+      title="批量发货"
+      :visible.sync="batchVisbale"
+      width="520px"
+    >
+      <p>步骤 １：点击<a>下载</a>发货信息表</p>
+      <p>步骤 ２：在Excel表中填写快递单号、快递名称</p>
+      <p>步骤 ３：上传已填好发货信息的Excel文件即可批量发货</p>
+      <Upload ref="upload" :url="conf.url" :headers="conf.headers" />
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="batchVisbale = false">取消</el-button>
+        <el-button
+          :loading="batchLoading"
+          type="primary"
+          @click="handleBatchUpload"
+          >确定</el-button
+        >
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -501,12 +521,15 @@ import _ from "underscore";
 import moment from "moment";
 import waves from "@/directive/waves"; // waves directive
 import Pagination from "@/components/Pagination"; // secondary package based on el-pagination
+import Upload from "@/components/Upload/SingleFile";
+import { getConf } from "@/api/oss";
 
 export default {
   name: "ComplexTable",
-  components: { Pagination },
+  components: { Pagination, Upload },
   directives: { waves },
   data() {
+    const upload = getConf();
     return {
       statusList: ActivityOrderStatus,
       channels: [],
@@ -545,6 +568,13 @@ export default {
         scopes: {},
       },
       scopes: [],
+      batchVisbale: false,
+      batchUrl: "",
+      batchLoading: false,
+      conf: {
+        url: upload.url,
+        headers: upload.headers,
+      },
     };
   },
   computed: {
@@ -695,6 +725,28 @@ export default {
           this.listLoading = false;
         });
     },
+    handleBatchShip() {
+      this.batchVisbale = true;
+      this.getBatchShip();
+    },
+    getBatchShip(){
+
+    },
+    handleBatchUpload() {
+      this.batchLoading = true;
+      this.$refs.upload
+        .submit()
+        .then((r) => {
+          this.batchLoading = false;
+          this.batchVisbale = false;
+          this.getTabs();
+          this.getList();
+        })
+        .catch((e) => {
+          this.batchLoading = false;
+          this.$message({ message: e.msg, type: "error" });
+        });
+    },
     handleShip(row) {
       this.shipVisible = true;
       this.getShip(row.receiver.logisticsNo);
@@ -755,8 +807,8 @@ export default {
       });
     },
     handleDetail(row) {
-      window.showCommunicate(row.id)
-    }
+      window.showCommunicate(row.id);
+    },
   },
 };
 </script>
