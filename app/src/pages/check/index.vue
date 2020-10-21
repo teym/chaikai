@@ -311,6 +311,7 @@ export default {
         return p1 === p2 && (!c2 || c1 === c2)
       }
       const type = conf[0].type
+      console.log(conf, address, type)
       if (type === 1) {
         return !_.some(conf, isSame)
       }
@@ -334,8 +335,9 @@ export default {
         return
       }
       if (!this.checkAddress(this.data.extension.receiveAreas || [], this.address)) {
-        uiapi.alert({ title: '温馨提示', content: uiapi.toast(this.formatAddressConf(this.data.extension.receiveAreas || [])) }).then(r => {
-          router(this).push('/pages/address/main')
+        uiapi.alert({ title: '温馨提示', content: this.formatAddressConf(this.data.extension.receiveAreas || []) }).then(r => {
+          // router(this).push('/pages/address/main')
+          this.chooseAddress()
         }).catch(e => {
 
         })
