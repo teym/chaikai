@@ -132,7 +132,7 @@
       <el-table-column
         v-if="listQuery.statusCode === '1' || listQuery.statusCode === '2'"
         label="申请渠道"
-        width="90"
+        width="120"
       >
         <template slot-scope="{ row }">
           <div v-for="c in row.channels" :key="c.platformId" class="channel">
@@ -162,10 +162,9 @@
         width="90"
       >
         <template slot-scope="{ row }">
-          <span v-for="c in row.channels" :key="c.platformId">
-            {{ c.fansCount }}
-            <br />
-          </span>
+          <div v-for="c in row.channels" :key="c.platformId" class="channel">
+            <span>{{ c.fansCount }}</span>
+          </div>
         </template>
       </el-table-column>
       <el-table-column
@@ -639,7 +638,7 @@ export default {
     getList() {
       this.listLoading = true;
       const obj = Object.assign({}, this.listQuery);
-      if (obj.searchType === "1") {
+      if (obj.searchType === "2") {
         obj.orderId = obj.searchKey;
       } else {
         obj.bloggerName = obj.searchKey;
@@ -691,10 +690,7 @@ export default {
       this.getList();
     },
     handleAction(row, act, tip) {
-      if (act === "CANDIDATE") {
-        row.brRemark = "";
-        row.candidate = true;
-      } else if (act === "PASS" && !tip) {
+      if (act === "PASS" && !tip) {
         this.$confirm(
           "确认通过" +
             row.blogger.nickname +
@@ -711,20 +707,32 @@ export default {
             }
           })
           .catch((e) => {});
-      } else {
-        this.listLoading = true;
-        updateAction({ orderId: row.id, action: act })
-          .then((r) => {
-            this.getTabs();
-            this.getList();
-          })
-          .catch((e) => {
-            this.listLoading = false;
-          });
+        return;
       }
+      if (act === "CANDIDATE") {
+        row.brRemark = "";
+        row.candidate = !row.candidate;
+      }
+      // this.listLoading = true;
+      updateAction({
+        orderId: row.id,
+        action: act,
+        candidate: row.candidate,
+        remark: row.brRemark,
+      })
+        .then((r) => {
+          // this.listLoading = false;
+          this.getTabs();
+          if (act !== "CANDIDATE") {
+            this.getList();
+          }
+        })
+        .catch((e) => {
+          // this.listLoading = false;
+        });
     },
     handleRemark(row) {
-      this.listLoading = true;
+      // this.listLoading = true;
       updateAction({
         orderId: row.id,
         action: "CANDIDATE",
@@ -733,10 +741,10 @@ export default {
       })
         .then((r) => {
           this.getTabs();
-          this.getList();
+          // this.getList();
         })
         .catch((e) => {
-          this.listLoading = false;
+          // this.listLoading = false;
         });
     },
     handleBatchShip() {
@@ -871,6 +879,7 @@ export default {
       }
     }
   }
+
   .row2 {
     border-top: 1px solid #f5f5f5;
     .el-select {
@@ -891,6 +900,20 @@ export default {
         margin: 0 16px;
       }
     }
+  }
+}
+.channel {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 4px 0;
+  img {
+    width: 32px;
+    height: 32px;
+    margin-right: 4px;
+  }
+  span {
+    line-height: 32px;
   }
 }
 .info {

@@ -4,8 +4,13 @@
       <div v-show="listQuery.statusCode === '1'" class="row row2">
         <div class="place" />
         <div class="right">
-          <span>活动名额: {{ stat['0'] }} 已通过: {{ stat['2'] }} 已候选: {{ stat['8'] }}</span>
-          <el-button type="primary" size="mini" @click="handleAccept()">一键通过</el-button>
+          <span
+            >活动名额: {{ stat["0"] }} 已通过: {{ stat["2"] }} 已候选:
+            {{ stat["8"] }}</span
+          >
+          <el-button type="primary" size="mini" @click="handleAccept()"
+            >一键通过</el-button
+          >
         </div>
       </div>
     </div>
@@ -17,29 +22,31 @@
       border
       fit
       highlight-current-row
-      style="width: 100%;"
+      style="width: 100%"
     >
       <el-table-column label="达人">
-        <template slot-scope="{row}">
+        <template slot-scope="{ row }">
           <div class="info">
-            <img :src="row.blogger.avatar" alt="pic">
+            <img :src="row.blogger.avatar" alt="pic" />
             <div>
               <p>
                 {{ row.blogger.nickname }}
                 <span>评分：{{ row.blogger.score }}</span>
               </p>
               <p>
-                <span v-for="(i, j) in ['abcd','def']" :key="j" class="pill">{{ i }}</span>
+                <span v-for="(i, j) in ['abcd', 'def']" :key="j" class="pill">{{
+                  i
+                }}</span>
               </p>
             </div>
           </div>
         </template>
       </el-table-column>
       <el-table-column label="申请信息">
-        <template slot-scope="{row}">
+        <template slot-scope="{ row }">
           <span>
             规格：{{ row.goodsSku }}
-            <br>
+            <br />
             申请理由：{{ row.applyReason }}
           </span>
         </template>
@@ -49,7 +56,7 @@
         label="申请渠道"
         width="90"
       >
-        <template slot-scope="{row}">
+        <template slot-scope="{ row }">
           <!-- <img
             v-for="c in row.channels"
             :key="c.platformId"
@@ -58,16 +65,16 @@
             srcset
           />-->
           <span v-for="c in row.channels" :key="c.platformId">
-            {{ channelIcons[c.platformId + ''].name }}
-            <br>
+            {{ channelIcons[c.platformId + ""].name }}
+            <br />
           </span>
         </template>
       </el-table-column>
       <el-table-column v-if="listQuery.statusCode === '6'" label="评测内容">
-        <template slot-scope="{row}">
+        <template slot-scope="{ row }">
           <span v-for="c in row.channels" :key="c.platformId">
-            {{ channelIcons[c.platformId + ''].name }}
-            <br>
+            {{ channelIcons[c.platformId + ""].name }}
+            <br />
           </span>
         </template>
       </el-table-column>
@@ -76,50 +83,71 @@
         label="粉丝/万"
         width="90"
       >
-        <template slot-scope="{row}">
+        <template slot-scope="{ row }">
           <span v-for="c in row.channels" :key="c.platformId">
             {{ c.fansCount }}
-            <br>
+            <br />
           </span>
         </template>
       </el-table-column>
       <el-table-column
-        v-if="listQuery.statusCode === '1' || listQuery.statusCode === '2'|| listQuery.statusCode === '6'|| listQuery.statusCode === '7'"
+        v-if="
+          listQuery.statusCode === '1' ||
+          listQuery.statusCode === '2' ||
+          listQuery.statusCode === '6' ||
+          listQuery.statusCode === '7'
+        "
         label="合作方式"
         width="120"
       >
-        <template slot-scope="{row}">
-          <span>{{ ['','接受悬赏',"达人报价"][row.activity.cooperationType] }}¥{{ row.reward }}</span>
+        <template slot-scope="{ row }">
+          <span
+            >{{ ["", "接受悬赏", "达人报价"][row.activity.cooperationType] }}¥{{
+              row.reward
+            }}</span
+          >
         </template>
       </el-table-column>
       <el-table-column
-        v-if="listQuery.statusCode === '3' || listQuery.statusCode === '4' || listQuery.statusCode === '5'"
+        v-if="
+          listQuery.statusCode === '3' ||
+          listQuery.statusCode === '4' ||
+          listQuery.statusCode === '5'
+        "
         label="收货信息"
       >
-        <template slot-scope="{row}">
+        <template slot-scope="{ row }">
           <span>
             收货人：{{ (row.receiver || {}).name }}
-            <br>
+            <br />
             手机号码：{{ (row.receiver || {}).telephone }}
-            <br>
-            收货地址：{{ ((row.receiver || {}).province || '') + ((row.receiver || {}).city || '') + ((row.receiver || {}).county || '') + ((row.receiver || {}).address || '') }}
-            <br>
-            物流信息：{{ ((row.receiver || {}).logisticsPlatform || '') + ((row.receiver || {}).logisticsNo || '') }}
+            <br />
+            收货地址：{{
+              ((row.receiver || {}).province || "") +
+              ((row.receiver || {}).city || "") +
+              ((row.receiver || {}).county || "") +
+              ((row.receiver || {}).address || "")
+            }}
+            <br />
+            物流信息：{{
+              ((row.receiver || {}).logisticsPlatform || "") +
+              ((row.receiver || {}).logisticsNo || "")
+            }}
           </span>
         </template>
       </el-table-column>
       <el-table-column v-if="listQuery.statusCode === '3'" label="发货时间">
-        <template slot-scope="{row}">
+        <template slot-scope="{ row }">
           <span>还剩{{ row.deadlineText }}</span>
         </template>
       </el-table-column>
       <el-table-column v-if="listQuery.statusCode === '4'" label="确认收货">
-        <template slot-scope="{row}">
+        <template slot-scope="{ row }">
           <span>还剩{{ row.deadlineText }}</span>
         </template>
       </el-table-column>
       <el-table-column v-if="listQuery.statusCode === '5'" label="评测时间">
-        <template slot-scope="{row}">
+        <template slot-scope="{ row }">
           <span>测评发布时间还剩{{ row.deadlineText }}</span>
         </template>
       </el-table-column>
@@ -127,10 +155,17 @@
         v-if="listQuery.statusCode === '6' || listQuery.statusCode === '7'"
         label="悬赏"
       >
-        <template slot-scope="{row}">
+        <template slot-scope="{ row }">
           <span>
-            <strong>{{ ({'1':'未缴押金',"9":"已缴押金",'4':'已冻结','3':"押金退回"})[row.depositStatus + ''] }}</strong>
-            <br>
+            <strong>{{
+              {
+                "1": "未缴押金",
+                "9": "已缴押金",
+                "4": "已冻结",
+                "3": "押金退回",
+              }[row.depositStatus + ""]
+            }}</strong>
+            <br />
             押金支付还剩{{ row.deadlineText }}超时将视作放弃名额
           </span>
         </template>
@@ -139,13 +174,23 @@
         v-if="listQuery.statusCode === '2' || listQuery.statusCode === '7'"
         label="押金状态"
       >
-        <template slot-scope="{row}">
+        <template slot-scope="{ row }">
           <span>
-            <strong>{{ ({'1':'未缴押金',"9":"已缴押金",'4':'已冻结','3':"押金退回"})[row.depositStatus + ''] }}</strong>
-            <br>
+            <strong>{{
+              {
+                "1": "未缴押金",
+                "9": "已缴押金",
+                "4": "已冻结",
+                "3": "押金退回",
+              }[row.depositStatus + ""]
+            }}</strong>
+            <br />
             {{
-              listQuery.statusCode === '2' ? '押金支付还剩' + row.deadlineText +',超时将视作放弃名额' :
-              (listQuery.statusCode === '3' ? '发布测评后15天自动退还':'')
+              listQuery.statusCode === "2"
+                ? "押金支付还剩" + row.deadlineText + ",超时将视作放弃名额"
+                : listQuery.statusCode === "3"
+                ? "发布测评后15天自动退还"
+                : ""
             }}
           </span>
         </template>
@@ -157,53 +202,75 @@
         width="280"
         class-name="small-padding fixed-width"
       >
-        <template slot-scope="{row}">
+        <template slot-scope="{ row }">
           <div>
             <el-button
               v-if="listQuery.statusCode === '1'"
               size="mini"
               @click="handleAction(row, 'REJECT')"
-            >拒绝</el-button>
+              >拒绝</el-button
+            >
             <el-button
               v-if="listQuery.statusCode === '1'"
               size="mini"
               type="primary"
               @click="handleAction(row, 'PASS')"
-            >通过</el-button>
+              >通过</el-button
+            >
             <el-button
               v-if="listQuery.statusCode === '1'"
               size="mini"
               type="primary"
               :icon="row.candidate ? 'el-icon-checked' : 'el-icon-plus'"
               @click="handleAction(row, 'CANDIDATE')"
-            >{{ row.candidate ? '已':'' }}候选</el-button>
+              >{{ row.candidate ? "已" : "" }}候选</el-button
+            >
             <el-button
-              v-if="listQuery.statusCode === '3' || listQuery.statusCode === '4' || listQuery.statusCode === '5'"
+              v-if="
+                listQuery.statusCode === '3' ||
+                listQuery.statusCode === '4' ||
+                listQuery.statusCode === '5'
+              "
               size="mini"
               type="primary"
               @click="handleDetail(row)"
-            >订单详情</el-button>
+              >订单详情</el-button
+            >
             <el-button
               v-if="listQuery.statusCode === '6'"
               size="mini"
               type="primary"
               @click="handleComplain(row)"
-            >投诉</el-button>
+              >投诉</el-button
+            >
             <el-button
               v-if="listQuery.statusCode === '6'"
               size="mini"
               type="primary"
               @click="handleComplain(row)"
-            >评价</el-button>
+              >评价</el-button
+            >
             <el-button
-              v-if="listQuery.statusCode === '4' || listQuery.statusCode === '5'|| listQuery.statusCode === '6'"
+              v-if="
+                listQuery.statusCode === '4' ||
+                listQuery.statusCode === '5' ||
+                listQuery.statusCode === '6'
+              "
               size="mini"
               type="primary"
               @click="handleDetail(row)"
-            >查看物流</el-button>
+              >查看物流</el-button
+            >
           </div>
-          <div v-if="listQuery.statusCode === '1' && row.candidate" style="margin: 8px 32px 0 32px">
-            <el-input v-model="row.brRemark" size="mini" @change="handleRemark(row)" />
+          <div
+            v-if="listQuery.statusCode === '1' && row.candidate"
+            style="margin: 8px 32px 0 32px"
+          >
+            <el-input
+              v-model="row.brRemark"
+              size="mini"
+              @change="handleRemark(row)"
+            />
           </div>
           <!-- <el-button type="text" size="mini" @click="handleUpdate(row)">订单详情</el-button>
           <el-button type="text" size="mini" @click="handleDelete(row,$index)">查看物流</el-button>-->
@@ -212,7 +279,7 @@
     </el-table>
 
     <pagination
-      v-show="total>0"
+      v-show="total > 0"
       :total="total"
       :page.sync="listQuery.page"
       :limit.sync="listQuery.size"
@@ -248,17 +315,18 @@ import {
   fetchOdList,
   fetchOdStat,
   fetchData,
-  updateAction
-} from '@/api/activities'
-import { ActivityOrderStatus, Channels, ChannelIcons } from '@/utils/constant'
-import {formatDeadLine} from '@/utils/index'
-import { mapGetters } from 'vuex'
-import moment from 'moment'
-import waves from '@/directive/waves' // waves directive
-import Pagination from '@/components/Pagination' // secondary package based on el-pagination
+  updateAction,
+  passAll,
+} from "@/api/activities";
+import { ActivityOrderStatus, Channels, ChannelIcons } from "@/utils/constant";
+import { formatDeadLine } from "@/utils/index";
+import { mapGetters } from "vuex";
+import moment from "moment";
+import waves from "@/directive/waves"; // waves directive
+import Pagination from "@/components/Pagination"; // secondary package based on el-pagination
 
 export default {
-  name: 'ComplexTable',
+  name: "ComplexTable",
   components: { Pagination },
   directives: { waves },
   data() {
@@ -276,154 +344,181 @@ export default {
         brActivityId: 0,
         page: 1,
         size: 10,
-        sort: 'RECOMMEND',
-        statusCode: '1',
-        platformId: '',
-        goodsSkuUnionId: '',
-        searchType: '1',
-        searchKey: ''
+        sort: "RECOMMEND",
+        statusCode: "1",
+        platformId: "",
+        goodsSkuUnionId: "",
+        searchType: "1",
+        searchKey: "",
       },
-      activeIndex: '',
+      activeIndex: "",
       detail: {},
       append: 0,
       formVisible: false,
-      formLoading: false
-    }
+      formLoading: false,
+    };
   },
   computed: {
-    ...mapGetters(['name', 'avatar', 'telephone', 'statusCode', 'brandCount'])
+    ...mapGetters(["name", "avatar", "telephone", "statusCode", "brandCount"]),
   },
   created() {
-    this.listQuery.brActivityId = this.$route.query && this.$route.query.id
-    this.getTabs()
-    this.getList()
+    this.listQuery.brActivityId = this.$route.query && this.$route.query.id;
+    this.getTabs();
+    this.getList();
   },
   methods: {
     getTabs() {
       Promise.all([
         fetchOdStat({ brActivityId: this.listQuery.brActivityId }),
-        fetchData(this.listQuery.brActivityId)
+        fetchData(this.listQuery.brActivityId),
       ])
         .then((r) => {
           this.stat = {
-            '0': r[0].data.total,
-            '1': r[0].data.pending,
-            '2': r[0].data.notPayDeposit,
-            '3': r[0].data.toBeDelivered,
-            '4': r[0].data.toBeReceived,
-            '5': r[0].data.toBeEvaluated,
-            '6': r[0].data.evaluated,
-            '7': r[0].data.closed,
-            '8': r[0].data.candidate
-          }
+            0: r[0].data.total,
+            1: r[0].data.pending,
+            2: r[0].data.notPayDeposit,
+            3: r[0].data.toBeDelivered,
+            4: r[0].data.toBeReceived,
+            5: r[0].data.toBeEvaluated,
+            6: r[0].data.evaluated,
+            7: r[0].data.closed,
+            8: r[0].data.candidate,
+          };
           this.channels = r[1].data.extension.channelLimit
             ? r[1].data.extension.channels.map((i) =>
-              Object.assign({}, i, ChannelIcons[i.platformId + ''])
-            )
-            : Channels.map((i) =>
-              Object.assign(
-                { platformName: i.name, platformId: i.id },
-                i,
-                ChannelIcons[i.id + '']
+                Object.assign({}, i, ChannelIcons[i.platformId + ""])
               )
-            )
-          this.skus = r[1].data.goods.skuUnionList
+            : Channels.map((i) =>
+                Object.assign(
+                  { platformName: i.name, platformId: i.id },
+                  i,
+                  ChannelIcons[i.id + ""]
+                )
+              );
+          this.skus = r[1].data.goods.skuUnionList;
         })
         .catch((e) => {
-          console.log(e)
-        })
+          console.log(e);
+        });
     },
     getList() {
-      this.listLoading = true
-      const obj = Object.assign({}, this.listQuery)
-      if (obj.searchType === '1') {
-        obj.orderId = obj.searchKey
+      this.listLoading = true;
+      const obj = Object.assign({}, this.listQuery);
+      if (obj.searchType === "1") {
+        obj.orderId = obj.searchKey;
       } else {
-        obj.bloggerName = obj.searchKey
+        obj.bloggerName = obj.searchKey;
       }
       fetchOdList(obj)
         .then((response) => {
           this.list = response.data.data.map((i) =>
             Object.assign(
-              { brRemark: '', deadlineText: formatDeadLine(i.deadline)},
+              { brRemark: "", deadlineText: formatDeadLine(i.deadline) },
               i
             )
-          )
-          this.total = response.data.pager.count
+          );
+          this.total = response.data.pager.count;
 
           setTimeout(() => {
-            this.listLoading = false
-          }, 1.5 * 1000)
+            this.listLoading = false;
+          }, 1.5 * 1000);
         })
         .catch((e) => {
-          this.listLoading = false
-        })
+          this.listLoading = false;
+        });
     },
     handleSelect(e) {
-      this.listQuery.statusCode = e
-      this.handleFilter()
+      this.listQuery.statusCode = e;
+      this.handleFilter();
     },
     handleFilter() {
-      this.listQuery.page = 1
-      this.getList()
+      this.listQuery.page = 1;
+      this.getList();
     },
     handleAction(row, act, tip) {
-      if (act === 'CANDIDATE') {
-        row.brRemark = row.brRemark || ''
-        row.candidate = !row.candidate
-      } else if (act === 'PASS' && !tip) {
+      if (act === "PASS" && !tip) {
         this.$confirm(
-          '确认通过' +
+          "确认通过" +
             row.blogger.nickname +
-            '的活动申请，并消耗账户余额' +
+            "的活动申请，并消耗账户余额" +
             row.reward +
-            '元',
+            "元",
           {
-            title: '一键通过'
+            title: "提示",
           }
-        ).then((r) => {
-          if (r === 'confirm') {
-            this.handleAction(row, act, true)
-          }
-        })
-      } else {
-        this.listLoading = true
-        updateAction({ orderId: row.id, action: act })
+        )
           .then((r) => {
-            this.getTabs()
-            this.getList()
+            if (r === "confirm") {
+              this.handleAction(row, act, true);
+            }
           })
-          .catch((e) => {
-            this.listLoading = false
-          })
+          .catch((e) => {});
+        return;
       }
-    },
-    handleRemark(row) {
-      this.listLoading = true
+      if (act === "CANDIDATE") {
+        row.brRemark = "";
+        row.candidate = !row.candidate;
+      }
+      // this.listLoading = true;
       updateAction({
         orderId: row.id,
-        action: 'CANDIDATE',
+        action: act,
         candidate: row.candidate,
-        remark: row.brRemark
+        remark: row.brRemark,
       })
         .then((r) => {
-          this.getTabs()
-          this.getList()
+          // this.listLoading = false;
+          this.getTabs();
+          if (act !== "CANDIDATE") {
+            this.getList();
+          }
         })
         .catch((e) => {
-          this.listLoading = false
+          // this.listLoading = false;
+        });
+    },
+    handleRemark(row) {
+      // this.listLoading = true;
+      updateAction({
+        orderId: row.id,
+        action: "CANDIDATE",
+        candidate: row.candidate,
+        remark: row.brRemark,
+      })
+        .then((r) => {
+          this.getTabs();
+          // this.getList();
         })
+        .catch((e) => {
+          // this.listLoading = false;
+        });
     },
     handleAccept() {
-      this.$confirm('将消耗3个活动名额和账户余额600元', {
-        title: '一键通过'
-      }).then((r) => {
-        // if (r === 'confirm') {
-        // }
-      })
-    }
-  }
-}
+      if (this.list.length > 0) {
+        this.$confirm(
+          `将消耗${this.list.length}个活动名额和账户余额${
+            this.list.length * this.list[0].reward
+          }元`,
+          {
+            title: "一键通过",
+          }
+        ).then((r) => {
+          if (r === "confirm") {
+            this.listLoading = true;
+            passAll({ orderIds: this.list.map((i) => i.id) })
+              .then((r) => {
+                this.getTabs();
+                this.getList();
+              })
+              .catch((e) => {
+                this.listLoading = false;
+              });
+          }
+        });
+      }
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>

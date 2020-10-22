@@ -69,38 +69,38 @@
             <div class="row just pad-t">
               <p class="small normal light">内容形式</p>
               <div
-                class="small medium light text-right flex"
+                class="small blod light text-right flex"
               >{{['无要求', '图文', '视频'][data.extension.contentType]}}</div>
             </div>
             <div class="row just pad-t">
               <p class="small normal light">最低字数</p>
               <div
-                class="small medium light text-right flex"
+                class="small blod light text-right flex"
               >{{['无要求', '200字', '400字'][data.extension.minWordNum]}}</div>
             </div>
             <div class="row just pad-t">
               <p class="small normal light">最低图片数</p>
               <div
-                class="small medium light text-right flex"
+                class="small blod light text-right flex"
               >{{['无要求', '6张', '9张'][data.extension.minPicNum]}}</div>
             </div>
             <div v-if="data.extension.minVideoLength > 0" class="row just pad-t">
               <p class="small normal light">最低视频时长</p>
               <div
-                class="small medium light text-right flex"
+                class="small blod light text-right flex"
               >{{['无要求', '15秒', '30秒', '1分钟', '2分钟'][data.extension.minVideoLength]}}</div>
             </div>
             <div v-if="topics.length > 0" class="row just pad-t">
               <p class="small normal light" @click="tip=true">账号话题Ⓢ</p>
-              <div class="small medium light text-right flex">
+              <div class="small blod light text-right flex">
                 <p v-for="(c, i) in topics" :key="i">{{c.platformName}}@{{c.nickname}}#{{c.topic}}</p>
               </div>
             </div>
             <div v-if="data.extension.discountInfo" class="row just pad-t">
               <p class="small normal light" @click="tip=true">优惠信息Ⓢ</p>
-              <div class="small medium light text-right flex">
+              <div class="small blod light text-right flex">
                 {{data.extension.discountInfo}}
-                <span class="red" @click="onCopy(data.extension.discountInfo)">复制</span>
+                <span class="red normal" @click="onCopy(data.extension.discountInfo)">复制</span>
               </div>
             </div>
             <div v-if="keywords.length > 0" class="row just pad-t">
@@ -111,13 +111,13 @@
             </div>
             <div v-if="data.extension.bloggerPublishTime" class="row just pad-t">
               <p class="small normal light">发布时间</p>
-              <div class="small medium light text-right flex">
+              <div class="small blod light text-right flex">
                 {{data.extension.bloggerPublishTimeStr}}
               </div>
             </div>
             <div v-if="otherReq.length > 0" class="row just pad-t">
               <p class="small normal light">其他要求</p>
-              <div class="small medium light text-right flex">
+              <div class="small blod light text-right flex">
                 <p v-for="(o, i) in otherReq" :key="i">{{o}}</p>
               </div>
             </div>
@@ -281,6 +281,9 @@ export default {
       })
     },
     onActive (item) {
+      if (!item.available) {
+        return uiapi.toast('你还未认证该渠道')
+      }
       if (this.active[item.platformId]) {
         this.active = _.omit(this.active, item.platformId)
       } else {
@@ -360,20 +363,11 @@ export default {
           uiapi.toast(e.info)
           l()
         })
-      // const t = Math.random()
-      // if (t < 0.4) {
-      //   this.pop = true
-      // } else {
-      //   if (t < 0.7) {
-      //     uiapi.alert({ title: '温馨提示', content: '可收货地区如下：广东省、湖北省、舟山市、宁波市、嘉兴市' }).then(r => {
-      //       router(this).push('/pages/address/main')
-      //     }).catch(e => {
-
-      //     })
-      //   } else {
-      //     uiapi.toast('申请已提交')
-      //   }
-      // }
+    },
+    onCopy (str) {
+      api.copy(str).then(r => {
+        uiapi.toast('复制成功')
+      })
     }
   }
 }

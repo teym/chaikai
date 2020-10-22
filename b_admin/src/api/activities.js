@@ -1,4 +1,4 @@
-import request,{baseConf} from '@/utils/request'
+import request, { baseConf } from '@/utils/request'
 
 export function fetchList(query) {
   return request({
@@ -84,6 +84,13 @@ export function updateData(data) {
     data
   })
 }
+export function passAll(data) {
+  return request({
+    url: '/br/activity/order/passAll',
+    method: 'post',
+    data
+  })
+}
 export function updateNum(data) {
   return request({
     url: '/br/activity/quota',
@@ -145,7 +152,7 @@ export function exportToken() {
   })
 }
 export function downloadUrl(token) {
-  return baseConf().url + '/br/activity/order/export/undelivered?token=' + token 
+  return baseConf().url + '/br/activity/order/export/undelivered?token=' + token
 }
 export function importUrl() {
   return baseConf().url + '/br/activity/order/import/undelivered'
