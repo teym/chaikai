@@ -45,10 +45,11 @@
           label-width="90px"
           label="商品价值:"
         >
-          <el-input-number
-            :min="0.01"
+          <el-input-number class="text-left"
+            :min="1"
             :max="99999999"
-            :step="0.01"
+            :step="1"
+            :controls="false"
             v-model="postForm.price"
             placeholder="请输入产品价值"
           />
@@ -206,12 +207,17 @@ export default {
   },
   data() {
     const validateRequire = (rule, value, callback) => {
-      console.log(rule.name, value);
       if (!value || value.length === 0) {
-        this.$message({
-          message: "请输入" + rule.name,
-          type: "error",
-        });
+        if (this.tip <= 0) {
+          this.tip += 1;
+          this.$message({
+            message: "请输入" + rule.name,
+            type: "error",
+            onClose: () => {
+              this.tip -= 1;
+            },
+          });
+        }
         callback(new Error("请输入" + rule.name));
       } else {
         callback();
@@ -219,34 +225,35 @@ export default {
     };
     const validateNumber = (rule, value, callback) => {
       if (!(parseFloat(value) > 0)) {
-        this.$message({
-          message: "请填写正确的数字",
-          type: "error",
-        });
-        callback(new Error("请填写正确的数字"));
+        if (this.tip <= 0) {
+          this.tip += 1;
+          this.$message({
+            message: "请填写正确的" + rule.name,
+            type: "error",
+            onClose: () => {
+              this.tip -= 1;
+            },
+          });
+        }
+        callback(new Error("请填写正确的" + rule.name));
       } else {
         callback();
       }
     };
-    // const validateSourceUri = (rule, value, callback) => {
-    //   if (validURL(value || "")) {
-    //     callback();
-    //   } else {
-    //     this.$message({
-    //       message: "外链url填写不正确",
-    //       type: "error",
-    //     });
-    //     callback(new Error("外链url填写不正确"));
-    //   }
-    // };
     const validateSourceUri = (rule, value, callback) => {
       if (!value || validURL(value || "")) {
         callback();
       } else {
-        this.$message({
-          message: "请输入淘宝/天猫链接",
-          type: "error",
-        });
+        if (this.tip <= 0) {
+          this.tip += 1;
+          this.$message({
+            message: "请输入淘宝/天猫链接",
+            type: "error",
+            onClose: () => {
+              this.tip -= 1;
+            },
+          });
+        }
         callback(new Error("请输入淘宝/天猫链接"));
       }
     };
@@ -255,12 +262,13 @@ export default {
       postForm: defaultForm(),
       loading: false,
       brandListOptions: [],
+      tip: 0,
       rules: {
         brand: [{ validator: validateRequire, name: "商品品牌" }],
         importUrl: [{ validator: validateSourceUri }],
-        price: [{ validator: validateNumber }],
+        price: [{ validator: validateNumber, name: "商品价值" }],
         title: [
-          { validator: validateRequire, trigger: "blur", name: "商品名称" },
+          { validator: validateRequire, name: "商品名称" },
         ],
         detail: [{ validator: validateRequire, name: "商品详情" }],
         skuGroups: [{ validator: validateRequire, name: "商品规格" }],

@@ -214,6 +214,11 @@ aside {
     border: none !important;
   }
 }
+.el-input-number.text-left{
+  input{
+    text-align: left !important;
+  }
+}
 .mce-branding{
   display: none !important;
 }
