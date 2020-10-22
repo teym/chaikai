@@ -335,7 +335,7 @@ export default {
         span {
           font-size: 26px;
           line-height: 40px;
-          color: #2873fc;
+          color: #4244ff;
         }
         .el-button {
           margin-left: 8px;
