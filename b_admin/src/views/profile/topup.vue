@@ -3,7 +3,15 @@
     <div class="container">
       <el-form label-width="90px">
         <el-form-item label="充值金额">
-          <el-input-number class="text-left" :min="1" :max="10000" :controls="false" v-if="type === '0'" v-model="num" style="width: 180px" />
+          <el-input-number
+            class="text-left"
+            :min="1"
+            :max="10000"
+            :controls="false"
+            v-if="type === '0'"
+            v-model="num"
+            style="width: 180px"
+          />
           <el-radio-group v-else v-model="type" @change="onChange">
             <el-radio-button label="1000" />
             <el-radio-button label="3000" />
@@ -28,16 +36,17 @@
       <div class="info">
         <p>
           线下转账：
-          <span>*转账时请备注【{{'{' + name + '}{' + id + '}'}}】</span>
+          <span>*转账时请备注【{{ name }}{{ id }}】</span>
         </p>
         <p style="color: #ffffff">
           线下转账：
           <span>*转账成功后将截图发送给对接您的小二</span>
         </p>
-        <p class="alipay">支付宝：123012@80.com</p>
+        <p class="alipay">支付宝：fd@ckgift.cn</p>
         <p class="bank">
-          户名:杭州多推科技有限公司
-          <br />开户行:招商银行杭州转塘小微企业 <br />账号:12397012380913801
+          户名：杭州多推科技有限公司
+          <br/>账号：571915109710201
+          <br />开户行：招商银行杭州转塘小微企业专营支行
         </p>
       </div>
     </div>
@@ -70,9 +79,9 @@ export default {
       }
     },
     handleSubmit() {
-      if(!parseInt(this.num) > 0){
-        this.$message({message:'请输入充值金额', type:'error'})
-        return
+      if (!parseInt(this.num) > 0) {
+        this.$message({ message: "请输入充值金额", type: "error" });
+        return;
       }
       this.loading = true;
       buyAlipay({ amount: this.num, payScene: "BR_RECHARGE" })
