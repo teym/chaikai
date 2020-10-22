@@ -5,6 +5,7 @@ import router, { resetRouter } from '@/router'
 
 const state = {
   token: getToken(),
+  id: 0,
   name: '',
   avatar: '',
   telephone: '',
@@ -17,6 +18,9 @@ const state = {
 }
 
 const mutations = {
+  SET_ID: (state, id) => {
+    state.id = id
+  },
   SET_TOKEN: (state, token) => {
     state.token = token
   },
@@ -108,8 +112,9 @@ const actions = {
         if (r1.code === 20003) {
           throw r1
         }
-        const { roles, company, avatar, telephone } = r1.data || {}
+        const { id, roles, company, avatar, telephone } = r1.data || {}
         const xiaoer = window.location.search.indexOf('sso') > 0;
+        commit('SET_ID', id)
         commit('SET_XIAOER', xiaoer)
 
         commit('SET_ROLES', roles || ['admin'])
