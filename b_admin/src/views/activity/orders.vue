@@ -69,7 +69,7 @@
           >
           <el-button
             type="primary"
-            size="mini"
+            size="medium"
             @click="
               $router.push({
                 path: '/activity/qorder',

@@ -8,7 +8,7 @@
             >活动名额: {{ stat["0"] }} 已通过: {{ stat["2"] }} 已候选:
             {{ stat["8"] }}</span
           >
-          <el-button type="primary" size="mini" @click="handleAccept()"
+          <el-button type="primary" size="medium" @click="handleAccept()"
             >一键通过</el-button
           >
         </div>
@@ -319,7 +319,7 @@ import {
   passAll,
 } from "@/api/activities";
 import { ActivityOrderStatus, Channels, ChannelIcons } from "@/utils/constant";
-import { formatDeadLine } from "@/utils/index";
+import { clearQueryObject, formatDeadLine } from "@/utils/index";
 import { mapGetters } from "vuex";
 import moment from "moment";
 import waves from "@/directive/waves"; // waves directive
@@ -344,6 +344,7 @@ export default {
         brActivityId: 0,
         page: 1,
         size: 10,
+        candidate: true,
         sort: "RECOMMEND",
         statusCode: "1",
         platformId: "",
@@ -409,7 +410,7 @@ export default {
       } else {
         obj.bloggerName = obj.searchKey;
       }
-      fetchOdList(obj)
+      fetchOdList(clearQueryObject(obj))
         .then((response) => {
           this.list = response.data.data.map((i) =>
             Object.assign(
