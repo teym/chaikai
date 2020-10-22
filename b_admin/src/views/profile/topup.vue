@@ -3,7 +3,7 @@
     <div class="container">
       <el-form label-width="90px">
         <el-form-item label="充值金额">
-          <el-input-number class="text-left" :min="1" :max="99999999" :controls="false" v-if="type === '0'" v-model="num" style="width: 180px" />
+          <el-input-number class="text-left" :min="1" :max="10000" :controls="false" v-if="type === '0'" v-model="num" style="width: 180px" />
           <el-radio-group v-else v-model="type" @change="onChange">
             <el-radio-button label="1000" />
             <el-radio-button label="3000" />
