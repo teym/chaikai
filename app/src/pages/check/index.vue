@@ -84,7 +84,7 @@
                 class="small medium light text-right flex"
               >{{['无要求', '6张', '9张'][data.extension.minPicNum]}}</div>
             </div>
-            <div class="row just pad-t">
+            <div v-if="data.extension.minVideoLength > 0" class="row just pad-t">
               <p class="small normal light">最低视频时长</p>
               <div
                 class="small medium light text-right flex"
@@ -256,7 +256,7 @@ export default {
     loadData () {
       const {id, select} = router(this).params()
       // console.log('check', id, select)
-      Promise.all([request.get('/bl/activity/' + id), request.get('/bl/account')]).then((rts) => {
+      Promise.all([request.get('/bl/activity', {id}), request.get('/bl/account')]).then((rts) => {
         const data = rts[0].json.data
         const user = rts[1].json.data
         data.extension.bloggerPublishTimeStr = moment(data.extension.bloggerPublishTime).format('截止M月D日前')
@@ -270,18 +270,6 @@ export default {
         this.otherReq = data.extension.otherReq ? data.extension.otherReq.split('+').map(i => ({'1': '产品和达人同框露脸', '2': '使用前后效果对比', '3': '提供评测原图使用权'}[i])) : []
         this.sku = data.goods.skuUnionList.find(i => i.skuIdUnion === select) || {}
         this.type = data.cooperationType === 3 ? 3 : 1
-      })
-      request.get('/bl/activity/' + id).then(({json: {data}}) => {
-        data.extension.bloggerPublishTimeStr = moment(data.extension.bloggerPublishTime).format('截止M月D日前')
-        this.data = data
-        this.channels = mapChannel(data.extension.channels)
-        this.topics = _.filter(this.channels, i => i.topic)
-        this.keywords = data.extension.keywords ? data.extension.keywords.split(' ') : []
-        this.otherReq = data.extension.otherReq ? data.extension.otherReq.split('+').map(i => ({'1': '产品和达人同框露脸', '2': '使用前后效果对比', '3': '提供评测原图使用权'}[i])) : []
-        this.sku = data.goods.skuUnionList.find(i => i.skuIdUnion === select) || {}
-        this.type = data.cooperationType === 3 ? 3 : 1
-      }).catch(e => {
-        uiapi.toast(e.info)
       })
     },
     chooseAddress () {
