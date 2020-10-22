@@ -276,6 +276,10 @@
           <el-button type="text" size="mini" @click="handleDelete(row,$index)">查看物流</el-button>-->
         </template>
       </el-table-column>
+      <div slot="empty" class="empty" style="padding: 48px 0">
+        <img src="@/assets/images/goods_empty.png" alt="empty" />
+        <p style="margin: 0; color: #999">暂无候选订单</p>
+      </div>
     </el-table>
 
     <pagination

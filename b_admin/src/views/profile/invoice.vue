@@ -7,16 +7,19 @@
       </el-menu>
       <el-button
         size="mini"
-        style="float:right"
+        style="float: right"
         type="primary"
         @click="$router.push('/user/invoices')"
-      >开票记录</el-button>
+        >开票记录</el-button
+      >
     </div>
     <div class="table">
       <div class="head">
         选择开票的订单
         <span>仅支持悬赏已发放的活动订单</span>
-        <el-button type="primary" size="mini" @click="formVisible = true">申请开票</el-button>
+        <el-button type="primary" size="mini" @click="formVisible = true"
+          >申请开票</el-button
+        >
       </div>
       <el-table
         :key="tableKey"
@@ -25,24 +28,24 @@
         border
         fit
         highlight-current-row
-        style="width: 100%;"
+        style="width: 100%"
         @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" width="50" label="全选" />
         <el-table-column label="订单编号">
-          <template slot-scope="{row}">
+          <template slot-scope="{ row }">
             <div class="info">
               <span>{{ row.orderId }}</span>
             </div>
           </template>
         </el-table-column>
         <el-table-column v-if="listQuery.type === '1'" label="活动名称">
-          <template slot-scope="{row}">
+          <template slot-scope="{ row }">
             <span>{{ row.activityName }}</span>
           </template>
         </el-table-column>
         <el-table-column v-if="listQuery.type === '1'" label="达人昵称">
-          <template slot-scope="{row}">
+          <template slot-scope="{ row }">
             <span>{{ row.bloggerName }}</span>
           </template>
         </el-table-column>
@@ -52,21 +55,25 @@
           </template>
         </el-table-column>
         <el-table-column v-if="listQuery.type === '2'" label="订购时间">
-          <template slot-scope="{row}">
+          <template slot-scope="{ row }">
             <div class="info">
               <span>{{ row.orderTime }}</span>
             </div>
           </template>
         </el-table-column>
         <el-table-column label="订单金额">
-          <template slot-scope="{row}">
+          <template slot-scope="{ row }">
             <span>{{ row.amount }}</span>
           </template>
         </el-table-column>
+        <div slot="empty" class="empty" style="padding: 48px 0">
+          <img src="@/assets/images/goods_empty.png" alt="empty" />
+          <p style="margin: 0; color: #999">暂无记录</p>
+        </div>
       </el-table>
 
       <pagination
-        v-show="total>0"
+        v-show="total > 0"
         :total="total"
         :page.sync="listQuery.page"
         :limit.sync="listQuery.size"
@@ -82,7 +89,8 @@
       <div>
         <el-form label-width="100px">
           <el-form-item label="开票金额：">
-            <span>{{ totalAmount }}</span>元
+            <span>{{ totalAmount }}</span
+            >元
           </el-form-item>
           <el-form-item label="发票抬头：">
             <el-input v-model="form.rise" placeholder="发票抬头" />
@@ -95,21 +103,21 @@
           </el-form-item>
         </el-form>
         <p>关联订单</p>
-        <el-table :data="sel" border fit style="width: 100%;">
+        <el-table :data="sel" border fit style="width: 100%">
           <el-table-column label="订单编号">
-            <template slot-scope="{row}">
+            <template slot-scope="{ row }">
               <div class="info">
                 <span>{{ row.orderId }}</span>
               </div>
             </template>
           </el-table-column>
           <el-table-column v-if="listQuery.type === '1'" label="活动名称">
-            <template slot-scope="{row}">
+            <template slot-scope="{ row }">
               <span>{{ row.activityName }}</span>
             </template>
           </el-table-column>
           <el-table-column v-if="listQuery.type === '1'" label="达人昵称">
-            <template slot-scope="{row}">
+            <template slot-scope="{ row }">
               <span>{{ row.bloggerName }}</span>
             </template>
           </el-table-column>
@@ -119,34 +127,40 @@
             </template>
           </el-table-column>
           <el-table-column v-if="listQuery.type === '2'" label="订购时间">
-            <template slot-scope="{row}">
+            <template slot-scope="{ row }">
               <div class="info">
                 <span>{{ row.orderTime }}</span>
               </div>
             </template>
           </el-table-column>
           <el-table-column label="订单金额">
-            <template slot-scope="{row}">
+            <template slot-scope="{ row }">
               <span>{{ row.amount }}</span>
             </template>
           </el-table-column>
+          <div slot="empty" class="empty" style="padding: 48px 0">
+            <img src="@/assets/images/goods_empty.png" alt="empty" />
+            <p style="margin: 0; color: #999">暂无记录</p>
+          </div>
         </el-table>
       </div>
       <div slot="footer" class="dialog-footer">
         <el-button @click="formVisible = false">取消</el-button>
-        <el-button :loading="formLoading" type="primary" @click="handleSubmit">确定</el-button>
+        <el-button :loading="formLoading" type="primary" @click="handleSubmit"
+          >确定</el-button
+        >
       </div>
     </el-dialog>
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-import { fetchInvoice, createInvoice } from '@/api/user'
-import Pagination from '@/components/Pagination' // secondary package based on el-pagination
+import { mapGetters } from "vuex";
+import { fetchInvoice, createInvoice } from "@/api/user";
+import Pagination from "@/components/Pagination"; // secondary package based on el-pagination
 
 export default {
-  name: 'Profile',
+  name: "Profile",
   components: { Pagination },
   data() {
     return {
@@ -155,72 +169,76 @@ export default {
       total: 0,
       listLoading: true,
       listQuery: {
-        type: '1',
+        type: "1",
         page: 1,
-        size: 10
+        size: 10,
       },
       sel: [],
       formVisible: false,
       form: {
         statusCode: 1,
-        rise: '',
-        company: '',
-        receiveMail: ''
+        rise: "",
+        company: "",
+        receiveMail: "",
       },
-      formLoading: false
-    }
+      formLoading: false,
+    };
   },
   computed: {
-    ...mapGetters(['name', 'avatar', 'roles', 'amount']),
+    ...mapGetters(["name", "avatar", "roles", "amount"]),
     totalAmount() {
-      return this.sel.map((i) => i.amount).reduce((a, b) => a + b, 0)
-    }
+      return this.sel.map((i) => i.amount).reduce((a, b) => a + b, 0);
+    },
   },
   created() {
-    this.fetchData()
+    this.fetchData();
   },
   methods: {
     fetchData() {
-      this.listLoading = true
+      this.listLoading = true;
       fetchInvoice(this.listQuery)
         .then((r) => {
-          this.list = (r.data || {}).data || []
-          this.total = ((r.data || {}).pager || {}).count || 0
-          this.listLoading = false
+          this.list = (r.data || {}).data || [];
+          this.total = ((r.data || {}).pager || {}).count || 0;
+          this.listLoading = false;
         })
         .catch((e) => {
-          this.listLoading = false
-        })
+          this.listLoading = false;
+        });
     },
     handleSelectionChange(e) {
-      this.sel = e
+      this.sel = e;
     },
     handleSelect(e) {
-      this.listQuery.type = e
-      this.listQuery.page = 1
-      this.fetchData()
+      this.listQuery.type = e;
+      this.listQuery.page = 1;
+      this.fetchData();
     },
     handleSubmit() {
-      this.formLoading = true
+      this.formLoading = true;
       createInvoice(
-        Object.assign({}, this.form, { type: this.listQuery.type, totalAmount: this.totalAmount, orderIds: this.sel.map((i) => i.orderId) })
+        Object.assign({}, this.form, {
+          type: this.listQuery.type,
+          totalAmount: this.totalAmount,
+          orderIds: this.sel.map((i) => i.orderId),
+        })
       )
         .then((r) => {
           this.$message({
-            message: '提交成功',
-            type: 'success'
-          })
-          this.formLoading = false
-          this.formVisible = false
-          this.sel = []
-          this.fetchData()
+            message: "提交成功",
+            type: "success",
+          });
+          this.formLoading = false;
+          this.formVisible = false;
+          this.sel = [];
+          this.fetchData();
         })
         .catch((e) => {
-          this.formLoading = false
-        })
-    }
-  }
-}
+          this.formLoading = false;
+        });
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>

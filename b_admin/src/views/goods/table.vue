@@ -65,9 +65,9 @@
           >
         </template>
       </el-table-column>
-      <div slot="empty" class="empty">
+      <div slot="empty" class="empty" style="padding: 48px 0;">
         <img src="@/assets/images/goods_empty.png" alt="empty" />
-        <p>暂无商品</p>
+        <p style="margin: 0;color: #999;">暂无商品</p>
       </div>
     </el-table>
 
@@ -203,13 +203,6 @@ export default {
       font-size: 14px;
       color: #666;
       flex: 1;
-    }
-  }
-  .empty {
-    padding: 48px 0;
-    p {
-      margin: 0;
-      color: #999;
     }
   }
 }

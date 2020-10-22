@@ -69,6 +69,10 @@
             >
           </template>
         </el-table-column>
+        <div slot="empty" class="empty" style="padding: 48px 0">
+          <img src="@/assets/images/goods_empty.png" alt="empty" />
+          <p style="margin: 0; color: #999">暂无授权</p>
+        </div>
       </el-table>
     </div>
   </div>

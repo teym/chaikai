@@ -8,26 +8,28 @@
         border
         fit
         highlight-current-row
-        style="width: 100%;"
+        style="width: 100%"
         @selection-change="handleSelectionChange"
       >
         <el-table-column label="开票编号" width="260">
-          <template slot-scope="{row}">
+          <template slot-scope="{ row }">
             <span>{{ row.id }}</span>
           </template>
         </el-table-column>
         <el-table-column label="申请时间" width="260">
-          <template slot-scope="{row}">
+          <template slot-scope="{ row }">
             <span>{{ row.gmtCreate }}</span>
           </template>
         </el-table-column>
         <el-table-column label="开票状态">
-          <template slot-scope="{row}">
-            <span>{{ ["","待开票","已开票","已拒绝"][row.statusCode] }}</span>
+          <template slot-scope="{ row }">
+            <span>{{
+              ["", "待开票", "已开票", "已拒绝"][row.statusCode]
+            }}</span>
           </template>
         </el-table-column>
         <el-table-column label="开票金额">
-          <template slot-scope="{row}">
+          <template slot-scope="{ row }">
             <span>{{ row.totalAmount }}</span>
           </template>
         </el-table-column>
@@ -37,25 +39,36 @@
           width="230"
           class-name="small-padding fixed-width"
         >
-          <template slot-scope="{row}">
-            <el-button type="text" size="mini" @click="handleDetail(row)">详情</el-button>
+          <template slot-scope="{ row }">
+            <el-button type="text" size="mini" @click="handleDetail(row)"
+              >详情</el-button
+            >
           </template>
         </el-table-column>
+        <div slot="empty" class="empty" style="padding: 48px 0">
+          <img src="@/assets/images/goods_empty.png" alt="empty" />
+          <p style="margin: 0; color: #999">暂无记录</p>
+        </div>
       </el-table>
 
       <pagination
-        v-show="total>0"
+        v-show="total > 0"
         :total="total"
         :page.sync="listQuery.page"
         :limit.sync="listQuery.size"
         @pagination="fetchData"
       />
     </div>
-    <el-dialog custom-class="custom-dialog" title="开票详情" :visible.sync="showDetail" width="420px">
+    <el-dialog
+      custom-class="custom-dialog"
+      title="开票详情"
+      :visible.sync="showDetail"
+      width="420px"
+    >
       <div class="info">
         <p>开票编号：{{ detail.id }}</p>
         <p>
-          开票状态：{{ ["","待开票","已开票","已拒绝"][detail.statusCode] }}
+          开票状态：{{ ["", "待开票", "已开票", "已拒绝"][detail.statusCode] }}
           <span>{{ detail.rejectReason }}</span>
         </p>
         <p>开票时间：{{ detail.gmtCreate }}</p>
@@ -64,19 +77,25 @@
         <p>公司名称：{{ detail.company }}</p>
         <p>接收邮箱：{{ detail.receiveMail }}</p>
         <h5>关联订单</h5>
-        <el-table :key="1" v-loading="detailLoading" :data="orders" border style="width: 100%;">
+        <el-table
+          :key="1"
+          v-loading="detailLoading"
+          :data="orders"
+          border
+          style="width: 100%"
+        >
           <el-table-column label="开票编号">
-            <template slot-scope="{row}">
+            <template slot-scope="{ row }">
               <span>{{ row.orderId }}</span>
             </template>
           </el-table-column>
           <el-table-column v-if="detail.type === 1" label="活动名称">
-            <template slot-scope="{row}">
+            <template slot-scope="{ row }">
               <span>{{ row.activityName }}</span>
             </template>
           </el-table-column>
           <el-table-column v-if="detail.type === 1" label="达人昵称">
-            <template slot-scope="{row}">
+            <template slot-scope="{ row }">
               <span>{{ row.bloggerName }}</span>
             </template>
           </el-table-column>
@@ -86,17 +105,21 @@
             </template>
           </el-table-column>
           <el-table-column v-if="detail.type === 2" label="订购时间">
-            <template slot-scope="{row}">
+            <template slot-scope="{ row }">
               <div class="info">
                 <span>{{ row.orderTime }}</span>
               </div>
             </template>
           </el-table-column>
           <el-table-column label="订单金额">
-            <template slot-scope="{row}">
+            <template slot-scope="{ row }">
               <span>{{ row.amount }}</span>
             </template>
           </el-table-column>
+          <div slot="empty" class="empty" style="padding: 48px 0">
+            <img src="@/assets/images/goods_empty.png" alt="empty" />
+            <p style="margin: 0; color: #999">暂无记录</p>
+          </div>
         </el-table>
       </div>
       <div slot="footer" class="dialog-footer">
@@ -108,12 +131,12 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-import { fetchInvoices, fetchLinkInvoice } from '@/api/user'
-import Pagination from '@/components/Pagination' // secondary package based on el-pagination
+import { mapGetters } from "vuex";
+import { fetchInvoices, fetchLinkInvoice } from "@/api/user";
+import Pagination from "@/components/Pagination"; // secondary package based on el-pagination
 
 export default {
-  name: 'Profile',
+  name: "Profile",
   components: { Pagination },
   data() {
     return {
@@ -123,49 +146,49 @@ export default {
       listLoading: true,
       listQuery: {
         page: 1,
-        size: 10
+        size: 10,
       },
       detail: {},
       orders: [],
       detailLoading: false,
-      showDetail: false
-    }
+      showDetail: false,
+    };
   },
   computed: {
-    ...mapGetters(['name', 'avatar', 'roles', 'amount'])
+    ...mapGetters(["name", "avatar", "roles", "amount"]),
   },
   created() {
-    this.fetchData()
+    this.fetchData();
   },
   methods: {
     fetchData() {
-      this.listLoading = true
+      this.listLoading = true;
       fetchInvoices(this.listQuery).then((r) => {
-        this.list = (r.data || {}).data || []
-        this.total = ((r.data || {}).pager || {}).count || 0
-        this.listLoading = false
-      })
+        this.list = (r.data || {}).data || [];
+        this.total = ((r.data || {}).pager || {}).count || 0;
+        this.listLoading = false;
+      });
     },
     handleDetail(row) {
-      this.detail = row
-      this.orders = []
-      this.detailLoading = true
+      this.detail = row;
+      this.orders = [];
+      this.detailLoading = true;
       fetchLinkInvoice({ invoiceId: row.id, type: row.type, page: 1, size: 50 })
         .then((r) => {
-          this.orders = r.data.data
-          this.detailLoading = false
+          this.orders = r.data.data;
+          this.detailLoading = false;
         })
         .catch((e) => {
-          this.detailLoading = false
-        })
-      this.showDetail = true
+          this.detailLoading = false;
+        });
+      this.showDetail = true;
     },
     handleSelectionChange(sel) {
-      console.log(sel)
+      console.log(sel);
     },
-    handleInvoice(e) {}
-  }
-}
+    handleInvoice(e) {},
+  },
+};
 </script>
 
 <style lang="scss" scoped>

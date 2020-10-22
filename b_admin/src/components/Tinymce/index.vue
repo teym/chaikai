@@ -9,7 +9,7 @@
       <editorImage
         :url="upload.url"
         :headers="upload.headers"
-        color="#1890ff"
+        color="#4244FF"
         class="editor-upload-btn"
         @successCBK="imageSuccessCBK"
       />

@@ -7,12 +7,19 @@
         <span>元</span>
       </span>
       <el-button @click="$router.push('/user/withdraw')">提现</el-button>
-      <el-button type="primary" @click="$router.push('/user/topup')">充值</el-button>
+      <el-button type="primary" @click="$router.push('/user/topup')"
+        >充值</el-button
+      >
     </div>
     <div class="table">
       <div class="head">
         余额明细
-        <el-button type="primary" size="mini" @click="$router.push('/user/invoice')">开发票</el-button>
+        <el-button
+          type="primary"
+          size="mini"
+          @click="$router.push('/user/invoice')"
+          >开发票</el-button
+        >
       </div>
       <el-table
         :key="tableKey"
@@ -21,32 +28,40 @@
         border
         fit
         highlight-current-row
-        style="width: 100%;"
+        style="width: 100%"
       >
         <el-table-column label="订购时间" width="260">
-          <template slot-scope="{row}">
+          <template slot-scope="{ row }">
             <div class="info">
               <span>{{ row.gmtCreate }}</span>
             </div>
           </template>
         </el-table-column>
         <el-table-column label="类型">
-          <template slot-scope="{row}">
-            <span>{{ ({'101':'服务订购','102':'账户充值','103':'账户提现','104':'悬赏订单','105':'悬赏退回'})[row.type + ''] }}</span>
+          <template slot-scope="{ row }">
+            <span>{{
+              {
+                "101": "服务订购",
+                "102": "账户充值",
+                "103": "账户提现",
+                "104": "悬赏订单",
+                "105": "悬赏退回",
+              }[row.type + ""]
+            }}</span>
           </template>
         </el-table-column>
         <el-table-column label="详情描述">
-          <template slot-scope="{row}">
+          <template slot-scope="{ row }">
             <span>{{ row.remark }}</span>
           </template>
         </el-table-column>
         <el-table-column label="余额变动">
-          <template slot-scope="{row}">
-            <span>{{ (row.raeType === 2 ? '-' : '') + row.amount }}</span>
+          <template slot-scope="{ row }">
+            <span>{{ (row.raeType === 2 ? "-" : "") + row.amount }}</span>
           </template>
         </el-table-column>
         <el-table-column label="上次余额">
-          <template slot-scope="{row}">
+          <template slot-scope="{ row }">
             <span>{{ row.lastBalance }}</span>
           </template>
         </el-table-column>
@@ -71,10 +86,14 @@
             >去支付</el-button>
           </template>
         </el-table-column> -->
+        <div slot="empty" class="empty" style="padding: 48px 0">
+          <img src="@/assets/images/goods_empty.png" alt="empty" />
+          <p style="margin: 0; color: #999">暂无记录</p>
+        </div>
       </el-table>
 
       <pagination
-        v-show="total>0"
+        v-show="total > 0"
         :total="total"
         :page.sync="listQuery.page"
         :limit.sync="listQuery.size"
@@ -107,12 +126,12 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-import { fetchHistory } from '@/api/user'
-import Pagination from '@/components/Pagination' // secondary package based on el-pagination
+import { mapGetters } from "vuex";
+import { fetchHistory } from "@/api/user";
+import Pagination from "@/components/Pagination"; // secondary package based on el-pagination
 
 export default {
-  name: 'Profile',
+  name: "Profile",
   components: { Pagination },
   data() {
     return {
@@ -122,33 +141,33 @@ export default {
       listLoading: true,
       listQuery: {
         page: 1,
-        size: 10
-      }
-    }
+        size: 10,
+      },
+    };
   },
   computed: {
-    ...mapGetters(['name', 'avatar', 'roles', 'amount'])
+    ...mapGetters(["name", "avatar", "roles", "amount"]),
   },
   created() {
-    this.fetchData()
+    this.fetchData();
   },
   methods: {
     fetchData() {
-      this.listLoading = true
+      this.listLoading = true;
       fetchHistory(this.listQuery).then((r) => {
-        this.list = (r.data || {}).data || []
-        this.total = ((r.data || {}).pager || {}).count || 0
-        this.listLoading = false
-      })
+        this.list = (r.data || {}).data || [];
+        this.total = ((r.data || {}).pager || {}).count || 0;
+        this.listLoading = false;
+      });
     },
     handleDetail(row) {
-      this.$router.push({ path: '/user/auth', query: { id: row.id }})
+      this.$router.push({ path: "/user/auth", query: { id: row.id } });
     },
     handlePay() {
-      this.$router.push('/user/auth')
-    }
-  }
-}
+      this.$router.push("/user/auth");
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>
