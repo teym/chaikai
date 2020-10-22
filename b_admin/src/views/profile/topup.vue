@@ -70,6 +70,10 @@ export default {
       }
     },
     handleSubmit() {
+      if(!parseInt(this.num) > 0){
+        this.$message({message:'请输入充值金额', type:'error'})
+        return
+      }
       this.loading = true;
       buyAlipay({ amount: this.num, payScene: "BR_RECHARGE" })
         .then((r) => {
