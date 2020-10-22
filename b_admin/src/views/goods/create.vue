@@ -7,6 +7,12 @@
       class="form-container"
     >
       <div class="createPost-main-container">
+        <a class="help"
+          href="https://www.yuque.com/docs/share/4775af8f-cee6-4cc6-a595-51096f8ef55d"
+          target="_blank"
+          ><el-icon class="el-icon-question" />如何快速导入</a
+        >
+
         <el-form-item
           prop="brand"
           style="margin-bottom: 30px; max-width: 640px"
@@ -45,7 +51,8 @@
           label-width="90px"
           label="商品价值:"
         >
-          <el-input-number class="text-left"
+          <el-input-number
+            class="text-left"
             :min="1"
             :max="99999999"
             :step="1"
@@ -267,9 +274,7 @@ export default {
         brand: [{ validator: validateRequire, name: "商品品牌" }],
         importUrl: [{ validator: validateSourceUri }],
         price: [{ validator: validateNumber, name: "商品价值" }],
-        title: [
-          { validator: validateRequire, name: "商品名称" },
-        ],
+        title: [{ validator: validateRequire, name: "商品名称" }],
         detail: [{ validator: validateRequire, name: "商品详情" }],
         skuGroups: [{ validator: validateRequire, name: "商品规格" }],
         banners: [{ validator: validateRequire, name: "商品图片" }],
@@ -445,6 +450,12 @@ export default {
 
     .createPost-main-container {
       padding: 40px 45px 20px 50px;
+
+      .help{
+        float: right;
+        font-size: 14px;
+        color: #999;
+      }
 
       .el-form-item {
         .el-input {

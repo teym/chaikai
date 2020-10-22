@@ -7,7 +7,7 @@
       <head>
         <h5>
           品牌授权
-          <span> <el-icon class="el-icon-question" />如何设置活动 </span>
+          <a href="https://www.yuque.com/docs/share/dc7cd417-178b-401c-9bfd-f33f663acd50" target="_blank"> <el-icon class="el-icon-question" />如何设置活动 </a>
         </h5>
         <el-button type="primary" size="mini" @click="handleAddAuth"
           >新增授权</el-button
@@ -164,7 +164,7 @@ export default {
       h5 {
         margin: 0;
         padding: 0;
-        span {
+        a {
           font-size: 12px;
           color: #737373;
           margin-left: 8px;

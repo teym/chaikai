@@ -253,7 +253,7 @@
           </span>
         </template>
       </el-table-column>
-      <el-table-column label="押金状态">
+      <el-table-column v-if="listQuery.statusCode !== '1'" label="押金状态">
         <template slot-scope="{ row }">
           <span>
             <strong>{{

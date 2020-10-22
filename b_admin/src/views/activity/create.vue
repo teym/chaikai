@@ -1,24 +1,33 @@
 <template>
   <div class="createPost-container">
-    <el-form ref="postForm" :model="postForm" :rules="rules">
+    <el-form ref="postForm" :hide-required-asterisk="false" :model="postForm" :rules="rules">
       <div class="createPost-main-container">
         <div class="form-container">
-          <p>基本信息</p>
+          <h3>基本信息</h3>
           <el-form-item
             prop="goods"
             style="margin-bottom: 30px"
             label-width="110px"
             label="活动商品:"
+            :required="true"
           >
-            <el-button icon="el-icon-plus" @click="handleSelectGoods"
+            <el-button
+              v-if="!postForm.goods"
+              icon="el-icon-plus"
+              @click="handleSelectGoods"
               >选择商品</el-button
             >
             <div v-if="postForm.goods" class="goods_p">
               <div class="box">
                 <img :src="postForm.goods.picUrl" alt="pic" />
-                <div>
+                <div class="info">
                   <p>{{ postForm.goods.title }}</p>
-                  <span>价值：{{ postForm.goods.price }}</span>
+                  <div class="line">
+                    <span>价值：{{ postForm.goods.price }}</span>
+                    <el-button size="mini" @click="handleSelectGoods"
+                      >重新选择</el-button
+                    >
+                  </div>
                 </div>
               </div>
             </div>
@@ -28,6 +37,7 @@
             style="margin-bottom: 30px"
             label-width="110px"
             label="商品规格:"
+            :required="true"
           >
             <el-select v-model="postForm.skus" multiple placeholder="请选择">
               <el-option
@@ -43,6 +53,7 @@
             style="margin-bottom: 30px"
             label-width="110px"
             label="活动名称:"
+            :required="true"
           >
             <el-input
               v-model="postForm.title"
@@ -55,6 +66,7 @@
             style="margin-bottom: 30px"
             label-width="110px"
             label="报名时间:"
+            :required="true"
           >
             <span slot="label" for="bloggerPublishTime">
               报名时间:
@@ -81,6 +93,7 @@
             style="margin-bottom: 30px"
             label-width="110px"
             label="活动名额:"
+            :required="true"
           >
             <el-input-number
               v-model="postForm.totalNum"
@@ -115,7 +128,7 @@
       </div>
       <div class="createPost-main-container">
         <div class="form-container">
-          <p>活动设置</p>
+          <h3>活动设置</h3>
           <el-form-item
             prop="displayType"
             style="margin-bottom: 30px"
@@ -175,7 +188,7 @@
                 <span
                   v-for="(i, j) in postForm.extension.receiveAreas"
                   :key="j"
-                  >{{ i.province + (i.city || '') }}</span
+                  >{{ i.province + (i.city || "") }}</span
                 >
                 <span v-if="postForm.extension.receiveAreas.length === 0"
                   >未选择地区</span
@@ -187,7 +200,7 @@
       </div>
       <div class="createPost-main-container">
         <div class="form-container">
-          <p>合作任务</p>
+          <h3>合作任务</h3>
           <el-form-item
             prop="channels"
             style="margin-bottom: 30px"
@@ -526,9 +539,12 @@
     >
       <div class="address-form">
         <p>
-          <span v-for="(a, n) in postForm.extension.receiveAreas" :key="n" class="pill">{{
-            a.province + (a.city || '')
-          }}</span>
+          <span
+            v-for="(a, n) in postForm.extension.receiveAreas"
+            :key="n"
+            class="pill"
+            >{{ a.province + (a.city || "") }}</span
+          >
         </p>
         <h5>省份选择</h5>
         <a-address
@@ -1060,9 +1076,9 @@ export default {
           if (copy) {
             obj.statusCode = 1;
           }
-          var t = (copy || !id) ? createData(obj) : updateData(obj);
+          var t = copy || !id ? createData(obj) : updateData(obj);
           if (submit) {
-            t = t.then((r) => submitData((copy || !id) ? r.data : id));
+            t = t.then((r) => submitData(copy || !id ? r.data : id));
           }
           t.then((r) => {
             this.$notify({
@@ -1110,7 +1126,6 @@ export default {
     .goods_p {
       display: flex;
       flex-direction: row;
-      margin-top: 22px;
       .box {
         display: flex;
         flex-direction: row;
@@ -1121,7 +1136,7 @@ export default {
           width: 70px;
           height: 70px;
         }
-        div {
+        .info {
           flex: 1;
           margin-left: 12px;
           display: flex;
@@ -1134,10 +1149,20 @@ export default {
             padding: 0;
             color: #3e3e3e;
           }
-          span {
-            font-size: 12px;
-            line-height: 16px;
-            color: #4244ff;
+          .line {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+            span {
+              font-size: 12px;
+              line-height: 16px;
+              color: #4244ff;
+            }
+            .el-button{
+              background-color: #4244ff26;
+              color: #4244ff;
+            }
           }
         }
       }
