@@ -224,7 +224,7 @@ export default {
       if (!row.menuIdList) {
         row.menuIdList = []
       }
-      this.detail = row
+      this.detail = Object.assign({}, row)
       this.proList = []
       this.proVisible = true
       this.loadRouters(row.roleId)

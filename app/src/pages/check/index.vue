@@ -63,7 +63,7 @@
             <div class="row just pad-t">
               <p class="small normal light">合作篇幅</p>
               <div
-                class="small medium light text-right flex"
+                class="small blod light text-right flex"
               >{{data.extension.articleType > 0 ? '单篇' : '无要求'}}</div>
             </div>
             <div class="row just pad-t">
@@ -100,7 +100,7 @@
               <p class="small normal light" @click="tip=true">优惠信息Ⓢ</p>
               <div class="small medium light text-right flex">
                 {{data.extension.discountInfo}}
-                <span @click="onCopy(data.extension.discountInfo)">复制</span>
+                <span class="red" @click="onCopy(data.extension.discountInfo)">复制</span>
               </div>
             </div>
             <div v-if="keywords.length > 0" class="row just pad-t">

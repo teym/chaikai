@@ -216,7 +216,12 @@ export default {
           })
         })
       } else {
-        this.$prompt('请输入拒绝理由').then((r) => {
+        this.$prompt('请输入拒绝理由', {
+          inputPlaceholder: '拒绝理由,最多200字',
+          inputValidator: (s) => {
+            return s && s.length <= 200
+          }
+        }).then((r) => {
           updateBloggerState({
             id: row.id,
             statusCode: state,

@@ -234,7 +234,12 @@ export default {
           })
         })
       } else {
-        this.$prompt('请输入拒绝理由').then((r) => {
+        this.$prompt('请输入拒绝理由', {
+          inputPlaceholder: '拒绝理由,最多200字',
+          inputValidator: (s) => {
+            return s && s.length <= 200
+          }
+        }).then((r) => {
           updateBrandState({
             id: row.id,
             statusCode: state,
@@ -252,7 +257,15 @@ export default {
       this.detailVisable = true
       fetchCompanyList({ page: 1, size: 1, accountId: item.brAccountId }).then(
         (r) => {
-          this.detail = r.data.data[0]
+          const d = r.data.data[0] || {}
+          d.brands = d.brands.map((i) =>
+            Object.assign(
+              { date: moment(i.gmtCreate).format('YYYY-MM-DD HH:mm:ss') },
+              i
+            )
+          )
+          d.date = moment(d.gmtCreate).format('YYYY-MM-DD HH:mm:ss')
+          this.detail = d
         }
       )
     }
