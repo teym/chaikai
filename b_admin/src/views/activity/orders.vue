@@ -5,6 +5,7 @@
         <el-menu
           :default-active="'1'"
           class="el-menu-demo"
+          active-text-color="#4244FF"
           mode="horizontal"
           @select="handleSelect"
         >
@@ -871,9 +872,9 @@ export default {
         height: 40px;
         line-height: 40px;
         .pill {
-          background-color: #4244ff;
+          background-color: #4244ff26;
           font-size: 12px;
-          color: white;
+          color: #4244ff;
           line-height: 18px;
           border-radius: 9px;
           min-width: 18px;
@@ -952,7 +953,7 @@ export default {
         line-height: 25px;
         padding: 0 8px;
         border-radius: 12px;
-        background-color: #4244ffa6;
+        background-color: #4244ff26;
         margin-right: 8px;
       }
     }

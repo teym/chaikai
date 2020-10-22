@@ -6,8 +6,9 @@
       <el-popover
         class="right-menu-item"
         placement="bottom"
-        width="200"
+        width="318"
         trigger="hover"
+        popper-class="account-pop"
       >
         <img
           slot="reference"
@@ -16,7 +17,10 @@
           alt="setting"
         />
         <div class="account">
-          <h5>账户资产</h5>
+          <img class="bg" :src="bg_img" />
+          <el-row>
+            <h5>账户资产</h5>
+          </el-row>
           <el-row :gutter="20">
             <el-col :span="12">
               <span>{{ activity }}</span
@@ -52,11 +56,11 @@
           src="@/assets/images/nav_setting.png"
           alt="setting"
         />
-        <el-dropdown-menu slot="dropdown">
+        <el-dropdown-menu slot="dropdown" class="account-pop">
           <el-dropdown-item>
-            <router-link to="/user/index">账号信息</router-link>
+            <router-link style="color:#FFFFFF" to="/user/index">账号信息</router-link>
           </el-dropdown-item>
-          <el-dropdown-item @click.native="logout">退出登陆</el-dropdown-item>
+          <el-dropdown-item style="color:#FFFFFF" @click.native="logout">退出登陆</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
       <el-button type="text" class="right-menu-item menu-help" @click="onHelp"
@@ -73,6 +77,8 @@ import Breadcrumb from "@/components/Breadcrumb";
 import Search from "@/components/HeaderSearch";
 import Communicate from "@/components/Communicate";
 
+const bg = require("@/assets/images/account_bg.png");
+
 export default {
   components: {
     Breadcrumb,
@@ -80,7 +86,9 @@ export default {
     Communicate,
   },
   data() {
-    return {};
+    return {
+      bg_img: bg,
+    };
   },
   computed: {
     ...mapGetters(["amount", "activity", "xiaoer"]),
@@ -158,8 +166,16 @@ export default {
   }
 }
 .account {
+  position: relative;
+  color: white;
+  .bg {
+    position: absolute;
+    left: -12px;
+    top: -12px;
+    width: 318px;
+    bottom: -12px;
+  }
   h5 {
-    color: #333;
     font-size: 16px;
     margin: 0;
     padding: 0;
@@ -168,16 +184,30 @@ export default {
     .el-col {
       text-align: center;
       font-size: 14px;
-      color: #333;
       span {
         font-size: 26px;
         font-weight: bold;
       }
       p {
-        margin: 4px 0;
+        margin: 6px 0 16px 0;
         padding: 0;
+      }
+      .el-button{
+        background-color: transparent;
+        color: white;
       }
     }
   }
+}
+</style>
+<style>
+.account-pop {
+  background-color: #4244ff;
+}
+.account-pop .popper__arrow::after {
+  border-bottom-color: #4244ff !important;
+}
+.account-pop .el-dropdown-menu__item:hover{
+  background-color: #4244ff;
 }
 </style>

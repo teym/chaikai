@@ -14,7 +14,7 @@
           <div>
             企业认证：{{ (["UNKNOW","未认证","审核中","已认证","已拒绝"])[user.statusCode] }}
             <span>
-              <el-button
+              <el-button class="bg_light"
                 size="mini"
                 type="primary"
                 round
@@ -39,11 +39,11 @@
             </el-col>
             <el-col class="title" :span="12">
               置换活动
-              <el-button size="mini" type="primary" round @click="$router.push('/user/buy')">增加次数</el-button>
+              <el-button class="bg_light" size="mini" type="primary" round @click="$router.push('/user/buy')">增加次数</el-button>
             </el-col>
             <el-col class="title" :span="12">
               账户余额
-              <el-button size="mini" type="primary" round @click="$router.push('/user/topup')">充值金额</el-button>
+              <el-button class="bg_light" size="mini" type="primary" round @click="$router.push('/user/topup')">充值金额</el-button>
             </el-col>
           </el-row>
         </div>
@@ -222,6 +222,10 @@ export default {
       .el-col {
         padding: 8px 0;
       }
+    }
+    .bg_light {
+      background-color: #4244FF26;
+      color: #4244FF;
     }
     .function {
       div {

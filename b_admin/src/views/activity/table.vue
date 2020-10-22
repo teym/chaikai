@@ -27,6 +27,7 @@
         <el-menu
           :default-active="''"
           class="el-menu-demo"
+          active-text-color="#4244FF"
           mode="horizontal"
           @select="handleSelect"
         >
@@ -64,6 +65,7 @@
       fit
       highlight-current-row
       style="width: 100%"
+      header-cell-style="font-weight: 400"
     >
       <el-table-column label="商品名称" width="260">
         <template slot-scope="{ row }">
@@ -403,9 +405,9 @@ export default {
         height: 40px;
         line-height: 40px;
         .pill {
-          background-color: #4244ff;
+          background-color: #4244ff26;
           font-size: 12px;
-          color: white;
+          color: #4244ff;
           line-height: 18px;
           border-radius: 9px;
           min-width: 18px;

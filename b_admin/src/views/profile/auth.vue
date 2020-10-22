@@ -6,12 +6,9 @@
         <h1>已提交和审核</h1>
         <p>
           审核通过后，将通过短信进行通知
-          <br />为加快小二审核效率，
-          <router-link :to="{ path: '/user/auth' }"
-            >请完成最后一步品牌授权</router-link
-          >，即可招募达人
+          <br />为加快小二审核效率，请完成最后一步品牌授权，即可招募达人
         </p>
-        <el-button size="mini">新增品牌授权</el-button>
+        <el-button size="mini" @click="onAddNew">新增品牌授权</el-button>
       </div>
     </div>
     <el-form
@@ -186,6 +183,11 @@ export default {
     this.tempRoute = Object.assign({}, this.$route);
   },
   methods: {
+    onAddNew() {
+      this.$router.push("/user/auth");
+      this.tip = false;
+      this.postForm = Object.assign({}, defaultForm);
+    },
     fetchData(id) {
       getPv(id)
         .then((response) => {
@@ -199,7 +201,7 @@ export default {
       this.$refs.postForm.validate((valid) => {
         if (valid) {
           this.loading = true;
-          const id = this.$route.params && this.$route.params.id;
+          const id = this.$route.query && this.$route.query.id;
 
           if (!id) {
             createPv(Object.assign({}, this.postForm))
