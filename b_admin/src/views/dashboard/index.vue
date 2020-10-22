@@ -152,6 +152,7 @@ export default {
         flex-direction: row;
         align-items: center;
         font-size: 16px;
+        font-weight: 500;
         img {
           width: 40px;
           height: 40px;
@@ -162,11 +163,13 @@ export default {
     .task {
       .el-col {
         font-size: 16px;
+        font-weight: 500;
         color: #333;
         span {
           font-size: 26px;
           line-height: 40px;
-          color: #2873fc;
+          color: #2873FC;
+          font-weight: bold;
         }
       }
       .title {
