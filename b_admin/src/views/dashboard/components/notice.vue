@@ -5,7 +5,8 @@
       <el-col v-for="(item, i) in list" :key="i" :span="12">
         <div>
           <a :href="item.link" target="_blank">{{ item.content }}</a>
-          <span v-if="item.tag">{{ item.tag }}</span>
+          <img v-if="item.tag && item.tag==='最热'" src="@/assets/images/notice_huo.png" alt="huo">
+          <img v-if="item.tag && item.tag==='最新'" src="@/assets/images/notice_xin.png" alt="huo">
         </div>
       </el-col>
     </el-row>
@@ -53,16 +54,12 @@ export default {
       padding: 8px;
       color: #333;
       font-size: 16px;
+      line-height: 24px;
       div {
         width: 80%;
-
-        span {
-          background-color: #4244ff;
-          padding: 2px 10px;
-          border-radius: 2px;
-          color: white;
-          font-size: 12px;
+        img{
           float: right;
+          height: 24px;
         }
       }
     }

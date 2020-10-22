@@ -131,7 +131,7 @@ export const asyncRoutes = [
         path: 'index',
         component: () => import('@/views/activity/table'),
         name: 'activity-table',
-        meta: { title: '活动管理', icon: 'table' }
+        meta: { title: '活动管理', icon: 'activity' }
       },
       {
         path: 'create',

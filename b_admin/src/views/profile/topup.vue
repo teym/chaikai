@@ -28,7 +28,7 @@
       <div class="info">
         <p>
           线下转账：
-          <span>*转账时请备注【{{name}}{{id}}】</span>
+          <span>*转账时请备注【{{'{' + name + '}{' + id + '}'}}】</span>
         </p>
         <p style="color: #ffffff">
           线下转账：
