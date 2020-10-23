@@ -1,7 +1,12 @@
 <template>
   <div class="container">
-    <!-- <div class="content">
-      <el-carousel class="banners">
+    <el-radio-group v-model="select">
+      <el-radio-button :label="1">预览</el-radio-button>
+      <el-radio-button :label="2">商品</el-radio-button>
+    </el-radio-group>
+    <div style="height: 12px" />
+    <div v-if="select === 1" class="content">
+      <el-carousel class="banners" :indicator-position="'none'">
         <el-carousel-item v-for="(i, j) in banners" :key="j" :index="j">
           <img :src="i" alt="banner" mode="aspectFill">
         </el-carousel-item>
@@ -26,7 +31,11 @@
         <div class="row just channel">
           <span>报名渠道</span>
           <ul>
-            <li v-for="(i, j) in channels" :key="j" :style="{'z-index': 9 - j}">
+            <li
+              v-for="(i, j) in channels"
+              :key="j"
+              :style="{ 'z-index': 9 - j }"
+            >
               <img :src="i.img" :alt="i.platformName">
             </li>
           </ul>
@@ -34,28 +43,22 @@
       </div>
       <div class="detail">
         <div class="tab">
-          <div :class="{active:tab === 1}">
+          <div :class="{ active: tab === 1 }">
             <p @click="tab = 1">产品详情</p>
             <span />
           </div>
-          <div :class="{active:tab === 2}">
+          <div :class="{ active: tab === 2 }">
             <p @click="tab = 2">合作任务</p>
             <span />
           </div>
         </div>
-        <div v-if="tab===1" class="block desc">
+        <div v-if="tab === 1" class="block desc">
           <div class="brand row">
             <img :src="(data.goods.brandInfo || {}).logo" alt="logo">
             <div class="flex">
               <h5>{{ (data.goods.brandInfo || {}).name }}</h5>
-              <p :class="{collapse:!expand}">
+              <p>
                 {{ (data.goods.brandInfo || {}).story }}
-                <span
-                  v-if="!expand"
-                  class="float"
-                  @click="expand=true"
-                >展开更多︾</span>
-                <span v-if="expand" @click="expand=false">收起︽</span>
               </p>
             </div>
           </div>
@@ -66,12 +69,17 @@
             </ul>
           </div>
           <div
-            v-if="data.extension.receiveAreaLimit && data.extension.receiveAreas.length > 0"
+            v-if="
+              data.extension.receiveAreaLimit &&
+                data.extension.receiveAreas.length > 0
+            "
             class="ship"
           >
             <h5>
               收货地限制
-              <span>{{ data.extension.receiveAreas[0].type === 1 ? '不' : '仅' }}支持以下地区收货</span>
+              <span>{{
+                data.extension.receiveAreas[0].type === 1 ? "不" : "仅"
+              }}支持以下地区收货</span>
             </h5>
             <p>{{ receiveAreas }}</p>
           </div>
@@ -82,13 +90,19 @@
             <div v-html="data.goods.detail" />
           </div>
         </div>
-        <div v-if="tab===2" class="block task">
+        <div v-if="tab === 2" class="block task">
           <div class="rule">
             <img src="@/assets/images/detail_tip.png" alt="tip">
           </div>
           <div class="row just line">
             <h5>合作方式</h5>
-            <div class="round-btn">{{ ['', '接受悬赏', '接受悬赏/达人报价', '免费置换'][data.cooperationType] }}</div>
+            <div class="round-btn">
+              {{
+                ["", "接受悬赏", "接受悬赏/达人报价", "免费置换"][
+                  data.cooperationType
+                ]
+              }}
+            </div>
           </div>
           <div class="row just line">
             <h5>合作要求</h5>
@@ -96,35 +110,40 @@
           </div>
           <div class="row just line">
             <h6>合作篇幅</h6>
-            <p>{{ data.extension.articleType > 0 ? '单篇' : '无要求' }}</p>
+            <p>{{ data.extension.articleType > 0 ? "单篇" : "无要求" }}</p>
           </div>
           <div class="row just line">
             <h6>内容形式</h6>
-            <p>{{ ['无要求', '图文', '视频'][data.extension.contentType] }}</p>
+            <p>{{ ["无要求", "图文", "视频"][data.extension.contentType] }}</p>
           </div>
           <div class="row just line">
             <h6>最低字数</h6>
-            <p>{{ ['无要求', '200字', '400字'][data.extension.minWordNum] }}</p>
+            <p>{{ ["无要求", "200字", "400字"][data.extension.minWordNum] }}</p>
           </div>
           <div class="row just line">
             <h6>最低图片数</h6>
-            <p>{{ ['无要求', '6张', '9张'][data.extension.minPicNum] }}</p>
+            <p>{{ ["无要求", "6张", "9张"][data.extension.minPicNum] }}</p>
           </div>
           <div class="row just line">
             <h6>最低视频时长</h6>
-            <p>{{ ['无要求', '15秒', '30秒', '1分钟', '2分钟'][data.extension.minVideoLength] }}</p>
+            <p>
+              {{
+                ["无要求", "15秒", "30秒", "1分钟", "2分钟"][
+                  data.extension.minVideoLength
+                ]
+              }}
+            </p>
           </div>
           <div v-if="topics.length > 0" class="row just line">
-            <h6 @click="tip=true">账号话题Ⓢ</h6>
+            <h6 @click="tip = true">账号话题Ⓢ</h6>
             <div>
-              <p
-                v-for="(c, i) in topics"
-                :key="i"
-              >{{ c.platformName }}@{{ c.nickname }}#{{ c.topic }}</p>
+              <p v-for="(c, i) in topics" :key="i">
+                {{ c.platformName }}@{{ c.nickname }}#{{ c.topic }}
+              </p>
             </div>
           </div>
           <div v-if="data.discountInfo" class="row just line">
-            <h6 @click="tip=true">优惠信息Ⓢ</h6>
+            <h6 @click="tip = true">优惠信息Ⓢ</h6>
             <p>
               {{ data.discountInfo }}
               <span>复制</span>
@@ -133,7 +152,13 @@
           <div v-if="keywords.length > 0" class="row just line i-center">
             <h6>附带关键词</h6>
             <div class="row">
-              <p v-for="(k, i) in keywords" :key="i" class="round-btn gray margin-l">{{ k }}</p>
+              <p
+                v-for="(k, i) in keywords"
+                :key="i"
+                class="round-btn gray margin-l"
+              >
+                {{ k }}
+              </p>
             </div>
           </div>
           <div v-if="otherReq.length > 0" class="row just line i-center">
@@ -144,36 +169,35 @@
           </div>
         </div>
       </div>
-    </div> -->
-    <!-- <div class="bar">
-      <div class="btn" @click="onOk">{{data.statusCode > 5 ? '报名结束' :'立即申请'}}</div>
-    </div>-->
-    <!-- <div v-if="tip" class="pop">
-      <div class="pop-content bottom">
-        <h6>合作要求特殊说明：</h6>
-        <p>小红书：因添加优惠信息后，内容屏蔽风险较高，内容正文和评论中暂不支持添加优惠信息</p>
-      </div>
-      <div class="place" @click="tip=false"></div>
     </div>
-    <div v-if="pop" class="pop">
-      <div class="place"></div>
-      <div class="pop-content top">
-        <h5>选择商品规格</h5>
-        <div v-for="(sku, i) in data.goods.skuGroupList" :key="i" class="sku">
-          <h6>{{sku.name}}</h6>
-          <ul>
-            <li
-              v-for="(item, j) in sku.skuList"
-              :key="j"
-              :class="{sel:active[sku.id] && active[sku.id].id === item.id}"
-              @click="onSelect(sku, item)"
-            >{{item.name}}</li>
-          </ul>
-        </div>
-        <div class="btn" @click="onGo">立即申请</div>
-        <img @click="pop=false" class="close" src="/static/images/pop-close.png" alt="close" />
+    <div v-if="select === 2" class="content goods">
+      <div class="row">
+        <h6>商品ID：</h6>
+        <p>{{ data.goods.id }}</p>
       </div>
-    </div>-->
+      <div class="row">
+        <h6>商品品牌：</h6>
+        <p>{{ data.goods.brandInfo.name }}</p>
+      </div>
+      <div class="row">
+        <h6>商品名称：</h6>
+        <p>{{ data.goods.title }}</p>
+      </div>
+      <div class="row">
+        <h6>商品链接：</h6>
+        <p>{{ data.goods.link }}</p>
+      </div>
+      <div class="row">
+        <h6>商品价值：</h6>
+        <p>{{ data.goods.price }}</p>
+      </div>
+      <div class="row">
+        <h6>商品规格：</h6>
+        <div style="flex: 1">
+          <p v-for="i in data.goods.skuUnionList" :key="i.id">{{ i.name }}</p>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -221,7 +245,8 @@ export default {
       active: {},
       pop: false,
       tip: false,
-      userChannels: new Set()
+      userChannels: new Set(),
+      select: 1
     }
   },
   computed: {
@@ -235,11 +260,11 @@ export default {
     }
   },
   mounted() {
-    const data = this.item
-
+    const data = Object.assign({}, this.item)
+    data.extension = data.extension || {}
     this.data = data
-    this.banners = [data.picUrl]
-    this.channels = mapChannel(data.extension.channels)
+    this.banners = data.goods.banners
+    this.channels = mapChannel(data.extension.channels || [])
     this.topics = _.filter(this.channels, (i) => i.topic)
     this.keywords = data.extension.keywords
       ? data.extension.keywords.split(' ')
@@ -269,10 +294,6 @@ ul {
   width: 100%;
   position: relative;
 }
-.row {
-  display: flex;
-  flex-direction: row;
-}
 .just {
   justify-content: space-between;
 }
@@ -300,15 +321,15 @@ ul {
 }
 .banners {
   width: 375px;
-  height: 375px;
+  height: 300px;
 }
 .banner {
   width: 375px;
-  height: 375px;
+  height: 300px;
 }
 .banner img {
   width: 375px;
-  height: 375px;
+  height: 300px;
 }
 .row {
   display: flex;
@@ -642,5 +663,23 @@ h5 {
 }
 .pop-content .btn {
   margin: 200rpx 32rpx 24rpx 32rpx;
+}
+
+.goods {
+  padding: 12px;
+}
+.goods .row {
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+.goods .row h6 {
+  width: 64px;
+  margin: 0;
+  padding: 0;
+}
+.goods .row p {
+  flex: 1;
+  margin: 0;
+  padding: 0;
 }
 </style>

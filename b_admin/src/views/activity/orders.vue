@@ -257,12 +257,9 @@
         <template slot-scope="{ row }">
           <span>
             <strong>{{
-              {
-                "1": "未缴押金",
-                "2": "已冻结",
-                "3": "已解冻",
-                "4": "已扣除",
-              }[row.depositStatus + ""]
+              ["", "未缴押金", "已冻结", "已解冻", "已扣除"][
+                row.depositInfo.statusCode
+              ]
             }}</strong>
             <br />
             {{
@@ -499,14 +496,18 @@
       <p>步骤 ２：在Excel表中填写快递单号、快递名称</p>
       <p>步骤 ３：上传已填好发货信息的Excel文件即可批量发货</p>
       <Upload
+        v-model="batchFile"
         v-if="batchVisbale"
         ref="upload"
         :url="conf.url"
         :headers="conf.headers"
       />
       <div slot="footer" class="dialog-footer">
-        <el-button @click="batchVisbale = false">取消</el-button>
+        <el-button @click="(batchVisbale = false), (batchFile = '')"
+          >取消</el-button
+        >
         <el-button
+          :disabled="!batchFile"
           :loading="batchLoading"
           type="primary"
           @click="handleBatchUpload"
@@ -588,6 +589,7 @@ export default {
       scopes: [],
       batchVisbale: false,
       batchUrl: "",
+      batchFile: "",
       batchLoading: false,
       conf: {
         url: importUrl(),

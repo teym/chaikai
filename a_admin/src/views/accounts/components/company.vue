@@ -1,55 +1,62 @@
 <template>
   <div>
     <div v-if="detail" class="detail">
-      <div class="row">
-        <h4>账户ID:</h4>
-        <p>{{ detail.id }}</p>
-      </div>
-      <div class="row">
-        <h4>手机号:</h4>
-        <p>{{ detail.telephone }}</p>
-      </div>
-      <div class="row">
-        <h4>注册时间:</h4>
-        <p>{{ detail.date }}</p>
-      </div>
-      <div class="row">
-        <h4>企业名称:</h4>
-        <p>{{ detail.company }}</p>
-      </div>
-      <div class="row">
-        <h4>统一社会信用代码:</h4>
-        <p>{{ detail.companyInfo.creditCode }}</p>
-      </div>
-      <div class="row">
-        <h4>营业执照:</h4>
-        <div>
-          <el-button
-            size="mini"
-            @click="onPreview(detail.companyInfo.businessLicense)"
-          >查看</el-button>
-        </div>
-      </div>
-      <div class="row">
-        <h4>联系人:</h4>
-        <p>{{ detail.companyInfo.contact }}</p>
-      </div>
-      <div class="row">
-        <h4>微信号:</h4>
-        <p>{{ detail.companyInfo.contactWechat }}</p>
-      </div>
-      <div class="row">
-        <h4>企业认证:</h4>
-        <p>{{ status[detail.companyInfo.statusCode] }}</p>
-      </div>
-      <div class="row">
-        <h4>账户余额:</h4>
-        <p>{{ detail.financeInfo.totalAmount }}</p>
-      </div>
-      <div class="row">
-        <h4>置换活动:</h4>
-        <p>{{ detail.financeInfo.activityAmount }}</p>
-      </div>
+      <el-row>
+        <el-col :span="12">
+          <div class="row">
+            <h4>账户ID:</h4>
+            <p>{{ detail.id }}</p>
+          </div>
+          <div class="row">
+            <h4>手机号:</h4>
+            <p>{{ detail.telephone }}</p>
+          </div>
+          <div class="row">
+            <h4>注册时间:</h4>
+            <p>{{ detail.date }}</p>
+          </div>
+          <div class="row">
+            <h4>企业名称:</h4>
+            <p>{{ detail.company }}</p>
+          </div>
+          <div class="row">
+            <h4>统一社会信用代码:</h4>
+            <p>{{ detail.companyInfo.creditCode }}</p>
+          </div>
+          <div class="row">
+            <h4>营业执照:</h4>
+            <div>
+              <el-button
+                size="mini"
+                @click="onPreview(detail.companyInfo.businessLicense)"
+              >查看</el-button>
+            </div>
+          </div>
+        </el-col>
+        <el-col :span="12">
+          <div class="row">
+            <h4>联系人:</h4>
+            <p>{{ detail.companyInfo.contact }}</p>
+          </div>
+          <div class="row">
+            <h4>微信号:</h4>
+            <p>{{ detail.companyInfo.contactWechat }}</p>
+          </div>
+          <div class="row">
+            <h4>企业认证:</h4>
+            <p>{{ status[detail.companyInfo.statusCode] }}</p>
+          </div>
+          <div class="row">
+            <h4>账户余额:</h4>
+            <p>{{ detail.financeInfo.totalAmount }}</p>
+          </div>
+          <div class="row">
+            <h4>置换活动:</h4>
+            <p>{{ detail.financeInfo.activityAmount }}</p>
+          </div>
+        </el-col>
+      </el-row>
+
       <h4>品牌授权</h4>
       <el-table :data="detail.brands" border fit>
         <el-table-column label="品牌名称" align="center">
@@ -133,8 +140,7 @@ export default {
       preview: ''
     }
   },
-  created() {
-  },
+  created() {},
   methods: {
     onPreview(url) {
       this.preview = url

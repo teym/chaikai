@@ -1,41 +1,48 @@
 <template>
   <div>
     <div v-if="detail" class="detail">
-      <div class="row">
-        <h4>账户ID:</h4>
-        <p>{{ detail.id }}</p>
-      </div>
-      <div class="row">
-        <h4>微信昵称:</h4>
-        <p>{{ detail.nickname }}</p>
-      </div>
-      <div class="row">
-        <h4>真实姓名:</h4>
-        <p>{{ detail.realName }}</p>
-      </div>
-      <div class="row">
-        <h4>擅长领域:</h4>
-        <p>{{ detail.areas.map((i) => i.name).join("/") }}</p>
-      </div>
-      <div class="row">
-        <h4>注册时间:</h4>
-        <p>{{ detail.date }}</p>
-      </div>
-      <div class="row">
-        <h4>手机号:</h4>
-        <p>{{ detail.telephone }}</p>
-      </div>
-      <div class="row">
-        <h4>微信号:</h4>
-        <p>{{ detail.wechatNo }}</p>
-      </div>
-      <div class="row">
-        <h4>钱包收入:</h4>
-        <div class="row">
-          <p>{{ detail.id }}</p>
-          <el-button size="mini" @click="handleFinance">明细</el-button>
-        </div>
-      </div>
+      <el-row>
+        <el-col :span="12">
+          <div class="row">
+            <h4>账户ID:</h4>
+            <p>{{ detail.id }}</p>
+          </div>
+          <div class="row">
+            <h4>微信昵称:</h4>
+            <p>{{ detail.nickname }}</p>
+          </div>
+          <div class="row">
+            <h4>真实姓名:</h4>
+            <p>{{ detail.realName }}</p>
+          </div>
+          <div class="row">
+            <h4>擅长领域:</h4>
+            <p>{{ detail.areas.map((i) => i.name).join("/") }}</p>
+          </div>
+        </el-col>
+        <el-col :span="12">
+          <div class="row">
+            <h4>注册时间:</h4>
+            <p>{{ detail.date }}</p>
+          </div>
+          <div class="row">
+            <h4>手机号:</h4>
+            <p>{{ detail.telephone }}</p>
+          </div>
+          <div class="row">
+            <h4>微信号:</h4>
+            <p>{{ detail.wechatNo }}</p>
+          </div>
+          <div class="row">
+            <h4>钱包收入:</h4>
+            <div class="row">
+              <p>{{ detail.id }}</p>
+              <el-button size="mini" @click="handleFinance">明细</el-button>
+            </div>
+          </div>
+        </el-col>
+      </el-row>
+
       <h4>渠道</h4>
       <el-table :data="detail.channels" border fit>
         <el-table-column label="认证渠道">
@@ -134,10 +141,7 @@
 </template>
 
 <script>
-import {
-  unbindBlogger,
-  fetchBloggerFinance
-} from '@/api/accounts'
+import { unbindBlogger, fetchBloggerFinance } from '@/api/accounts'
 import { Channels } from '@/utils/constant'
 import moment from 'moment'
 import waves from '@/directive/waves' // waves directive
@@ -245,7 +249,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
 .detail {
   .row {
     display: flex;

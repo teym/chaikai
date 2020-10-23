@@ -320,8 +320,7 @@
       </div>
     </el-dialog>
     <el-dialog width="415px" title="预览" :visible.sync="previewVisible">
-      <img style="width:100%" :src="previewQR" alt="qr">
-      <p style="text-align:center">微信扫描二维码预览活动</p>
+      <preview v-if="detail" :item="detail" />
     </el-dialog>
   </div>
 </template>
@@ -339,10 +338,11 @@ import { clearQueryObject } from '@/utils/index'
 import waves from '@/directive/waves' // waves directive
 import { mapGetters } from 'vuex'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
+import preview from './preview'
 
 export default {
   name: 'ComplexTable',
-  components: { Pagination },
+  components: { Pagination, preview },
   directives: { waves },
   data() {
     return {
@@ -370,8 +370,7 @@ export default {
       coopTypes: ['全部', '接受悬赏', '接受悬赏/达人报价', '免费置换'],
       detailVisible: false,
       detail: null,
-      previewVisible: false,
-      previewQR: ''
+      previewVisible: false
     }
   },
   computed: {
@@ -402,9 +401,10 @@ export default {
     },
 
     handlePreview(row) {
-      this.previewQR = ''
+      this.detail = null
       this.previewVisible = true
-      this.loadQR(row.id)
+      this.loadDetail(row.id)
+      // this.loadQR(row.id)
     },
     handleAction(row, state) {
       if (state === 4 || state === 6) {
@@ -435,7 +435,7 @@ export default {
     },
     loadQR(id) {
       fetchActivityQR(id).then((r) => {
-        this.previewQR = r.data ? ('data:image/png;base64,' + r.data) : ''
+        this.previewQR = r.data ? 'data:image/png;base64,' + r.data : ''
       })
     },
     loadDetail(id) {

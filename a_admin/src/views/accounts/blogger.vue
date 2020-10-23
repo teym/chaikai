@@ -111,7 +111,7 @@
       @pagination="getList"
     />
     <el-dialog
-      width="60%"
+      width="50%"
       title="达人详情"
       :visible.sync="detailVisable"
       append-to-body

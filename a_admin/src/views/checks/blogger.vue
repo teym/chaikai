@@ -120,6 +120,7 @@
             size="mini"
             @click="handleAction(row, 2)"
           >拒绝</el-button>
+          <el-button size="mini" @click="handleDetail(row)">详情</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -134,21 +135,31 @@
     <el-dialog width="60%" title="预览" :visible.sync="preview" append-to-body>
       <img style="width: 100%" :src="previewUrl" alt="img">
     </el-dialog>
+    <el-dialog
+      width="50%"
+      title="详情"
+      :visible.sync="detailVisable"
+      append-to-body
+    >
+      <detail :detail="detail" />
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import { fetchBloggerList, updateBloggerState } from '@/api/check'
+import { fetchBlogger } from '@/api/accounts'
 import { clearQueryObject } from '@/utils/index'
 import { Channels } from '@/utils/constant'
 import moment from 'moment'
 import waves from '@/directive/waves' // waves directive
 import { mapGetters } from 'vuex'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
+import detail from '../accounts/components/blogger'
 
 export default {
   name: 'ComplexTable',
-  components: { Pagination },
+  components: { Pagination, detail },
   directives: { waves },
   data() {
     return {
@@ -167,7 +178,9 @@ export default {
       channels: Channels,
       status: ['全部', '审核中', '已拒绝', '已认证'],
       preview: false,
-      previewUrl: ''
+      previewUrl: '',
+      detailVisable: false,
+      detail: null
     }
   },
   computed: {
@@ -235,7 +248,13 @@ export default {
       }
     },
     handleDetail(item) {
-      console.log(item.name)
+      this.detailVisable = true
+      fetchBlogger(item.account.id).then((r) => {
+        r.data.financeInfo = item.financeInfo
+        r.data.channels = item.channels
+        r.data.date = item.date
+        this.detail = r.data
+      })
     }
   }
 }

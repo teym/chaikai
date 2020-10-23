@@ -110,7 +110,7 @@
       @pagination="getList"
     />
     <el-dialog
-      width="80%"
+      width="60%"
       title="企业详情"
       :visible.sync="detailVisable"
       append-to-body

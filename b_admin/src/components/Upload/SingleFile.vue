@@ -27,6 +27,10 @@
 export default {
   name: "SingleFile",
   props: {
+    value: {
+      type: String,
+      default: "",
+    },
     headers: {
       type: Object,
       default: {},
@@ -54,8 +58,9 @@ export default {
       });
     },
     handleChange(file, fileList) {
-    //   console.log("change", file);
+      //   console.log("change", file);
       this.files = file ? [file] : [];
+      this.$emit("input", file.name);
     },
     handleSuccess(resp) {
       console.log("success", resp);
@@ -66,7 +71,7 @@ export default {
       this.handle.reject(error);
     },
     handleRemove() {
-    //   console.log("remove");
+      //   console.log("remove");
       this.files = [];
     },
   },
