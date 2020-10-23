@@ -232,7 +232,10 @@
             label-width="110px"
             label="合作方式:"
           >
-            <el-radio-group v-model="postForm.cooperationType">
+            <el-radio-group
+              v-model="postForm.cooperationType"
+              @change="onCooperation"
+            >
               <el-radio-button :label="1">接受悬赏</el-radio-button>
               <el-radio-button :label="2">接受悬赏/达人报价</el-radio-button>
               <el-radio-button :label="3">免费置换</el-radio-button>
@@ -269,214 +272,216 @@
               <br />--品牌方无法提出：[合作篇幅]、[内容形式]、[图片数量]、[视频长度]等要求,并消耗一次置换活动次数
             </div>
           </el-form-item>
-          <el-form-item
-            prop
-            style="margin-bottom: 30px"
-            label-width="170px"
-            label="合作要求 内容篇幅:"
-          >
-            <el-radio-group
-              v-model="postForm.extension.articleType"
-              @change="handleTypeChange"
+          <div v-if="postForm.cooperationType !== 3">
+            <el-form-item
+              prop
+              style="margin-bottom: 30px"
+              label-width="170px"
+              label="合作要求 内容篇幅:"
             >
-              <el-radio-button :label="0">无要求</el-radio-button>
-              <el-radio-button :label="1">单篇</el-radio-button>
-            </el-radio-group>
-          </el-form-item>
+              <el-radio-group
+                v-model="postForm.extension.articleType"
+                @change="handleTypeChange"
+              >
+                <el-radio-button :label="0">无要求</el-radio-button>
+                <el-radio-button :label="1">单篇</el-radio-button>
+              </el-radio-group>
+            </el-form-item>
 
-          <el-form-item
-            prop="articleType"
-            style="margin-bottom: 30px"
-            label-width="170px"
-            label="内容形式:"
-          >
-            <el-radio-group
-              v-model="postForm.extension.contentType"
-              @change="handleContentType"
+            <el-form-item
+              prop="articleType"
+              style="margin-bottom: 30px"
+              label-width="170px"
+              label="内容形式:"
             >
-              <el-radio-button :label="0">无要求</el-radio-button>
-              <el-radio-button
-                :label="1"
-                :disabled="postForm.channels.filter((i) => i > 4).length > 0"
-                >图文</el-radio-button
+              <el-radio-group
+                v-model="postForm.extension.contentType"
+                @change="handleContentType"
               >
-              <el-radio-button :label="2">视频</el-radio-button>
-            </el-radio-group>
-          </el-form-item>
-          <el-form-item
-            v-if="postForm.extension.contentType === 2"
-            prop="minVideoLength"
-            style="margin-bottom: 30px"
-            label-width="170px"
-            label="视频时长:"
-          >
-            <el-radio-group v-model="postForm.extension.minVideoLength">
-              <el-radio-button :label="0">无要求</el-radio-button>
-              <el-radio-button :label="1">15秒</el-radio-button>
-              <el-radio-button :label="2">30秒</el-radio-button>
-              <el-radio-button :label="3">1分钟</el-radio-button>
-              <el-radio-button :label="4">2分钟</el-radio-button>
-            </el-radio-group>
-          </el-form-item>
-          <el-form-item
-            v-if="postForm.extension.contentType === 1"
-            prop="minWordNum"
-            style="margin-bottom: 30px"
-            label-width="170px"
-            label="最低字数:"
-          >
-            <el-radio-group v-model="postForm.extension.minWordNum">
-              <el-radio-button :label="0">无要求</el-radio-button>
-              <el-radio-button :label="1">200</el-radio-button>
-              <el-radio-button :label="2">400</el-radio-button>
-            </el-radio-group>
-          </el-form-item>
-          <el-form-item
-            v-if="postForm.extension.contentType === 1"
-            prop="minPicNum"
-            style="margin-bottom: 30px"
-            label-width="170px"
-            label="最低图片数:"
-          >
-            <el-radio-group v-model="postForm.extension.minPicNum">
-              <el-radio-button :label="0">无要求</el-radio-button>
-              <el-radio-button :label="1">6张</el-radio-button>
-              <el-radio-button
-                :label="2"
-                :disabled="postForm.extension.articleType === 0"
-                >9张</el-radio-button
-              >
-            </el-radio-group>
-          </el-form-item>
-          <el-form-item
-            style="margin-bottom: 30px"
-            label-width="170px"
-            label="账号话题:"
-          >
-            <div v-for="(t, i) in postForm.topics" :key="i">
-              <span>
-                {{ t.platformName }}
-                <br />
-                @{{ t.nickname }}#{{ t.topic }}
-              </span>
-            </div>
-            <el-button @click="onShowTopicForm">添加话题</el-button>
-          </el-form-item>
-          <el-form-item
-            prop="discountInfo"
-            style="margin-bottom: 30px"
-            label-width="170px"
-          >
-            <span slot="label" for="discountInfo">
-              优惠信息
-              <el-tooltip
-                effect="dark"
-                placement="bottom"
-                content="达人可在正文或评论中添加优惠信息，小红书暂不支持携带优惠信息"
-              >
-                <el-icon class="el-icon-question" />
-              </el-tooltip>
-            </span>
-            <el-input
-              v-model="postForm.extension.discountInfo"
-              placeholder="请填写需要露出的优惠信息"
-              :maxlength="150"
-            />
-          </el-form-item>
-          <el-form-item
-            prop="keywords"
-            style="margin-bottom: 30px"
-            label-width="170px"
-            label="附加关键词:"
-          >
-            <span slot="label" for="keywords">
-              附加关键词
-              <el-tooltip
-                effect="dark"
-                placement="bottom"
-                content="达人需在测评正文中添加关键词"
-              >
-                <el-icon class="el-icon-question" />
-              </el-tooltip>
-            </span>
-            <div>
-              <el-input
-                style="width: 30%; margin-right: 8px"
-                v-for="(k, i) in postForm.keywords"
-                :key="i"
-                v-model="k.txt"
-                :maxlength="5"
-                show-word-limit
-              >
-                <div slot="suffix" class="input_remove">
-                  <div class="box" @click="handleRemoveKeyword(i)">
-                    <el-icon class="el-icon-circle-close" />
+                <el-radio-button :label="0">无要求</el-radio-button>
+                <el-radio-button
+                  :label="1"
+                  :disabled="postForm.channels.filter((i) => i > 4).length > 0"
+                  >图文</el-radio-button
+                >
+                <el-radio-button :label="2">视频</el-radio-button>
+              </el-radio-group>
+            </el-form-item>
+            <el-form-item
+              v-if="postForm.extension.contentType === 2"
+              prop="minVideoLength"
+              style="margin-bottom: 30px"
+              label-width="170px"
+              label="视频时长:"
+            >
+              <el-radio-group v-model="postForm.extension.minVideoLength">
+                <el-radio-button :label="0">无要求</el-radio-button>
+                <el-radio-button :label="1">15秒</el-radio-button>
+                <el-radio-button :label="2">30秒</el-radio-button>
+                <el-radio-button :label="3">1分钟</el-radio-button>
+                <el-radio-button :label="4">2分钟</el-radio-button>
+              </el-radio-group>
+            </el-form-item>
+            <el-form-item
+              v-if="postForm.extension.contentType === 1"
+              prop="minWordNum"
+              style="margin-bottom: 30px"
+              label-width="170px"
+              label="最低字数:"
+            >
+              <el-radio-group v-model="postForm.extension.minWordNum">
+                <el-radio-button :label="0">无要求</el-radio-button>
+                <el-radio-button :label="1">200</el-radio-button>
+                <el-radio-button :label="2">400</el-radio-button>
+              </el-radio-group>
+            </el-form-item>
+            <el-form-item
+              v-if="postForm.extension.contentType === 1"
+              prop="minPicNum"
+              style="margin-bottom: 30px"
+              label-width="170px"
+              label="最低图片数:"
+            >
+              <el-radio-group v-model="postForm.extension.minPicNum">
+                <el-radio-button :label="0">无要求</el-radio-button>
+                <el-radio-button :label="1">6张</el-radio-button>
+                <el-radio-button
+                  :label="2"
+                  :disabled="postForm.extension.articleType === 0"
+                  >9张</el-radio-button
+                >
+              </el-radio-group>
+            </el-form-item>
+            <el-form-item
+              style="margin-bottom: 30px"
+              label-width="170px"
+              label="账号话题:"
+            >
+              <div class="topic_p">
+                <div class="item" v-for="(t, i) in postForm.topics" :key="i">
+                  <img :src="t.icon" alt="icon" />
+                  <div>
+                    <span>账号：@{{ t.nickname }}</span>
+                    <span>话题：#{{ t.topic }}</span>
                   </div>
+                  <el-button size="mini" @click="onShowTopicForm"
+                    >修改</el-button
+                  >
                 </div>
-              </el-input>
+              </div>
               <el-button
-                v-if="postForm.keywords.length < 3"
-                @click="handleAddKeywords"
+                v-if="postForm.topics.length <= 0"
+                @click="onShowTopicForm"
+                >添加话题</el-button
               >
-                添加
-              </el-button>
-            </div>
-            <!-- <el-input
-              v-model="postForm.extension.keywords"
-              placeholder="达人需在测评正文中添加关键词"
-            /> -->
-          </el-form-item>
-          <el-form-item
-            prop="bloggerPublishTime"
-            style="margin-bottom: 30px"
-            label-width="170px"
-            label="发布时间"
-          >
-            <span slot="label" for="bloggerPublishTime">
-              发布时间
-              <el-tooltip
-                effect="dark"
-                placement="bottom"
-                content="截止发布时间前，所发布的测评才能获得悬赏"
-              >
-                <el-icon class="el-icon-question" />
-              </el-tooltip>
-            </span>
-            <el-date-picker
-              v-model="postForm.extension.bloggerPublishTime"
-              type="date"
-              placeholder="指定达人发布测评时间"
-            />
-          </el-form-item>
-          <el-form-item
-            prop="otherReq"
-            style="margin-bottom: 30px"
-            label-width="170px"
-            label="其它要求"
-          >
-            <el-checkbox-group v-model="postForm.extension.otherReq">
-              <el-checkbox-button :label="1"
-                >产品和达人同框露脸</el-checkbox-button
-              >
-              <el-checkbox-button :label="2"
-                >使用前后效果对比</el-checkbox-button
-              >
-              <el-checkbox-button :label="3"
-                >提供评测原图使用权</el-checkbox-button
-              >
-            </el-checkbox-group>
-          </el-form-item>
-          <el-form-item
-            prop="reward"
-            style="margin-bottom: 30px"
-            label-width="170px"
-            label="悬赏金额"
-          >
-            <el-input
-              v-model="postForm.reward"
-              :placeholder="'最低' + minAmount + '元/人'"
-            />
-          </el-form-item>
+            </el-form-item>
+            <el-form-item
+              prop="discountInfo"
+              style="margin-bottom: 30px"
+              label-width="170px"
+            >
+              <span slot="label" for="discountInfo">
+                优惠信息
+                <el-tooltip
+                  effect="dark"
+                  placement="bottom"
+                  content="达人可在正文或评论中添加优惠信息，小红书暂不支持携带优惠信息"
+                >
+                  <el-icon class="el-icon-question" />
+                </el-tooltip>
+              </span>
+              <el-input
+                v-model="postForm.extension.discountInfo"
+                placeholder="请填写需要露出的优惠信息"
+                :maxlength="150"
+              />
+            </el-form-item>
+            <el-form-item
+              prop="keywords"
+              style="margin-bottom: 30px"
+              label-width="170px"
+              label="附加关键词:"
+            >
+              <span slot="label" for="keywords">
+                附加关键词
+                <el-tooltip
+                  effect="dark"
+                  placement="bottom"
+                  content="达人需在测评正文中添加关键词"
+                >
+                  <el-icon class="el-icon-question" />
+                </el-tooltip>
+              </span>
+              <div>
+                <el-input
+                  style="width: 30%; margin-right: 8px"
+                  v-for="(k, i) in postForm.keywords"
+                  :key="i"
+                  v-model="k.txt"
+                  :maxlength="5"
+                  show-word-limit
+                >
+                  <div slot="suffix" class="input_remove">
+                    <div class="box" @click="handleRemoveKeyword(i)">
+                      <el-icon class="el-icon-circle-close" />
+                    </div>
+                  </div>
+                </el-input>
+                <el-button
+                  v-if="postForm.keywords.length < 3"
+                  @click="handleAddKeywords"
+                >
+                  添加
+                </el-button>
+              </div>
+            </el-form-item>
+            <el-form-item
+              prop="bloggerPublishTime"
+              style="margin-bottom: 30px"
+              label-width="170px"
+              label="发布时间"
+            >
+              <span slot="label" for="bloggerPublishTime">
+                发布时间
+                <el-tooltip
+                  effect="dark"
+                  placement="bottom"
+                  content="截止发布时间前，所发布的测评才能获得悬赏"
+                >
+                  <el-icon class="el-icon-question" />
+                </el-tooltip>
+              </span>
+              <el-date-picker
+                v-model="postForm.extension.bloggerPublishTime"
+                type="date"
+                placeholder="指定达人发布测评时间"
+              />
+            </el-form-item>
+            <el-form-item
+              prop="otherReq"
+              style="margin-bottom: 30px"
+              label-width="170px"
+              label="其它要求"
+            >
+              <el-checkbox-group v-model="postForm.extension.otherReq">
+                <el-checkbox :label="1">产品和达人同框露脸</el-checkbox><br />
+                <el-checkbox :label="2">使用前后效果对比</el-checkbox><br />
+                <el-checkbox :label="3">提供评测原图使用权</el-checkbox>
+              </el-checkbox-group>
+            </el-form-item>
+            <el-form-item
+              prop="reward"
+              :required="true"
+              style="margin-bottom: 30px"
+              label-width="170px"
+              label="悬赏金额"
+            >
+              <el-input
+                v-model="postForm.reward"
+                :placeholder="'最低' + minAmount + '元/人'"
+              />
+            </el-form-item>
+          </div>
           <el-form-item style="margin-bottom: 30px" label-width="100px">
             <el-button @click="onCancel">取消</el-button>
             <el-button @click="submitForm(false)">保存</el-button>
@@ -762,21 +767,16 @@ export default {
       loading: false,
       brandListOptions: [],
       rules: {
-        goods: [
-          { validator: validateRequire, trigger: "blur", name: "活动名称" },
-        ],
+        goods: [{ validator: validateRequire, name: "活动名称" }],
         skus: [{ validator: validateArrayRequire, name: "商品规格" }],
-        title: [
-          { validator: validateRequire, trigger: "blur", name: "活动名称" },
-        ],
+        title: [{ validator: validateRequire, name: "活动名称" }],
         totalNum: [
           {
             validator: validateNumberRequire,
-            trigger: "blur",
             name: "活动名额",
           },
         ],
-        reward: [{ validator: validateAmount, trigger: "blur" }],
+        reward: [{ validator: validateAmount }],
         regTime: [{ validator: validateArrayRequire, name: "报名时间" }],
         channels: [{ validator: validateArrayRequire, name: "推广渠道" }],
       },
@@ -992,7 +992,7 @@ export default {
     onChannels(e) {
       const last = [].concat(e).pop();
       if (last === 0) {
-        console.log(last, this.postForm.extension.contentType);
+        // console.log(last, this.postForm.extension.contentType);
         if (this.postForm.extension.contentType === 1) {
           e.splice(
             0,
@@ -1008,6 +1008,14 @@ export default {
         } else {
           e.splice(0, e.length, ...e.filter((i) => i !== 0));
         }
+      }
+    },
+    onCooperation(e) {
+      if (e === 3) {
+        this.postForm.extension.contentType = 0;
+        this.onChannels(
+          this.postForm.channels.splice(0, this.postForm.channels.length, 0, ...Channels.map((i) => i.id))
+        );
       }
     },
     onShowTopicForm() {
@@ -1332,6 +1340,39 @@ export default {
     width: 22px;
     height: 22px;
     margin-left: 8px;
+  }
+}
+.topic_p {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  .item:first-of-type {
+    margin-top: 0;
+  }
+  .item {
+    display: flex;
+    flex-direction: row;
+    border: 1px solid #dcdfe6;
+    border-radius: 4px;
+    align-items: center;
+    padding: 4px 8px;
+    margin-top: 8px;
+    img {
+      width: 40px;
+      height: 40px;
+    }
+    div {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 32px;
+      padding: 0 8px;
+      span {
+        margin: 0;
+        padding: 0;
+        line-height: 1;
+      }
+    }
   }
 }
 .split {
