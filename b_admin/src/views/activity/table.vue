@@ -31,23 +31,23 @@
           mode="horizontal"
           @select="handleSelect"
         >
-          <el-menu-item :index="''">
+          <el-menu-item :index="''" style="padding: 0 0;margin: 0 20px">
             全部
             <span v-if="stat.total > 0" class="pill">{{ stat.total }}</span>
           </el-menu-item>
-          <el-menu-item index="5">
+          <el-menu-item index="5" style="padding: 0 0;margin: 0 20px">
             报名中
             <span v-if="stat.signingUp > 0" class="pill">{{
               stat.signingUp
             }}</span>
           </el-menu-item>
-          <el-menu-item index="4">
+          <el-menu-item index="4" style="padding: 0 0;margin: 0 20px">
             未开始
             <span v-if="stat.notStarted > 0" class="pill">{{
               stat.notStarted
             }}</span>
           </el-menu-item>
-          <el-menu-item index="6">
+          <el-menu-item index="6" style="padding: 0 0;margin: 0 20px">
             报名结束
             <span v-if="stat.signUpClosed > 0" class="pill">{{
               stat.signUpClosed
@@ -65,7 +65,6 @@
       fit
       highlight-current-row
       style="width: 100%"
-      :header-cell-style="{'font-weight': 400}"
     >
       <el-table-column label="商品名称" width="260">
         <template slot-scope="{ row }">
