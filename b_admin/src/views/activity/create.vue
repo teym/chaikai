@@ -1,6 +1,11 @@
 <template>
   <div class="createPost-container">
-    <el-form ref="postForm" :hide-required-asterisk="false" :model="postForm" :rules="rules">
+    <el-form
+      ref="postForm"
+      :hide-required-asterisk="false"
+      :model="postForm"
+      :rules="rules"
+    >
       <div class="createPost-main-container">
         <div class="form-container">
           <h3>基本信息</h3>
@@ -68,16 +73,15 @@
             label="报名时间:"
             :required="true"
           >
-            <span slot="label" for="bloggerPublishTime">
+            <span slot="label">
               报名时间:
-              <el-popover
+              <el-tooltip
+                effect="dark"
                 placement="bottom"
-                width="300"
-                trigger="click"
                 content="达人将于报名期间提交合作申请"
               >
-                <el-icon slot="reference" class="el-icon-question" />
-              </el-popover>
+                <el-icon class="el-icon-question" />
+              </el-tooltip>
             </span>
             <el-date-picker
               v-model="postForm.regTime"
@@ -136,14 +140,13 @@
           >
             <span slot="label" for="displayType">
               私密活动
-              <el-popover
+              <el-tooltip
+                effect="dark"
                 placement="bottom"
-                width="300"
-                trigger="click"
                 content="私密活动将不在小程序公开申请，需手动转发邀约达人参加"
               >
-                <el-icon slot="reference" class="el-icon-question" />
-              </el-popover>
+                <el-icon class="el-icon-question" />
+              </el-tooltip>
             </span>
             <el-switch
               v-model="postForm.displayType"
@@ -159,14 +162,13 @@
           >
             <span slot="label" for="recvArea">
               收货地限制
-              <el-popover
+              <el-tooltip
+                effect="dark"
                 placement="bottom"
-                width="300"
-                trigger="click"
                 content="若达人收货地址不符，无法申请活动"
               >
-                <el-icon slot="reference" class="el-icon-question" />
-              </el-popover>
+                <el-icon class="el-icon-question" />
+              </el-tooltip>
             </span>
             <el-switch
               v-model="postForm.extension.receiveAreaLimit"
@@ -367,14 +369,13 @@
           >
             <span slot="label" for="discountInfo">
               优惠信息
-              <el-popover
+              <el-tooltip
+                effect="dark"
                 placement="bottom"
-                width="300"
-                trigger="click"
                 content="达人可在正文或评论中添加优惠信息，小红书暂不支持携带优惠信息"
               >
-                <el-icon slot="reference" class="el-icon-question" />
-              </el-popover>
+                <el-icon class="el-icon-question" />
+              </el-tooltip>
             </span>
             <el-input
               v-model="postForm.extension.discountInfo"
@@ -390,14 +391,13 @@
           >
             <span slot="label" for="keywords">
               附加关键词
-              <el-popover
+              <el-tooltip
+                effect="dark"
                 placement="bottom"
-                width="300"
-                trigger="click"
                 content="达人需在测评正文中添加关键词"
               >
-                <el-icon slot="reference" class="el-icon-question" />
-              </el-popover>
+                <el-icon class="el-icon-question" />
+              </el-tooltip>
             </span>
             <div>
               <el-input
@@ -434,14 +434,13 @@
           >
             <span slot="label" for="bloggerPublishTime">
               发布时间
-              <el-popover
+              <el-tooltip
+                effect="dark"
                 placement="bottom"
-                width="300"
-                trigger="click"
                 content="截止发布时间前，所发布的测评才能获得悬赏"
               >
-                <el-icon slot="reference" class="el-icon-question" />
-              </el-popover>
+                <el-icon class="el-icon-question" />
+              </el-tooltip>
             </span>
             <el-date-picker
               v-model="postForm.extension.bloggerPublishTime"
@@ -1159,7 +1158,7 @@ export default {
               line-height: 16px;
               color: #4244ff;
             }
-            .el-button{
+            .el-button {
               background-color: #4244ff26;
               color: #4244ff;
             }
