@@ -168,7 +168,7 @@ export default {
         span {
           font-size: 26px;
           line-height: 40px;
-          color: #2873FC;
+          color: #4244ff;
           font-weight: bold;
         }
       }
