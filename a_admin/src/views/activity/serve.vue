@@ -13,7 +13,7 @@
       <el-input
         v-model="listQuery.searchKey"
         placeholder="请输入"
-        style="width: 160px;"
+        style="width: 160px"
         size="mini"
         class="filter-item"
         @keyup.enter.native="handleFilter"
@@ -22,13 +22,23 @@
         v-model="listQuery.statusCode"
         size="mini"
         class="filter-item"
-        style="width: 120px;margin-left: 16px"
+        style="width: 120px; margin-left: 16px"
       >
         <el-option :value="0" label="全部" />
         <el-option :value="2" label="订购成功" />
         <el-option :value="1" label="待支付" />
         <el-option :value="5" label="已关闭" />
       </el-select>
+      <el-date-picker
+        v-model="listQuery.timeRange"
+        size="mini"
+        class="filter-item"
+        style="margin-left: 16px"
+        type="daterange"
+        range-separator="至"
+        start-placeholder="开始日期"
+        end-placeholder="结束日期"
+      />
 
       <el-button
         class="filter-item"
@@ -37,6 +47,7 @@
         size="mini"
         @click="handleFilter"
       >筛选</el-button>
+
       <el-button
         class="filter-item"
         style="margin-left: 16px"
@@ -81,7 +92,11 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column
+        label="操作"
+        align="center"
+        class-name="small-padding fixed-width"
+      >
         <template slot-scope="{ row }">
           <el-button size="mini" @click="handleDetail(row)">详情</el-button>
         </template>
@@ -118,7 +133,9 @@
           <div>
             <p>订购次数 {{ detail.serverOrder.amount }}次</p>
             <p>支付金额 {{ detail.amount }}</p>
-            <p>支付方式 {{ ['', '支付宝', '余额'][detail.serverOrder.type] }}</p>
+            <p>
+              支付方式 {{ ["", "支付宝", "余额"][detail.serverOrder.type] }}
+            </p>
             <p>支付单号 {{ detail.orderNo }}</p>
           </div>
         </div>
@@ -141,6 +158,10 @@ export default {
   components: { Pagination },
   directives: { waves },
   data() {
+    const n = moment()
+    const ns = n.format('YYYY-MM-DD')
+    const p = n.subtract(3, 'M')
+    const ps = p.format('YYYY-MM-DD')
     return {
       tableKey: 0,
       list: null,
@@ -154,7 +175,8 @@ export default {
         statusCode: 0,
         coopType: 0,
         depositStatusCode: 0,
-        rewardStatusCode: 0
+        rewardStatusCode: 0,
+        timeRange: [ps, ns]
       },
       status: ['处理中', '待支付', '订购成功', '订购失败', '已拒绝', '已关闭'],
       detailVisable: false,
@@ -172,8 +194,21 @@ export default {
       this.listLoading = true
       const obj = Object.assign({}, this.listQuery)
       obj[['', 'orderNo', 'companyName'][obj.searchType]] = obj.searchKey
+      if (obj.timeRange && obj.timeRange.length > 0) {
+        obj.startTime = moment(this.listQuery.timeRange[0]).format(
+          'YYYY-MM-DD HH:mm:ss'
+        )
+        obj.endTime = moment(this.listQuery.timeRange[1]).format(
+          'YYYY-MM-DD HH:mm:ss'
+        )
+        obj.timeRange = null
+      }
       fetchServeList(clearQueryObject(obj, true)).then(({ data }) => {
-        this.list = data.data.map(i => Object.assign(i, { date: moment(i.gmtCreate).format('YYYY-MM-DD HH:mm:ss') }))
+        this.list = data.data.map((i) =>
+          Object.assign(i, {
+            date: moment(i.gmtCreate).format('YYYY-MM-DD HH:mm:ss')
+          })
+        )
         this.total = data.pager.count
 
         // Just to simulate the time of the request
@@ -186,9 +221,7 @@ export default {
       this.listQuery.page = 1
       this.getList()
     },
-    handleExport() {
-
-    },
+    handleExport() {},
     handleClose(row) {
       this.$prompt('请输入拒绝理由').then((r) => {
         closeOrder({

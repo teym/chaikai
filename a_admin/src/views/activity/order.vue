@@ -15,7 +15,7 @@
       <el-input
         v-model="listQuery.searchKey"
         placeholder="请输入"
-        style="width: 160px;"
+        style="width: 160px"
         size="mini"
         class="filter-item"
         @keyup.enter.native="handleFilter"
@@ -34,7 +34,12 @@
         class="filter-item"
         style="width: 120px; margin-left: 16px"
       >
-        <el-option v-for="(i, j) in depositStatus" :key="j" :value="j" :label="i" />
+        <el-option
+          v-for="(i, j) in depositStatus"
+          :key="j"
+          :value="j"
+          :label="i"
+        />
       </el-select>
       <el-select
         v-model="listQuery.rewardStatusCode"
@@ -42,16 +47,37 @@
         class="filter-item"
         style="width: 120px; margin-left: 16px"
       >
-        <el-option v-for="(i, j) in rewardStatus" :key="j" :value="j" :label="i" />
+        <el-option
+          v-for="(i, j) in rewardStatus"
+          :key="j"
+          :value="j"
+          :label="i"
+        />
       </el-select>
       <el-select
         v-model="listQuery.statusCode"
         size="mini"
         class="filter-item"
-        style="width: 120px;margin-left: 16px"
+        style="width: 120px; margin-left: 16px"
       >
-        <el-option v-for="(item, i) in status" :key="i" :value="i" :label="item" />
+        <el-option
+          v-for="(item, i) in status"
+          :key="i"
+          :value="i"
+          :label="item"
+        />
       </el-select>
+
+      <el-date-picker
+        v-model="listQuery.timeRange"
+        size="mini"
+        class="filter-item"
+        style="margin-left: 16px"
+        type="daterange"
+        range-separator="至"
+        start-placeholder="开始日期"
+        end-placeholder="结束日期"
+      />
 
       <el-button
         class="filter-item"
@@ -105,7 +131,8 @@
       </el-table-column>
       <el-table-column label="押金|状态" align="center">
         <template slot-scope="{ row }">
-          <span>{{ row.depositInfo.amount }}<br> {{ depositStatus[row.depositInfo.statusCode] }}</span>
+          <span>{{ (row.depositInfo || {}).amount }}<br>
+            {{ depositStatus[(row.depositInfo || {}).statusCode || 0] }}</span>
         </template>
       </el-table-column>
       <el-table-column label="悬赏|状态" align="center">
@@ -123,10 +150,18 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="操作" align="center" width="240" class-name="small-padding fixed-width">
+      <el-table-column
+        label="操作"
+        align="center"
+        width="240"
+        class-name="small-padding fixed-width"
+      >
         <template slot-scope="{ row }">
           <el-button size="mini" @click="handleDetail(row)">订单详情</el-button>
-          <el-button size="mini" @click="handleDeposit(row)">押金详情</el-button>
+          <el-button
+            size="mini"
+            @click="handleDeposit(row)"
+          >押金详情</el-button>
           <el-button
             v-if="row.statusCode === 5 || row.statusCode === 6"
             size="mini"
@@ -182,7 +217,7 @@
           </el-table-column>
           <el-table-column label="罚款金额" align="center">
             <template slot-scope="{ row }">
-              <span>{{ row.raeType === 1 ? '+' : '-' }}{{ row.amount }}</span>
+              <span>{{ row.raeType === 1 ? "+" : "-" }}{{ row.amount }}</span>
             </template>
           </el-table-column>
         </el-table>
@@ -193,7 +228,7 @@
 
 <script>
 import { fetchOrderList, closeOrder, fetchDeposit } from '@/api/check'
-// import moment from 'moment'
+import moment from 'moment'
 import { clearQueryObject } from '@/utils/index'
 import waves from '@/directive/waves' // waves directive
 import { mapGetters } from 'vuex'
@@ -205,6 +240,10 @@ export default {
   components: { Pagination },
   directives: { waves },
   data() {
+    const n = moment()
+    const ns = n.format('YYYY-MM-DD')
+    const p = n.subtract(3, 'M')
+    const ps = p.format('YYYY-MM-DD')
     return {
       tableKey: 0,
       list: null,
@@ -218,7 +257,8 @@ export default {
         statusCode: 0,
         coopType: 0,
         depositStatusCode: 0,
-        rewardStatusCode: 0
+        rewardStatusCode: 0,
+        timeRange: [ps, ns]
       },
       status: [
         '全部',
@@ -252,25 +292,30 @@ export default {
           obj.searchType
         ]
       ] = obj.searchKey
-      fetchOrderList(clearQueryObject(obj, true)).then(
-        ({ data }) => {
-          this.list = data.data
-          this.total = data.pager.count
+      if (obj.timeRange && obj.timeRange.length > 0) {
+        obj.startTime = moment(this.listQuery.timeRange[0]).format(
+          'YYYY-MM-DD HH:mm:ss'
+        )
+        obj.endTime = moment(this.listQuery.timeRange[1]).format(
+          'YYYY-MM-DD HH:mm:ss'
+        )
+        obj.timeRange = null
+      }
+      fetchOrderList(clearQueryObject(obj, true)).then(({ data }) => {
+        this.list = data.data
+        this.total = data.pager.count
 
-          // Just to simulate the time of the request
-          setTimeout(() => {
-            this.listLoading = false
-          }, 1.5 * 1000)
-        }
-      )
+        // Just to simulate the time of the request
+        setTimeout(() => {
+          this.listLoading = false
+        }, 1.5 * 1000)
+      })
     },
     handleFilter() {
       this.listQuery.page = 1
       this.getList()
     },
-    handleExport() {
-
-    },
+    handleExport() {},
     handleClose(row) {
       this.$prompt('请输入拒绝理由').then((r) => {
         closeOrder({
