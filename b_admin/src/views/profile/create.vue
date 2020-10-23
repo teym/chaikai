@@ -26,10 +26,10 @@
     >
       <div class="createPost-main-container">
         <el-form-item label="公司名称:" prop="name">
-          <el-input v-model="postForm.name" placeholder="请输入公司名称" />
+          <el-input :disabled="stat.statusCode === 3" v-model="postForm.name" placeholder="请输入公司名称" />
         </el-form-item>
         <el-form-item label="统一社会信用代码:" prop="creditCode">
-          <el-input
+          <el-input :disabled="stat.statusCode === 3"
             v-model="postForm.creditCode"
             placeholder="请输入统一社会信用代码"
           />
@@ -40,6 +40,7 @@
           label="营业执照:"
         >
           <Upload
+            :disabled="stat.statusCode === 3"
             :url="conf.url"
             :headers="conf.headers"
             :count="7"
@@ -49,10 +50,10 @@
           />
         </el-form-item>
         <el-form-item label="联系人:" prop="contact">
-          <el-input v-model="postForm.contact" placeholder="请输入联系人" />
+          <el-input :disabled="stat.statusCode === 3" v-model="postForm.contact" placeholder="请输入联系人" />
         </el-form-item>
         <el-form-item label="微信号:" prop="contactWechat">
-          <el-input
+          <el-input :disabled="stat.statusCode === 3"
             v-model="postForm.contactWechat"
             placeholder="请输入微信号"
           />
@@ -62,7 +63,7 @@
           <div class="reason">{{ stat.rejectReason }}</div>
         </el-form-item>
 
-        <el-button type="primary" @click="submitForm">{{
+        <el-button type="primary" v-if="stat.statusCode !== 3" @click="submitForm">{{
           ["", "提交审核", "审核中", "已通过", "提交审核"][stat.statusCode || 1]
         }}</el-button>
       </div>

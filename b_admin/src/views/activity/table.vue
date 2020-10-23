@@ -65,7 +65,7 @@
       fit
       highlight-current-row
       style="width: 100%"
-      header-cell-style="font-weight: 400"
+      :header-cell-style="{'font-weight': 400}"
     >
       <el-table-column label="商品名称" width="260">
         <template slot-scope="{ row }">

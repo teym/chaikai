@@ -1,6 +1,7 @@
 <template>
   <div>
     <el-upload
+      :disabled="disabled"
       :action="url"
       :headers="headers"
       :file-list="list"
@@ -49,6 +50,10 @@ export default {
     url: {
       type: String,
       default: "",
+    },
+    disabled: {
+      type: Boolean,
+      default: false
     },
     tip: {
       type: String,
