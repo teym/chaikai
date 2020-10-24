@@ -65,7 +65,7 @@
         </el-select>
         <div class="right">
           <span
-            >活动名额: {{ stat["0"] }} 已通过: {{ stat["9"] }} 已候选:
+            >活动名额: {{ stat["0"] }} 已通过: {{ stat["9"] }} 剩余名额:
             {{ stat["8"] }}</span
           >
           <el-button
@@ -92,15 +92,16 @@
     </div>
 
     <el-table
-      :key="tableKey"
+      :key="this.listQuery.statusCode"
       v-loading="listLoading"
       :data="list"
       border
       fit
       highlight-current-row
       style="width: 100%"
+      ref="table"
     >
-      <el-table-column label="达人">
+      <el-table-column label="达人" :index="1">
         <template slot-scope="{ row }">
           <div class="info">
             <img :src="row.blogger.avatar" alt="pic" />
@@ -121,7 +122,7 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="申请信息">
+      <el-table-column label="申请信息" :index="2">
         <template slot-scope="{ row }">
           <span>
             规格：{{ row.goodsSku }}
@@ -131,6 +132,7 @@
         </template>
       </el-table-column>
       <el-table-column
+        :index="3"
         v-if="listQuery.statusCode === '1' || listQuery.statusCode === '2'"
         label="申请渠道"
         width="120"
@@ -142,7 +144,12 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column v-if="listQuery.statusCode === '6'" label="评测内容" width="160">
+      <el-table-column
+        :index="4"
+        v-if="listQuery.statusCode === '6'"
+        label="评测内容"
+        width="160"
+      >
         <template slot-scope="{ row }">
           <a
             v-for="(c, i) in row.evaluationItems"
@@ -158,6 +165,7 @@
         </template>
       </el-table-column>
       <el-table-column
+        :index="5"
         v-if="listQuery.statusCode === '1' || listQuery.statusCode === '2'"
         label="粉丝/万"
         width="90"
@@ -169,6 +177,7 @@
         </template>
       </el-table-column>
       <el-table-column
+        :index="6"
         v-if="
           listQuery.statusCode === '1' ||
           listQuery.statusCode === '2' ||
@@ -187,6 +196,7 @@
         </template>
       </el-table-column>
       <el-table-column
+        :index="7"
         v-if="
           listQuery.statusCode === '3' ||
           listQuery.statusCode === '4' ||
@@ -214,22 +224,35 @@
           </span>
         </template>
       </el-table-column>
-      <el-table-column v-if="listQuery.statusCode === '3'" label="发货时间">
+      <el-table-column
+        :index="8"
+        v-if="listQuery.statusCode === '3'"
+        label="发货时间"
+      >
         <template slot-scope="{ row }">
           <span>还剩{{ row.deadlineText }}</span>
         </template>
       </el-table-column>
-      <el-table-column v-if="listQuery.statusCode === '4'" label="确认收货">
+      <el-table-column
+        :index="9"
+        v-if="listQuery.statusCode === '4'"
+        label="确认收货"
+      >
         <template slot-scope="{ row }">
           <span>还剩{{ row.deadlineText }}</span>
         </template>
       </el-table-column>
-      <el-table-column v-if="listQuery.statusCode === '5'" label="评测时间">
+      <el-table-column
+        :index="10"
+        v-if="listQuery.statusCode === '5'"
+        label="评测时间"
+      >
         <template slot-scope="{ row }">
           <span>测评发布时间还剩{{ row.deadlineText }}</span>
         </template>
       </el-table-column>
       <el-table-column
+        :index="11"
         v-if="listQuery.statusCode === '6' || listQuery.statusCode === '7'"
         label="悬赏"
       >
@@ -253,12 +276,16 @@
           </span>
         </template>
       </el-table-column>
-      <el-table-column v-if="listQuery.statusCode !== '1'" label="押金状态">
+      <el-table-column
+        :index="12"
+        v-if="listQuery.statusCode !== '1'"
+        label="押金状态"
+      >
         <template slot-scope="{ row }">
           <span>
             <strong>{{
               ["", "未缴押金", "已冻结", "已解冻", "已扣除"][
-                row.depositInfo.statusCode
+                (row.depositInfo || {}).statusCode || 1
               ]
             }}</strong>
             <br />
@@ -273,6 +300,7 @@
         </template>
       </el-table-column>
       <el-table-column
+        :index="13"
         v-if="listQuery.statusCode !== '2' && listQuery.statusCode !== '7'"
         label="操作"
         align="center"
@@ -326,7 +354,11 @@
               >{{ row.ticketStatusCode > 0 ? "投诉处理中" : "投诉" }}
             </el-button>
             <el-button
-              v-if="listQuery.statusCode === '6' && row.rewardStatusCode === 2 && !row.scoreInfo"
+              v-if="
+                listQuery.statusCode === '6' &&
+                row.rewardStatusCode === 2 &&
+                !row.scoreInfo
+              "
               size="mini"
               type="primary"
               @click="handleCommend(row)"
@@ -624,7 +656,7 @@ export default {
             5: r[0].data.toBeEvaluated,
             6: r[0].data.evaluated,
             7: r[0].data.closed,
-            8: r[0].data.candidate,
+            8: r[1].data.remainingNum || 0,
             9: r[1].data.totalNum - (r[1].data.remainingNum || 0),
           };
           this.channels = r[1].data.extension.channelLimit
@@ -757,9 +789,9 @@ export default {
         });
     },
     handleBatchShip() {
-      if(!this.list || this.list.length === 0){
-        this.$message({message:'无可用数据', type:'info'})
-        return
+      if (!this.list || this.list.length === 0) {
+        this.$message({ message: "无可用数据", type: "info" });
+        return;
       }
       this.batchVisbale = true;
       this.getBatchShip();
