@@ -36,13 +36,13 @@ export default {
     }
   },
   mounted () {
-    this.requestDatas()
+    this.loadData()
   },
   onPullDownRefresh () {
-    this.requestDatas(true)
+    uiapi.waitRefresh(this.loadData())
   },
   methods: {
-    requestDatas () {
+    loadData () {
       const {id} = router(this).params()
       return request
         .get('/common/logistics', { no: id })
@@ -75,7 +75,7 @@ export default {
   font-size: 26rpx;
   color: #999999;
 }
-.ship{
+.ship {
   margin-bottom: 16rpx;
 }
 .ship_head {
@@ -105,10 +105,10 @@ export default {
   color: #9b9b9b;
 }
 .copy {
-  color: #FF8E3B;
+  color: #ff8e3b;
   font-size: 20rpx;
   padding: 4rpx 8rpx;
-  border: 1rpx solid #FF8E3B;
+  border: 1rpx solid #ff8e3b;
   border-radius: 4rpx;
   margin: 0 8rpx;
   background-color: white;
@@ -148,7 +148,7 @@ export default {
   width: 24rpx;
   height: 24rpx;
   border-radius: 12rpx;
-  background-color: #FF8E3B !important;
+  background-color: #ff8e3b !important;
   position: absolute;
   top: 40rpx;
   right: 6rpx;
@@ -170,7 +170,7 @@ export default {
   width: 670rpx;
 }
 .flow_text_a {
-  color: #FF8E3B !important;
+  color: #ff8e3b !important;
 }
 .flow_title {
   font-size: 28rpx;

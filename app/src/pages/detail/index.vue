@@ -249,7 +249,7 @@ export default {
     this.loadData()
   },
   onPullDownRefresh () {
-    this.loadData()
+    uiapi.waitRefresh(this.loadData())
   },
   methods: {
     reset () {
@@ -269,7 +269,7 @@ export default {
       }).catch(e => {
         console.log(e)
       })
-      request.get('/bl/activity', {id}).then(({json: {data}}) => {
+      return request.get('/bl/activity', {id}).then(({json: {data}}) => {
         if (!data.goods.brandInfo) {
           data.goods.brandInfo = {}
         }

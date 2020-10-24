@@ -10,7 +10,7 @@
 
 <script>
 // import _ from 'underscore'
-import {router} from '@/utils/index'
+import {router, uiapi} from '@/utils/index'
 
 export default {
   props: ['status'],
@@ -45,12 +45,17 @@ export default {
     }
   },
   onPullDownRefresh () {
-
+    uiapi.waitRefresh(this.loadData())
   },
   onReachBottom () {
 
   },
   methods: {
+    loadData (page) {
+      return (new Promise((resolve, reject) => {
+        resolve({})
+      }))
+    }
   }
 }
 </script>

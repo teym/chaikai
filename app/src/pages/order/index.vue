@@ -210,7 +210,7 @@ export default {
     this.loadData()
   },
   onPullDownRefresh () {
-    this.loadData()
+    uiapi.waitRefresh(this.loadData())
   },
   onReachBottom () {
 
@@ -218,7 +218,7 @@ export default {
   methods: {
     loadData () {
       const {id} = router(this).params()
-      request.get('/bl/activity/order/' + id).then(({json: {data}}) => {
+      return request.get('/bl/activity/order/' + id).then(({json: {data}}) => {
         data.date = moment(data.gmtCreate).format('YYYY-MM-DD HH:mm:ss')
         data.tickets = data.tickets || []
         this.data = data

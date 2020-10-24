@@ -64,13 +64,13 @@ export default {
   },
   onPullDownRefresh () {
     const {id} = router(this).params()
-    this.loadData(id)
+    uiapi.waitRefresh(this.loadData(id))
   },
   onReachBottom () {
   },
   methods: {
     loadData (id) {
-      request.get('/bl/activity/order/' + id).then(({json: {data}}) => {
+      return request.get('/bl/activity/order/' + id).then(({json: {data}}) => {
         this.channels = mapChannel(data.channels || []).map(i => Object.assign(i, {url: ''}))
         if (this.append) {
           this.datas = [Object.assign({}, this.channels[0], {pop: false})]

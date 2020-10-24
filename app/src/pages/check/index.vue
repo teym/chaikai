@@ -247,7 +247,7 @@ export default {
     this.loadData()
   },
   onPullDownRefresh () {
-    this.loadData()
+    uiapi.waitRefresh(this.loadData())
   },
   methods: {
     reset () {
@@ -256,7 +256,7 @@ export default {
     loadData () {
       const {id, select} = router(this).params()
       // console.log('check', id, select)
-      Promise.all([request.get('/bl/activity', {id}), request.get('/bl/account')]).then((rts) => {
+      return Promise.all([request.get('/bl/activity', {id}), request.get('/bl/account')]).then((rts) => {
         const data = rts[0].json.data
         const user = rts[1].json.data
         data.extension.bloggerPublishTimeStr = moment(data.extension.bloggerPublishTime).format('截止M月D日前')

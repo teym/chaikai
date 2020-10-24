@@ -50,7 +50,7 @@ export default {
     this.loadData(1)
   },
   onPullDownRefresh () {
-    this.loadData(1)
+    uiapi.waitRefresh(this.loadData(1))
   },
   onReachBottom () {
     if (this.loading || this.nomore) {
@@ -60,7 +60,7 @@ export default {
   },
   methods: {
     loadData (page) {
-      request.get('/bl/activity/order/ticket/list', {page, size: 10}).then(({json: {data}}) => {
+      return request.get('/bl/activity/order/ticket/list', {page, size: 10}).then(({json: {data}}) => {
         this.datas = (page === 1 ? [] : this.datas).concat(data.data.map(i => Object.assign(i, {date: moment(i.gmtCreate).format('YYYY.MM.DD')})))
         this.loading = false
         this.nomore = data.pager.totalPages <= page

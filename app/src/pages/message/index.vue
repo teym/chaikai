@@ -58,7 +58,7 @@ export default {
     this.loadData(1)
   },
   onPullDownRefresh () {
-    this.loadData(1)
+    uiapi.waitRefresh(this.loadData(1))
   },
   methods: {
     reset () {
@@ -66,7 +66,7 @@ export default {
     },
     loadData (page) {
       const {id} = router(this).params()
-      request.get('/chat/bl/room/record/list', {page, size: 10, originId: id, roomType: 1}).then(({json: {data}}) => {
+      return request.get('/chat/bl/room/record/list', {page, size: 10, originId: id, roomType: 1}).then(({json: {data}}) => {
         this.datas = data.data.reverse().map(i => Object.assign(i, {accountInfo: i.accountInfo || {}, date: formatMsgTime(i.gmtCreate), isimg: isImgMsg(i.content), content: isImgMsg(i.content) ? imgMsgUrl(i.content) : i.content})).concat(page === 1 ? [] : this.datas)
         this.page = page
         this.loading = false

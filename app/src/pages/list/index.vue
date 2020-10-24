@@ -39,7 +39,7 @@ export default {
     this.loadData(1)
   },
   onPullDownRefresh () {
-    this.loadData(1)
+    uiapi.waitRefresh(this.loadData(1))
   },
   onReachBottom () {
     if (this.loading || (this.page > 1 && !this.nomore)) { return }
@@ -47,7 +47,7 @@ export default {
   },
   methods: {
     loadData (page) {
-      request.get('/bl/account/finance/record/list', {page, size: 10}).then(({json: {data}}) => {
+      return request.get('/bl/account/finance/record/list', {page, size: 10}).then(({json: {data}}) => {
         this.datas = (page === 1 ? [] : this.datas).concat(data.data.map(i => Object.assign(i, {date: moment(i.gmtCreate).format('YYYY-MM-DD HH:mm')})))
         this.page = page
         this.loading = false

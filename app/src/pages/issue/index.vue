@@ -79,14 +79,14 @@ export default {
   },
   onPullDownRefresh () {
     const {id} = router(this).params()
-    this.loadData(id)
+    uiapi.waitRefresh(this.loadData(id))
   },
   onReachBottom () {
 
   },
   methods: {
     loadData (id) {
-      request.get('/ticket/ao/detail/' + id, {}).then(({json: {data}}) => {
+      return request.get('/ticket/ao/detail/' + id, {}).then(({json: {data}}) => {
         data.date = moment(data.gmtCreate).format('YYYY-MM-DD HH:mm:ss')
         this.data = data
         this.channels = mapChannel(data.evaluations).map(i => Object.assign(i, {date: moment(i.gmtCreate).format('YYYY.MM.DD')}))

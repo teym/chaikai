@@ -53,12 +53,6 @@ export default {
   mounted () {
     this.channel = _.mapObject(router(this).params(), (v) => { const r = decodeURIComponent(v); return (r === 'null' || r === ' undefined') ? '' : r })
   },
-  onPullDownRefresh () {
-
-  },
-  onReachBottom () {
-
-  },
   onShow () {
 
   },

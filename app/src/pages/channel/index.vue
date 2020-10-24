@@ -44,11 +44,14 @@ export default {
       unbind: []
     }
   },
-  onShow () {
+  mounted () {
+    this.data = {}
+    this.bind = []
+    this.unbind = []
     this.loadData()
   },
   onPullDownRefresh () {
-    this.loadData()
+    uiapi.waitRefresh(this.loadData())
   },
   methods: {
     loadData () {

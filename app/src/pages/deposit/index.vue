@@ -22,48 +22,69 @@
 
 <script>
 // import _ from 'underscore'
-// import {router, uiapi} from '@/utils/index'
+import {uiapi} from '@/utils/index'
 
 export default {
   data () {
     return {
-      datas: [{
-        title: '悬赏发放',
-        amount: '+100',
-        desc: '毛戈平 故宫IP碧日良辰多用眼彩盘',
-        id: '17898764567',
-        date: '2020.03.01 12:10'
-      },
-      {
-        title: '悬赏发放',
-        amount: '+100',
-        id: '17898764567',
-        date: '2020.03.01 12:10'
-      }]
+      datas: [],
+      loading: false,
+      nomore: false,
+      page: 1
     }
   },
   created () {
     // let app = getApp()
   },
   onPullDownRefresh () {
-
+    uiapi.waitRefresh(this.loadData(1))
   },
   onReachBottom () {
-
+    if (this.loading || this.nomore) {
+      return
+    }
+    this.loadData(this.page + 1)
   },
   methods: {
+    loadData (page) {
+      this.loading = true
+
+      return (new Promise((resolve, reject) => {
+        setTimeout(() => {
+          resolve([{
+            title: '悬赏发放',
+            amount: '+100',
+            desc: '毛戈平 故宫IP碧日良辰多用眼彩盘',
+            id: '17898764567',
+            date: '2020.03.01 12:10'
+          },
+          {
+            title: '悬赏发放',
+            amount: '+100',
+            id: '17898764567',
+            date: '2020.03.01 12:10'
+          }])
+        }, 1000)
+      })).then((data) => {
+        this.datas = data
+        this.loading = false
+        this.nomore = true
+      }).catch(e => {
+        this.loading = false
+      })
+    }
   }
 }
 </script>
 
 <style scoped>
-.item div{
+.item div {
   margin-top: 8rpx;
 }
-.item p{
+.item p {
   margin-top: 8rpx;
 }
-.empty img{
+.empty img {
   width: 480rpx;
   height: 306rpx;
 }

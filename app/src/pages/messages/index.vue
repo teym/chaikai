@@ -65,7 +65,9 @@ export default {
   },
   onPullDownRefresh () {
     if (api.isLogin()) {
-      this.loadData(1)
+      uiapi.waitRefresh(this.loadData(1))
+    } else {
+      uiapi.waitRefresh(Promise.resolve({}))
     }
   },
   onReachBottom () {
@@ -82,7 +84,7 @@ export default {
       }
     },
     loadData (page) {
-      request.get('/chat/bl/room/list', {page, size: 10, type: 1}).then(({json: {data}}) => {
+      return request.get('/chat/bl/room/list', {page, size: 10, type: 1}).then(({json: {data}}) => {
         this.datas = (page === 1 ? [] : this.datas).concat(data.data.map(i => Object.assign(i, {date: formatMsgTime(i.lastTime), content: isImgMsg(i.lastRecord.content) ? '[图片]' : i.lastRecord.content})))
         this.loading = false
         this.page = page

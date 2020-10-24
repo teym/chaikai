@@ -56,7 +56,7 @@ export default {
     this.loadData()
   },
   onPullDownRefresh () {
-
+    uiapi.waitRefresh(this.loadData())
   },
   onReachBottom () {
 
@@ -64,7 +64,7 @@ export default {
   methods: {
     loadData () {
       const {id} = router(this).params()
-      request.get('/bl/activity/order/' + id).then(({json: {data}}) => {
+      return request.get('/bl/activity/order/' + id).then(({json: {data}}) => {
         data.depositInfo.records = data.depositInfo.records.map(i => Object.assign(i, {date: moment(i.gmtCreate).format('YYYY.MM.DD HH:mm')}))
         this.info = data
         this.data = data.depositInfo
