@@ -56,6 +56,30 @@ export function diffTime (date) {
   const m = Math.floor((sec - d * 24 * 60 * 60 - h * 60 * 60) / 60)
   return `${d > 0 ? d + '天' : ''}${(d > 0 || h > 0) ? h + '小时' : ''}${m}分`
 }
+
+export function checkAddress (conf, address) {
+  if (conf.length === 0) {
+    return true
+  }
+  const isSame = (b) => {
+    const p1 = address.province.replace('省', '').replace('市', '').replace('自治区', '').replace('特别行政区', '')
+    const p2 = b.province.replace('省', '').replace('市', '').replace('自治区', '').replace('特别行政区', '')
+    const c1 = address.city.replace('市', '').replace('区', '')
+    const c2 = (b.city || '').replace('市', '').replace('区', '')
+    return p1 === p2 && (!c2 || c1 === c2)
+  }
+  const type = conf[0].type
+  // console.log(conf, address, type)
+  if (type === 1) {
+    return !_.some(conf, isSame)
+  }
+  return _.some(conf, isSame)
+}
+export function formatAddressConf (conf) {
+  const type = conf[0].type
+  return (type === 1 ? '不' : '') + '可收货地区如下：' + conf.map(i => (i.province + (i.city || ''))).join('、')
+}
+
 const CHS = {
   1: { img: '/static/images/channel_wb.png' },
   2: { img: '/static/images/channel_bi.png' },
@@ -126,6 +150,8 @@ export const uiapi = muiapi
 export const signal = msignal
 
 export default {
+  checkAddress,
+  formatAddressConf,
   formatMsgTime,
   formatNumber,
   formatTime,

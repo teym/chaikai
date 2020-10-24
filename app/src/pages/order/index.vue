@@ -94,19 +94,19 @@
                 class="small medium light text-right flex"
               >{{['无要求', '图文', '视频'][data.activity.extension.contentType]}}</div>
             </div>
-            <div class="row just pad-t">
+            <div v-if="data.activity.extension.minWordNum > 0" class="row just pad-t">
               <p class="small normal light">最低字数</p>
               <div
                 class="small medium light text-right flex"
               >{{['无要求', '200字', '400字'][data.activity.extension.minWordNum]}}</div>
             </div>
-            <div class="row just pad-t">
+            <div v-if="data.activity.extension.minPicNum > 0" class="row just pad-t">
               <p class="small normal light">最低图片数</p>
               <div
                 class="small medium light text-right flex"
               >{{['无要求', '6张', '9张'][data.activity.extension.minPicNum]}}</div>
             </div>
-            <div class="row just pad-t">
+            <div v-if="data.activity.extension.minVideoLength > 0" class="row just pad-t">
               <p class="small normal light">最低视频时长</p>
               <div
                 class="small medium light text-right flex"
@@ -139,7 +139,7 @@
             </div>
       </div>
     </div>
-    <div class="row i-center white_bg pad2 margin-t address">
+    <div class="row i-center white_bg pad2 margin-t address" @click="onChoseAddress">
       <img class="icon" src="/static/images/address_icon.png" alt="icon" />
       <div class="flex col just pad-l pad-r">
         <div class="row just pad-b">
@@ -167,7 +167,6 @@
       </div>
     </div>
     <div class="bar row pad2 i-center white_bg">
-      <div v-if="data.statusCode < 4" class="btn gray small row center margin-l" @click="choseAddress">修改物流信息</div>
       <div v-if="data.statusCode < 4" class="btn gray small row center margin-l" @click="onCancel">取消申请</div>
       <div v-if="data.statusCode === 4" class="btn gray small row center margin-l" @click="onShip">查看物流</div>
       <div v-if="data.statusCode >= 4" class="btn gray small row center margin-l" @click="onMessage">留言</div>
@@ -182,7 +181,7 @@
 <script>
 import _ from 'underscore'
 import moment from 'moment'
-import {router, api, uiapi, request, mapChannel, diffTime} from '@/utils/index'
+import {router, api, uiapi, request, mapChannel, diffTime, checkAddress, formatAddressConf} from '@/utils/index'
 
 export default {
   data () {
@@ -258,9 +257,24 @@ export default {
     onDepose () {
       router(this).push('/pages/depose/main', {id: this.data.id})
     },
-    choseAddress () {
-      uiapi.choseAddress().then(a => {
-        this.data.receiver = a
+    onUpdate () {
+
+    },
+    onChoseAddress () {
+      if (this.data.statusCode >= 4) {
+        return
+      }
+      uiapi.chooseAddress().then(a => {
+        if (!checkAddress(this.data.activity.extension.receiveAreas || [], a)) {
+          uiapi.alert({ title: '温馨提示', content: formatAddressConf(this.data.activity.extension.receiveAreas || []) }).then(r => {
+            this.onChoseAddress()
+          }).catch(e => {
+
+          })
+        } else {
+          this.data.receiver = a
+          this.onUpdate()
+        }
       }).catch(e => {
         console.log(e)
       })
