@@ -65,7 +65,7 @@
         </el-select>
         <div class="right">
           <span
-            >活动名额: {{ stat["0"] }} 已通过: {{ stat["2"] }} 已候选:
+            >活动名额: {{ stat["0"] }} 已通过: {{ stat["9"] }} 已候选:
             {{ stat["8"] }}</span
           >
           <el-button
@@ -617,7 +617,7 @@ export default {
         .then((r) => {
           this.stat = {
             0: r[1].data.totalNum,
-            1: r[1].data.totalNum - (r[1].data.remainingNum || 0),
+            1: r[0].data.pending,
             2: r[0].data.notPayDeposit,
             3: r[0].data.toBeDelivered,
             4: r[0].data.toBeReceived,
@@ -625,6 +625,7 @@ export default {
             6: r[0].data.evaluated,
             7: r[0].data.closed,
             8: r[0].data.candidate,
+            9: r[1].data.totalNum - (r[1].data.remainingNum || 0),
           };
           this.channels = r[1].data.extension.channelLimit
             ? r[1].data.extension.channels.map((i) =>

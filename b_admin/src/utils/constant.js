@@ -5,7 +5,6 @@ export const ActivityOrderStatus = [
   { name: '待收货', value: '4' },
   { name: '待测评', value: '5' },
   { name: '已测评', value: '6' },
-  
   { name: '已关闭', value: '7' }
 ]
 
