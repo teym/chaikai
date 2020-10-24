@@ -755,6 +755,10 @@ export default {
         });
     },
     handleBatchShip() {
+      if(!this.list || this.list.length === 0){
+        this.$message({message:'无可用数据', type:'info'})
+        return
+      }
       this.batchVisbale = true;
       this.getBatchShip();
     },
