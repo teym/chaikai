@@ -2,7 +2,7 @@
   <div class="container light_bg">
     <div class="white_bg pad2 row">
       <div class="flex col c-center margin2-l margin2-r">
-        <h5 class="big light blod">{{['', '待审核', '待缴押金', '待发货', '待收货', '待测评', '已测评', '已完成'][data.statusCode]}}</h5>
+        <h5 class="big light blod">{{['', '待审核', '待缴押金', '待发货', '待收货', '待测评', '已测评', '已关闭'][data.statusCode]}}</h5>
         <p class="small margin-t" :class="{red: data.statusCode > 5, light: data.statusCode < 6}">{{msg}}</p>
       </div>
       <img class="state margin2" src="/static/images/issue_status_1.png" alt="status" />
@@ -19,7 +19,7 @@
         </div>
       </div>
     </div>
-    <div v-if="data.statusCode > 5" class="margin-t white_bg pad2">
+    <div v-if="data.statusCode > 5 && data.statusCode < 7" class="margin-t white_bg pad2">
       <h5 class="middle dark blod">我的测评</h5>
       <div class="row just channel margin-t" v-for="(item, i) in evaluations" :key="i">
         <div class="row i-center">
@@ -161,16 +161,16 @@
       <div class="margin-t">
         <p class="light small margin-t">订单编号：{{data.id}} <span class="red" @click="onCopy(data.id)">复制</span></p>
         <p class="light small margin-t">申请时间：{{data.date}}</p>
-        <p v-if="data.statusCode >= 4" class="light small margin-t">发货时间：{{data.recvDate}}</p>
-        <p v-if="data.statusCode >= 4" class="light small margin-t">物流公司：{{data.receiver.logisticsPlatform}}</p>
-        <p v-if="data.statusCode >= 4" class="light small margin-t">物流单号：{{data.receiver.logisticsNo}} <span class="red" @click="onCopy(data.receiver.logisticsNo)">复制</span></p>
+        <p v-if="data.statusCode >= 4 && data.receiver.logisticsNo" class="light small margin-t">发货时间：{{data.recvDate}}</p>
+        <p v-if="data.statusCode >= 4 && data.receiver.logisticsNo" class="light small margin-t">物流公司：{{data.receiver.logisticsPlatform}}</p>
+        <p v-if="data.statusCode >= 4 && data.receiver.logisticsNo" class="light small margin-t">物流单号：{{data.receiver.logisticsNo}} <span class="red" @click="onCopy(data.receiver.logisticsNo)">复制</span></p>
       </div>
     </div>
     <div class="bar row pad2 i-center white_bg">
       <div v-if="data.statusCode < 4" class="btn gray small row center margin-l" @click="onCancel">取消申请</div>
       <div v-if="data.statusCode === 4" class="btn gray small row center margin-l" @click="onShip">查看物流</div>
-      <div v-if="data.statusCode >= 4" class="btn gray small row center margin-l" @click="onMessage">留言</div>
-      <div v-if="data.depositInfo.statusCode < 2" class="btn red small row center margin-l" @click="onPay">支付押金</div>
+      <div v-if="data.statusCode >= 4 && data.statusCode < 7" class="btn gray small row center margin-l" @click="onMessage">留言</div>
+      <div v-if="data.statusCode < 7 && data.depositInfo.statusCode < 2" class="btn red small row center margin-l" @click="onPay">支付押金</div>
       <div v-if="data.statusCode === 4" class="btn red small row center margin-l" @click="onRecv">确认收货</div>
       <div v-if="data.statusCode === 5" class="btn red small row center margin-l" @click="onCommit">提交评测</div>
       <div v-if="data.statusCode === 6" class="btn red small row center margin-l" @click="onAdd">追加测评</div>
@@ -218,6 +218,9 @@ export default {
         data.date = moment(data.gmtCreate).format('YYYY-MM-DD HH:mm:ss')
         data.recvDate = moment((data.receiver || {}).expectedReceiveTime).format('YYYY-MM-DD HH:mm:ss')
         data.tickets = data.tickets || []
+        if (!data.depositInfo) {
+          data.depositInfo = {statusCode: 1, amount: 0}
+        }
         this.data = data
         this.channels = mapChannel(data.channels || [])
         this.evaluations = mapChannel(data.evaluationItems || []).map(i => Object.assign(i, {date: moment(i.gmtCreate).format('YYYY.MM.DD')}))
@@ -245,7 +248,7 @@ export default {
         case 6:
           return ''
         case 7:
-          return `已逾期${s}，将按天扣除押金`
+          return '' // `已逾期${s}，将按天扣除押金`
       }
       return ''
     },

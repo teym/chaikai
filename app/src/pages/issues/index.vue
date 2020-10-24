@@ -64,6 +64,7 @@ export default {
         this.datas = (page === 1 ? [] : this.datas).concat(data.data.map(i => Object.assign(i, {date: moment(i.gmtCreate).format('YYYY.MM.DD')})))
         this.loading = false
         this.nomore = data.pager.totalPages <= page
+        this.page = page
       }).catch(e => {
         uiapi.toast(e.info)
       })
