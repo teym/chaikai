@@ -61,7 +61,7 @@
 <script>
 import _ from 'underscore'
 import navbar from '@/components/navbar'
-import {router, request} from '@/utils/index'
+import {router, request, uiapi} from '@/utils/index'
 
 export default {
   data () {
@@ -80,11 +80,8 @@ export default {
   mounted () {
     this.loadData(1)
   },
-  created () {
-    // let app = getApp()
-  },
   onPullDownRefresh () {
-    this.loadData(1)
+    uiapi.waitRefresh(this.loadData(1))
   },
   onReachBottom () {
     if (this.loading || this.nomore) {
@@ -97,6 +94,7 @@ export default {
   },
   methods: {
     loadData (page) {
+      this.loading = true
       if (page === 1) {
         request.get('/banner/list', {page: 1, size: 20, type: 1, valid: true}).then(({json: {data}}) => {
           this.banners = data

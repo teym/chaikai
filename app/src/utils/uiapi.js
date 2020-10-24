@@ -67,5 +67,13 @@ export function previewImgs (imgs) {
   })
 }
 
-export const muiapi = { alert, toast, loading, chooseImage, chooseAddress, previewImgs }
+export function waitRefresh (p) {
+  if (p) {
+    p.then(() => {
+      mpvue.stopPullDownRefresh()
+    })
+  }
+}
+
+export const muiapi = { alert, toast, loading, chooseImage, chooseAddress, previewImgs, waitRefresh }
 export default muiapi
