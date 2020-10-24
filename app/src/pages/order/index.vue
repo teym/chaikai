@@ -161,7 +161,7 @@
       <div class="margin-t">
         <p class="light small margin-t">订单编号：{{data.id}} <span class="red" @click="onCopy(data.id)">复制</span></p>
         <p class="light small margin-t">申请时间：{{data.date}}</p>
-        <p v-if="data.statusCode >= 4" class="light small margin-t">发货时间：{{data.receiver.expectedReceiveTime}}</p>
+        <p v-if="data.statusCode >= 4" class="light small margin-t">发货时间：{{data.recvDate}}</p>
         <p v-if="data.statusCode >= 4" class="light small margin-t">物流公司：{{data.receiver.logisticsPlatform}}</p>
         <p v-if="data.statusCode >= 4" class="light small margin-t">物流单号：{{data.receiver.logisticsNo}} <span class="red" @click="onCopy(data.receiver.logisticsNo)">复制</span></p>
       </div>
@@ -202,10 +202,7 @@ export default {
       msg: ''
     }
   },
-  created () {
-    // let app = getApp()
-  },
-  mounted () {
+  onShow () {
     this.loadData()
   },
   onPullDownRefresh () {
@@ -219,6 +216,7 @@ export default {
       const {id} = router(this).params()
       return request.get('/bl/activity/order/' + id).then(({json: {data}}) => {
         data.date = moment(data.gmtCreate).format('YYYY-MM-DD HH:mm:ss')
+        data.recvDate = moment((data.receiver || {}).expectedReceiveTime).format('YYYY-MM-DD HH:mm:ss')
         data.tickets = data.tickets || []
         this.data = data
         this.channels = mapChannel(data.channels || [])
@@ -257,8 +255,10 @@ export default {
     onDepose () {
       router(this).push('/pages/depose/main', {id: this.data.id})
     },
-    onUpdate () {
-
+    onUpdate (addr) {
+      request.put('/bl/activity/order/receiver', Object.assign({brActivityOrderId: this.data.id}, addr)).catch(e => {
+        uiapi.toast(e.info)
+      })
     },
     onChoseAddress () {
       if (this.data.statusCode >= 4) {
@@ -273,7 +273,7 @@ export default {
           })
         } else {
           this.data.receiver = a
-          this.onUpdate()
+          this.onUpdate(a)
         }
       }).catch(e => {
         console.log(e)

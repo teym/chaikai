@@ -10,8 +10,8 @@
         <h5 class="middle medium dark">{{item.title}}</h5>
         <span class="middle medium dark">{{(item.raeType === 1 ? '+' : '-') + item.amount}}</span>
       </div>
-      <p v-if="item.msg2" class="dark small">{{item.msg}}</p>
-      <p class="light small">{{item.intro}}</p>
+      <p v-if="item.msg" class="dark small">{{item.msg}}</p>
+      <p v-if="item.intro" class="light small">{{item.intro}}</p>
       <p class="light small">{{(item.raeType === 1 ? '发放时间：' : '提现时间：') + item.date}}</p>
     </div>
     </div>
@@ -31,9 +31,6 @@ export default {
       loading: false,
       nomore: false
     }
-  },
-  created () {
-    // let app = getApp()
   },
   mounted () {
     this.loadData(1)

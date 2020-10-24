@@ -765,7 +765,6 @@ export default {
     getBatchShip() {
       exportToken().then((r) => {
         if (r.data) {
-          console.log(r.data);
           this.batchUrl = downloadUrl(r.data, this.listQuery.brActivityId);
         } else {
           this.$message({ message: "获取下载链接失败", type: "error" });

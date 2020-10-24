@@ -26,7 +26,7 @@
           </div>
           </div>
         </div>
-        <div class="flex row light_bg pad">
+        <div class="flex row light_bg pad i-center">
           <input class="middle dark flex" type="text" v-model="item.url" :placeholder="'请输入追加的测评链接'">
           <span class="red small" @click="onDel(i)">删除</span>
         </div>
