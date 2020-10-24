@@ -13,34 +13,60 @@ export default {
       code: ''
     }
   },
+  watch: {
+    '$route.query': function() {
+      console.log('change', this.$route.query)
+      this.login()
+    }
+  },
   mounted() {
     const { code, state } = this.$route.query
-    if (code) {
+    if (this.login()) {
       console.log('login', code, state)
-      this.$store
-        .dispatch('user/loginCode', { code, state })
-        .then(() => {
-          this.$router.push({
-            path: this.redirect || '/',
-            query: this.otherQuery
-          })
-          this.loading = false
-        })
-        .catch(() => {
-          this.loading = false
-        })
-    } else if (window.location.search) {
-      window.location = '/#/sso' + window.location.search
+    } else if (
+      window.location.search &&
+      window.location.search.indexOf('code=') > 0
+    ) {
+      window.location = '/?sso=1#/sso' + window.location.search
+      // setTimeout(() => {
+      //   // location.reload();
+      //   this.login();
+      // }, 100);
       console.log('redir')
     } else {
       window.WwLogin({
         id: 'sso_qr',
         appid: 'ww9bd117a014bf30bf',
         agentid: '1000015',
-        redirect_uri: encodeURIComponent('http://admintest.ckgift.cn/#/sso'),
+        redirect_uri: encodeURIComponent(
+          `${location.protocol}//${location.host}/#/sso`
+        ),
         state: 'adminTest',
         href: ''
       })
+    }
+  },
+  methods: {
+    login() {
+      const { code, state } = this.$route.query
+      if (code) {
+        console.log('login', code, state)
+        this.$store
+          .dispatch('user/loginCode', { code, state })
+          .then(() => {
+            // this.$router.push({
+            //   path: this.redirect || "/",
+            //   query: this.otherQuery,
+            // });
+            this.loading = false
+            window.location = '/?sso=1#/'
+          })
+          .catch(() => {
+            this.loading = false
+          })
+        return true
+      }
+      return false
     }
   }
 }

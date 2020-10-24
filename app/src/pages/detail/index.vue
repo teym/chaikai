@@ -20,7 +20,7 @@
         <h4>{{data.title}}</h4>
         <div class="row just">
           <span>价值 {{data.goods.price}}元</span>
-          <span>报名剩余{{leftTime}}</span>
+          <span>{{leftTime}}</span>
         </div>
         <div class="row count">
           <p>
@@ -235,7 +235,8 @@ export default {
   },
   computed: {
     leftTime () {
-      return this.data ? diffTime(this.data.regEndTime) : ''
+      const t = this.data ? diffTime(this.data.regEndTime, '') : ''
+      return t ? '报名剩余' + t : '报名已结束'
     },
     receiveAreas () {
       return (((this.data || {}).extension || {}).receiveAreas || []).map(i => ((i.province || '') + (i.city || ''))).join(',')

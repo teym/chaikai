@@ -43,7 +43,7 @@
 <script>
 // import _ from 'underscore'
 // import moment from 'moment'
-import {uiapi, router, request, mapChannel} from '@/utils/index'
+import {uiapi, router, request, mapChannel, matchURL} from '@/utils/index'
 
 export default {
   data () {
@@ -88,8 +88,13 @@ export default {
       this.datas.splice(i, 1)
     },
     onOK () {
+      if (this.datas.length <= 0) {
+        uiapi.toast('请输入测评链接')
+        return
+      }
+      const datas = this.datas.map(i => Object.assign(i, {url: matchURL(i.url)})).filter(i => !!i.url)
       const {id, append} = router(this).params()
-      request.post('/bl/activity/order/evaluation', {brActivityOrderId: id, type: append ? 2 : 1, list: this.datas}).then(r => {
+      request.post('/bl/activity/order/evaluation', {brActivityOrderId: id, type: append ? 2 : 1, list: datas}).then(r => {
         uiapi.toast('已提交')
         router(this).pop()
       }).catch(e => {

@@ -153,7 +153,7 @@
           >
             <img :src="channelIcons[c.platformId + ''].icon" alt="" />
             <span>{{ c.type === 1 ? "正式" : "追加" }}</span>
-            <span>活动量{{ c.activeAmount }}</span>
+            <span>互动量{{ c.activeAmount }}</span>
           </a>
         </template>
       </el-table-column>

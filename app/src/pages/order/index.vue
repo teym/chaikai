@@ -230,7 +230,7 @@ export default {
       })
     },
     mapMsg (data) {
-      const s = diffTime(data.deadline)
+      const s = diffTime(data.deadline, '0分0秒')
       switch (data.statusCode) {
         case 1:
           return `还剩${s}结束审核`

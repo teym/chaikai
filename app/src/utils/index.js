@@ -49,8 +49,11 @@ export function imgMsgUrl (s) {
 export function makeImgMsg (u) {
   return `[img:${u}]`
 }
-export function diffTime (date) {
+export function diffTime (date, def) {
   const sec = date ? moment(date).diff(moment(), 'seconds') : 0
+  if (sec <= 0) {
+    return def
+  }
   const d = Math.floor(sec / (24 * 60 * 60))
   const h = Math.floor((sec - d * 24 * 60 * 60) / (60 * 60))
   const m = Math.floor((sec - d * 24 * 60 * 60 - h * 60 * 60) / 60)
@@ -78,6 +81,11 @@ export function checkAddress (conf, address) {
 export function formatAddressConf (conf) {
   const type = conf[0].type
   return (type === 1 ? '不' : '') + '可收货地区如下：' + conf.map(i => (i.province + (i.city || ''))).join('、')
+}
+
+export function matchURL (u) {
+  const url = /.*(https?:\/\/[-a-zA-Z0-9@:%._+~#=/]+).*/.exec(u)[1]
+  return url
 }
 
 const CHS = {
@@ -159,6 +167,7 @@ export default {
   mapChannel,
   makeImgMsg,
   resetData,
+  matchURL,
   diffTime,
   imgMsgUrl,
   isImgMsg,
