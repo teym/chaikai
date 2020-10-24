@@ -338,8 +338,9 @@ export default {
           }
           router(this).replace('/pages/orders/main')
         }).catch(e => {
-          uiapi.toast(e.info)
+          // console.log(e)
           l()
+          uiapi.toast(e.info)
         })
     },
     onCopy (str) {

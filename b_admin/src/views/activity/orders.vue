@@ -142,7 +142,7 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column v-if="listQuery.statusCode === '6'" label="评测内容">
+      <el-table-column v-if="listQuery.statusCode === '6'" label="评测内容" width="160">
         <template slot-scope="{ row }">
           <a
             v-for="(c, i) in row.evaluationItems"
@@ -276,7 +276,7 @@
         v-if="listQuery.statusCode !== '2' && listQuery.statusCode !== '7'"
         label="操作"
         align="center"
-        width="280"
+        width="240"
         class-name="small-padding fixed-width"
       >
         <template slot-scope="{ row }">
@@ -306,7 +306,8 @@
               v-if="
                 listQuery.statusCode === '3' ||
                 listQuery.statusCode === '4' ||
-                listQuery.statusCode === '5'
+                listQuery.statusCode === '5' ||
+                (listQuery.statusCode === '6' && row.rewardStatusCode !== 2)
               "
               size="mini"
               type="primary"
@@ -325,7 +326,7 @@
               >{{ row.ticketStatusCode > 0 ? "投诉处理中" : "投诉" }}
             </el-button>
             <el-button
-              v-if="listQuery.statusCode === '6' && !row.scoreInfo"
+              v-if="listQuery.statusCode === '6' && row.rewardStatusCode === 2 && !row.scoreInfo"
               size="mini"
               type="primary"
               @click="handleCommend(row)"
