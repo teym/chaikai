@@ -262,7 +262,7 @@ export default {
         data.extension.bloggerPublishTimeStr = moment(data.extension.bloggerPublishTime).format('截止M月D日前')
         this.data = data
         const sets = _.object(user.channels.map(i => [i.platformId, i.statusCode === 3]))
-        this.channels = mapChannel(data.extension.channels).map(i => Object.assign(i, {available: !!sets[i.platformId]}))
+        this.channels = mapChannel(data.extension.channels).map(i => Object.assign(i, {available: !!sets[i.platformId]})).filter(i => i.available)
         this.active = _.object(_.map(_.filter(this.channels, i => i.available), i => ([i.platformId, i])))
         // console.log(sets, this.channels, this.active)
         this.topics = _.filter(this.channels, i => i.topic)

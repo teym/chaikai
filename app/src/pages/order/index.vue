@@ -220,6 +220,7 @@ export default {
       const {id} = router(this).params()
       request.get('/bl/activity/order/' + id).then(({json: {data}}) => {
         data.date = moment(data.gmtCreate).format('YYYY-MM-DD HH:mm:ss')
+        data.tickets = data.tickets || []
         this.data = data
         this.channels = mapChannel(data.channels || [])
         this.evaluations = mapChannel(data.evaluationItems || []).map(i => Object.assign(i, {date: moment(i.gmtCreate).format('YYYY.MM.DD')}))
@@ -366,26 +367,26 @@ export default {
   height: 44rpx;
 }
 .info {
-  border-bottom: 1rpx solid #F5F5F5;
+  border-bottom: 1rpx solid #f5f5f5;
 }
-.info .img{
+.info .img {
   width: 208rpx;
   height: 208rpx;
 }
-.bar{
+.bar {
   justify-content: flex-end;
 }
-.bar .btn{
+.bar .btn {
   height: 56rpx;
   border-radius: 28rpx;
   padding: 0 32rpx;
 }
-.bar .btn.red{
-  color: #FF8E3B;
-  border: 1rpx solid #FF8E3B;
+.bar .btn.red {
+  color: #ff8e3b;
+  border: 1rpx solid #ff8e3b;
 }
-.bar .btn.gray{
-  color: #C1C6CB;
-  border: 1rpx solid #C1C6CB;
+.bar .btn.gray {
+  color: #c1c6cb;
+  border: 1rpx solid #c1c6cb;
 }
 </style>

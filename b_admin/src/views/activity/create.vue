@@ -664,10 +664,10 @@ const defaultForm = {
   keywords: [],
   extension: {
     channels: [],
-    articleType: 1,
-    contentType: 1,
     receiveAreaLimit: false,
     receiveAreas: [],
+    articleType: 1,
+    contentType: 1,
     minWordNum: 0,
     minPicNum: 0,
     minVideoLength: 0,
@@ -885,9 +885,10 @@ export default {
             size: 1,
             brGoodsId: response.data.goods.brGoodsId,
           }).then((r) => {
-            response.data.skus = response.data.goods.skuUnionList.map(
-              (i) => i.skuIdUnion
-            );
+            response.data.skus = [];
+            //  response.data.goods.skuUnionList.map(
+            //   (i) => i.skuIdUnion
+            // );
             response.data.goods = r.data.data[0];
             return response.data;
           });
@@ -901,7 +902,7 @@ export default {
 
           obj.displayType = obj.displayType === 1;
 
-          obj.regTime = [r.regStartTime, r.regEndTime];
+          obj.regTime = []; // [r.regStartTime, r.regEndTime];
           if (!r.extension.channelLimit) {
             obj.channels = Channels.map((i) => i.id);
           } else {
@@ -1014,7 +1015,12 @@ export default {
       if (e === 3) {
         this.postForm.extension.contentType = 0;
         this.onChannels(
-          this.postForm.channels.splice(0, this.postForm.channels.length, 0, ...Channels.map((i) => i.id))
+          this.postForm.channels.splice(
+            0,
+            this.postForm.channels.length,
+            0,
+            ...Channels.map((i) => i.id)
+          )
         );
       }
     },
@@ -1041,40 +1047,52 @@ export default {
     submitForm(submit) {
       this.$refs.postForm.validate((valid) => {
         if (valid) {
-          var obj = Object.assign(
+          var obj = Object.assign({}, this.postForm);
+          if (obj.cooperationType === 3) {
+            obj.extension = Object.assign({}, obj.extension, {
+              articleType: 0,
+              contentType: 0,
+              minWordNum: 0,
+              minPicNum: 0,
+              minVideoLength: 0,
+              discountInfo: "",
+              keywords: "",
+              bloggerPublishTime: undefined,
+              otherReq: [],
+            });
+            obj.reward = "0";
+          }
+          obj = Object.assign(
             {},
-            this.postForm,
+            obj,
             {
-              guidelines: this.postForm.guidelines.map((i) => i.txt),
-              displayType: this.postForm.displayType ? 1 : 0,
-              regStartTime: moment(this.postForm.regTime[0]).format(
+              guidelines: obj.guidelines.map((i) => i.txt),
+              displayType: obj.displayType ? 1 : 0,
+              regStartTime: moment(obj.regTime[0]).format(
                 "YYYY-MM-DD HH:mm:ss"
               ),
-              regEndTime: moment(this.postForm.regTime[1]).format(
-                "YYYY-MM-DD HH:mm:ss"
-              ),
+              regEndTime: moment(obj.regTime[1]).format("YYYY-MM-DD HH:mm:ss"),
             },
             {
-              goods: Object.assign({}, this.postForm.goods, {
-                skuUnionList: this.postForm.goods.skuUnionList.filter(
-                  (i) => this.postForm.skus.indexOf(i.skuIdUnion) >= 0
+              goods: Object.assign({}, obj.goods, {
+                skuUnionList: obj.goods.skuUnionList.filter(
+                  (i) => obj.skus.indexOf(i.skuIdUnion) >= 0
                 ),
               }),
             },
             {
-              extension: Object.assign({}, this.postForm.extension, {
-                receiveAreaLimit:
-                  this.postForm.extension.receiveAreas.length > 0,
-                receiveAreas: this.postForm.extension.receiveAreas.map((i) =>
-                  Object.assign({}, i, { type: this.postForm.recvAreaType })
+              extension: Object.assign({}, obj.extension, {
+                receiveAreaLimit: obj.extension.receiveAreas.length > 0,
+                receiveAreas: obj.extension.receiveAreas.map((i) =>
+                  Object.assign({}, i, { type: obj.recvAreaType })
                 ),
-                channels: this.postForm.channels.map((id) => {
-                  const topic = this.postForm.topics.find((i) => i.id === id);
+                channels: obj.channels.map((id) => {
+                  const topic = obj.topics.find((i) => i.id === id);
                   return Object.assign({}, topic || {}, { platformId: id });
                 }),
-                channelLimit: this.postForm.channels.indexOf("0") < 0,
-                otherReq: this.postForm.extension.otherReq.join("+"),
-                keywords: this.postForm.keywords.map((i) => i.txt).join(" "),
+                channelLimit: obj.channels.indexOf("0") < 0,
+                otherReq: obj.extension.otherReq.join("+"),
+                keywords: obj.keywords.map((i) => i.txt).join(" "),
               }),
             }
           );
