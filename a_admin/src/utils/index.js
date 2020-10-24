@@ -122,7 +122,7 @@ export function getQueryObject(url) {
 }
 
 export function clearQueryObject(obj, zero) {
-  return _.omit(obj, (v) => ((_.isString(v) && _.isEmpty(v)) || (zero && _.isNumber(v) && v === 0)))
+  return _.omit(obj, (v) => (v === '' || (zero && _.isNumber(v) && v === 0)))
 }
 
 /**

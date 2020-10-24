@@ -122,7 +122,7 @@ export function getQueryObject(url) {
 }
 
 export function clearQueryObject(obj) {
-  return _.omit(obj, (v) => (_.isString(v) && _.isEmpty(v)))
+  return _.object(_.map(obj, (v, k)=>([k, v])).filter((v)=> v[1]!==''))  
 }
 
 /**

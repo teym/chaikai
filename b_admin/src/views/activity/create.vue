@@ -878,6 +878,7 @@ export default {
   },
   methods: {
     loadData(id) {
+      const { copy } = this.$route.query || {};
       fetchData(id)
         .then((response) => {
           return fetchPv({
@@ -885,24 +886,26 @@ export default {
             size: 1,
             brGoodsId: response.data.goods.brGoodsId,
           }).then((r) => {
-            response.data.skus = [];
-            //  response.data.goods.skuUnionList.map(
-            //   (i) => i.skuIdUnion
-            // );
+            if (copy) {
+              response.data.skus = [];
+            } else {
+              response.data.skus = response.data.goods.skuUnionList.map(
+                (i) => i.skuIdUnion
+              );
+            }
             response.data.goods = r.data.data[0];
             return response.data;
           });
-          // response.data.skus = response.data.goods.skuUnionList.map(
-          //   (i) => i.skuIdUnion
-          // );
-          // return response.data;
         })
         .then((r) => {
           const obj = Object.assign({}, defaultForm, r);
 
           obj.displayType = obj.displayType === 1;
-
-          obj.regTime = []; // [r.regStartTime, r.regEndTime];
+          if (copy) {
+            obj.regTime = [];
+          } else {
+            obj.regTime = [r.regStartTime, r.regEndTime];
+          }
           if (!r.extension.channelLimit) {
             obj.channels = Channels.map((i) => i.id);
           } else {

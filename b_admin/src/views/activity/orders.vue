@@ -616,8 +616,8 @@ export default {
       ])
         .then((r) => {
           this.stat = {
-            0: r[0].data.total,
-            1: r[0].data.pending,
+            0: r[1].data.totalNum,
+            1: r[1].data.totalNum - (r[1].data.remainingNum || 0),
             2: r[0].data.notPayDeposit,
             3: r[0].data.toBeDelivered,
             4: r[0].data.toBeReceived,

@@ -247,6 +247,7 @@ export default {
     this.loadData()
   },
   onShow () {
+    this.reset()
     this.loadData()
   },
   onPullDownRefresh () {

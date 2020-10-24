@@ -324,7 +324,7 @@ export default {
         reward: this.reward,
         skuUnion: this.sku
       }).then(r => {
-        return this.pay === 1 ? request.post('/wxpay/mini', {amount: 0.3 /* this.reward */, brActivityId: id, payScene: 'BL_PAY_DEPOSIT'}).then(({json: {data}}) => {
+        return this.pay === 1 ? request.post('/wxpay/mini', {amount: 0.01/* this.reward */, brActivityId: id, payScene: 'BL_PAY_DEPOSIT'}).then(({json: {data}}) => {
           return api.pay(data)
         })
           .catch(e => {
