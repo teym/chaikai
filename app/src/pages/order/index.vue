@@ -331,7 +331,7 @@ export default {
         .catch(e => {})
     },
     onIssue (item) {
-      router(this).push('/pages/issue/main', {id: item.id})
+      router(this).push('/pages/issue/main', { id: item.id })
     },
     onCopy (txt) {
       console.log('copy', txt)

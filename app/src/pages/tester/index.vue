@@ -91,8 +91,8 @@ export default {
         return
       }
       const datas = this.datas.map(i => Object.assign(i, {url: matchURL(i.url)})).filter(i => !!i.url)
-      const {id, append, issue} = router(this).params()
-      request.post('/bl/activity/order/evaluation', {brActivityOrderId: id, type: append ? 2 : 1, scene: issue ? 2 : 1, list: datas}).then(r => {
+      const {id, append, issue, ticketId} = router(this).params()
+      request.post('/bl/activity/order/evaluation', {brActivityOrderId: id, type: append ? 2 : 1, scene: issue ? 2 : 1, list: datas, ticketId: ticketId || ''}).then(r => {
         uiapi.toast('已提交')
         router(this).pop()
       }).catch(e => {

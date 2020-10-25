@@ -2,7 +2,7 @@
   <div class="container col light_bg">
     <div class="white_bg pad2 row">
       <div class="flex col c-center margin2-l margin2-r">
-        <h5 class="big light blod">待确认</h5>
+        <h5 class="big light blod">{{status[data.statusCode]}}</h5>
         <p class="small light margin-t" 
         :class="{red:data.statusCode === 1 || data.statusCode === 4 || data.statusCode === 7, light:data.statusCode != 1 && data.statusCode != 4 && data.statusCode != 7}">品牌确认修改还剩3天0时0分，超时将自动确认</p>
       </div>
@@ -67,7 +67,8 @@ export default {
       data: {
 
       },
-      channels: []
+      channels: [],
+      status: ['', '待修改', '待确认', '小二审核中', '待重评', '已修改', '已取消', '已违规']
     }
   },
   created () {
@@ -90,7 +91,7 @@ export default {
         data.date = moment(data.gmtCreate).format('YYYY-MM-DD HH:mm:ss')
         this.data = data
         this.channels = mapChannel(data.evaluations).map(i => Object.assign(i, {date: moment(i.gmtCreate).format('YYYY.MM.DD')}))
-        this.title = ['', '待修改', '待确认', '小二审核中', '待重评', '已修改', '已取消', '已违规'][data.statusCode]
+        this.title = this.status[data.statusCode]
         this.msg = this.mapStatus(data.statusCode, data.deadline)
       }).catch(e => {
         uiapi.toast(e.info)
@@ -116,7 +117,7 @@ export default {
       }
     },
     onGo () {
-      router(this).push('/pages/tester/main', {id: this.data.brActivityOrderId, issue: true})
+      router(this).push('/pages/tester/main', {id: this.data.brActivityOrderId, issue: true, ticketId: this.data.id})
     },
     onDetail (item) {
       router(this).push('/pages/web/main', {url: item.url})

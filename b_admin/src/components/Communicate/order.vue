@@ -356,10 +356,10 @@
           </div>
         </div>
         <div
-          v-if="data.ticket.statusCode === 2 || data.ticket.statusCode === 3"
+          v-if="data.ticket.statusCode === 2"
           class="row"
         >
-          <el-button size="mini" :loading="data.update" @click="updateState(1)"
+          <el-button size="mini" :loading="data.update" @click="updateState(3)"
             >未达要求</el-button
           >
           <el-button
