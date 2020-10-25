@@ -96,7 +96,7 @@ export function closeOrder(data) {
 }
 export function fetchDeposit(id) {
   return request({
-    url: '/sys/activity/order/' + id + '/diposit',
+    url: '/sys/activity/order/' + id + '/deposit',
     method: 'get'
   })
 }

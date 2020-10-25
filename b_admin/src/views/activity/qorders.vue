@@ -502,7 +502,7 @@ export default {
     },
     handleAccept() {
       if (this.list.length > 0) {
-        const count = Math.min(this.list.length, this.data.remainingNum || 0);
+        const count = Math.min(this.list.length, this.stat['10']);
         this.$confirm(
           `将消耗${count}个活动名额和账户余额${count * this.list[0].reward}元`,
           {
