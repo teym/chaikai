@@ -18,7 +18,7 @@
             <p class="middle dark">{{item.activity.title}}</p>
             <div class="row just i-center">
               <p class="small light">{{item.date}}</p>
-              <span class="red small">{{['', '待审核', '待缴押金', '待发货', '待收货', '待测评', '已完成'][item.statusCode]}}</span>
+              <span class="red small">{{['', '待审核', '待缴押金', '待发货', '待收货', '待测评', '已测评'][item.statusCode]}}</span>
             </div>
           </div>
         </div>
@@ -36,7 +36,7 @@ export default {
   data () {
     return {
       active: 0,
-      status: ['全部', '待缴押金', '待发货', '待收货', '待测评', '已完成'],
+      status: ['全部', '待缴押金', '待发货', '待收货', '待测评', '已测评'],
       datas: [],
       loading: false,
       page: 1,

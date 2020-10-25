@@ -503,7 +503,7 @@
             <el-input
               v-model="goods.key"
               placeholder="请输入商品名称"
-              @keypress.enter="handleFilter"
+              @keyup.enter.native="handleFilter"
             />
           </el-form-item>
         </el-form>
@@ -524,10 +524,11 @@
         </el-row>
         <pagination
           layout="total, prev, pager, next"
-          :page-size="10"
+          :pageSizes="[12]"
           :total="goods.total"
-          :current-page="goods.page"
-          @current-change="handleGoodsPage"
+          :page="goods.page"
+          :limit="12"
+          @pagination="handleGoodsPage"
         />
       </div>
       <div slot="footer" class="dialog-footer">
@@ -645,6 +646,7 @@ import {
   updateData,
 } from "@/api/activities";
 import { Channels, ChannelIcons, mapChannel } from "@/utils/constant";
+import {clearQueryObject} from '@/utils/index'
 import address from "./components/address";
 import Pagination from "@/components/Pagination"; // secondary package based on el-pagination
 import moment from "moment";
@@ -937,11 +939,12 @@ export default {
     },
     fetchPv(page) {
       this.goods.loading = true;
-      fetchPv({ page, size: 10 }).then((r) => {
+      fetchPv(clearQueryObject({ page, size: 12, key: this.goods.key })).then((r) => {
         this.goods = {
           page,
           total: r.data.pager.count,
           list: r.data.data,
+          key: this.goods.key,
           loading: false,
         };
       });
@@ -967,10 +970,11 @@ export default {
       }
     },
     handleFilter() {
+      console.log('key', this.goods);
       this.fetchPv(1);
     },
     handleGoodsPage(p) {
-      this.fetchPv(p);
+      this.fetchPv(p.page);
     },
     handleContentType(e) {
       if (e === 1) {
@@ -1247,6 +1251,7 @@ export default {
       text-align: center;
       padding: 2px;
       position: relative;
+      margin-bottom: 12px;
       .img {
         width: 84%;
         padding-bottom: 75%;

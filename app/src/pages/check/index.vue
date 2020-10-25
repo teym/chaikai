@@ -72,13 +72,13 @@
                 class="small blod light text-right flex"
               >{{['无要求', '图文', '视频'][data.extension.contentType]}}</div>
             </div>
-            <div class="row just pad-t">
+            <div v-if="data.extension.minWordNum > 0" class="row just pad-t">
               <p class="small normal light">最低字数</p>
               <div
                 class="small blod light text-right flex"
               >{{['无要求', '200字', '400字'][data.extension.minWordNum]}}</div>
             </div>
-            <div class="row just pad-t">
+            <div v-if="data.extension.minPicNum > 0" class="row just pad-t">
               <p class="small normal light">最低图片数</p>
               <div
                 class="small blod light text-right flex"
