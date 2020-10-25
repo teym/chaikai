@@ -5,8 +5,8 @@
         <div class="place" />
         <div class="right">
           <span
-            >活动名额: {{ stat["0"] }} 已通过: {{ stat["2"] }} 已候选:
-            {{ stat["8"] }}</span
+            >活动名额: {{ stat["0"] }} 已通过: {{ stat["9"] }} 剩余名额:
+            {{ stat["10"] }}</span
           >
           <el-button type="primary" size="medium" @click="handleAccept()"
             >一键通过</el-button
@@ -380,14 +380,16 @@ export default {
         .then((r) => {
           this.stat = {
             0: r[1].data.totalNum,
-            1: r[1].data.totalNum - (r[1].data.remainingNum || 0),
+            1: r[0].data.pending,
             2: r[0].data.notPayDeposit,
             3: r[0].data.toBeDelivered,
             4: r[0].data.toBeReceived,
             5: r[0].data.toBeEvaluated,
             6: r[0].data.evaluated,
             7: r[0].data.closed,
-            8: r[0].data.candidate,
+            8: r[1].data.candidate || 0,
+            9: r[1].data.totalNum - (r[1].data.remainingNum || 0),
+            10: r[1].data.remainingNum || 0,
           };
           this.channels = r[1].data.extension.channelLimit
             ? r[1].data.extension.channels.map((i) =>
@@ -500,11 +502,9 @@ export default {
     },
     handleAccept() {
       if (this.list.length > 0) {
-        const count = Math.min(this.list.length, this.data.remainingNum || 0)
+        const count = Math.min(this.list.length, this.data.remainingNum || 0);
         this.$confirm(
-          `将消耗${count}个活动名额和账户余额${
-            count * this.list[0].reward
-          }元`,
+          `将消耗${count}个活动名额和账户余额${count * this.list[0].reward}元`,
           {
             title: "一键通过",
           }

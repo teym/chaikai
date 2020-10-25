@@ -66,7 +66,7 @@
         <div class="right">
           <span
             >活动名额: {{ stat["0"] }} 已通过: {{ stat["9"] }} 剩余名额:
-            {{ stat["8"] }}</span
+            {{ stat["10"] }}</span
           >
           <el-button
             type="primary"
@@ -77,7 +77,7 @@
                 query: { id: listQuery.brActivityId },
               })
             "
-            >候选名单{{ stat["8"] }}</el-button
+            >候选名单{{ stat["8"] > 0 ? stat["8"] : '' }}</el-button
           >
         </div>
       </div>
@@ -656,8 +656,9 @@ export default {
             5: r[0].data.toBeEvaluated,
             6: r[0].data.evaluated,
             7: r[0].data.closed,
-            8: r[1].data.remainingNum || 0,
+            8: r[1].data.candidate || 0,
             9: r[1].data.totalNum - (r[1].data.remainingNum || 0),
+            10: r[1].data.remainingNum || 0
           };
           this.channels = r[1].data.extension.channelLimit
             ? r[1].data.extension.channels.map((i) =>
