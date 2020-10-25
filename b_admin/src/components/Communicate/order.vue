@@ -27,20 +27,26 @@
       </div>
       <div class="row">
         <h5>申请时间：</h5>
-        <p>{{ data.gmtCreate }}</p>
+        <p>{{ data.date }}</p>
       </div>
       <div class="row">
         <h5>订单状态：</h5>
         <div>
-          <p>已测评</p>
-          <span>{{ data.gmtCreate }}</span>
+          <p>{{ activityStatus[data.statusCode] }}</p>
+          <!-- <span>{{ data.date }}</span> -->
         </div>
       </div>
       <div class="row">
         <h5>押金状态：</h5>
         <div>
-          <p>已冻结</p>
-          <span>测评投诉中，若处理超时或违规，将扣除</span>
+          <p>
+            {{
+              ["", "未缴押金", "已冻结", "已解冻", "已扣除"][
+                (data.depositInfo || {}).statusCode || 1
+              ]
+            }}
+          </p>
+          <!-- <span>测评投诉中，若处理超时或违规，将扣除</span> -->
         </div>
       </div>
       <div class="row">
@@ -105,8 +111,8 @@
               <el-option
                 v-for="(item, i) in logistics"
                 :key="i"
-                :label="item.value"
-                :value="item.value"
+                :label="item"
+                :value="item"
               />
             </el-select>
             <el-input
@@ -371,7 +377,9 @@
 
 <script>
 import { fetchOrder, addrs, updateIssueState, updateAddress } from "./api";
-import { ChannelIcons } from "@/utils/constant";
+import { ChannelIcons, ActivityOrderStatus } from "@/utils/constant";
+import _ from 'underscore'
+
 import moment from "moment";
 
 const DefObj = {
@@ -396,6 +404,9 @@ export default {
     return {
       active: 1,
       data: DefObj,
+      activityStatus: _.object(
+        ActivityOrderStatus.map((i) => [i.value, i.name])
+      ),
       addrs,
       logistics: ["顺丰", "圆通", "中通"],
     };
@@ -483,6 +494,7 @@ export default {
             data.receiver.city,
             data.receiver.county,
           ];
+          data.date = moment(data.gmtCreate).format("YYYY-MM-DD HH:mm:ss");
           this.data = data;
         }
       });
