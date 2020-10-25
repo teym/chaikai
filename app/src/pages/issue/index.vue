@@ -116,7 +116,7 @@ export default {
       }
     },
     onGo () {
-      router(this).push('/pages/tester/main', {id: this.data.brActivityOrderId})
+      router(this).push('/pages/tester/main', {id: this.data.brActivityOrderId, issue: true})
     },
     onDetail (item) {
       router(this).push('/pages/web/main', {url: item.url})

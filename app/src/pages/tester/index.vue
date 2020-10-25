@@ -50,29 +50,27 @@ export default {
     return {
       datas: [],
       channels: [],
-      loading: false,
-      append: false
+      loading: false
     }
   },
   created () {
     // let app = getApp()
   },
   mounted () {
-    const {id, append} = router(this).params()
-    this.append = !!append
-    this.loadData(id)
+    this.loadData()
   },
   onPullDownRefresh () {
-    const {id} = router(this).params()
-    uiapi.waitRefresh(this.loadData(id))
+    uiapi.waitRefresh(this.loadData())
   },
   onReachBottom () {
   },
   methods: {
-    loadData (id) {
+    loadData () {
+      const {id, append} = router(this).params()
+
       return request.get('/bl/activity/order/' + id).then(({json: {data}}) => {
         this.channels = mapChannel(data.channels || []).map(i => Object.assign(i, {url: ''}))
-        if (this.append) {
+        if (append) {
           this.datas = [Object.assign({}, this.channels[0], {pop: false})]
         } else {
           this.datas = [].concat(this.channels)
@@ -93,8 +91,8 @@ export default {
         return
       }
       const datas = this.datas.map(i => Object.assign(i, {url: matchURL(i.url)})).filter(i => !!i.url)
-      const {id, append} = router(this).params()
-      request.post('/bl/activity/order/evaluation', {brActivityOrderId: id, type: append ? 2 : 1, list: datas}).then(r => {
+      const {id, append, issue} = router(this).params()
+      request.post('/bl/activity/order/evaluation', {brActivityOrderId: id, type: append ? 2 : 1, scene: issue ? 2 : 1, list: datas}).then(r => {
         uiapi.toast('已提交')
         router(this).pop()
       }).catch(e => {
@@ -106,7 +104,7 @@ export default {
 </script>
 
 <style scoped>
-.item img{
+.item img {
   width: 60rpx;
   height: 60rpx;
 }
@@ -117,12 +115,12 @@ export default {
   position: relative;
   margin-left: 8rpx;
 }
-.pop-menu .tag span{
+.pop-menu .tag span {
   font-size: 20rpx;
   color: #999999;
 }
-.pop-menu .tag.pop span{
-  color: #FF8E3B;
+.pop-menu .tag.pop span {
+  color: #ff8e3b;
 }
 .pop-menu .mask {
   position: fixed;
@@ -132,7 +130,7 @@ export default {
   height: 100%;
   z-index: 1;
 }
-.pop-menu .pop-menu-content{
+.pop-menu .pop-menu-content {
   position: absolute;
   z-index: 2;
   top: 50rpx;
@@ -151,7 +149,7 @@ export default {
   background-color: white;
   z-index: 1;
 }
-.pop-menu .pop-menu-content .menu-items{
+.pop-menu .pop-menu-content .menu-items {
   z-index: 2;
 }
 .add-btn {
@@ -161,11 +159,11 @@ export default {
   border-radius: 12rpx;
   color: #999999;
 }
-.btn{
+.btn {
   margin: 54rpx;
   height: 80rpx;
   border-radius: 40rpx;
   color: white;
-  background-color: #FF8E3B;
+  background-color: #ff8e3b;
 }
 </style>

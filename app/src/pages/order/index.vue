@@ -151,10 +151,10 @@
       <img v-if="data.statusCode < 4" class="right" src="/static/images/arrow_right.png" alt="icon" />
     </div>
     <div class="margin-t white_bg pad2">
-      <div class="row info pad-b">
+      <div class="row info pad-b" @click="onActivity">
         <img class="img" :src="data.activity.goods.picUrl" alt="img">
         <div class="col just flex margin-l">
-          <h5 class="middle dark">{{data.activity.goods.title}}</h5>
+          <h5 class="middle dark">{{data.activity.title}}</h5>
           <span class="small light">已选规格：{{data.goodsSku}}</span>
         </div>
       </div>
@@ -290,6 +290,9 @@ export default {
     },
     onWeb (item) {
       router(this).push('/pages/web/main', {url: item.url})
+    },
+    onActivity () {
+      router(this).push('/pages/detail/main', {id: this.data.activity.id})
     },
     onRecv () {
       uiapi.alert({ title: '确认收货', content: '确认收货后，请及时在规定时间范围内完成测评并上传' })

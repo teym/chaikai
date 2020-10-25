@@ -646,7 +646,7 @@ import {
   updateData,
 } from "@/api/activities";
 import { Channels, ChannelIcons, mapChannel } from "@/utils/constant";
-import {clearQueryObject} from '@/utils/index'
+import { clearQueryObject } from "@/utils/index";
 import address from "./components/address";
 import Pagination from "@/components/Pagination"; // secondary package based on el-pagination
 import moment from "moment";
@@ -939,15 +939,17 @@ export default {
     },
     fetchPv(page) {
       this.goods.loading = true;
-      fetchPv(clearQueryObject({ page, size: 12, key: this.goods.key })).then((r) => {
-        this.goods = {
-          page,
-          total: r.data.pager.count,
-          list: r.data.data,
-          key: this.goods.key,
-          loading: false,
-        };
-      });
+      fetchPv(clearQueryObject({ page, size: 12, key: this.goods.key })).then(
+        (r) => {
+          this.goods = {
+            page,
+            total: r.data.pager.count,
+            list: r.data.data,
+            key: this.goods.key,
+            loading: false,
+          };
+        }
+      );
     },
     onGuideDel(index) {
       this.postForm.guidelines.splice(index, 1);
@@ -970,7 +972,7 @@ export default {
       }
     },
     handleFilter() {
-      console.log('key', this.goods);
+      console.log("key", this.goods);
       this.fetchPv(1);
     },
     handleGoodsPage(p) {

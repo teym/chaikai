@@ -189,7 +189,7 @@
       >
         <template slot-scope="{ row }">
           <span
-            >{{ ["", "接受悬赏", "达人报价"][row.activity.cooperationType] }}¥{{
+            >{{ ["", "接受悬赏", "达人报价"][row.coopSubType] }}¥{{
               row.reward
             }}</span
           >
