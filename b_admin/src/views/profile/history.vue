@@ -12,7 +12,7 @@
       <el-table-column label="订购时间">
         <template slot-scope="{ row }">
           <div class="info">
-            <span>{{ row.gmtCreate }}</span>
+            <span>{{ row.date }}</span>
           </div>
         </template>
       </el-table-column>
@@ -108,6 +108,7 @@
 import { mapGetters } from "vuex";
 import { fetchHistory, buyAlipay } from "@/api/user";
 import Pagination from "@/components/Pagination"; // secondary package based on el-pagination
+import moment from 'moment'
 
 export default {
   name: "Profile",
@@ -138,7 +139,11 @@ export default {
     fetchData() {
       this.listLoading = true;
       fetchHistory(this.listQuery).then((r) => {
-        this.list = (r.data || {}).data || [];
+        this.list = ((r.data || {}).data || []).map((i) =>
+          Object.assign(i, {
+            date: moment(i.gmtCreate).format("YYYY-MM-DD HH:mm"),
+          })
+        );
         this.total = ((r.data || {}).pager || {}).count || 0;
         this.listLoading = false;
       });
@@ -149,7 +154,7 @@ export default {
     },
     handlePay(row) {
       this.listLoading = true;
-      buyAlipay({ amount: row.amount, type: "SERVER_ORDER", recordId: row.id })
+      buyAlipay({ amount: row.amount, payScene: "SERVER_ORDER", recordId: row.id })
         .then((r) => {
           this.listLoading = false;
           this.tmp = r.data.body.replace("<form ", '<form target="_blank"');

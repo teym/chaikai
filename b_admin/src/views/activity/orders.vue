@@ -335,7 +335,7 @@
                 listQuery.statusCode === '3' ||
                 listQuery.statusCode === '4' ||
                 listQuery.statusCode === '5' ||
-                (listQuery.statusCode === '6' && row.rewardStatusCode !== 2)
+                listQuery.statusCode === '6'
               "
               size="mini"
               type="primary"
@@ -343,7 +343,7 @@
               >订单详情</el-button
             >
             <el-button
-              v-if="
+              v-if=" row.rewardStatusCode !== 2 &&
                 listQuery.statusCode === '6' &&
                 row.ticketStatusCode !== 5 &&
                 row.ticketStatusCode !== 7
