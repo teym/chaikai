@@ -444,7 +444,7 @@ export default {
         .then((r) => {
           this.data.update = false;
           this.$message({ message: "修改成功", type: "success" });
-          this.loadData();
+          this.loadData(id);
         })
         .catch((e) => {
           this.data.update = false;
