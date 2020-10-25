@@ -55,9 +55,12 @@ export default {
   mounted () {
     this.loadData()
   },
+  onPullDownRefresh () {
+    uiapi.waitRefresh(this.loadData())
+  },
   methods: {
     loadData () {
-      request.get('/bl/account/finance').then(({json: {data}}) => {
+      return request.get('/bl/account/finance').then(({json: {data}}) => {
         this.amount = data.totalAmount
       }).catch(e => {
         console.log(e)

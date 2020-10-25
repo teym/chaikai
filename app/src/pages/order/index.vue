@@ -339,7 +339,7 @@ export default {
     },
     onPay () {
       const l = uiapi.loading()
-      request.post('/wxpay/mini', {amount: 0.3 /* this.data.depositInfo.amount */, brActivityId: this.data.activity.id, payScene: this.data.statusCode >= 2 ? 'BL_PAY_DEPOSIT_AFTER' : 'BL_PAY_DEPOSIT'}).then(({json: {data}}) => {
+      request.post('/wxpay/mini', {amount: this.data.depositInfo.amount || this.data.goods.price, brActivityId: this.data.activity.id, payScene: this.data.statusCode >= 2 ? 'BL_PAY_DEPOSIT_AFTER' : 'BL_PAY_DEPOSIT'}).then(({json: {data}}) => {
         return api.pay(data)
       }).then(r => {
         setTimeout(() => {

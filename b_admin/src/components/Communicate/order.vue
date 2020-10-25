@@ -268,107 +268,109 @@
       </div>
     </div>
     <div v-if="active === 3" class="content issue">
-      <div v-if="data.ticket">
-        <div class="row">
-          <h5>工单编号：</h5>
-          <p>{{ data.ticket.id }}</p>
-        </div>
-        <div class="row">
-          <h5>创建时间：</h5>
-          <p>
-            {{ data.ticket.gmtCreate }}
-          </p>
-        </div>
-        <div class="row">
-          <h5>工单类型：</h5>
-          <p>测评投诉</p>
-        </div>
-        <div class="row">
-          <h5>工单状态：</h5>
-          <div>
+      <div v-if="data.tickets && data.tickets.legnth > 0">
+        <div v-for="(ticket, i) in data.tickets" :key="i">
+          <div class="row">
+            <h5>工单编号：</h5>
+            <p>{{ ticket.id }}</p>
+          </div>
+          <div class="row">
+            <h5>创建时间：</h5>
             <p>
-              {{
-                [
-                  "",
-                  "待修改",
-                  "待确认",
-                  "小二审核中",
-                  "待重评",
-                  "已修改",
-                  "已取消",
-                  "已违规",
-                ][data.ticket.statusCode]
-              }}
-            </p>
-            <span>品牌审核还剩3天0时0分，超时将自动确认</span>
-          </div>
-        </div>
-        <div class="row">
-          <h5>投诉理由：</h5>
-          <div>
-            <p v-for="(i, j) in data.ticket.items" :key="j" class="mb">
-              {{ i.content }}
+              {{ ticket.gmtCreate }}
             </p>
           </div>
-        </div>
-        <div v-if="data.build.zhengshi.length > 0" class="row ceping">
-          <h5 style="line-height: 28px">投诉测评：</h5>
-          <div>
-            <div
-              v-for="(item, i) in data.build.zhengshi"
-              :key="i"
-              class="row"
-              style="margin-top: 0; align-items: center"
-            >
-              <div class="item" @click="onUrl(item.url)">
-                <img :src="item.icon" alt="" />
-                <span style="margin-left: 4px"
-                  >{{ item.platformName
-                  }}<span style="margin-left: 12px"
-                    >活动量：{{ item.activeAmount }}</span
-                  ></span
-                >
-              </div>
-              <span style="margin-left: 12px">{{ item.date }}</span>
+          <div class="row">
+            <h5>工单类型：</h5>
+            <p>测评投诉</p>
+          </div>
+          <div class="row">
+            <h5>工单状态：</h5>
+            <div>
+              <p>
+                {{
+                  [
+                    "",
+                    "待修改",
+                    "待确认",
+                    "小二审核中",
+                    "待重评",
+                    "已修改",
+                    "已取消",
+                    "已违规",
+                  ][ticket.statusCode]
+                }}
+              </p>
+              <span>品牌审核还剩3天0时0分，超时将自动确认</span>
             </div>
           </div>
-        </div>
-        <div v-if="data.build.zhengshi.length > 0" class="row ceping">
-          <h5 style="line-height: 28px">修改测评：</h5>
-          <div>
-            <div
-              v-for="(item, i) in data.build.zhengshi"
-              :key="i"
-              class="row"
-              style="margin-top: 0; align-items: center"
-            >
-              <div class="item" @click="onUrl(item.url)">
-                <img :src="item.icon" alt="" />
-                <span style="margin-left: 4px"
-                  >{{ item.platformName
-                  }}<span style="margin-left: 12px"
-                    >活动量：{{ item.activeAmount }}</span
-                  ></span
-                >
-              </div>
-              <span style="margin-left: 12px">{{ item.date }}</span>
+          <div class="row">
+            <h5>投诉理由：</h5>
+            <div>
+              <p v-for="(i, j) in ticket.items" :key="j" class="mb">
+                {{ i.content }}
+              </p>
             </div>
           </div>
-        </div>
-        <div
-          v-if="data.ticket.statusCode === 2"
-          class="row"
-        >
-          <el-button size="mini" :loading="data.update" @click="updateState(3)"
-            >未达要求</el-button
-          >
-          <el-button
-            size="mini"
-            type="primary"
-            :loading="data.update"
-            @click="updateState(5)"
-            >确认修改</el-button
-          >
+          <div v-if="data.build.zhengshi.length > 0" class="row ceping">
+            <h5 style="line-height: 28px">投诉测评：</h5>
+            <div>
+              <div
+                v-for="(item, i) in data.build.zhengshi"
+                :key="i"
+                class="row"
+                style="margin-top: 0; align-items: center"
+              >
+                <div class="item" @click="onUrl(item.url)">
+                  <img :src="item.icon" alt="" />
+                  <span style="margin-left: 4px"
+                    >{{ item.platformName
+                    }}<span style="margin-left: 12px"
+                      >活动量：{{ item.activeAmount }}</span
+                    ></span
+                  >
+                </div>
+                <span style="margin-left: 12px">{{ item.date }}</span>
+              </div>
+            </div>
+          </div>
+          <div v-if="data.build.zhengshi.length > 0" class="row ceping">
+            <h5 style="line-height: 28px">修改测评：</h5>
+            <div>
+              <div
+                v-for="(item, i) in data.build.zhengshi"
+                :key="i"
+                class="row"
+                style="margin-top: 0; align-items: center"
+              >
+                <div class="item" @click="onUrl(item.url)">
+                  <img :src="item.icon" alt="" />
+                  <span style="margin-left: 4px"
+                    >{{ item.platformName
+                    }}<span style="margin-left: 12px"
+                      >活动量：{{ item.activeAmount }}</span
+                    ></span
+                  >
+                </div>
+                <span style="margin-left: 12px">{{ item.date }}</span>
+              </div>
+            </div>
+          </div>
+          <div v-if="ticket.statusCode === 2" class="row">
+            <el-button
+              size="mini"
+              :loading="data.update"
+              @click="updateState(ticket, 3)"
+              >未达要求</el-button
+            >
+            <el-button
+              size="mini"
+              type="primary"
+              :loading="data.update"
+              @click="updateState(ticket, 5)"
+              >确认修改</el-button
+            >
+          </div>
         </div>
       </div>
     </div>
@@ -378,7 +380,7 @@
 <script>
 import { fetchOrder, addrs, updateIssueState, updateAddress } from "./api";
 import { ChannelIcons, ActivityOrderStatus } from "@/utils/constant";
-import _ from 'underscore'
+import _ from "underscore";
 
 import moment from "moment";
 
@@ -397,6 +399,7 @@ const DefObj = {
     addrs: [],
   },
   update: false,
+  tickets: [],
 };
 export default {
   props: ["id"],
@@ -430,10 +433,10 @@ export default {
     onUrl(url) {
       window.open(url, "_blank");
     },
-    updateState(s) {
+    updateState(ticket, s) {
       const id = this.id;
       this.data.update = true;
-      updateIssueState({ id: this.data.ticket.id, statusCode: s })
+      updateIssueState({ id: ticket.id, statusCode: s })
         .then((r) => {
           if (id === this.id) {
             this.data.update = false;
@@ -495,6 +498,7 @@ export default {
             data.receiver.county,
           ];
           data.date = moment(data.gmtCreate).format("YYYY-MM-DD HH:mm:ss");
+          console.log("tickets", data.tickets);
           this.data = data;
         }
       });
