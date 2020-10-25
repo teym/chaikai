@@ -191,10 +191,10 @@ export default {
       this.getList();
     },
     handleDetail(item) {
-      window.showCommunicate(item.brActivityOrderId);
+      window.showCommunicate(item.brActivityOrderId, true);
     },
     handleAction(item) {
-      window.showCommunicate(item.brActivityOrderId);
+      window.showCommunicate(item.brActivityOrderId, true);
     },
   },
 };

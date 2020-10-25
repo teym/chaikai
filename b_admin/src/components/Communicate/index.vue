@@ -17,7 +17,7 @@
       </el-row>
     </div>
     <el-row class="layout">
-      <el-col :span="5" class="list">
+      <el-col v-if="showList" :span="5" class="list">
         <div
           v-for="(i, j) in list"
           :key="j"
@@ -25,7 +25,7 @@
           :class="{ active: i.originId === active }"
           @click="onActive(i)"
         >
-          <img :src="(i.accountInfo || {}).avatar" alt="avatar">
+          <img :src="(i.accountInfo || {}).avatar" alt="avatar" />
           <div class="col">
             <div class="row t">
               <h5>{{ (i.accountInfo || {}).name }}</h5>
@@ -38,9 +38,9 @@
           </div>
         </div>
       </el-col>
-      <el-col class="content" :span="12">
+      <el-col class="content" :span="showList ? 12 : 16">
         <div class="tip">
-          <img src="@/assets/images/chat_tip.png" alt="tip">
+          <img src="@/assets/images/chat_tip.png" alt="tip" />
           <p>提示：警惕站外沟通交易，平台提供合作保障</p>
           <el-icon class="el-icon-arrow-right" />
         </div>
@@ -51,7 +51,11 @@
             class="chat"
             :class="{ mine: item.my }"
           >
-            <img class="logo" :src="(item.accountInfo || {}).avatar" alt="logo">
+            <img
+              class="logo"
+              :src="(item.accountInfo || {}).avatar"
+              alt="logo"
+            />
             <div class="col">
               <span>{{ (item.accountInfo || {}).name }}</span>
               <div>
@@ -60,7 +64,7 @@
                   :src="item.content"
                   alt="img"
                   @click="onPreview(item.content)"
-                >
+                />
                 <p v-else>{{ item.content }}</p>
                 <span>{{ item.date }}</span>
               </div>
@@ -68,11 +72,7 @@
           </div>
         </div>
         <div class="bar">
-          <textarea
-            v-model="text"
-            class="input"
-            @keypress.enter="onSend"
-          />
+          <textarea v-model="text" class="input" @keypress.enter="onSend" />
           <div class="row">
             <label for="file" class="file" @click="clickFile">
               <input
@@ -83,7 +83,7 @@
                 accept="image/png, image/jpeg"
                 hidden
                 @change="onFile"
-              >
+              />
               <el-icon class="el-icon-plus" />
               <span>图片支持 jpg png jpeg 大小不超过1M</span>
             </label>
@@ -93,16 +93,17 @@
               type="primary"
               size="mini"
               @click="onSend"
-            >发送</el-button>
+              >发送</el-button
+            >
           </div>
         </div>
       </el-col>
-      <el-col :span="7" class="detail">
-        <order :id="active" />
+      <el-col :span="showList ? 7 : 8" class="detail">
+        <order ref="order" :id="active" />
       </el-col>
     </el-row>
     <el-dialog width="60%" title="预览" :visible.sync="preview" append-to-body>
-      <img style="width: 100%" :src="previewUrl" alt="" srcset="">
+      <img style="width: 100%" :src="previewUrl" alt="" srcset="" />
     </el-dialog>
   </el-dialog>
 </template>
@@ -114,36 +115,37 @@ import {
   fetchHistory,
   //   createData,
   createHistory,
-  uploadFile
+  uploadFile,
   //   updateData
-} from './api'
-import order from './order'
-import moment from 'moment'
+} from "./api";
+import order from "./order";
+import moment from "moment";
 
 const formatDate = (t) => {
-  const m = moment(t)
-  return m.isSame(new Date(), 'day')
-    ? m.format('HH:mm')
-    : m.format('MM.DD HH:mm')
-}
+  const m = moment(t);
+  return m.isSame(new Date(), "day")
+    ? m.format("HH:mm")
+    : m.format("MM.DD HH:mm");
+};
 
 function isImgMsg(s) {
-  return /^\[img:https?:\/\/[a-zA-Z0-9-_./]+\]$/.test(s)
+  return /^\[img:https?:\/\/[a-zA-Z0-9-_./]+\]$/.test(s);
 }
 function imgMsgUrl(s) {
-  return /^\[img:(https?:\/\/[a-zA-Z0-9-_./]+)\]$/.exec(s)[1]
+  return /^\[img:(https?:\/\/[a-zA-Z0-9-_./]+)\]$/.exec(s)[1];
 }
 function makeImgMsg(u) {
-  return `[img:${u}]`
+  return `[img:${u}]`;
 }
 
 export default {
   components: {
-    order
+    order,
   },
   data() {
     return {
       list: [],
+      showList: true,
       active: null,
       stat: 0,
       page: 0,
@@ -155,45 +157,54 @@ export default {
         page: 0,
         nomore: false,
         loading: false,
-        sending: false
+        sending: false,
       },
-      text: '',
+      text: "",
       preview: false,
-      previewUrl: ''
-    }
+      previewUrl: "",
+    };
   },
   created() {
-    this.loadList(1)
-    window.showCommunicate = (id) => {
-      this.showDetail = true
-      this.active = id
-    }
+    this.loadList(1);
+    window.showCommunicate = (id, issue) => {
+      this.active = id;
+      this.showList = false;
+      this.showDetail = true;
+      setTimeout(() => {
+        this.$refs.order.showTab(issue ? "issue" : "order");
+      }, 0);
+    };
   },
   methods: {
     show() {
-      this.showDetail = true
+      this.showList = true;
+      this.showDetail = true;
+      setTimeout(() => {
+        this.$refs.order.showTab("order");
+      }, 0);
+      this.loadList(1);
     },
     onPreview(img) {
-      this.previewUrl = img
-      this.preview = true
+      this.previewUrl = img;
+      this.preview = true;
     },
     onSend() {
       this.realSend(Promise.resolve(this.text), () => {
-        this.text = ''
-      })
+        this.text = "";
+      });
     },
     clickFile() {
-      this.$refs.fileinput.click()
+      this.$refs.fileinput.click();
     },
     onFile(e) {
-      this.realSend(uploadFile(e.target.files[0]).then((u) => makeImgMsg(u)))
+      this.realSend(uploadFile(e.target.files[0]).then((u) => makeImgMsg(u)));
     },
     realSend(txt, done) {
-      this.data.sending = true
-      const act = this.active
+      this.data.sending = true;
+      const act = this.active;
       const room = this.list.filter((i) => i.originId === act)[0] || {
-        originId: act
-      }
+        originId: act,
+      };
       txt
         .then((r) => {
           return createHistory({
@@ -201,12 +212,12 @@ export default {
             originId: room.originId,
             roomId: room.id,
             type: 1,
-            roomType: 1
-          })
+            roomType: 1,
+          });
         })
         .then(({ data }) => {
           if (act !== this.active) {
-            return
+            return;
           }
           this.data.datas.splice(
             this.data.datas.length,
@@ -217,36 +228,36 @@ export default {
               isImg: isImgMsg(data.content),
               content: isImgMsg(data.content)
                 ? imgMsgUrl(data.content)
-                : data.content
+                : data.content,
             })
-          )
-          this.data.sending = false
+          );
+          this.data.sending = false;
           if (done) {
-            done()
+            done();
           }
         })
         .catch((e) => {
           if (act !== this.active) {
-            return
+            return;
           }
-          console.log(e)
-          this.data.sending = false
-        })
+          console.log(e);
+          this.data.sending = false;
+        });
     },
     onActive(item) {
-      this.active = item.originId
+      this.active = item.originId;
       this.data = {
         datas: [],
         page: 0,
         nomore: false,
         loading: false,
-        sending: false
-      }
-      this.text = ''
-      this.loadData(1)
+        sending: false,
+      };
+      this.text = "";
+      this.loadData(1);
     },
     loadList(page) {
-      this.loading = true
+      this.loading = true;
       fetchList({ page: page, size: 10, roomType: 1, type: 1 })
         .then((r) => {
           this.list = (page === 1 ? [] : this.list)
@@ -254,36 +265,36 @@ export default {
             .map((i) =>
               Object.assign(i, {
                 content: isImgMsg(i.lastRecord.content)
-                  ? '[图片]'
+                  ? "[图片]"
                   : i.lastRecord.content,
-                date: formatDate(i.lastTime)
+                date: formatDate(i.lastTime),
               })
-            )
-          this.nomore = r.data.pager.totalPages <= page
-          this.loading = false
+            );
+          this.nomore = r.data.pager.totalPages <= page;
+          this.loading = false;
           if (!this.active) {
-            this.active = this.list[0].originId
-            this.loadData(1)
+            this.active = this.list[0].originId;
           }
+          this.loadData(1);
         })
         .catch((e) => {
-          this.loading = false
-        })
+          this.loading = false;
+        });
     },
     loadData(page) {
-      const act = this.active
+      const act = this.active;
       if (page === 1) {
         this.data = {
           datas: [],
           page: page,
           nomore: false,
-          loading: false
-        }
+          loading: false,
+        };
       }
       if (this.data.loading || this.data.nomore) {
-        return
+        return;
       }
-      this.data.loading = true
+      this.data.loading = true;
       fetchHistory({ page, size: 10, originId: act, type: 1, roomType: 1 })
         .then(({ data }) => {
           if (act === this.active) {
@@ -292,26 +303,26 @@ export default {
               .concat(page === 1 ? [] : this.data.datas)
               .map((i) =>
                 Object.assign(i, {
-                  date: moment(i.gmtCreate).format('YYYY-MM-DD HH:mm:ss'),
+                  date: moment(i.gmtCreate).format("YYYY-MM-DD HH:mm:ss"),
                   isImg: isImgMsg(i.content),
                   content: isImgMsg(i.content)
                     ? imgMsgUrl(i.content)
-                    : i.content
+                    : i.content,
                 })
-              )
-            this.data.nomore = data.pager.totalPages <= page
-            this.data.page = page
-            this.data.loading = false
+              );
+            this.data.nomore = data.pager.totalPages <= page;
+            this.data.page = page;
+            this.data.loading = false;
           }
         })
         .catch((e) => {
           if (act === this.active) {
-            this.data.loading = false
+            this.data.loading = false;
           }
-        })
-    }
-  }
-}
+        });
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>

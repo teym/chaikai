@@ -5,17 +5,20 @@
         size="mini"
         :type="active === 1 ? 'primary' : ''"
         @click="active = 1"
-      >订单信息</el-button>
+        >订单信息</el-button
+      >
       <el-button
         size="mini"
         :type="active === 2 ? 'primary' : ''"
         @click="active = 2"
-      >合作任务</el-button>
+        >合作任务</el-button
+      >
       <el-button
         size="mini"
         :type="active === 3 ? 'primary' : ''"
         @click="active = 3"
-      >订单问题</el-button>
+        >订单问题</el-button
+      >
     </div>
     <div v-if="active === 1" class="content order">
       <div class="row">
@@ -66,10 +69,7 @@
         <div class="row">
           <h5 style="line-height: 28px; width: 64px">手机号：</h5>
           <div>
-            <el-input
-              v-model="data.build.address.telephone"
-              size="mini"
-            />
+            <el-input v-model="data.build.address.telephone" size="mini" />
           </div>
         </div>
         <div class="row">
@@ -81,10 +81,10 @@
               :options="addrs"
               :placeholder="
                 data.build.address.province +
-                  '/' +
-                  data.build.address.city +
-                  '/' +
-                  data.build.address.county
+                '/' +
+                data.build.address.city +
+                '/' +
+                data.build.address.county
               "
             />
             <el-input
@@ -123,7 +123,8 @@
             type="primary"
             :loading="data.update"
             @click="updateAddr"
-          >修改</el-button>
+            >修改</el-button
+          >
         </div>
       </div>
     </div>
@@ -225,13 +226,13 @@
             style="margin-top: 0; align-items: center"
           >
             <div class="item" @click="onUrl(item.url)">
-              <img :src="item.img" alt="">
-              <span
-                style="margin-left: 4px"
-              >{{ item.platformName
-              }}<span
-                style="margin-left: 12px"
-              >活动量：{{ item.activeAmount }}</span></span>
+              <img :src="item.icon" alt="" />
+              <span style="margin-left: 4px"
+                >{{ item.platformName
+                }}<span style="margin-left: 12px"
+                  >活动量：{{ item.activeAmount }}</span
+                ></span
+              >
             </div>
             <span style="margin-left: 12px">{{ item.date }}</span>
           </div>
@@ -247,13 +248,13 @@
             style="margin-top: 0; align-items: center"
           >
             <div class="item" @click="onUrl(item.url)">
-              <img :src="item.img" alt="">
-              <span
-                style="margin-left: 4px"
-              >{{ item.platformName
-              }}<span
-                style="margin-left: 12px"
-              >活动量：{{ item.activeAmount }}</span></span>
+              <img :src="item.icon" alt="" />
+              <span style="margin-left: 4px"
+                >{{ item.platformName
+                }}<span style="margin-left: 12px"
+                  >活动量：{{ item.activeAmount }}</span
+                ></span
+              >
             </div>
             <span style="margin-left: 12px">{{ item.date }}</span>
           </div>
@@ -314,13 +315,13 @@
               style="margin-top: 0; align-items: center"
             >
               <div class="item" @click="onUrl(item.url)">
-                <img :src="item.img" alt="">
-                <span
-                  style="margin-left: 4px"
-                >{{ item.platformName
-                }}<span
-                  style="margin-left: 12px"
-                >活动量：{{ item.activeAmount }}</span></span>
+                <img :src="item.icon" alt="" />
+                <span style="margin-left: 4px"
+                  >{{ item.platformName
+                  }}<span style="margin-left: 12px"
+                    >活动量：{{ item.activeAmount }}</span
+                  ></span
+                >
               </div>
               <span style="margin-left: 12px">{{ item.date }}</span>
             </div>
@@ -336,13 +337,13 @@
               style="margin-top: 0; align-items: center"
             >
               <div class="item" @click="onUrl(item.url)">
-                <img :src="item.img" alt="">
-                <span
-                  style="margin-left: 4px"
-                >{{ item.platformName
-                }}<span
-                  style="margin-left: 12px"
-                >活动量：{{ item.activeAmount }}</span></span>
+                <img :src="item.icon" alt="" />
+                <span style="margin-left: 4px"
+                  >{{ item.platformName
+                  }}<span style="margin-left: 12px"
+                    >活动量：{{ item.activeAmount }}</span
+                  ></span
+                >
               </div>
               <span style="margin-left: 12px">{{ item.date }}</span>
             </div>
@@ -352,17 +353,16 @@
           v-if="data.ticket.statusCode === 2 || data.ticket.statusCode === 3"
           class="row"
         >
-          <el-button
-            size="mini"
-            :loading="data.update"
-            @click="updateState(1)"
-          >未达要求</el-button>
+          <el-button size="mini" :loading="data.update" @click="updateState(1)"
+            >未达要求</el-button
+          >
           <el-button
             size="mini"
             type="primary"
             :loading="data.update"
             @click="updateState(5)"
-          >确认修改</el-button>
+            >确认修改</el-button
+          >
         </div>
       </div>
     </div>
@@ -370,14 +370,14 @@
 </template>
 
 <script>
-import { fetchOrder, addrs, updateIssueState, updateAddress } from './api'
-import { ChannelIcons } from '@/utils/constant'
-import moment from 'moment'
+import { fetchOrder, addrs, updateIssueState, updateAddress } from "./api";
+import { ChannelIcons } from "@/utils/constant";
+import moment from "moment";
 
 const DefObj = {
   blogger: {},
   activity: {
-    extension: {}
+    extension: {},
   },
   build: {
     topics: [],
@@ -386,106 +386,109 @@ const DefObj = {
     zhengshi: [],
     zhuijia: [],
     address: {},
-    addrs: []
+    addrs: [],
   },
-  update: false
-}
+  update: false,
+};
 export default {
-  props: ['id'],
+  props: ["id"],
   data() {
     return {
       active: 1,
       data: DefObj,
       addrs,
-      logistics: ['顺丰', '圆通', '中通']
-    }
+      logistics: ["顺丰", "圆通", "中通"],
+    };
   },
   watch: {
     id(val, old) {
       if (val !== old) {
-        this.loadData(val)
+        this.loadData(val);
       }
-    }
+    },
   },
   created() {
     if (this.id) {
-      this.loadData(this.id)
+      this.loadData(this.id);
     }
   },
   methods: {
+    showTab(tab) {
+      this.active = tab === "issue" ? 3 : 1;
+    },
     onUrl(url) {
-      window.open(url, '_blank')
+      window.open(url, "_blank");
     },
     updateState(s) {
-      const id = this.id
-      this.data.update = true
+      const id = this.id;
+      this.data.update = true;
       updateIssueState({ id: this.data.ticket.id, statusCode: s })
         .then((r) => {
           if (id === this.id) {
-            this.data.update = false
-            this.loadData(id)
+            this.data.update = false;
+            this.loadData(id);
           }
         })
         .catch((e) => {
-          this.data.update = false
-        })
+          this.data.update = false;
+        });
     },
     updateAddr() {
-      const id = this.id
-      this.data.update = true
-      const addr = this.data.build.address
-      addr.province = this.data.build.addrs[0] || addr.province
-      addr.city = this.data.build.addrs[1] || addr.city
-      addr.county = this.data.build.addrs[2] || addr.county
+      const id = this.id;
+      this.data.update = true;
+      const addr = this.data.build.address;
+      addr.province = this.data.build.addrs[0] || addr.province;
+      addr.city = this.data.build.addrs[1] || addr.city;
+      addr.county = this.data.build.addrs[2] || addr.county;
       updateAddress(Object.assign(addr, { brActivityOrderId: id }))
         .then((r) => {
-          this.data.update = false
-          this.$message({ message: '修改成功', type: 'success' })
-          this.loadData()
+          this.data.update = false;
+          this.$message({ message: "修改成功", type: "success" });
+          this.loadData();
         })
         .catch((e) => {
-          this.data.update = false
-        })
+          this.data.update = false;
+        });
     },
     loadData(id) {
-      this.data = DefObj
+      this.data = DefObj;
       fetchOrder(id).then(({ data }) => {
         if (id === this.id) {
-          data.build = {}
-          data.build.topics = data.channels.filter((i) => i.topic)
+          data.build = {};
+          data.build.topics = data.channels.filter((i) => i.topic);
           data.build.keywords = data.activity.extension.keywords
-            ? data.activity.extension.keywords.split(' ')
-            : []
+            ? data.activity.extension.keywords.split(" ")
+            : [];
           data.build.otherReq = data.activity.extension.otherReq
-            ? data.activity.extension.otherReq.split('+').map(
-              (i) =>
-                ({
-                  1: '产品和达人同框露脸',
-                  2: '使用前后效果对比',
-                  3: '提供评测原图使用权'
-                }[i])
-            )
-            : []
+            ? data.activity.extension.otherReq.split("+").map(
+                (i) =>
+                  ({
+                    1: "产品和达人同框露脸",
+                    2: "使用前后效果对比",
+                    3: "提供评测原图使用权",
+                  }[i])
+              )
+            : [];
 
           const ev = data.evaluationItems.map((i) =>
-            Object.assign({}, i, ChannelIcons[i.platformId + ''], {
-              date: moment(i.gmtCreate).format('YYYY-MM-DD')
+            Object.assign({}, i, ChannelIcons[i.platformId + ""], {
+              date: moment(i.gmtCreate).format("YYYY-MM-DD"),
             })
-          )
-          data.build.zhengshi = ev.filter((i) => i.type === 1)
-          data.build.zhuijia = ev.filter((i) => i.type === 2)
-          data.build.address = data.receiver
+          );
+          data.build.zhengshi = ev.filter((i) => i.type === 1);
+          data.build.zhuijia = ev.filter((i) => i.type === 2);
+          data.build.address = data.receiver;
           data.build.addrs = [
             data.receiver.province,
             data.receiver.city,
-            data.receiver.county
-          ]
-          this.data = data
+            data.receiver.county,
+          ];
+          this.data = data;
         }
-      })
-    }
-  }
-}
+      });
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>
