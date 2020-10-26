@@ -498,7 +498,6 @@ export default {
             data.receiver.county,
           ];
           data.date = moment(data.gmtCreate).format("YYYY-MM-DD HH:mm:ss");
-          console.log("tickets", data.tickets);
           this.data = data;
         }
       });

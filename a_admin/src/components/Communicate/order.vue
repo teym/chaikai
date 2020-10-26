@@ -318,7 +318,7 @@
           </div>
         </div>
         <div class="row">
-          <el-button size="mini" :loading="data.update" @click="updateState(1)">继续修改</el-button>
+          <el-button size="mini" :loading="data.update" @click="updateState(4)">继续修改</el-button>
           <el-button size="mini" :loading="data.update" @click="updateState(7)">判定违规</el-button>
           <el-button size="mini" :loading="data.update" @click="updateState(5)">修改完成</el-button>
           <el-button size="mini" :loading="data.update" @click="updateState(6)">取消投诉</el-button>
