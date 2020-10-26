@@ -45,7 +45,7 @@
             :headers="conf.headers"
             :count="7"
             :limit="conf.limit"
-            tip="请上传小于5M的图片，支持图片格式：jpg,jpeg,png"
+            tip="请上传小于3M的图片，支持图片格式：jpg,jpeg,png"
             v-model="postForm.businessLicense"
           />
         </el-form-item>

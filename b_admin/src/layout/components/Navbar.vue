@@ -99,7 +99,7 @@ export default {
     // },
     async logout() {
       await this.$store.dispatch("user/logout");
-      this.$router.push(`/login?redirect=${this.$route.fullPath}`);
+      this.$router.push(`/login`);
     },
     handelMessage() {
       this.$refs.communicate.show();

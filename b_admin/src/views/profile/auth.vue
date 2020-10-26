@@ -21,7 +21,7 @@
     >
       <div class="createPost-main-container">
         <el-form-item label="品牌名称:" prop="name">
-          <el-input v-model="postForm.name" placeholder="请输入品牌名称" />
+          <el-input :max="50" show-word-limit v-model="postForm.name" placeholder="请输入品牌名称" />
         </el-form-item>
         <el-form-item prop="logo" style="margin-bottom: 30px" label="品牌LOGO:">
           <Upload
@@ -36,6 +36,7 @@
           <el-input
             v-model="postForm.story"
             type="textarea"
+            :max="300" show-word-limit
             placeholder="请输入您的品牌故事，帮助达人和粉丝更好了解贵品牌"
           />
         </el-form-item>

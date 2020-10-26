@@ -70,9 +70,9 @@
       <div class="detail">
         <el-row>
           <el-col :span="4">提交时间</el-col>
-          <el-col :span="8">{{ detail.gmtCreate }}</el-col>
-          <el-col :span="4">支付时间</el-col>
-          <el-col :span="8">{{ detail.gmtCreate }}</el-col>
+          <el-col :span="8">{{ detail.date }}</el-col>
+          <el-col :span="4">订购单号</el-col>
+          <el-col :span="8">{{ detail.orderNo }}</el-col>
         </el-row>
         <el-row>
           <el-col :span="4">订购服务</el-col>

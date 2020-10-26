@@ -6,9 +6,13 @@
     </el-radio-group>
     <div style="height: 12px" />
     <div v-if="select === 1" class="content">
-      <el-carousel class="banners" :indicator-position="'none'">
+      <el-carousel class="banners banners1x1" :indicator-position="'none'">
         <el-carousel-item v-for="(i, j) in banners" :key="j" :index="j">
-          <img :src="i" alt="banner" mode="aspectFill">
+          <img
+            style="width: 375px; height: 375px; object-fit: cover"
+            :src="i"
+            alt="banner"
+          >
         </el-carousel-item>
       </el-carousel>
       <div v-if="data.statusCode > 5" class="stop">报名结束</div>
@@ -230,7 +234,8 @@ export default {
     return {
       data: {
         goods: {
-          brandInfo: {}
+          brandInfo: {},
+          detail: ''
         },
         extension: {}
       },
@@ -279,6 +284,7 @@ export default {
           }[i])
       )
       : []
+    console.log(data.goods.detail)
   },
   methods: {
     onOk() {}
@@ -321,15 +327,11 @@ ul {
 }
 .banners {
   width: 375px;
-  height: 300px;
+  height: 375px;
 }
 .banner {
   width: 375px;
-  height: 300px;
-}
-.banner img {
-  width: 375px;
-  height: 300px;
+  height: 375px;
 }
 .row {
   display: flex;
@@ -482,6 +484,9 @@ h5 {
   font-size: 12px;
   padding: 10px;
   border-bottom: 1px solid #ebebeb;
+}
+.desc .guide li:last-of-type {
+  border-bottom: none;
 }
 .desc .ship {
   padding: 0 12px;
@@ -681,5 +686,10 @@ h5 {
   flex: 1;
   margin: 0;
   padding: 0;
+}
+</style>
+<style>
+.banners1x1 .el-carousel__container {
+  height: 375px;
 }
 </style>
