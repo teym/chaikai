@@ -43,9 +43,6 @@ export default {
       nomore: false
     }
   },
-  created () {
-    // let app = getApp()
-  },
   mounted () {
     const status = parseInt(router(this).params().status)
     if (status > 0) {
@@ -70,7 +67,7 @@ export default {
     loadData (page) {
       return request.get('/bl/activity/order/list', Object.assign({page: page, size: 10}, this.active > 0 ? {statusCode: this.active + 1} : {})).then(({json: {data}}) => {
         this.datas = (page === 1 ? [] : this.datas).concat((data.data || []).map(i => Object.assign({date: moment(i.gmtCreate).format('YYYY.MM.DD')}, i)))
-        this.nomore = data.pager.totalPages > page
+        this.nomore = data.pager.totalPages <= page
         this.page = page
         this.loading = false
       }).catch(e => {
