@@ -66,6 +66,9 @@ export default {
       active: {}
     }
   },
+  onPullDownRefresh () {
+    uiapi.waitRefresh(this.loadData())
+  },
   onShow () {
     this.loadCode()
     this.loadData()

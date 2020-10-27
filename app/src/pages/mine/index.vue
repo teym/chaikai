@@ -123,6 +123,13 @@ export default {
       this.loadData()
     }
   },
+  onPullDownRefresh () {
+    if (api.isLogin()) {
+      uiapi.waitRefresh(this.loadData())
+    } else {
+      uiapi.waitRefresh(Promise.resolve({}))
+    }
+  },
   created () {
     this.logined = api.isLogin()
     this.onUser = () => {
@@ -141,7 +148,7 @@ export default {
       }
     },
     loadData () {
-      request.get('/bl/account').then(({json: {data}}) => {
+      return Promise.all([request.get('/bl/account').then(({json: {data}}) => {
         this.user = data
         this.channels = mapChannel(data.channels).filter(i => i.statusCode === 3)
         this.session = JSON.stringify({tel: data.telephone,
@@ -163,12 +170,12 @@ export default {
         })
       }).catch(e => {
         uiapi.toast(e.info)
-      })
+      }),
       request.get('/bl/account/finance').then(({json: {data}}) => {
         this.amount = data.totalAmount
       }).catch(e => {
         console.log(e)
-      })
+      })])
     },
     onScope () {
       this.onRouter('scope', {scope: this.user.score, tags: this.user.scoreInfo.items.map(i => (`${i.msg} ${i.number}`)).join(',')})
@@ -225,7 +232,7 @@ export default {
 .end {
   align-items: flex-end;
 }
-.line{
+.line {
   margin: 44rpx 0;
 }
 .right {
