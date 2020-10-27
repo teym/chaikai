@@ -36,7 +36,7 @@
       <div class="row just i-center" @click="onReward">
         <div class="row i-center">
           <h5 class="middle dark blod">悬赏金额</h5>
-          <span class="middle red margin-l">{{data.reward}}元</span>
+          <span class="middle red margin-l">{{data.blReward}}元</span>
         </div>
         <div class="row i-center">
           <p class="small light">{{['','待发放','已发放','已取消'][data.rewardStatusCode]}}</p>

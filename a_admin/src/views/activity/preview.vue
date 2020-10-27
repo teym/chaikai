@@ -110,7 +110,7 @@
           </div>
           <div class="row just line">
             <h5>合作要求</h5>
-            <div class="round-btn">{{ data.reward }}/人</div>
+            <div class="round-btn">{{ data.blReward }}/人</div>
           </div>
           <div class="row just line">
             <h6>合作篇幅</h6>

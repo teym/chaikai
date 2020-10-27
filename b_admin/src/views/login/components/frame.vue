@@ -1,5 +1,6 @@
 <template>
   <div class="container">
+    <img src="@/assets/images/login_bg.jpg" alt="bg" class="bg">
     <div class="frame">
       <img class="frame_bg" src="@/assets/images/login_from.png" alt="bg">
       <div class="form">
@@ -25,6 +26,15 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
+  .bg{
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
 
   .frame {
     position: relative;

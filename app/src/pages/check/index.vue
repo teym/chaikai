@@ -188,9 +188,10 @@
         </div>
 
         <div class="row just i-center bar">
-          <p class="small light">
+          <p class="small light" v-if="data.cooperationType === 3">免费置换无悬赏</p>
+          <p class="small light" v-else>
             可获得
-            <span class="red big blod">{{reward}}</span>悬赏
+            <span class="red big blod">{{blReward}}</span>悬赏
           </p>
           <div class="btn row center" @click="onOk">提交申请</div>
         </div>
@@ -238,6 +239,9 @@ export default {
     return defaultData()
   },
   computed: {
+    blReward () {
+      return this.data ? this.data.blReward * (this.type === 2 ? parseInt(this.bid) * 2 : 1) : 0
+    },
     reward () {
       return this.data ? this.data.reward * (this.type === 2 ? parseInt(this.bid) * 2 : 1) : 0
     }
@@ -322,6 +326,7 @@ export default {
         receiver: this.address,
         platformIdSum: idsum,
         reward: this.reward,
+        blReward: this.blReward,
         skuUnion: this.sku
       }).then(r => {
         return this.pay === 1 ? request.post('/wxpay/mini', {amount: this.data.goods.price, brActivityId: id, payScene: 'BL_PAY_DEPOSIT'}).then(({json: {data}}) => {
