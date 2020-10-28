@@ -18,13 +18,13 @@
         </el-table-column>
         <el-table-column label="申请时间" width="260">
           <template slot-scope="{ row }">
-            <span>{{ row.gmtCreate }}</span>
+            <span>{{ row.date }}</span>
           </template>
         </el-table-column>
         <el-table-column label="开票状态">
           <template slot-scope="{ row }">
             <span>{{
-              ["", "待开票", "已开票", "已拒绝"][row.statusCode]
+              ["", "待开票", "已拒绝", "已开票"][row.statusCode]
             }}</span>
           </template>
         </el-table-column>
@@ -63,18 +63,18 @@
       custom-class="custom-dialog"
       title="开票详情"
       :visible.sync="showDetail"
-      width="420px"
+      width="720px"
     >
       <div class="info">
         <p>开票编号：{{ detail.id }}</p>
         <p>
-          开票状态：{{ ["", "待开票", "已开票", "已拒绝"][detail.statusCode] }}
+          开票状态：{{ ["", "待开票", "已拒绝", "已开票"][detail.statusCode] }}
           <span>{{ detail.rejectReason }}</span>
         </p>
-        <p>开票时间：{{ detail.gmtCreate }}</p>
+        <p>开票时间：{{ detail.date }}</p>
         <p>开票金额：{{ detail.totalAmount }}元</p>
-        <p>发票抬头：{{ detail.rise }}</p>
-        <p>公司名称：{{ detail.company }}</p>
+        <p>发票抬头：{{ detail.company }}</p>
+        <p>公司税号：{{ detail.rise }}</p>
         <p>接收邮箱：{{ detail.receiveMail }}</p>
         <h5>关联订单</h5>
         <el-table
@@ -107,7 +107,7 @@
           <el-table-column v-if="detail.type === 2" label="订购时间">
             <template slot-scope="{ row }">
               <div class="info">
-                <span>{{ row.orderTime }}</span>
+                <span>{{ row.date }}</span>
               </div>
             </template>
           </el-table-column>
@@ -133,6 +133,7 @@
 <script>
 import { mapGetters } from "vuex";
 import { fetchInvoices, fetchLinkInvoice } from "@/api/user";
+import moment from "moment";
 import Pagination from "@/components/Pagination"; // secondary package based on el-pagination
 
 export default {
@@ -164,7 +165,11 @@ export default {
     fetchData() {
       this.listLoading = true;
       fetchInvoices(this.listQuery).then((r) => {
-        this.list = (r.data || {}).data || [];
+        this.list = ((r.data || {}).data || []).map((i) =>
+          Object.assign(i, {
+            date: moment(i.gmtCreate).format("YYYY-MM-DD HH:mm:ss"),
+          })
+        );
         this.total = ((r.data || {}).pager || {}).count || 0;
         this.listLoading = false;
       });
@@ -175,7 +180,11 @@ export default {
       this.detailLoading = true;
       fetchLinkInvoice({ invoiceId: row.id, type: row.type, page: 1, size: 50 })
         .then((r) => {
-          this.orders = r.data.data;
+          this.orders = r.data.data.map((i) =>
+            Object.assign(i, {
+              date: moment(i.orderTime).format("YYYY-MM-DD HH:mm:ss"),
+            })
+          );
           this.detailLoading = false;
         })
         .catch((e) => {

@@ -86,6 +86,11 @@
           <span>{{ row.amount }}</span>
         </template>
       </el-table-column>
+      <el-table-column label="提交时间" align="center">
+        <template slot-scope="{ row }">
+          <span>{{ row.date }}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="状态" align="center">
         <template slot-scope="{ row }">
           <span>{{ status[row.statusCode] }}</span>

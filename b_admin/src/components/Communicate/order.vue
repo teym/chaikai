@@ -122,7 +122,7 @@
             />
           </div>
         </div>
-        <div v-if="data.statusCode > 2 && data.statusCode < 4" class="row">
+        <div v-if="data.statusCode > 2 && data.statusCode <= 5" class="row">
           <div style="width: 64px" />
           <el-button
             size="mini"
@@ -268,7 +268,7 @@
       </div>
     </div>
     <div v-if="active === 3" class="content issue">
-      <div v-if="data.tickets && data.tickets.legnth > 0">
+      <div v-if="data.tickets && data.tickets.length > 0">
         <div v-for="(ticket, i) in data.tickets" :key="i">
           <div class="row">
             <h5>工单编号：</h5>
@@ -277,7 +277,7 @@
           <div class="row">
             <h5>创建时间：</h5>
             <p>
-              {{ ticket.gmtCreate }}
+              {{ ticket.date }}
             </p>
           </div>
           <div class="row">
@@ -372,6 +372,10 @@
             >
           </div>
         </div>
+      </div>
+      <div v-else class="empty">
+        <img src="@/assets/images/issue_empty.png" alt="empty" />
+        <p>太棒了<br />暂无订单问题</p>
       </div>
     </div>
   </div>
@@ -498,6 +502,11 @@ export default {
             data.receiver.county,
           ];
           data.date = moment(data.gmtCreate).format("YYYY-MM-DD HH:mm:ss");
+          data.tickets = (data.tickets || []).map((i) =>
+            Object.assign(i, {
+              date: moment(i.gmtCreate).format("YYYY-MM-DD HH:mm:ss"),
+            })
+          );
           this.data = data;
         }
       });
@@ -510,7 +519,7 @@ export default {
 .container {
   width: 100%;
   height: 100%;
-  padding: 16px;
+  padding: 16px 16px 0 16px;
   display: flex;
   flex-direction: column;
   .tab {
@@ -524,6 +533,8 @@ export default {
   .content {
     flex: 1;
     margin-top: 12px;
+    overflow: hidden scroll;
+    padding-bottom: 16px;
     .row {
       display: flex;
       flex-direction: row;
@@ -570,6 +581,17 @@ export default {
         font-size: 10px;
         color: #666666;
       }
+    }
+  }
+  .empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 60px;
+    p {
+      text-align: center;
+      font-size: 14px;
+      line-height: 20px;
     }
   }
 }

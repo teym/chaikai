@@ -22,14 +22,19 @@
       :model="postForm"
       :rules="rules"
       class="form-container"
-      label-width="130px"
+      label-width="138px"
     >
       <div class="createPost-main-container">
         <el-form-item label="公司名称:" prop="name">
-          <el-input :disabled="stat.statusCode === 3" v-model="postForm.name" placeholder="请输入公司名称" />
+          <el-input
+            :disabled="stat.statusCode === 3"
+            v-model="postForm.name"
+            placeholder="请输入公司名称"
+          />
         </el-form-item>
         <el-form-item label="统一社会信用代码:" prop="creditCode">
-          <el-input :disabled="stat.statusCode === 3"
+          <el-input
+            :disabled="stat.statusCode === 3"
             v-model="postForm.creditCode"
             placeholder="请输入统一社会信用代码"
           />
@@ -38,6 +43,7 @@
           prop="businessLicense"
           style="margin-bottom: 30px"
           label="营业执照:"
+          :required="true"
         >
           <Upload
             :disabled="stat.statusCode === 3"
@@ -50,10 +56,15 @@
           />
         </el-form-item>
         <el-form-item label="联系人:" prop="contact">
-          <el-input :disabled="stat.statusCode === 3" v-model="postForm.contact" placeholder="请输入联系人" />
+          <el-input
+            :disabled="stat.statusCode === 3"
+            v-model="postForm.contact"
+            placeholder="请输入联系人"
+          />
         </el-form-item>
         <el-form-item label="微信号:" prop="contactWechat">
-          <el-input :disabled="stat.statusCode === 3"
+          <el-input
+            :disabled="stat.statusCode === 3"
             v-model="postForm.contactWechat"
             placeholder="请输入微信号"
           />
@@ -63,9 +74,16 @@
           <div class="reason">{{ stat.rejectReason }}</div>
         </el-form-item>
 
-        <el-button type="primary" v-if="stat.statusCode !== 3" @click="submitForm">{{
-          ["", "提交审核", "审核中", "已通过", "提交审核"][stat.statusCode || 1]
-        }}</el-button>
+        <el-button
+          type="primary"
+          v-if="stat.statusCode !== 3"
+          @click="submitForm"
+          >{{
+            ["", "提交审核", "审核中", "已通过", "提交审核"][
+              stat.statusCode || 1
+            ]
+          }}</el-button
+        >
       </div>
     </el-form>
   </div>
@@ -127,13 +145,37 @@ export default {
       tip: false,
       stat: {},
       rules: {
-        name: [{ validator: validateRequire, msg: "请输入公司名称" }],
-        contact: [{ validator: validateRequire, msg: "请输入联系人姓名" }],
+        name: [
+          {
+            required: true,
+            trigger: "blur",
+            validator: validateRequire,
+            msg: "请输入公司名称",
+          },
+        ],
+        contact: [
+          {
+            required: true,
+            trigger: "blur",
+            validator: validateRequire,
+            msg: "请输入联系人姓名",
+          },
+        ],
         contactWechat: [
-          { validator: validateRequire, msg: "请输入联系人微信号" },
+          {
+            required: true,
+            trigger: "blur",
+            validator: validateRequire,
+            msg: "请输入联系人微信号",
+          },
         ],
         creditCode: [
-          { validator: validateRequire, msg: "请输入的统一社会信用代码" },
+          {
+            required: true,
+            trigger: "blur",
+            validator: validateRequire,
+            msg: "请输入的统一社会信用代码",
+          },
         ],
         businessLicense: [
           { validator: validateSourceUri, msg: "请上传营业执照" },

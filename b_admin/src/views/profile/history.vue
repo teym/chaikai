@@ -154,7 +154,7 @@ export default {
     },
     handlePay(row) {
       this.listLoading = true;
-      buyAlipay({ amount: row.amount, payScene: "SERVER_ORDER", recordId: row.id })
+      buyAlipay({ amount: row.amount, payScene: "BR_SERVER_ORDER", recordId: row.id })
         .then((r) => {
           this.listLoading = false;
           this.tmp = r.data.body.replace("<form ", '<form target="_blank"');

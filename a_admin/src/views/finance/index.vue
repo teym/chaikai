@@ -4,7 +4,7 @@
       <el-input
         v-model="listQuery.companyName"
         placeholder="请输入公司名称"
-        style="width: 160px;"
+        style="width: 160px"
         size="mini"
         class="filter-item"
         @keyup.enter.native="handleFilter"
@@ -13,9 +13,14 @@
         v-model="listQuery.statusCode"
         size="mini"
         class="filter-item"
-        style="width: 120px;margin-left: 16px"
+        style="width: 120px; margin-left: 16px"
       >
-        <el-option v-for="(item, i) in status" :key="i" :value="i" :label="item" />
+        <el-option
+          v-for="(item, i) in status"
+          :key="i"
+          :value="i"
+          :label="item"
+        />
       </el-select>
 
       <el-button
@@ -69,7 +74,11 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column
+        label="操作"
+        align="center"
+        class-name="small-padding fixed-width"
+      >
         <template slot-scope="{ row }">
           <el-button size="mini" @click="handleDetail(row)">详情</el-button>
         </template>
@@ -102,12 +111,12 @@
           <p>{{ detail.totalAmount }}</p>
         </div>
         <div class="row">
-          <h4>发票抬头:</h4>
-          <p>{{ detail.rise }}</p>
-        </div>
-        <div class="row">
           <h4>公司名称:</h4>
           <p>{{ detail.company }}</p>
+        </div>
+        <div class="row">
+          <h4>税号:</h4>
+          <p>{{ detail.rise }}</p>
         </div>
         <div class="row">
           <h4>接收邮箱:</h4>
@@ -120,22 +129,38 @@
               <span>{{ row.orderId }}</span>
             </template>
           </el-table-column>
-          <el-table-column v-if="detail.type === 1" label="活动名称" align="center">
+          <el-table-column
+            v-if="detail.type === 1"
+            label="活动名称"
+            align="center"
+          >
             <template slot-scope="{ row }">
               <span>{{ row.activityName }}</span>
             </template>
           </el-table-column>
-          <el-table-column v-if="detail.type === 1" label="达人昵称" align="center">
+          <el-table-column
+            v-if="detail.type === 1"
+            label="达人昵称"
+            align="center"
+          >
             <template slot-scope="{ row }">
               <span>{{ row.bloggerName }}</span>
             </template>
           </el-table-column>
-          <el-table-column v-if="detail.type === 2" label="订购类型" align="center">
+          <el-table-column
+            v-if="detail.type === 2"
+            label="订购类型"
+            align="center"
+          >
             <template>
               <span>置换活动</span>
             </template>
           </el-table-column>
-          <el-table-column v-if="detail.type === 2" label="订购时间" align="center">
+          <el-table-column
+            v-if="detail.type === 2"
+            label="订购时间"
+            align="center"
+          >
             <template slot-scope="{ row }">
               <span>{{ row.date }}</span>
             </template>

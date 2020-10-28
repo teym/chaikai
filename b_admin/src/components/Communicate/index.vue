@@ -39,11 +39,11 @@
         </div>
       </el-col>
       <el-col class="content" :span="showList ? 12 : 16">
-        <div class="tip">
+        <a class="tip" href="https://www.yuque.com/lftshh/fo41es/uvwnup" target="_blank">
           <img src="@/assets/images/chat_tip.png" alt="tip" />
           <p>提示：警惕站外沟通交易，平台提供合作保障</p>
           <el-icon class="el-icon-arrow-right" />
-        </div>
+        </a>
         <div class="box">
           <div
             v-for="(item, i) in data.datas"
@@ -389,7 +389,7 @@ export default {
     }
   }
   .el-col {
-    height: 680px;
+    height: calc(100vh * 0.7);
   }
   .content {
     border-right: 1px solid #e9e9e9;

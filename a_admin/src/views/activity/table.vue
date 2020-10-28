@@ -69,6 +69,11 @@
           <span>{{ row.title }}</span>
         </template>
       </el-table-column>
+      <el-table-column label="企业名称" align="center">
+        <template slot-scope="{ row }">
+          <span>{{ row.company && row.company.name }}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="品牌" align="center">
         <template slot-scope="{ row }">
           <span>{{ row.goods.brandInfo.name }}</span>

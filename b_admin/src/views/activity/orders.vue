@@ -60,7 +60,7 @@
             v-for="i in skus"
             :key="i.skuIdUnion"
             :label="i.name"
-            :value="i.skuIdUnion"
+            :value="i.id"
           />
         </el-select>
         <div class="right">
@@ -77,7 +77,7 @@
                 query: { id: listQuery.brActivityId },
               })
             "
-            >候选名单{{ stat["8"] > 0 ? stat["8"] : '' }}</el-button
+            >候选名单{{ stat["8"] > 0 ? stat["8"] : "" }}</el-button
           >
         </div>
       </div>
@@ -138,10 +138,10 @@
         width="120"
       >
         <template slot-scope="{ row }">
-          <div v-for="c in row.channels" :key="c.platformId" class="channel">
+          <a v-for="c in row.channels" :key="c.platformId" class="channel" :href="c.homeLink" target="_blank">
             <img :src="channelIcons['' + c.platformId].icon" />
             <span>{{ channelIcons[c.platformId + ""].name }}</span>
-          </div>
+          </a>
         </template>
       </el-table-column>
       <el-table-column
@@ -189,9 +189,8 @@
       >
         <template slot-scope="{ row }">
           <span
-            >{{ ["", "接受悬赏", "达人报价"][row.coopSubType] }}¥{{
-              row.reward
-            }}</span
+            >{{ ["", "接受悬赏", "达人报价", "免费置换"][row.coopSubType]
+            }}{{ row.coopSubType !== 3 ? "¥" + row.reward : "" }}</span
           >
         </template>
       </el-table-column>
@@ -343,7 +342,8 @@
               >订单详情</el-button
             >
             <el-button
-              v-if=" row.rewardStatusCode !== 2 &&
+              v-if="
+                row.rewardStatusCode !== 2 &&
                 listQuery.statusCode === '6' &&
                 row.ticketStatusCode !== 5 &&
                 row.ticketStatusCode !== 7
@@ -470,11 +470,17 @@
       :visible.sync="shipVisible"
       width="520px"
     >
-      <h6 style="margin: 8px 0; padding: 0">快递公司: {{ ship.name }}</h6>
-      <h6 style="margin: 8px 0; padding: 0">快递单号: {{ ship.no }}</h6>
-      <div v-for="(l, i) in ship.list" :key="i" style="margin: 8px 0">
-        <p style="margin: 0">{{ l.time }}</p>
-        <p style="margin: 8px 0">{{ l.content }}</p>
+      <div v-if="ship" class="ship_empty">
+        <img src="@/assets/images/ship_empty.png" alt="empty" />
+        <p>抱歉，暂未查询到物流信息</p>
+      </div>
+      <div v-else>
+        <h6 style="margin: 8px 0; padding: 0">快递公司: {{ ship.name }}</h6>
+        <h6 style="margin: 8px 0; padding: 0">快递单号: {{ ship.no }}</h6>
+        <div v-for="(l, i) in ship.list" :key="i" style="margin: 8px 0">
+          <p style="margin: 0">{{ l.time }}</p>
+          <p style="margin: 8px 0">{{ l.content }}</p>
+        </div>
       </div>
     </el-dialog>
     <el-dialog
@@ -658,7 +664,7 @@ export default {
             7: r[0].data.closed,
             8: r[1].data.candidate || 0,
             9: r[1].data.totalNum - (r[1].data.remainingNum || 0),
-            10: r[1].data.remainingNum || 0
+            10: r[1].data.remainingNum || 0,
           };
           this.channels = r[1].data.extension.channelLimit
             ? r[1].data.extension.channels.map((i) =>
@@ -740,7 +746,8 @@ export default {
             row.reward +
             "元",
           {
-            title: "一键通过",
+            title: "审核通过",
+            customClass: "pass_confirm",
           }
         )
           .then((r) => {
@@ -811,13 +818,18 @@ export default {
       this.$refs.upload
         .submit()
         .then((r) => {
-          this.batchLoading = false;
-          this.batchVisbale = false;
-          this.getTabs();
-          this.getList();
+          if (r.success) {
+            this.batchLoading = false;
+            this.batchVisbale = false;
+            this.getTabs();
+            this.getList();
+          } else {
+            throw r;
+          }
         })
         .catch((e) => {
           this.batchLoading = false;
+          console.log(e);
           this.$message({ message: e.msg, type: "error" });
         });
     },
@@ -878,6 +890,7 @@ export default {
         this.reason = [];
         this.detail = {};
         this.$message({ message: "已投诉", type: "success" });
+        this.getList();
       });
     },
     handleDetail(row) {
@@ -1055,5 +1068,16 @@ export default {
     font-size: 12px;
     color: #c3c3c3;
   }
+}
+.ship_empty{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+</style>
+
+<style>
+.pass_confirm {
+  width: 280px;
 }
 </style>

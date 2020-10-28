@@ -33,7 +33,7 @@
         <el-table-column label="订购时间" width="260">
           <template slot-scope="{ row }">
             <div class="info">
-              <span>{{ row.gmtCreate }}</span>
+              <span>{{ row.date }}</span>
             </div>
           </template>
         </el-table-column>
@@ -128,6 +128,7 @@
 <script>
 import { mapGetters } from "vuex";
 import { fetchHistory } from "@/api/user";
+import moment from 'moment';
 import Pagination from "@/components/Pagination"; // secondary package based on el-pagination
 
 export default {
@@ -155,7 +156,11 @@ export default {
     fetchData() {
       this.listLoading = true;
       fetchHistory(this.listQuery).then((r) => {
-        this.list = (r.data || {}).data || [];
+        this.list = ((r.data || {}).data || []).map((i) =>
+          Object.assign(i, {
+            date: moment(i.gmtCreate).format("YYYY-MM-DD HH:mm:ss"),
+          })
+        );
         this.total = ((r.data || {}).pager || {}).count || 0;
         this.listLoading = false;
       });
