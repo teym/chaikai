@@ -373,6 +373,10 @@
           </div>
         </div>
       </div>
+      <div v-else class="empty">
+        <img src="@/assets/images/issue_empty.png" alt="empty">
+        <p>太棒了<br>暂无订单问题</p>
+      </div>
     </div>
   </div>
 </template>
@@ -510,7 +514,7 @@ export default {
 .container {
   width: 100%;
   height: 100%;
-  padding: 16px;
+  padding: 16px 16px 0 16px;
   display: flex;
   flex-direction: column;
   .tab {
@@ -524,6 +528,8 @@ export default {
   .content {
     flex: 1;
     margin-top: 12px;
+    overflow: hidden scroll;
+    padding-bottom: 16px;
     .row {
       display: flex;
       flex-direction: row;
@@ -570,6 +576,17 @@ export default {
         font-size: 10px;
         color: #666666;
       }
+    }
+  }
+  .empty{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 60px;
+    p{
+      text-align: center;
+      font-size: 14px;
+      line-height: 20px;
     }
   }
 }

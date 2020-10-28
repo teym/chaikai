@@ -16,10 +16,12 @@
     <div class="table">
       <div class="head">
         选择开票的订单
-        <span>仅支持悬赏已发放的活动订单</span>
-        <el-button type="primary" size="mini" @click="formVisible = true"
-          >申请开票</el-button
-        >
+        <span>{{
+          listQuery.type === "1"
+            ? "仅支持悬赏已发放的活动订单"
+            : "仅支持订购成功的服务订单"
+        }}</span>
+        <el-button type="primary" size="mini" @click="onGo">申请开票</el-button>
       </div>
       <el-table
         :key="tableKey"
@@ -57,7 +59,7 @@
         <el-table-column v-if="listQuery.type === '2'" label="订购时间">
           <template slot-scope="{ row }">
             <div class="info">
-              <span>{{ row.orderTime }}</span>
+              <span>{{ row.date }}</span>
             </div>
           </template>
         </el-table-column>
@@ -84,7 +86,7 @@
       custom-class="custom-dialog"
       title="填写开票信息"
       :visible.sync="formVisible"
-      width="420px"
+      width="720px"
     >
       <div>
         <el-form label-width="100px">
@@ -93,10 +95,10 @@
             >元
           </el-form-item>
           <el-form-item label="发票抬头：">
-            <el-input v-model="form.rise" placeholder="发票抬头" />
+            <el-input v-model="form.company" placeholder="发票抬头" />
           </el-form-item>
-          <el-form-item label="公司名称：">
-            <el-input v-model="form.company" placeholder="公司名称" />
+          <el-form-item label="公司税号：">
+            <el-input v-model="form.rise" placeholder="公司税号" />
           </el-form-item>
           <el-form-item label="接收邮箱：">
             <el-input v-model="form.receiveMail" placeholder="接收邮箱" />
@@ -129,7 +131,7 @@
           <el-table-column v-if="listQuery.type === '2'" label="订购时间">
             <template slot-scope="{ row }">
               <div class="info">
-                <span>{{ row.orderTime }}</span>
+                <span>{{ row.date }}</span>
               </div>
             </template>
           </el-table-column>
@@ -157,6 +159,7 @@
 <script>
 import { mapGetters } from "vuex";
 import { fetchInvoice, createInvoice } from "@/api/user";
+import moment from 'moment'
 import Pagination from "@/components/Pagination"; // secondary package based on el-pagination
 
 export default {
@@ -198,7 +201,7 @@ export default {
       this.listLoading = true;
       fetchInvoice(this.listQuery)
         .then((r) => {
-          this.list = (r.data || {}).data || [];
+          this.list = ((r.data || {}).data || []).map(i=>Object.assign(i, {date: moment(i.orderTime).format('YYYY-MM-DD HH:mm:ss')}));
           this.total = ((r.data || {}).pager || {}).count || 0;
           this.listLoading = false;
         })
@@ -214,7 +217,32 @@ export default {
       this.listQuery.page = 1;
       this.fetchData();
     },
+    onGo() {
+      if (this.sel.length > 0) {
+        this.formVisible = true;
+      } else {
+        this.$message({
+          message:
+            this.listQuery.type === "1"
+              ? "请勾选已发放悬赏的活动订单"
+              : "请勾选订购成功的服务订单",
+          type: "error",
+        });
+      }
+    },
     handleSubmit() {
+      if(!this.form.company){
+        this.$message({message:'请填写发票抬头',type:'error'})
+        return
+      }
+      if(!this.form.rise){
+        this.$message({message:'请填写公司税号',type:'error'})
+        return
+      }
+      if(!this.form.receiveMail){
+        this.$message({message:'请填写接收邮箱',type:'error'})
+        return
+      }
       this.formLoading = true;
       createInvoice(
         Object.assign({}, this.form, {

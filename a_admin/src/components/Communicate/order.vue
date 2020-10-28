@@ -466,7 +466,7 @@ export default {
 .container {
   width: 100%;
   height: 100%;
-  padding: 16px;
+  padding: 16px 16px 0 16px;
   display: flex;
   flex-direction: column;
   .tab {
@@ -480,6 +480,8 @@ export default {
   .content {
     flex: 1;
     margin-top: 12px;
+    overflow: hidden scroll;
+    padding-bottom: 16px;
     .row {
       display: flex;
       flex-direction: row;
