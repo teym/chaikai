@@ -328,7 +328,7 @@ export default {
       }
     },
     onRule () {
-      this.onHot({linkType: 2, link: 'https://www/baidu.com'})
+      router(this).push('/pages/web/main', {url: 'https://mp.weixin.qq.com/s/yPXWeSNE_vZx5WCiqOjqtQ'})
     },
     onHot (item) {
       if (!item) {

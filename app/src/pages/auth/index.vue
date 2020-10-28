@@ -12,9 +12,9 @@
         <p v-if="!channel.homePic" class="middle light">点击上传主页截图</p>
         <img v-else :src="channel.homePic" alt="img">
       </div>
-      <p class="red small text-right margin2-t">查看示例</p>
+      <p class="red small text-right margin2-t" @click="onGuide">查看示例</p>
       <h5 class="middle dark medium margin2-t">{{channel.platformName}}入驻要求</h5>
-      <p class="small light margin-t">1.粉丝数≥10000</p>
+      <p class="small light margin-t">1.粉丝数≥{{channel.platformId === '2' ? 5000 : 10000}}</p>
       <p class="small light margin-t">2.根据达人账号综合资质，评估入驻资格，如：粉丝量、内容质量、互动真实无水分</p>
       <p class="small light margin-t">3.两个工作日内反馈申请结果</p>
       <div v-if="channel.statusCode === '2'" class="light_bg pad2 reason margin2-t">
@@ -68,6 +68,9 @@ export default {
           uiapi.toast(e.info)
         })
       })
+    },
+    onGuide () {
+      router(this).push('/pages/web/main', {url: 'https://docs.qq.com/doc/DU1R1RkNkU05MZWVj?pub=1&dver=2.1.0'})
     },
     onGo () {
       const l = uiapi.loading()

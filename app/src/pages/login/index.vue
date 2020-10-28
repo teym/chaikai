@@ -7,11 +7,16 @@
       <p class="small light margin2">拆开是一个集美妆、个护、美食、探店的测评合作平台，活动报名成功即可免费带产品回家，完成任务合作，还可获得悬赏哦～</p>
     </div>
     <div class="flex col i-center">
-      <button open-type='getUserInfo' class="btn row center middle blod" @getuserinfo="onLogin">微信授权登录</button>
+      <button :disabled="!checked" open-type='getUserInfo' class="btn row center middle blod" @getuserinfo="onLogin">微信授权登录</button>
       <span class="middle light margin2-t cancel" @click="onCancel">取消登录</span>
     </div>
     <div class="row center pad2 bar">
-      <p class="small light">登录代表已同意<span class="red">《拆开服务协议及免责声明》</span></p>
+      <div class="row center" @click="checked = !checked">
+        <img class="check-img" v-if="checked" src="/static/images/checked.png" alt="checked"  />
+        <img class="check-img" v-else src="/static/images/check.png" alt="check" />
+        <p class="small light">已同意</p>
+      </div>
+      <p class="small light"><span class="red" @click="onPro(1)">《服务协议》</span>及<span class="red" @click="onPro(2)">《隐私政策》</span></p>
     </div>
   </div>
 </template>
@@ -28,6 +33,7 @@ export default {
   },
   data () {
     return {
+      checked: false
     }
   },
   methods: {
@@ -40,6 +46,9 @@ export default {
           this.$emit('logined')
         }
       })
+    },
+    onPro (t) {
+      router(this).push('/pages/web/main', {url: t === 1 ? 'https://docs.qq.com/doc/DU2x5UUdNQlVrRGps?pub=1&dver=2.1.0' : 'https://docs.qq.com/doc/DU1F1ZXV4Y2dNVFlD?pub=1&dver=2.1.0'})
     },
     onCancel (e) {
       if (!this.embed) {
@@ -68,11 +77,23 @@ export default {
   margin-top: 80rpx;
   width: 640rpx;
   color: white;
+  border: none;
+}
+button.btn::after{
+  border: none !important;
+}
+button.btn[disabled]{
+  background-color: #ff8e3baa;
+  color: white;
 }
 .cancel {
   color: #999999;
 }
 .bar .light {
   color: #999999;
+}
+.bar img{
+  width: 44rpx;
+  height: 44rpx;
 }
 </style>

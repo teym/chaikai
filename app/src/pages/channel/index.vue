@@ -1,15 +1,18 @@
 <template>
   <div class="container">
     <div v-if="bind.length > 0">
-      <div class="light_bg pad2">
+      <div class="light_bg pad2 row head">
         <h5 class="middle dark blod">已入驻渠道</h5>
+        <span class="small light margin-l">每周自动更新</span>
       </div>
       <ul class="white_bg channel">
         <li v-for="(item, i) in bind" :key="i" class="row i-center pad2">
-          <img :src="item.img" :alt="item.platformName">
-          <p class="dark middle margin-l">{{item.platformName}}</p>
-          <span class="light small margin-l">粉丝数：{{item.fansCount || 0}}</span>
-          <img class="right" src="/static/images/arrow_right.png" alt="right">
+          <div class="row i-center" @click="onItem(item)">
+            <img :src="item.img" :alt="item.platformName">
+            <p class="dark middle margin-l">{{item.platformName}}</p>
+            <span class="light small margin-l">粉丝数：{{item.fansCount || 0}}</span>
+            <img class="right" src="/static/images/arrow_right.png" alt="right">
+          </div>
           <div class="flex"></div>
           <span class="light small" @click="onUnbind(item)">解绑</span>
         </li>
@@ -73,6 +76,9 @@ export default {
         router(this).push('/pages/auth/main', item)
       }
     },
+    onItem (item) {
+      router(this).push('/pages/web/main', {url: item.homeLink})
+    },
     onUnbind (item) {
       const l = uiapi.loading()
       request.post('/bl/account/channel/unbind', item).then(r => {
@@ -96,6 +102,9 @@ export default {
 </script>
 
 <style scoped>
+.head{
+  align-items: flex-end;
+}
 .channel img {
   width: 56rpx;
   height: 56rpx;

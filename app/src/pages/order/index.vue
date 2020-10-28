@@ -5,7 +5,14 @@
         <h5 class="big light blod">{{['', '待审核', '待缴押金', '待发货', '待收货', '待测评', '已测评', '已关闭'][data.statusCode]}}</h5>
         <p class="small margin-t" :class="{red: data.statusCode > 5, light: data.statusCode < 6}">{{msg}}</p>
       </div>
-      <img class="state margin2" src="/static/images/issue_status_1.png" alt="status" />
+      <img class="state margin2" v-if="data.statusCode === 1" src="/static/images/issue_status_2.png" alt="status" />
+      <img class="state margin2" v-if="data.statusCode === 2" src="/static/images/issue_status_2.png" alt="status" />
+      <img class="state margin2" v-if="data.statusCode === 3" src="/static/images/issue_status_2.png" alt="status" />
+      <img class="state margin2" v-if="data.statusCode === 4" src="/static/images/issue_status_4.png" alt="status" />
+      <img class="state margin2" v-if="data.statusCode === 5" src="/static/images/issue_status_1.png" alt="status" />
+      <img class="state margin2" v-if="data.statusCode === 6" src="/static/images/issue_status_3.png" alt="status" />
+      <img class="state margin2" v-if="data.statusCode === 7" src="/static/images/issue_status_5.png" alt="status" />
+
     </div>
     <div v-if="data.statusCode > 5 && data.tickets.length > 0" class="margin-t white_bg pad2">
       <h5 class="middle dark blod">订单问题</h5>
@@ -77,7 +84,7 @@
     </div>
     <div class="margin-t white_bg pad2">
       <h5 class="middle dark blod">合作任务</h5>
-      <div class="rule margin-t">
+      <div class="rule margin-t" @click="onRule">
         <img src="/static/images/detail_tip.png" alt="tip" />
       </div>
       <h5 class="middle dark blod margin-t">合作要求</h5>
@@ -166,6 +173,8 @@
         <p v-if="data.statusCode >= 4 && data.receiver.logisticsNo" class="light small margin-t">物流单号：{{data.receiver.logisticsNo}} <span class="red" @click="onCopy(data.receiver.logisticsNo)">复制</span></p>
       </div>
     </div>
+    <div style="height: 80rpx" class="white_bg"></div>
+    <bar background='#FFFFFF'>
     <div class="bar row pad2 i-center white_bg">
       <div v-if="data.statusCode < 4" class="btn gray small row center margin-l" @click="onCancel">取消申请</div>
       <div v-if="data.statusCode === 4" class="btn gray small row center margin-l" @click="onShip">查看物流</div>
@@ -175,15 +184,20 @@
       <div v-if="data.statusCode === 5" class="btn red small row center margin-l" @click="onCommit">提交评测</div>
       <div v-if="data.statusCode === 6" class="btn red small row center margin-l" @click="onAdd">追加测评</div>
     </div>
+    </bar>
   </div>
 </template>
 
 <script>
 import _ from 'underscore'
 import moment from 'moment'
+import bar from '@/components/bar'
 import {router, api, uiapi, request, mapChannel, diffTime, checkAddress, formatAddressConf} from '@/utils/index'
 
 export default {
+  components: {
+    bar
+  },
   data () {
     return {
       data: {
@@ -251,6 +265,9 @@ export default {
           return '' // `已逾期${s}，将按天扣除押金`
       }
       return ''
+    },
+    onRule () {
+      router(this).push('/pages/web/main', {url: 'https://mp.weixin.qq.com/s/yPXWeSNE_vZx5WCiqOjqtQ'})
     },
     onReward () {
       router(this).push('/pages/reward/main', {status: this.data.rewardStatusCode})

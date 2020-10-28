@@ -54,7 +54,7 @@
 
       <div class="pad2-l pad2-r pad-t pad-b margin-t white_bg task">
         <h5 class="middle dark blod">合作任务</h5>
-        <div class="rule margin-t">
+        <div class="rule margin-t" @click="onRule">
           <img src="/static/images/detail_tip.png" alt="tip" />
         </div>
         <div class="pad-b">
@@ -164,7 +164,10 @@
         </div>
         <div class="row just i-center margin-t">
           <h5 class="middle dark blod">押金支付方式</h5>
-          <p class="small light normal margin-l">审核不通过自动退回</p>
+          <div class="row i-center" @click="onGuide">
+            <p class="small light normal margin-l">审核不通过自动退回</p>
+            <img class="right" src="/static/images/arrow_right.png" alt="icon" />
+          </div>
         </div>
         <div class="row just i-center pay margin-t" @click="pay=1">
           <h6 class="middle normal dark row i-center">
@@ -180,14 +183,16 @@
           <img class="check-img" v-else src="/static/images/checked.png" alt="checked" />
         </div>
       </div>
-      <div class="pad2-l pad2-r pad-t pad-b white_bg margin-t">
+      <div class="pad2-l pad2-r pad-t pad2-b white_bg margin-t">
         <h5 class="middle dark blod">填写申请理由</h5>
         <div class="pad-l pad-t pad-r input light_bg margin-t">
           <textarea v-model="text" class="middle dark normal" placeholder="表达更多合作意向，能提高通过率喔~"></textarea>
           <p class="small light normal text-right">12/200</p>
         </div>
-
-        <div class="row just i-center bar">
+      </div>
+    </div>
+    <bar background='#FFFFFF'>
+      <div class="row just i-center bar">
           <p class="small light" v-if="data.cooperationType === 3">免费置换无悬赏</p>
           <p class="small light" v-else>
             可获得
@@ -195,8 +200,7 @@
           </p>
           <div class="btn row center" @click="onOk">提交申请</div>
         </div>
-      </div>
-    </div>
+    </bar>
     <div v-if="tip" class="pop">
       <div class="pop-content bottom">
         <h6>合作要求特殊说明：</h6>
@@ -210,6 +214,7 @@
 <script>
 import _ from 'underscore'
 import moment from 'moment'
+import bar from '@/components/bar'
 import {router, api, uiapi, request, mapChannel, resetData, checkAddress, formatAddressConf} from '@/utils/index'
 
 function defaultData () {
@@ -235,6 +240,9 @@ function defaultData () {
 }
 
 export default {
+  components: {
+    bar
+  },
   data () {
     return defaultData()
   },
@@ -293,6 +301,12 @@ export default {
       } else {
         this.active = Object.assign({}, this.active, _.object([[item.platformId, item]]))
       }
+    },
+    onRule () {
+      router(this).push('/pages/web/main', {url: 'https://mp.weixin.qq.com/s/yPXWeSNE_vZx5WCiqOjqtQ'})
+    },
+    onGuide () {
+      router(this).push('/pages/web/main', {url: 'https://mp.weixin.qq.com/s/_r3sWoykk70201FeK5yc9g'})
     },
     onOk () {
       if (!this.address) {
@@ -362,6 +376,10 @@ export default {
   width: 44rpx;
   height: 44rpx;
 }
+.right{
+  width: 44rpx;
+  height: 44rpx;
+}
 .info img {
   width: 208rpx;
   height: 208rpx;
@@ -390,7 +408,8 @@ export default {
   padding: 4rpx 8rpx;
 }
 .bar {
-  margin-top: 180rpx;
+  /* margin-top: 180rpx; */
+  padding: 8rpx 24rpx;
 }
 .bar .btn {
   font-size: 24rpx;
@@ -401,95 +420,4 @@ export default {
   border-radius: 36rpx;
   padding: 0 56rpx;
 }
-/* .block{
-  background-color: white;
-}
-h5 {
-  font-size: 28rpx;
-  font-weight: 500;
-  color: #494c5e;
-}
-
-.address p{
-  font-size: 28rpx;
-  color: #494C5E;
-  margin-left: 16rpx;
-}
-.info {
-  padding: 24rpx;
-  background-color: white;
-}
-
-.info div{
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-self: stretch;
-  margin-left: 16rpx;
-}
-.info div h5{
-  font-weight: 400;
-}
-.info div span{
-  font-size: 24rpx;
-  color: #7B7F8E;
-}
-
-.task{
-  padding: 0 24rpx;
-}
-.task .rule{
-  padding: 24rpx 0 0 0;
-}
-.task .rule img{
-  width: 702rpx;
-  height: 128rpx;
-}
-.task .round-btn{
-  font-size: 24rpx;
-  color: #FF8E3B;
-  font-weight: 500;
-  background-color: #FF8E3B2E;
-  height: 48rpx;
-  border-radius: 24rpx;
-  padding: 0 24rpx;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.pop{
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 100vw;
-  height: 100vh;
-  background-color: rgba(0, 0, 0, 0.4);
-  display: flex;
-  flex-direction: column;
-  z-index: 50;
-}
-.pop .place{
-  flex: 1;
-}
-.pop-content{
-  position: relative;
-  border-radius: 20rpx 20rpx 0 0;
-  background-color: white;
-  padding: 40rpx 24rpx;
-}
-.pop-content .close{
-  position: absolute;
-  right: 16rpx;
-  top: 32rpx;
-  width: 48rpx;
-  height: 48rpx;
-}
-.pop-content h5{
-  font-size: 32rpx;
-  color: #494C5E;
-  font-weight: 500;
-  text-align: center;
-  margin-bottom: 16rpx;
-} */
 </style>
