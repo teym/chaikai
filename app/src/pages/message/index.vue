@@ -1,8 +1,8 @@
 <template>
   <div class="container white_bg">
-    <div class="pad2-l pad2-r tip pos_f row i-center">
+    <div class="pad2-l pad2-r tip pos_f row i-center" @click="onTip">
       <img src="/static/images/messge_tip.png" alt="tip">
-      <p class="dark small margin-l">提示：警惕站外沟通交易，平台提供合作保障</p>
+      <p class="dark small margin-l flex">提示：警惕站外沟通交易，平台提供合作保障</p>
       <img src="/static/images/arrow_right.png" alt="right">
     </div>
     <div class="content flex">
@@ -115,6 +115,9 @@ export default {
       if (this.text) {
         this.sendMsg(Promise.resolve(this.text), () => { this.text = '' })
       }
+    },
+    onTip () {
+      router(this).push('/pages/web/main', {url: 'https://mp.weixin.qq.com/s/ITxTHJ0Euw0TDUxprKpBsQ'})
     }
   }
 }
@@ -127,6 +130,7 @@ export default {
   left: 0;
   top: 0;
   background-color: #FFDDC4;
+  box-sizing: border-box;
 }
 .tip img{
   width: 32rpx;

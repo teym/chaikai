@@ -189,9 +189,8 @@
       >
         <template slot-scope="{ row }">
           <span
-            >{{ ["", "接受悬赏", "达人报价", "免费置换"][row.coopSubType] }}{{
-              row.coopSubType !== 3 ? ('¥' + row.reward) : ''
-            }}</span
+            >{{ ["", "接受悬赏", "达人报价", "免费置换"][row.coopSubType]
+            }}{{ row.coopSubType !== 3 ? "¥" + row.reward : "" }}</span
           >
         </template>
       </el-table-column>
@@ -471,11 +470,17 @@
       :visible.sync="shipVisible"
       width="520px"
     >
-      <h6 style="margin: 8px 0; padding: 0">快递公司: {{ ship.name }}</h6>
-      <h6 style="margin: 8px 0; padding: 0">快递单号: {{ ship.no }}</h6>
-      <div v-for="(l, i) in ship.list" :key="i" style="margin: 8px 0">
-        <p style="margin: 0">{{ l.time }}</p>
-        <p style="margin: 8px 0">{{ l.content }}</p>
+      <div v-if="ship" class="ship_empty">
+        <img src="@/assets/images/ship_empty.png" alt="empty" />
+        <p>抱歉，暂未查询到物流信息</p>
+      </div>
+      <div v-else>
+        <h6 style="margin: 8px 0; padding: 0">快递公司: {{ ship.name }}</h6>
+        <h6 style="margin: 8px 0; padding: 0">快递单号: {{ ship.no }}</h6>
+        <div v-for="(l, i) in ship.list" :key="i" style="margin: 8px 0">
+          <p style="margin: 0">{{ l.time }}</p>
+          <p style="margin: 8px 0">{{ l.content }}</p>
+        </div>
       </div>
     </el-dialog>
     <el-dialog
@@ -1063,6 +1068,11 @@ export default {
     font-size: 12px;
     color: #c3c3c3;
   }
+}
+.ship_empty{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 </style>
 
