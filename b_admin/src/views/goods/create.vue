@@ -7,7 +7,8 @@
       class="form-container"
     >
       <div class="createPost-main-container">
-        <a class="help"
+        <a
+          class="help"
           href="https://www.yuque.com/docs/share/4775af8f-cee6-4cc6-a595-51096f8ef55d"
           target="_blank"
           ><el-icon class="el-icon-question" />如何快速导入</a
@@ -18,6 +19,7 @@
           style="margin-bottom: 30px; max-width: 640px"
           label-width="90px"
           label="商品品牌:"
+          :required="true"
         >
           <el-select
             v-model="postForm.brand.id"
@@ -50,6 +52,7 @@
           style="margin-bottom: 30px; max-width: 360px"
           label-width="90px"
           label="商品价值:"
+          :required="true"
         >
           <el-input-number
             class="text-left"
@@ -67,6 +70,7 @@
           style="margin-bottom: 30px; max-width: 640px"
           label-width="90px"
           label="商品名称:"
+          :required="true"
         >
           <el-input
             v-model="postForm.title"
@@ -80,6 +84,7 @@
           style="margin-bottom: 30px; max-width: 1024px"
           label-width="90px"
           label="商品头图:"
+          :required="true"
         >
           <Upload
             :url="conf.url"
@@ -95,6 +100,7 @@
           style="margin-bottom: 30px; max-width: 840px"
           label-width="90px"
           label="商品规格:"
+          :required="true"
         >
           <div class="skus">
             <el-row v-if="postForm.skuGroups.length > 0" class="head">
@@ -451,7 +457,7 @@ export default {
     .createPost-main-container {
       padding: 40px 45px 20px 50px;
 
-      .help{
+      .help {
         float: right;
         font-size: 14px;
         color: #999;

@@ -77,7 +77,7 @@
                 query: { id: listQuery.brActivityId },
               })
             "
-            >候选名单{{ stat["8"] > 0 ? stat["8"] : '' }}</el-button
+            >候选名单{{ stat["8"] > 0 ? stat["8"] : "" }}</el-button
           >
         </div>
       </div>
@@ -343,7 +343,8 @@
               >订单详情</el-button
             >
             <el-button
-              v-if=" row.rewardStatusCode !== 2 &&
+              v-if="
+                row.rewardStatusCode !== 2 &&
                 listQuery.statusCode === '6' &&
                 row.ticketStatusCode !== 5 &&
                 row.ticketStatusCode !== 7
@@ -658,7 +659,7 @@ export default {
             7: r[0].data.closed,
             8: r[1].data.candidate || 0,
             9: r[1].data.totalNum - (r[1].data.remainingNum || 0),
-            10: r[1].data.remainingNum || 0
+            10: r[1].data.remainingNum || 0,
           };
           this.channels = r[1].data.extension.channelLimit
             ? r[1].data.extension.channels.map((i) =>
@@ -740,7 +741,8 @@ export default {
             row.reward +
             "元",
           {
-            title: "一键通过",
+            title: "审核通过",
+            customClass: "pass_confirm",
           }
         )
           .then((r) => {
@@ -811,13 +813,18 @@ export default {
       this.$refs.upload
         .submit()
         .then((r) => {
-          this.batchLoading = false;
-          this.batchVisbale = false;
-          this.getTabs();
-          this.getList();
+          if (r.success) {
+            this.batchLoading = false;
+            this.batchVisbale = false;
+            this.getTabs();
+            this.getList();
+          } else {
+            throw r;
+          }
         })
         .catch((e) => {
           this.batchLoading = false;
+          console.log(e);
           this.$message({ message: e.msg, type: "error" });
         });
     },
@@ -1055,5 +1062,11 @@ export default {
     font-size: 12px;
     color: #c3c3c3;
   }
+}
+</style>
+
+<style>
+.pass_confirm {
+  width: 280px;
 }
 </style>

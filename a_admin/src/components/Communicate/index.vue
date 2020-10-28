@@ -378,7 +378,7 @@ export default {
     }
   }
   .el-col {
-    height: 680px;
+    height: calc(100vh * 0.6);
   }
   .content {
     border-right: 1px solid #e9e9e9;
