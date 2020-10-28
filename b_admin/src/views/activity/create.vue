@@ -58,7 +58,6 @@
             style="margin-bottom: 30px"
             label-width="110px"
             label="活动名称:"
-            :required="true"
           >
             <el-input
               v-model="postForm.title"
@@ -471,7 +470,6 @@
             </el-form-item>
             <el-form-item
               prop="reward"
-              :required="true"
               style="margin-bottom: 30px"
               label-width="170px"
               label="悬赏金额"
@@ -769,18 +767,19 @@ export default {
       loading: false,
       brandListOptions: [],
       rules: {
-        goods: [{ validator: validateRequire, name: "活动名称" }],
-        skus: [{ validator: validateArrayRequire, name: "商品规格" }],
-        title: [{ validator: validateRequire, name: "活动名称" }],
+        goods: [{ validator: validateRequire, trigger:'blur', name: "活动商品" }],
+        skus: [{ validator: validateArrayRequire, trigger:'blur', name: "商品规格" }],
+        title: [{ required: true, validator: validateRequire, trigger:'blur', name: "活动名称" }],
         totalNum: [
           {
             validator: validateNumberRequire,
+            trigger:'blur',
             name: "活动名额",
           },
         ],
-        reward: [{ validator: validateAmount }],
-        regTime: [{ validator: validateArrayRequire, name: "报名时间" }],
-        channels: [{ validator: validateArrayRequire, name: "推广渠道" }],
+        reward: [{ validator: validateAmount, required: true, trigger:'blur' }],
+        regTime: [{ validator: validateArrayRequire, trigger:'blur', name: "报名时间" }],
+        channels: [{ validator: validateArrayRequire, trigger:'blur', name: "推广渠道" }],
       },
       channelList: mapChannel(Channels),
       goodsFormVisible: false,
@@ -931,7 +930,6 @@ export default {
             ? obj.extension.keywords.split(" ").map((txt) => ({ txt }))
             : [];
           this.postForm = obj;
-          console.log(ChannelIcons);
         })
         .catch((err) => {
           console.log(err);

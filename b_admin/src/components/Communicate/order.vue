@@ -268,7 +268,7 @@
       </div>
     </div>
     <div v-if="active === 3" class="content issue">
-      <div v-if="data.tickets && data.tickets.legnth > 0">
+      <div v-if="data.tickets && data.tickets.length > 0">
         <div v-for="(ticket, i) in data.tickets" :key="i">
           <div class="row">
             <h5>工单编号：</h5>
@@ -277,7 +277,7 @@
           <div class="row">
             <h5>创建时间：</h5>
             <p>
-              {{ ticket.gmtCreate }}
+              {{ ticket.date }}
             </p>
           </div>
           <div class="row">
@@ -374,8 +374,8 @@
         </div>
       </div>
       <div v-else class="empty">
-        <img src="@/assets/images/issue_empty.png" alt="empty">
-        <p>太棒了<br>暂无订单问题</p>
+        <img src="@/assets/images/issue_empty.png" alt="empty" />
+        <p>太棒了<br />暂无订单问题</p>
       </div>
     </div>
   </div>
@@ -502,6 +502,11 @@ export default {
             data.receiver.county,
           ];
           data.date = moment(data.gmtCreate).format("YYYY-MM-DD HH:mm:ss");
+          data.tickets = (data.tickets || []).map((i) =>
+            Object.assign(i, {
+              date: moment(i.gmtCreate).format("YYYY-MM-DD HH:mm:ss"),
+            })
+          );
           this.data = data;
         }
       });
@@ -578,12 +583,12 @@ export default {
       }
     }
   }
-  .empty{
+  .empty {
     display: flex;
     flex-direction: column;
     align-items: center;
     padding-top: 60px;
-    p{
+    p {
       text-align: center;
       font-size: 14px;
       line-height: 20px;

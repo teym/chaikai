@@ -189,8 +189,8 @@
       >
         <template slot-scope="{ row }">
           <span
-            >{{ ["", "接受悬赏", "达人报价"][row.coopSubType] }}¥{{
-              row.reward
+            >{{ ["", "接受悬赏", "达人报价", "免费置换"][row.coopSubType] }}{{
+              row.coopSubType !== 3 ? ('¥' + row.reward) : ''
             }}</span
           >
         </template>
@@ -885,6 +885,7 @@ export default {
         this.reason = [];
         this.detail = {};
         this.$message({ message: "已投诉", type: "success" });
+        this.getList();
       });
     },
     handleDetail(row) {

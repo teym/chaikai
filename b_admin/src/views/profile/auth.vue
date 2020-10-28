@@ -21,9 +21,19 @@
     >
       <div class="createPost-main-container">
         <el-form-item label="品牌名称:" prop="name">
-          <el-input :max="50" show-word-limit v-model="postForm.name" placeholder="请输入品牌名称" />
+          <el-input
+            :max="50"
+            show-word-limit
+            v-model="postForm.name"
+            placeholder="请输入品牌名称"
+          />
         </el-form-item>
-        <el-form-item prop="logo" style="margin-bottom: 30px" label="品牌LOGO:">
+        <el-form-item
+          prop="logo"
+          style="margin-bottom: 30px"
+          label="品牌LOGO:"
+          :required="true"
+        >
           <Upload
             :url="conf.url"
             :headers="conf.headers"
@@ -36,7 +46,8 @@
           <el-input
             v-model="postForm.story"
             type="textarea"
-            :max="300" show-word-limit
+            :max="300"
+            show-word-limit
             placeholder="请输入您的品牌故事，帮助达人和粉丝更好了解贵品牌"
           />
         </el-form-item>
@@ -44,6 +55,7 @@
           prop="trademarkRegistration"
           style="margin-bottom: 30px"
           label="商标注册书:"
+          :required="true"
         >
           <Upload
             :url="conf.url"
@@ -151,7 +163,14 @@ export default {
       loading: false,
       tip: false,
       rules: {
-        name: [{ validator: validateRequire, name: "品牌名称" }],
+        name: [
+          {
+            required: true,
+            trigger: "blur",
+            validator: validateRequire,
+            name: "品牌名称",
+          },
+        ],
         story: [{}],
         relationType: [{ validator: validateRequire, name: "品牌关系" }],
         logo: [{ validator: validateSourceUri, name: "品牌LOGO" }],

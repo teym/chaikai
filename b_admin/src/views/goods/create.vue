@@ -52,7 +52,6 @@
           style="margin-bottom: 30px; max-width: 360px"
           label-width="90px"
           label="商品价值:"
-          :required="true"
         >
           <el-input-number
             class="text-left"
@@ -70,7 +69,6 @@
           style="margin-bottom: 30px; max-width: 640px"
           label-width="90px"
           label="商品名称:"
-          :required="true"
         >
           <el-input
             v-model="postForm.title"
@@ -279,8 +277,22 @@ export default {
       rules: {
         brand: [{ validator: validateRequire, name: "商品品牌" }],
         importUrl: [{ validator: validateSourceUri }],
-        price: [{ validator: validateNumber, name: "商品价值" }],
-        title: [{ validator: validateRequire, name: "商品名称" }],
+        price: [
+          {
+            required: true,
+            validator: validateNumber,
+            name: "商品价值",
+            trigger: "blur",
+          },
+        ],
+        title: [
+          {
+            required: true,
+            validator: validateRequire,
+            name: "商品名称",
+            trigger: "blur",
+          },
+        ],
         detail: [{ validator: validateRequire, name: "商品详情" }],
         skuGroups: [{ validator: validateRequire, name: "商品规格" }],
         banners: [{ validator: validateRequire, name: "商品图片" }],
