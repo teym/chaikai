@@ -60,7 +60,7 @@
             v-for="i in skus"
             :key="i.skuIdUnion"
             :label="i.name"
-            :value="i.skuIdUnion"
+            :value="i.id"
           />
         </el-select>
         <div class="right">
@@ -138,10 +138,10 @@
         width="120"
       >
         <template slot-scope="{ row }">
-          <div v-for="c in row.channels" :key="c.platformId" class="channel">
+          <a v-for="c in row.channels" :key="c.platformId" class="channel" :href="c.homeLink" target="_blank">
             <img :src="channelIcons['' + c.platformId].icon" />
             <span>{{ channelIcons[c.platformId + ""].name }}</span>
-          </div>
+          </a>
         </template>
       </el-table-column>
       <el-table-column
