@@ -122,7 +122,7 @@
             />
           </div>
         </div>
-        <div v-if="data.statusCode > 2 && data.statusCode < 4" class="row">
+        <div v-if="data.statusCode > 2 && data.statusCode <= 5" class="row">
           <div style="width: 64px" />
           <el-button
             size="mini"
