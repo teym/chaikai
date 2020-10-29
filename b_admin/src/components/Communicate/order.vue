@@ -269,7 +269,7 @@
     </div>
     <div v-if="active === 3" class="content issue">
       <div v-if="data.tickets && data.tickets.length > 0">
-        <div v-for="(ticket, i) in data.tickets" :key="i">
+        <div v-for="(ticket, i) in data.tickets" :key="i" class="ticket">
           <div class="row">
             <h5>工单编号：</h5>
             <p>{{ ticket.id }}</p>
@@ -301,7 +301,7 @@
                   ][ticket.statusCode]
                 }}
               </p>
-              <span>品牌审核还剩3天0时0分，超时将自动确认</span>
+              <span>{{ ticket.msg }}</span>
             </div>
           </div>
           <div class="row">
@@ -312,11 +312,11 @@
               </p>
             </div>
           </div>
-          <div v-if="data.build.zhengshi.length > 0" class="row ceping">
+          <div v-if="ticket.ticketedEvaluations.length > 0" class="row ceping">
             <h5 style="line-height: 28px">投诉测评：</h5>
             <div>
               <div
-                v-for="(item, i) in data.build.zhengshi"
+                v-for="(item, i) in ticket.ticketedEvaluations"
                 :key="i"
                 class="row"
                 style="margin-top: 0; align-items: center"
@@ -334,11 +334,11 @@
               </div>
             </div>
           </div>
-          <div v-if="data.build.zhengshi.length > 0" class="row ceping">
+          <div v-if="ticket.modifiedEvaluations.length > 0" class="row ceping">
             <h5 style="line-height: 28px">修改测评：</h5>
             <div>
               <div
-                v-for="(item, i) in data.build.zhengshi"
+                v-for="(item, i) in ticket.modifiedEvaluations"
                 :key="i"
                 class="row"
                 style="margin-top: 0; align-items: center"
@@ -384,6 +384,7 @@
 <script>
 import { fetchOrder, addrs, updateIssueState, updateAddress } from "./api";
 import { ChannelIcons, ActivityOrderStatus } from "@/utils/constant";
+import { formatDeadLine } from "@/utils/index";
 import _ from "underscore";
 
 import moment from "moment";
@@ -470,6 +471,24 @@ export default {
     },
     loadData(id) {
       this.data = DefObj;
+      const ticketMsg = (tt) => {
+        const t = formatDeadLine(tt.deadline);
+        switch (tt.statusCode) {
+          case 1: //"待修改",
+            return `修改测评还剩${t}，超时将由小二介入`;
+          case 2: //"待确认",
+            return `品牌确认修改还剩${t}，超时将自动确认`;
+          case 3: //"小二审核中",
+            return "请等待小二审核";
+          case 4: //"待重评",
+            return `修改测评还剩${t}，超时将判违规，并扣除押金`;
+          //case 5: //"已修改",
+          //case 6: //"已取消",
+          case 7: //"已违规",
+            return "处理超时/违规";
+        }
+        return "";
+      };
       fetchOrder(id).then(({ data }) => {
         if (id === this.id) {
           data.build = {};
@@ -505,8 +524,12 @@ export default {
           data.tickets = (data.tickets || []).map((i) =>
             Object.assign(i, {
               date: moment(i.gmtCreate).format("YYYY-MM-DD HH:mm:ss"),
+              msg: ticketMsg(i),
             })
           );
+          data.ticket = (data.tickets || []).filter(
+            (i) => i.statusCode <= 4
+          )[0];
           this.data = data;
         }
       });
@@ -560,6 +583,12 @@ export default {
       .mb {
         margin-bottom: 6px;
       }
+    }
+    .ticket {
+      border-bottom: 1px solid #f5f5f5;
+    }
+    .ticket:last-of-type {
+      border-bottom: none;
     }
   }
   .address {

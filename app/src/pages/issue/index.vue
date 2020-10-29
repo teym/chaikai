@@ -71,10 +71,7 @@ export default {
       status: ['', '待修改', '待确认', '小二审核中', '待重评', '已修改', '已取消', '已违规']
     }
   },
-  created () {
-    // let app = getApp()
-  },
-  mounted () {
+  onShow () {
     const {id} = router(this).params()
     this.loadData(id)
   },

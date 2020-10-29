@@ -43,10 +43,7 @@ export default {
       nomore: false
     }
   },
-  created () {
-    // let app = getApp()
-  },
-  mounted () {
+  onShow () {
     this.loadData(1)
   },
   onPullDownRefresh () {

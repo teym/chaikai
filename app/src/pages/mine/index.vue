@@ -70,7 +70,7 @@
           <img class="right" src="/static/images/arrow_right.png" alt="right">
         </div>
       </div>
-      <div class="row just line">
+      <div class="row just line" @click="onQa()">
         <p class="middle light">常见问题</p>
         <div class="row i-center">
           <span class="small light">学习平台规则</span>
@@ -185,6 +185,9 @@ export default {
     },
     onRouter (p, d) {
       router(this).push('/pages/' + p + '/main', d)
+    },
+    onQa () {
+      router(this).push('/pages/web/main', {url: 'https://www.yuque.com/books/share/95006af3-760c-4e91-a236-1f0113fa823e?#'})
     }
   }
 }

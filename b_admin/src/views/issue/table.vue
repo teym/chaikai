@@ -23,7 +23,7 @@
         style="width: 80px"
       >
         <el-option label="全部" :value="''" />
-        <!-- <el-option v-for="(i, j) in statusList" :label="i" :value="(j + 1) + ''" :key="j" /> -->
+        <el-option v-for="(i, j) in statusList" :label="i" :value="(j + 1) + ''" :key="j" />
       </el-select>
 
       <el-button

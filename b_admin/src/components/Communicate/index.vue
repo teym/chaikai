@@ -39,7 +39,11 @@
         </div>
       </el-col>
       <el-col class="content" :span="showList ? 12 : 16">
-        <a class="tip" href="https://www.yuque.com/lftshh/fo41es/uvwnup" target="_blank">
+        <a
+          class="tip"
+          href="https://www.yuque.com/lftshh/fo41es/uvwnup"
+          target="_blank"
+        >
           <img src="@/assets/images/chat_tip.png" alt="tip" />
           <p>提示：警惕站外沟通交易，平台提供合作保障</p>
           <el-icon class="el-icon-arrow-right" />
@@ -173,6 +177,7 @@ export default {
       setTimeout(() => {
         this.$refs.order.showTab(issue ? "issue" : "order");
       }, 0);
+      this.loadList(1);
     };
   },
   methods: {
