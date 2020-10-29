@@ -12,19 +12,19 @@
           <img class="logo" :src="item.accountInfo.avatar" alt="img">
           <div class="col just flex margin-l margin-r">
             <h5 class="small light">{{item.accountInfo.name}}</h5>
-            <div class="light_bg text margin-t" :class="{media: item.isimg}">
-              <img v-if="item.isimg" :src="item.content" alt="" @click="onPreview(item.content)">
+            <div class="light_bg text margin-t" :class="{media: item.isimg}" @click="onItem(item)">
+              <img v-if="item.isimg" :src="item.content" alt="img">
               <p v-else class="margin2 small light">{{item.content}}</p>
             </div>
           </div>
         </div>
       </div>
     </div>
-    <bar :fixed="true" background="white">
+    <bar background="white">
       <div class="bar row pad2-l pad2-r">
       <img class="margin-r" src="/static/images/message_order.png" alt="order" @click="onOrder">
       <img class="margin-r" src="/static/images/message_img.png" alt="img" @click="onImg">
-      <textarea auto-height class="input light_bg dark middle" placeholder-style="color:#C1C6CB;font-size:28rpx" v-model="text" placeholder="合作期间可以发送图文消息..."/>
+      <textarea :disabled="done" auto-height class="input light_bg dark middle" placeholder-style="color:#C1C6CB;font-size:28rpx" v-model="text" :placeholder="done ? '合作已结束，无法发送消息' :'合作期间可以发送图文消息...'"/>
       <div class="margin-l btn row center middle" :class="{red_bg: !!text, red_i_bg: !text}" @click="onSend">发送</div>
       </div>
     </bar>
@@ -41,7 +41,8 @@ function defaultData () {
     datas: [],
     text: '',
     page: 1,
-    loading: false
+    loading: false,
+    done: false
   }
 }
 
@@ -66,6 +67,14 @@ export default {
     },
     loadData (page) {
       const {id} = router(this).params()
+      if (page === 1) {
+        request.get('/bl/activity/order/' + id).then(({json: {data}}) => {
+          this.done = !(data && data.statusCode > 2 && data.statusCode < 7 && data.rewardStatusCode === 1)
+          console.log('done', this.done)
+        }).catch(e => {
+          this.done = true
+        })
+      }
       return request.get('/chat/bl/room/record/list', {page, size: 10, originId: id, roomType: 1}).then(({json: {data}}) => {
         this.datas = data.data.reverse().map(i => Object.assign(i, {accountInfo: i.accountInfo || {}, date: formatMsgTime(i.gmtCreate), isimg: isImgMsg(i.content), content: isImgMsg(i.content) ? imgMsgUrl(i.content) : i.content})).concat(page === 1 ? [] : this.datas)
         this.page = page
@@ -80,11 +89,26 @@ export default {
       router(this).push('/pages/order/main', {id})
     },
     onImg () {
+      if (this.done) {
+        return
+      }
       uiapi.chooseImage().then(r => {
         this.sendMsg(request.upload('/oss/upload', r).then(({json: {data}}) => {
           return makeImgMsg(data)
         }))
       })
+    },
+    onItem (item) {
+      if (item.isimg) {
+        this.onPreview(item.content)
+      } else {
+        const reg = 'https?:\\/\\/[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b([-a-zA-Z0-9()@:%_\\+.~#?&//=]*)?'
+        const link = (new RegExp(reg)).exec(item.content)[0]
+        console.log('go', link)
+        if (link) {
+          router(this).push('/pages/web/main', {url: link})
+        }
+      }
     },
     onPreview (img) {
       uiapi.previewImgs([img]).catch(e => uiapi.toast(e))
@@ -124,84 +148,85 @@ export default {
 </script>
 
 <style scoped>
-.tip{
+.tip {
   width: 750rpx;
   height: 72rpx;
   left: 0;
   top: 0;
-  background-color: #FFDDC4;
+  background-color: #ffddc4;
   box-sizing: border-box;
 }
-.tip img{
+.tip img {
   width: 32rpx;
   height: 32rpx;
 }
-.content{
+.content {
   padding-bottom: 88rpx;
   padding-top: 72rpx;
 }
-.item .date{
-  color: #7B7F8E;
-  background-color: #C7CACA;
+.item .date {
+  color: #7b7f8e;
+  background-color: #c7caca;
   color: white;
   padding: 2rpx 8rpx;
   border-radius: 8rpx;
   align-self: center;
   font-size: 20rpx;
 }
-.item .logo{
+.item .logo {
   width: 100rpx;
   height: 100rpx;
   border-radius: 50rpx;
 }
-.item .col{
+.item .col {
   align-items: flex-start;
 }
-.item .text{
+.item .text {
   border-radius: 0 20rpx 20rpx 20rpx;
   max-width: 470rpx;
 }
-.item .text.media{
+.item .text.media {
   padding: 0;
   border-radius: 8rpx;
   overflow: hidden;
   background-color: white;
 }
-.item .text img{
+.item .text img {
   width: 236rpx;
   height: 236rpx;
   border-radius: 0 20rpx 20rpx 20rpx;
 }
-.item.self .text img{
+.item.self .text img {
   border-radius: 20rpx 0 20rpx 20rpx;
 }
-.item.self .row{
+.item.self .row {
   flex-direction: row-reverse;
 }
-.item.self .col{
+.item.self .col {
   align-items: flex-end;
 }
-.item.self .text{
-  background-color: #FF8E3B;
+.item.self .text {
+  background-color: #ff8e3b;
   border-radius: 20rpx 0 20rpx 20rpx;
 }
-.item.self .text.media{
+.item.self .text.media {
   background-color: white;
 }
-.item.self .text p{
+.item.self .text p {
   color: white;
+  word-break: break-all;
 }
-.bar{
+.bar {
   width: 100%;
   min-height: 64rpx;
   padding-top: 12rpx;
   padding-bottom: 12rpx;
 }
-.bar img{
+.bar img {
   width: 64rpx;
   height: 64rpx;
 }
-.bar .input{
+.bar .input {
   width: 374rpx;
   height: auto;
   min-height: 32rpx;
@@ -214,10 +239,10 @@ export default {
   color: white;
   border-radius: 32rpx;
 }
-.bar .red_bg{
-  background-color: #FF8E3B;
+.bar .red_bg {
+  background-color: #ff8e3b;
 }
-.bar .red_i_bg{
-  background-color: #FF8E3BB0;
+.bar .red_i_bg {
+  background-color: #ff8e3bb0;
 }
 </style>

@@ -68,7 +68,7 @@ export default {
       })
     },
     onGo (item) {
-      if (!this.data.telephone) {
+      if (!(this.data.telephone && this.data.realName && this.data.wechatNo)) {
         uiapi.alert({ title: '温馨提示', content: '为核实认证渠道的信息真实性，请先完善个人信息', confirmText: '去完善', confirmColor: '#ff8e3b' }).then(r => {
           router(this).replace('/pages/profile/main')
         })

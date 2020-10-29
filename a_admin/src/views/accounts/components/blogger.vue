@@ -52,7 +52,7 @@
         </el-table-column>
         <el-table-column label="昵称">
           <template slot-scope="{ row }">
-            <span>{{ row.account }}</span>
+            <span>{{ row.platformNickname }}</span>
           </template>
         </el-table-column>
         <el-table-column label="粉丝数">

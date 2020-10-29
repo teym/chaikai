@@ -91,13 +91,13 @@
               >{{['无要求', '15秒', '30秒', '1分钟', '2分钟'][data.extension.minVideoLength]}}</div>
             </div>
             <div v-if="topics.length > 0" class="row just pad-t">
-              <p class="small normal light" @click="tip=true">账号话题Ⓢ</p>
+              <p class="small normal light">账号话题</p>
               <div class="small blod light text-right flex">
                 <p v-for="(c, i) in topics" :key="i">{{c.platformName}}@{{c.nickname}}#{{c.topic}}</p>
               </div>
             </div>
             <div v-if="data.extension.discountInfo" class="row just pad-t">
-              <p class="small normal light" @click="tip=true">优惠信息Ⓢ</p>
+              <p class="small normal light" @click="tip=true">优惠信息<img src="/static/images/detail_mark.png" style="width:24rpx;height:24rpx"/></p>
               <div class="small blod light text-right flex">
                 {{data.extension.discountInfo}}
                 <span class="red normal" @click="onCopy(data.extension.discountInfo)">复制</span>
@@ -234,7 +234,7 @@ function defaultData () {
     bid: 1,
     loading: false,
     active: {},
-    pop: false,
+    tip: false,
     text: ''
   }
 }
@@ -419,5 +419,40 @@ export default {
   height: 72rpx;
   border-radius: 36rpx;
   padding: 0 56rpx;
+}
+.pop {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.4);
+  display: flex;
+  flex-direction: column;
+  z-index: 50;
+}
+.pop .place {
+  flex: 1;
+}
+.pop-content {
+  position: relative;
+  background-color: white;
+  padding: 40rpx 24rpx;
+}
+.pop-content.top {
+  border-radius: 20rpx 20rpx 0 0;
+}
+.pop-content.bottom {
+  border-radius: 0 0 20rpx 20rpx;
+}
+.pop-content h6 {
+  font-size: 28rpx;
+  color: #494c5e;
+  font-weight: 400;
+}
+.pop-content p {
+  font-size: 24rpx;
+  line-height: 40rpx;
+  color: #7b7f8e;
 }
 </style>

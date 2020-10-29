@@ -89,7 +89,7 @@
             :headers="conf.headers"
             :count="7"
             :limit="conf.limit"
-            tip="请上传大于700 * 700像素，小于3M的图片"
+            tip="请上传大于700 * 700像素，小于5M的图片"
             v-model="postForm.banners"
           />
         </el-form-item>
@@ -306,8 +306,8 @@ export default {
             tip: "请上传png/jpg格式的图片",
           },
           size: {
-            size: 3 * 1024 * 1024,
-            tip: "请上传小于3M的图片",
+            size: 5 * 1024 * 1024,
+            tip: "请上传小于5M的图片",
           },
         },
       },

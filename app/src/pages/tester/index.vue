@@ -66,10 +66,14 @@ export default {
   },
   methods: {
     loadData () {
-      const {id, append} = router(this).params()
+      const {id, append, issue, ticketId} = router(this).params();
 
-      return request.get('/bl/activity/order/' + id).then(({json: {data}}) => {
-        this.channels = mapChannel(data.channels || []).map(i => Object.assign(i, {url: ''}))
+      (issue ? request.get('/ticket/ao/detail/' + ticketId, {}).then(({json: {data}}) => {
+        return data.ticketedEvaluations || []
+      }) : request.get('/bl/activity/order/' + id).then(({json: {data}}) => {
+        return data.channels
+      })).then(c => {
+        this.channels = mapChannel(c).map(i => Object.assign(i, {url: ''}))
         if (append) {
           this.datas = [Object.assign({}, this.channels[0], {pop: false})]
         } else {

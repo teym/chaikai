@@ -111,7 +111,7 @@
           <p>{{ detail.totalAmount }}</p>
         </div>
         <div class="row">
-          <h4>公司名称:</h4>
+          <h4>发票抬头:</h4>
           <p>{{ detail.company }}</p>
         </div>
         <div class="row">
@@ -258,7 +258,12 @@ export default {
     },
 
     handleClose() {
-      this.$prompt('请输入拒绝理由').then((r) => {
+      this.$prompt('请输入拒绝理由', {
+        inputPlaceholder: '拒绝理由,最多200字',
+        inputValidator: (s) => {
+          return s && s.length <= 200
+        }
+      }).then((r) => {
         updateInvoice({
           id: this.detail.id,
           rejectReason: r.value,

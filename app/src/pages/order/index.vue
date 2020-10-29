@@ -12,7 +12,6 @@
       <img class="state margin2" v-if="data.statusCode === 5" src="/static/images/issue_status_1.png" alt="status" />
       <img class="state margin2" v-if="data.statusCode === 6" src="/static/images/issue_status_3.png" alt="status" />
       <img class="state margin2" v-if="data.statusCode === 7" src="/static/images/issue_status_5.png" alt="status" />
-
     </div>
     <div v-if="data.statusCode > 5 && data.tickets.length > 0" class="margin-t white_bg pad2">
       <h5 class="middle dark blod">订单问题</h5>
@@ -120,13 +119,13 @@
               >{{['无要求', '15秒', '30秒', '1分钟', '2分钟'][data.activity.extension.minVideoLength]}}</div>
             </div>
             <div v-if="topics.length > 0" class="row just pad-t">
-              <p class="small normal light" @click="tip=true">账号话题Ⓢ</p>
+              <p class="small normal light">账号话题</p>
               <div class="small medium light text-right flex">
                 <p v-for="(c, i) in topics" :key="i">{{c.platformName}}@{{c.nickname}}#{{c.topic}}</p>
               </div>
             </div>
             <div v-if="data.activity.discountInfo" class="row just pad-t">
-              <p class="small normal light" @click="tip=true">优惠信息Ⓢ</p>
+              <p class="small normal light" @click="tip=true">优惠信息<img src="/static/images/detail_mark.png" style="width:24rpx;height:24rpx"/></p>
               <div class="small medium light text-right flex">
                 {{data.activity.discountInfo}}
                 <span>复制</span>

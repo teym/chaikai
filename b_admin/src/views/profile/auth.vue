@@ -188,8 +188,8 @@ export default {
             tip: "请上传png/jpg格式的图片",
           },
           size: {
-            size: 3 * 1024 * 1024,
-            tip: "请上传小于3M的图片",
+            size: 5 * 1024 * 1024,
+            tip: "请上传小于5M的图片",
           },
         },
       },

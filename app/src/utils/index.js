@@ -37,7 +37,7 @@ export function isPhoneNumber (s) {
 }
 export function formatMsgTime (date) {
   const m = moment(date)
-  const s = m.isSame(new Date(), 'day') ? m.format('Ahh:mm') : m.format('YYYY-MM-DD HH:mm:ss')
+  const s = m.isSame(new Date(), 'day') ? m.format('Ahh:mm') : m.format('MM-DD HH:mm')
   return s.replace('AM', '上午').replace('PM', '下午')
 }
 export function isImgMsg (s) {

@@ -14,7 +14,7 @@
         <img :src="item.accountInfo.logo" alt="img">
         <div class="col just flex margin-l">
           <h5 class="middle dark blod">{{item.accountInfo.name}}</h5>
-          <p class="small light">{{item.content}}</p>
+          <p class="small light text">{{item.content}}</p>
         </div>
         <div class="col just margin-l right">
           <p class="small light date">{{item.date}}</p>
@@ -85,7 +85,7 @@ export default {
     },
     loadData (page) {
       return request.get('/chat/bl/room/list', {page, size: 10, type: 1}).then(({json: {data}}) => {
-        this.datas = (page === 1 ? [] : this.datas).concat(data.data.map(i => Object.assign(i, {date: formatMsgTime(i.lastTime), content: isImgMsg(i.lastRecord.content) ? '[图片]' : i.lastRecord.content})))
+        this.datas = (page === 1 ? [] : this.datas).concat(data.data.map(i => Object.assign(i, {date: formatMsgTime(i.lastRecord.gmtCreate), content: isImgMsg(i.lastRecord.content) ? '[图片]' : i.lastRecord.content})))
         this.loading = false
         this.page = page
         this.nomore = data.pager.totalPages <= page
@@ -109,6 +109,10 @@ export default {
 .navbar p {
   font-size: 44rpx;
   font-weight: 500;
+}
+.item .text{
+  word-break: break-all;
+  height: 24rpx;
 }
 .item img {
   width: 100rpx;

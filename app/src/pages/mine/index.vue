@@ -41,25 +41,38 @@
       </div>
       <div class="row icons pad-t pad-l pad-r margin2-b">
         <div class="flex col center pad-t pad-b" @click="onOrder(2)">
-          <img src="/static/images/mine_icons_1.png " alt="1">
-          <p class="small light margin-t">待缴押金</p>
+          <div class="pos_r">
+            <img src="/static/images/mine_icons_1.png " alt="1">
+            <p class="small light margin-t">待缴押金</p>
+            <span class="dot flot" v-if="stat.depositToBePaid > 0">{{stat.depositToBePaid}}</span>
+          </div>
         </div>
         <div class="flex col center pad-t pad-b" @click="onOrder(3)">
-          <img src="/static/images/mine_icons_2.png " alt="2">
-          <p class="small light margin-t">待发货</p>
+          <div class="pos_r">
+            <img src="/static/images/mine_icons_2.png " alt="2">
+            <p class="small light margin-t">待发货</p>
+            <span class="dot flot" v-if="stat.toBeDelivered > 0">{{stat.toBeDelivered}}</span>
+          </div>
         </div>
         <div class="flex col center pad-t pad-b" @click="onOrder(4)">
-          <img src="/static/images/mine_icons_3.png " alt="3">
-          <p class="small light margin-t">待收货</p>
+          <div class="pos_r">
+            <img src="/static/images/mine_icons_3.png " alt="3">
+            <p class="small light margin-t">待收货</p>
+            <span class="dot flot" v-if="stat.toBeReceived > 0">{{stat.toBeReceived}}</span>
+          </div>
         </div>
         <div class="flex col center pad-t pad-b" @click="onOrder(5)">
-          <img src="/static/images/mine_icons_4.png " alt="4">
-          <p class="small light margin-t">待测评</p>
+          <div class="pos_r">
+            <img src="/static/images/mine_icons_4.png " alt="4">
+            <p class="small light margin-t">待测评</p>
+            <span class="dot flot" v-if="stat.toBeEvaluated > 0">{{stat.toBeEvaluated}}</span>
+          </div>
         </div>
       </div>
       <div class="row just line" @click="onRouter('issues')">
         <p class="middle light">订单问题</p>
         <div class="row i-center">
+          <span class="dot fill" v-if="stat.hasTicket > 0">{{stat.hasTicket}}</span>
           <img class="right" src="/static/images/arrow_right.png" alt="right">
         </div>
       </div>
@@ -106,6 +119,13 @@ export default {
         avatar: '',
         score: 0,
         areas: []
+      },
+      stat: {
+        depositToBePaid: 0,
+        toBeDelivered: 0,
+        toBeReceived: 0,
+        toBeEvaluated: 0,
+        hasTicket: 0
       },
       session: '',
       amount: 0,
@@ -175,6 +195,9 @@ export default {
         this.amount = data.totalAmount
       }).catch(e => {
         console.log(e)
+      }),
+      request.get('/bl/activity/order/stat').then(({json: {data}}) => {
+        this.stat = data
       })])
     },
     onScope () {
@@ -253,6 +276,27 @@ export default {
 .icons img {
   width: 64rpx;
   height: 64rpx;
+}
+.dot {
+  background-color: white;
+  color: #ff6144;
+  border: 1rpx solid #ff6144;
+  line-height: 32rpx;
+  font-size: 28rpx;
+  min-width: 32rpx;
+  text-align: center;
+  border-radius: 16rpx;
+  box-sizing: border-box;
+}
+.dot.flot {
+  position: absolute;
+  right: -4rpx;
+  top: -8rpx;
+}
+.dot.fill {
+  background-color: #ff6144;
+  color: white;
+  border: none;
 }
 button.btn-row {
   border: 0;

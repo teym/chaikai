@@ -10,7 +10,7 @@
 
 <script>
 // import _ from 'underscore'
-import {router, uiapi} from '@/utils/index'
+import {router} from '@/utils/index'
 
 export default {
   props: ['status'],
@@ -20,9 +20,6 @@ export default {
       state: '',
       img: '/static/images/act_done.png'
     }
-  },
-  created () {
-    // let app = getApp()
   },
   mounted () {
     const {status} = router(this).params()
@@ -42,19 +39,6 @@ export default {
         this.state = '已取消'
         this.img = '/static/images/reward_status_3.png'
         break
-    }
-  },
-  onPullDownRefresh () {
-    uiapi.waitRefresh(this.loadData())
-  },
-  onReachBottom () {
-
-  },
-  methods: {
-    loadData (page) {
-      return (new Promise((resolve, reject) => {
-        resolve({})
-      }))
     }
   }
 }

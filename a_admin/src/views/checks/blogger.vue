@@ -120,7 +120,11 @@
             size="mini"
             @click="handleAction(row, 2)"
           >拒绝</el-button>
-          <el-button size="mini" @click="handleDetail(row)">详情</el-button>
+          <el-button
+            v-if="row.statusCode === 1"
+            size="mini"
+            @click="handleDetail(row)"
+          >详情</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -136,7 +140,7 @@
       <img style="width: 100%" :src="previewUrl" alt="img">
     </el-dialog>
     <el-dialog
-      width="50%"
+      width="70%"
       title="详情"
       :visible.sync="detailVisable"
       append-to-body
@@ -232,7 +236,7 @@ export default {
         this.$prompt('请输入拒绝理由', {
           inputPlaceholder: '拒绝理由,最多200字',
           inputValidator: (s) => {
-            return s && s.length <= 200
+            return s && s.length > 0 && s.length <= 200
           }
         }).then((r) => {
           updateBloggerState({
@@ -251,7 +255,7 @@ export default {
       this.detailVisable = true
       fetchBlogger(item.account.id).then((r) => {
         r.data.financeInfo = item.financeInfo
-        r.data.channels = item.channels
+        // r.data.channels = item.channels;
         r.data.date = item.date
         this.detail = r.data
       })

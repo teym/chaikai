@@ -129,13 +129,13 @@
             <p>{{['无要求', '15秒', '30秒', '1分钟', '2分钟'][data.extension.minVideoLength]}}</p>
           </div>
           <div v-if="topics.length > 0" class="row just line">
-            <h6 @click="tip=true">账号话题Ⓢ</h6>
+            <h6>账号话题</h6>
             <div>
               <p v-for="(c, i) in topics" :key="i">{{c.platformName}}@{{c.nickname}}#{{c.topic}}</p>
             </div>
           </div>
           <div v-if="data.extension.discountInfo" class="row just line">
-            <h6 @click="tip=true">优惠信息Ⓢ</h6>
+            <h6 @click="tip=true">优惠信息<img src="/static/images/detail_mark.png" class="tip_mark"/></h6>
             <p>
               {{data.extension.discountInfo}}
               <span @click="onCopy(data.extension.discountInfo)">复制</span>
@@ -293,6 +293,7 @@ export default {
       this.active = Object.assign({}, this.active, _.object([[sku.id, item]]))
     },
     onOk () {
+      console.log('on ok')
       if (this.data.statusCode > 5 || this.data.applied) {
         return
       }
@@ -530,7 +531,7 @@ h5 {
   color: #7b7f8e;
   font-size: 24rpx;
   padding: 20rpx;
-  border-bottom: 1rpx solid #ebebeb;
+  border-bottom: 1rpx dashed #ebebeb;
 }
 .desc .guide li:nth-last-of-type(1) {
   border-bottom: none;
@@ -593,6 +594,10 @@ h5 {
 .task .line h6 {
   font-size: 24rpx;
   color: #494c5e;
+}
+.task .line h6 img{
+  width: 24rpx;
+  height: 24rpx;
 }
 .task .line p {
   font-size: 24rpx;

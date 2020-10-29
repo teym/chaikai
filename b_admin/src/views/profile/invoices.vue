@@ -74,7 +74,7 @@
         <p>开票时间：{{ detail.date }}</p>
         <p>开票金额：{{ detail.totalAmount }}元</p>
         <p>发票抬头：{{ detail.company }}</p>
-        <p>公司税号：{{ detail.rise }}</p>
+        <p>税号：{{ detail.rise }}</p>
         <p>接收邮箱：{{ detail.receiveMail }}</p>
         <h5>关联订单</h5>
         <el-table

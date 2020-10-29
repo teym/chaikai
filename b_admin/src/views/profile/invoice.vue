@@ -95,13 +95,13 @@
             >元
           </el-form-item>
           <el-form-item label="发票抬头：">
-            <el-input v-model="form.company" placeholder="发票抬头" />
+            <el-input v-model="form.company" placeholder="请填写发票抬头" />
           </el-form-item>
-          <el-form-item label="公司税号：">
-            <el-input v-model="form.rise" placeholder="公司税号" />
+          <el-form-item label="税号：">
+            <el-input v-model="form.rise" placeholder="请填写税号" />
           </el-form-item>
           <el-form-item label="接收邮箱：">
-            <el-input v-model="form.receiveMail" placeholder="接收邮箱" />
+            <el-input v-model="form.receiveMail" placeholder="请填写接收邮箱" />
           </el-form-item>
         </el-form>
         <p>关联订单</p>
@@ -236,7 +236,7 @@ export default {
         return
       }
       if(!this.form.rise){
-        this.$message({message:'请填写公司税号',type:'error'})
+        this.$message({message:'请填写税号',type:'error'})
         return
       }
       if(!this.form.receiveMail){

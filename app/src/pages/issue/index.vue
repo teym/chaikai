@@ -4,9 +4,16 @@
       <div class="flex col c-center margin2-l margin2-r">
         <h5 class="big light blod">{{status[data.statusCode]}}</h5>
         <p class="small light margin-t" 
-        :class="{red:data.statusCode === 1 || data.statusCode === 4 || data.statusCode === 7, light:data.statusCode != 1 && data.statusCode != 4 && data.statusCode != 7}">品牌确认修改还剩3天0时0分，超时将自动确认</p>
+        :class="{red:data.statusCode === 1 || data.statusCode === 4 || data.statusCode === 7, light:data.statusCode != 1 && data.statusCode != 4 && data.statusCode != 7}">{{msg}}</p>
       </div>
-      <img class="state margin2" src="/static/images/issue_status_1.png" alt="status" />
+      <img class="state margin2" v-if="data.statusCode === 1" src="/static/images/issue_status_2.png" alt="status" />
+      <img class="state margin2" v-if="data.statusCode === 2" src="/static/images/issue_status_1.png" alt="status" />
+      <img class="state margin2" v-if="data.statusCode === 3" src="/static/images/issue_status_2.png" alt="status" />
+      <img class="state margin2" v-if="data.statusCode === 4" src="/static/images/issue_status_6.png" alt="status" />
+      <img class="state margin2" v-if="data.statusCode === 5" src="/static/images/issue_status_3.png" alt="status" />
+      <img class="state margin2" v-if="data.statusCode === 6" src="/static/images/issue_status_3.png" alt="status" />
+      <img class="state margin2" v-if="data.statusCode === 7" src="/static/images/issue_status_3.png" alt="status" />
+
     </div>
     <div class="margin-t white_bg pad2">
       <h5 class="middle dark blod">投诉详情</h5>
@@ -27,7 +34,7 @@
     </div>
     <div class="margin-t white_bg pad2">
       <h5 class="middle dark blod">投诉测评</h5>
-      <div v-for="(item, i) in channels" :key="i" class="row just i-center margin-t">
+      <div v-for="(item, i) in data.ticketedEvaluations" :key="i" class="row just i-center margin-t">
         <div class="row i-center">
           <img class="icon" :src="item.img" :alt="item.platformName" />
           <p class="small light margin-l">正式测评</p>
@@ -38,9 +45,9 @@
         </div>
       </div>
     </div>
-    <div class="margin-t white_bg pad2" v-if="data.statusCode > 1">
+    <div class="margin-t white_bg pad2" v-if="data.modifiedEvaluations && data.modifiedEvaluations.length > 0">
       <h5 class="middle dark blod">修改测评</h5>
-      <div v-for="(item, i) in channels" :key="i" class="row just i-center margin-t">
+      <div v-for="(item, i) in data.modifiedEvaluations" :key="i" class="row just i-center margin-t">
         <div class="row i-center">
           <img class="icon" :src="item.img" :alt="item.platformName" />
           <p class="small light margin-l">正式测评</p>
@@ -67,7 +74,7 @@ export default {
       data: {
 
       },
-      channels: [],
+      msg: '',
       status: ['', '待修改', '待确认', '小二审核中', '待重评', '已修改', '已取消', '已违规']
     }
   },
@@ -86,8 +93,9 @@ export default {
     loadData (id) {
       return request.get('/ticket/ao/detail/' + id, {}).then(({json: {data}}) => {
         data.date = moment(data.gmtCreate).format('YYYY-MM-DD HH:mm:ss')
+        data.ticketedEvaluations = mapChannel(data.ticketedEvaluations).map(i => Object.assign(i, {date: moment(i.gmtCreate).format('YYYY.MM.DD')}))
+        data.modifiedEvaluations = mapChannel(data.modifiedEvaluations).map(i => Object.assign(i, {date: moment(i.gmtCreate).format('YYYY.MM.DD')}))
         this.data = data
-        this.channels = mapChannel(data.evaluations).map(i => Object.assign(i, {date: moment(i.gmtCreate).format('YYYY.MM.DD')}))
         this.title = this.status[data.statusCode]
         this.msg = this.mapStatus(data.statusCode, data.deadline)
       }).catch(e => {
