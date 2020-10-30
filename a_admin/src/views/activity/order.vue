@@ -35,9 +35,9 @@
         style="width: 120px; margin-left: 16px"
       >
         <el-option
-          v-for="(i, j) in depositStatus"
+          v-for="(i, j) in depositStatus.slice(1)"
           :key="j"
-          :value="j"
+          :value="j + 1"
           :label="i"
         />
       </el-select>
@@ -261,7 +261,7 @@ export default {
         searchKey: '',
         statusCode: 0,
         coopType: 1,
-        depositStatusCode: 0,
+        depositStatusCode: 1,
         rewardStatusCode: 0,
         timeRange: [ps, ns]
       },
