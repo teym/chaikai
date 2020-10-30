@@ -102,6 +102,10 @@
                 <el-option label="外部URL" :value="2" />
               </el-select>
             </el-input>
+            <a
+              href="https://docs.qq.com/doc/DU29Tb3NiYm9GRnBJ"
+              target="_blank"
+            >《如何配置小程序跳转链接》</a>
           </div>
         </div>
         <div class="row">
