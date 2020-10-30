@@ -4,7 +4,7 @@
       <el-input
         v-model="listQuery.companyName"
         placeholder="请输入公司名称"
-        style="width: 160px;"
+        style="width: 160px"
         size="mini"
         class="filter-item"
         @keyup.enter.native="handleFilter"
@@ -13,7 +13,7 @@
         v-model="listQuery.statusCode"
         size="mini"
         class="filter-item"
-        style="width: 120px;margin-left: 16px"
+        style="width: 120px; margin-left: 16px"
       >
         <el-option :value="-1" label="全部" />
         <el-option :value="0" label="处理中" />
@@ -72,7 +72,11 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column
+        label="操作"
+        align="center"
+        class-name="small-padding fixed-width"
+      >
         <template slot-scope="{ row }">
           <el-button size="mini" @click="handleDetail(row)">订单详情</el-button>
         </template>
@@ -114,7 +118,7 @@
         </div>
         <div class="row">
           <h4>退款方式:</h4>
-          <p>{{ ['','支付宝','银行卡'][detail.withdraw.type] }}</p>
+          <p>{{ ["", "支付宝", "银行卡"][detail.withdraw.type] }}</p>
         </div>
         <div v-if="detail.withdraw.type === 1" class="row">
           <h4>账号名称:</h4>
@@ -212,6 +216,13 @@ export default {
         inputPlaceholder: '拒绝理由,最多200字',
         inputValidator: (s) => {
           return s && s.length <= 200
+        },
+        beforeClose: (action, instance, done) => {
+          if (action === 'confirm' && !instance.inputValue) {
+            this.$message({ message: '请输入拒绝理由', type: 'error' })
+          } else {
+            done()
+          }
         }
       }).then((r) => {
         updateBWithdraw({

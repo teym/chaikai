@@ -48,13 +48,11 @@ import {uiapi, router, request, mapChannel, matchURL} from '@/utils/index'
 export default {
   data () {
     return {
+      append: false,
       datas: [],
       channels: [],
       loading: false
     }
-  },
-  created () {
-    // let app = getApp()
   },
   mounted () {
     this.loadData()
@@ -66,14 +64,15 @@ export default {
   },
   methods: {
     loadData () {
-      const {id, append, issue, ticketId} = router(this).params();
+      const {id, append, issue, ticketId} = router(this).params()
+      this.append = !!append;
 
       (issue ? request.get('/ticket/ao/detail/' + ticketId, {}).then(({json: {data}}) => {
         return data.ticketedEvaluations || []
       }) : request.get('/bl/activity/order/' + id).then(({json: {data}}) => {
         return data.channels
       })).then(c => {
-        this.channels = mapChannel(c).map(i => Object.assign(i, {url: ''}))
+        this.channels = mapChannel(append ? null : c).map(i => Object.assign(i, {url: ''}))
         if (append) {
           this.datas = [Object.assign({}, this.channels[0], {pop: false})]
         } else {

@@ -88,6 +88,23 @@ export function matchURL (u) {
   return url
 }
 
+const AllChannels = [{
+  platformId: 1,
+  platformName: '微博'
+}, {
+  platformId: 2,
+  platformName: 'B站'
+}, {
+  platformId: 4,
+  platformName: '小红书'
+}, {
+  platformId: 8,
+  platformName: '抖音'
+}, {
+  platformId: 16,
+  platformName: '快手'
+}]
+
 const CHS = {
   1: { img: '/static/images/channel_wb.png' },
   2: { img: '/static/images/channel_bi.png' },
@@ -96,7 +113,7 @@ const CHS = {
   16: { img: '/static/images/channel_ks.png' }
 }
 export function mapChannel (channels) {
-  return channels.map(i => Object.assign({}, i, CHS[i.platformId]))
+  return (channels || AllChannels).map(i => Object.assign({}, i, CHS[i.platformId]))
 }
 
 mapi.isLogin = () => {

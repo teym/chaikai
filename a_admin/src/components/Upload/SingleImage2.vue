@@ -1,130 +1,139 @@
 <template>
-  <div class="singleImageUpload2 upload-container">
+  <div>
     <el-upload
-      :data="dataObj"
-      :multiple="false"
-      :show-file-list="false"
-      :on-success="handleImageSuccess"
-      class="image-uploader"
-      drag
-      action="https://httpbin.org/post"
+      :action="url"
+      :headers="headers"
+      :file-list="list"
+      list-type="picture-card"
+      :before-upload="beforeUpload"
+      :on-success="handleSuccess"
+      :on-preview="handlePreview"
+      :on-remove="handleRemove"
+      :limit="count"
+      :class="{ full: full }"
     >
-      <i class="el-icon-upload" />
-      <div class="el-upload__text">
-        Drag或<em>点击上传</em>
-      </div>
+      <i class="el-icon-plus" />
+      <p v-if="tip" slot="tip" class="tip">{{ tip }}</p>
     </el-upload>
-    <div v-show="imageUrl.length>0" class="image-preview">
-      <div v-show="imageUrl.length>1" class="image-preview-wrapper">
-        <img :src="imageUrl">
-        <div class="image-preview-action">
-          <i class="el-icon-delete" @click="rmImage" />
-        </div>
-      </div>
-    </div>
+    <el-dialog :visible.sync="previewVisible" width="60%">
+      <img width="100%" :src="previewUrl" alt="preview">
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { getToken } from '@/api/qiniu'
-
+const arrEq = (a, b) => {
+  const a1 = a || []
+  const b1 = b || []
+  if (a1.length !== b1.length) {
+    return false
+  }
+  for (let index = 0; index < a1.length; index++) {
+    if (a1[index] !== b1[index]) {
+      return false
+    }
+  }
+  return true
+}
 export default {
   name: 'SingleImageUpload2',
   props: {
     value: {
+      type: Array,
+      default: () => ([])
+    },
+    headers: {
+      type: Object,
+      default: () => ({})
+    },
+    url: {
       type: String,
       default: ''
+    },
+    count: {
+      type: Number,
+      default: 1
+    },
+    tip: {
+      type: String,
+      default: ''
+    },
+    limit: {
+      type: Object,
+      default: () => ({})
     }
   },
   data() {
     return {
-      tempUrl: '',
-      dataObj: { token: '', key: '' }
+      list: [],
+      previewVisible: false,
+      previewUrl: '',
+      full: false
     }
   },
-  computed: {
-    imageUrl() {
-      return this.value
+  watch: {
+    value(cur, old) {
+      const ls = this.list.map((i) => (i.response ? i.response.data : i.url))
+      if (!arrEq(cur, old) && !arrEq(cur, ls)) {
+        const list = cur.map((i, j) => ({
+          name: j + '.' + i.split('.').pop(),
+          url: i
+        }))
+        console.log('update', list)
+        this.list = list
+        this.full = list.length >= this.count
+      }
     }
   },
   methods: {
-    rmImage() {
-      this.emitInput('')
+    handleSuccess(resp, img, list) {
+      console.log('success', img, list)
+      this.list = list || []
+      this.emitInput()
     },
-    emitInput(val) {
-      this.$emit('input', val)
+    handlePreview(img, i) {
+      console.log('preview', img, i)
+      this.previewUrl = img.url
+      this.previewVisible = true
     },
-    handleImageSuccess() {
-      this.emitInput(this.tempUrl)
+    handleRemove(img, list) {
+      console.log('remove', img, list)
+      this.list = list || []
+      this.emitInput()
     },
-    beforeUpload() {
-      const _self = this
-      return new Promise((resolve, reject) => {
-        getToken().then(response => {
-          const key = response.data.qiniu_key
-          const token = response.data.qiniu_token
-          _self._data.dataObj.token = token
-          _self._data.dataObj.key = key
-          this.tempUrl = response.data.qiniu_url
-          resolve(true)
-        }).catch(() => {
-          reject(false)
-        })
-      })
+    emitInput() {
+      console.log(
+        'change',
+        this.list.map((i) => (i.response ? i.response.data : i.url))
+      )
+      this.$emit(
+        'input',
+        this.list.map((i) => (i.response ? i.response.data : i.url))
+      )
+      this.full = this.list.length >= this.count
+    },
+    beforeUpload(file, i) {
+      console.log('upload', file, i)
+      const { type, size } = this.limit
+      if (type && type.list.indexOf(file.type) < 0) {
+        this.$message.error(type.tip)
+        return false
+      }
+      if (size && file.size > size.size) {
+        this.$message.error(size.tip)
+        return false
+      }
+      return true
     }
   }
 }
 </script>
 
-<style lang="scss" scoped>
-.upload-container {
-  width: 100%;
-  height: 100%;
-  position: relative;
-  .image-uploader {
-    height: 100%;
-  }
-  .image-preview {
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    left: 0px;
-    top: 0px;
-    border: 1px dashed #d9d9d9;
-    .image-preview-wrapper {
-      position: relative;
-      width: 100%;
-      height: 100%;
-      img {
-        width: 100%;
-        height: 100%;
-      }
-    }
-    .image-preview-action {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      left: 0;
-      top: 0;
-      cursor: default;
-      text-align: center;
-      color: #fff;
-      opacity: 0;
-      font-size: 20px;
-      background-color: rgba(0, 0, 0, .5);
-      transition: opacity .3s;
-      cursor: pointer;
-      text-align: center;
-      line-height: 200px;
-      .el-icon-delete {
-        font-size: 36px;
-      }
-    }
-    &:hover {
-      .image-preview-action {
-        opacity: 1;
-      }
-    }
-  }
+<style lang="scss">
+.full .el-upload {
+  display: none;
+}
+.tip {
+  margin: 0;
 }
 </style>

@@ -26,7 +26,7 @@
         class="filter-item"
         style="width: 160px; margin-left: 16px"
       >
-        <el-option v-for="(i, j) in coopTypes" :key="j" :value="j" :label="i" />
+        <el-option v-for="(i, j) in coopTypes.slice(1)" :key="j" :value="j + 1" :label="i" />
       </el-select>
       <el-select
         v-model="listQuery.depositStatusCode"
@@ -260,7 +260,7 @@ export default {
         searchType: 1,
         searchKey: '',
         statusCode: 0,
-        coopType: 0,
+        coopType: 1,
         depositStatusCode: 0,
         rewardStatusCode: 0,
         timeRange: [ps, ns]
@@ -275,7 +275,7 @@ export default {
         '已测评',
         '已关闭'
       ],
-      coopTypes: ['全部', '接受悬赏', '接受悬赏/达人报价', '免费置换'],
+      coopTypes: ['全部', '接受悬赏', '达人报价', '免费置换'],
       depositStatus: ['全部', '未缴押金', '已冻结', '已解冻', '已扣除'],
       rewardStatus: ['全部', '待发放', '已发放', '已取消'],
       depositVisable: false,
@@ -307,7 +307,11 @@ export default {
         obj.timeRange = null
       }
       fetchOrderList(clearQueryObject(obj, true)).then(({ data }) => {
-        this.list = (data.data || []).map(i => Object.assign(i, { date: moment(i.gmtCreate).format('YYYY-MM-DD HH:mm:ss') }))
+        this.list = (data.data || []).map((i) =>
+          Object.assign(i, {
+            date: moment(i.gmtCreate).format('YYYY-MM-DD HH:mm:ss')
+          })
+        )
         this.total = data.pager.count
 
         // Just to simulate the time of the request
@@ -326,6 +330,13 @@ export default {
         inputPlaceholder: '拒绝理由,最多200字',
         inputValidator: (s) => {
           return s && s.length <= 200
+        },
+        beforeClose: (action, instance, done) => {
+          if (action === 'confirm' && !instance.inputValue) {
+            this.$message({ message: '请输入拒绝理由', type: 'error' })
+          } else {
+            done()
+          }
         }
       }).then((r) => {
         closeOrder({

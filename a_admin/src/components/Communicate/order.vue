@@ -1,9 +1,21 @@
 <template>
   <div class="container">
     <div class="tab">
-      <el-button size="mini" :type="active === 1 ? 'primary' : ''" @click="active = 1">订单信息</el-button>
-      <el-button size="mini" :type="active === 2 ? 'primary' : ''" @click="active = 2">合作任务</el-button>
-      <el-button size="mini" :type="active === 3 ? 'primary' : ''" @click="active = 3">订单问题</el-button>
+      <el-button
+        size="mini"
+        :type="active === 1 ? 'primary' : ''"
+        @click="active = 1"
+      >订单信息</el-button>
+      <el-button
+        size="mini"
+        :type="active === 2 ? 'primary' : ''"
+        @click="active = 2"
+      >合作任务</el-button>
+      <el-button
+        size="mini"
+        :type="active === 3 ? 'primary' : ''"
+        @click="active = 3"
+      >订单问题</el-button>
     </div>
     <div v-if="active === 1" class="content order">
       <div class="row">
@@ -72,13 +84,21 @@
                   data.build.address.county
               "
             />
-            <el-input v-model="data.build.address.address" style="margin-top: 8px" size="mini" />
+            <el-input
+              v-model="data.build.address.address"
+              style="margin-top: 8px"
+              size="mini"
+            />
           </div>
         </div>
         <div class="row">
           <h5 style="line-height: 28px; width: 64px">快递信息：</h5>
           <div style="flex: 1">
-            <el-select v-model="data.build.address.logisticsPlatform" size="mini" placeholder="请选择">
+            <el-select
+              v-model="data.build.address.logisticsPlatform"
+              size="mini"
+              placeholder="请选择"
+            >
               <el-option
                 v-for="(item, i) in logistics"
                 :key="i"
@@ -86,12 +106,21 @@
                 :value="item.value"
               />
             </el-select>
-            <el-input v-model="data.build.address.logisticsNo" style="margin-top: 8px" size="mini" />
+            <el-input
+              v-model="data.build.address.logisticsNo"
+              style="margin-top: 8px"
+              size="mini"
+            />
           </div>
         </div>
         <div v-if="data.statusCode > 2 && data.statusCode < 4" class="row">
           <div style="width: 64px" />
-          <el-button size="mini" type="primary" :loading="data.update" @click="updateAddr">修改</el-button>
+          <el-button
+            size="mini"
+            type="primary"
+            :loading="data.update"
+            @click="updateAddr"
+          >修改</el-button>
         </div>
       </div>
     </div>
@@ -107,7 +136,7 @@
             {{ data.reward }}
             <span
               v-if="data.rewardStatusCode === 1"
-              style="color:red"
+              style="color: red"
               @click="onCancelReward"
             >取消发放</span>
           </p>
@@ -124,7 +153,9 @@
         <div>
           <div class="row" style="margin-top: 0">
             <h5>合作篇幅：</h5>
-            <p>{{ data.activity.extension.articleType > 0 ? "单篇" : "无要求" }}</p>
+            <p>
+              {{ data.activity.extension.articleType > 0 ? "单篇" : "无要求" }}
+            </p>
           </div>
           <div class="row">
             <h5>内容形式：</h5>
@@ -144,7 +175,9 @@
           </div>
           <div class="row">
             <h5>最低图片数：</h5>
-            <p>{{ ["无要求", "6张", "9张"][data.activity.extension.minPicNum] }}</p>
+            <p>
+              {{ ["无要求", "6张", "9张"][data.activity.extension.minPicNum] }}
+            </p>
           </div>
           <div class="row">
             <h5>最低视频时长：</h5>
@@ -159,11 +192,9 @@
           <div v-if="data.build.topics.length > 0" class="row">
             <h5>账号话题：</h5>
             <div>
-              <p
-                v-for="(c, i) in data.build.topics"
-                :key="i"
-                class="mb"
-              >{{ c.platformName }}@{{ c.nickname }}#{{ c.topic }}</p>
+              <p v-for="(c, i) in data.build.topics" :key="i" class="mb">
+                {{ c.platformName }}@{{ c.nickname }}#{{ c.topic }}
+              </p>
             </div>
           </div>
           <div v-if="data.activity.discountInfo" class="row">
@@ -173,13 +204,17 @@
           <div v-if="data.build.keywords.length > 0" class="row">
             <h5>附带关键词：</h5>
             <div>
-              <p v-for="(k, i) in data.build.keywords" :key="i" class="mb">{{ k }}</p>
+              <p v-for="(k, i) in data.build.keywords" :key="i" class="mb">
+                {{ k }}
+              </p>
             </div>
           </div>
           <div v-if="data.build.otherReq.length > 0" class="row">
             <h5>其他要求：</h5>
             <div>
-              <p v-for="(o, i) in data.build.otherReq" :key="i" class="mb">{{ o }}</p>
+              <p v-for="(o, i) in data.build.otherReq" :key="i" class="mb">
+                {{ o }}
+              </p>
             </div>
           </div>
         </div>
@@ -196,8 +231,7 @@
             <div class="item" @click="onUrl(item.url)">
               <img :src="item.img" alt>
               <span style="margin-left: 4px">
-                {{ item.platformName
-                }}
+                {{ item.platformName }}
                 <span
                   style="margin-left: 12px"
                 >活动量：{{ item.activeAmount }}</span>
@@ -219,8 +253,7 @@
             <div class="item" @click="onUrl(item.url)">
               <img :src="item.img" alt>
               <span style="margin-left: 4px">
-                {{ item.platformName
-                }}
+                {{ item.platformName }}
                 <span
                   style="margin-left: 12px"
                 >活动量：{{ item.activeAmount }}</span>
@@ -232,97 +265,121 @@
       </div>
     </div>
     <div v-if="active === 3" class="content issue">
-      <div v-if="data.ticket">
-        <div class="row">
-          <h5>工单编号：</h5>
-          <p>{{ data.ticket.id }}</p>
-        </div>
-        <div class="row">
-          <h5>创建时间：</h5>
-          <p>{{ data.ticket.gmtCreate }}</p>
-        </div>
-        <div class="row">
-          <h5>工单类型：</h5>
-          <p>测评投诉</p>
-        </div>
-        <div class="row">
-          <h5>工单状态：</h5>
-          <div>
+      <div v-if="data.tickets && data.tickets.length > 0">
+        <div v-for="(ticket, i) in data.tickets" :key="i" class="ticket">
+          <div class="row">
+            <h5>工单编号：</h5>
+            <p>{{ ticket.id }}</p>
+          </div>
+          <div class="row">
+            <h5>创建时间：</h5>
             <p>
-              {{
-                [
-                  "",
-                  "待修改",
-                  "待确认",
-                  "小二审核中",
-                  "待重评",
-                  "已修改",
-                  "已取消",
-                  "已违规",
-                ][data.ticket.statusCode]
-              }}
+              {{ ticket.date }}
             </p>
-            <span>品牌审核还剩3天0时0分，超时将自动确认</span>
           </div>
-        </div>
-        <div class="row">
-          <h5>投诉理由：</h5>
-          <div>
-            <p v-for="(i, j) in data.ticket.items" :key="j" class="mb">{{ i.content }}</p>
+          <div class="row">
+            <h5>工单类型：</h5>
+            <p>测评投诉</p>
           </div>
-        </div>
-        <div v-if="data.build.zhengshi.length > 0" class="row ceping">
-          <h5 style="line-height: 28px">投诉测评：</h5>
-          <div>
-            <div
-              v-for="(item, i) in data.build.zhengshi"
-              :key="i"
-              class="row"
-              style="margin-top: 0; align-items: center"
-            >
-              <div class="item" @click="onUrl(item.url)">
-                <img :src="item.img" alt>
-                <span style="margin-left: 4px">
-                  {{ item.platformName
-                  }}
+          <div class="row">
+            <h5>工单状态：</h5>
+            <div>
+              <p>
+                {{
+                  [
+                    "",
+                    "待修改",
+                    "待确认",
+                    "小二审核中",
+                    "待重评",
+                    "已修改",
+                    "已取消",
+                    "已违规",
+                  ][ticket.statusCode]
+                }}
+              </p>
+              <span>{{ ticket.msg }}</span>
+            </div>
+          </div>
+          <div class="row">
+            <h5>投诉理由：</h5>
+            <div>
+              <p v-for="(ii, jj) in ticket.items" :key="jj" class="mb">
+                {{ ii.content }}
+              </p>
+            </div>
+          </div>
+          <div v-if="ticket.ticketedEvaluations.length > 0" class="row ceping">
+            <h5 style="line-height: 28px">投诉测评：</h5>
+            <div>
+              <div
+                v-for="(item, ii) in ticket.ticketedEvaluations"
+                :key="ii"
+                class="row"
+                style="margin-top: 0; align-items: center"
+              >
+                <div class="item" @click="onUrl(item.url)">
+                  <img :src="item.icon" alt="">
                   <span
+                    style="margin-left: 4px"
+                  >{{ item.platformName
+                  }}<span
                     style="margin-left: 12px"
-                  >活动量：{{ item.activeAmount }}</span>
-                </span>
+                  >活动量：{{ item.activeAmount }}</span></span>
+                </div>
+                <span style="margin-left: 12px">{{ item.date }}</span>
               </div>
-              <span style="margin-left: 12px">{{ item.date }}</span>
+            </div>
+          </div>
+          <div v-if="ticket.modifiedEvaluations.length > 0" class="row ceping">
+            <h5 style="line-height: 28px">修改测评：</h5>
+            <div>
+              <div
+                v-for="(item, ii) in ticket.modifiedEvaluations"
+                :key="ii"
+                class="row"
+                style="margin-top: 0; align-items: center"
+              >
+                <div class="item" @click="onUrl(item.url)">
+                  <img :src="item.icon" alt="">
+                  <span
+                    style="margin-left: 4px"
+                  >{{ item.platformName
+                  }}<span
+                    style="margin-left: 12px"
+                  >活动量：{{ item.activeAmount }}</span></span>
+                </div>
+                <span style="margin-left: 12px">{{ item.date }}</span>
+              </div>
             </div>
           </div>
         </div>
-        <div v-if="data.build.zhengshi.length > 0" class="row ceping">
-          <h5 style="line-height: 28px">修改测评：</h5>
-          <div>
-            <div
-              v-for="(item, i) in data.build.zhengshi"
-              :key="i"
-              class="row"
-              style="margin-top: 0; align-items: center"
-            >
-              <div class="item" @click="onUrl(item.url)">
-                <img :src="item.img" alt>
-                <span style="margin-left: 4px">
-                  {{ item.platformName
-                  }}
-                  <span
-                    style="margin-left: 12px"
-                  >活动量：{{ item.activeAmount }}</span>
-                </span>
-              </div>
-              <span style="margin-left: 12px">{{ item.date }}</span>
-            </div>
-          </div>
+        <div v-if="data.ticket && data.ticket.statusCode < 5" class="row">
+          <el-button
+            size="mini"
+            :loading="data.update"
+            @click="updateState(4)"
+          >继续修改</el-button>
+          <el-button
+            size="mini"
+            :loading="data.update"
+            @click="updateState(7)"
+          >判定违规</el-button>
+          <el-button
+            size="mini"
+            :loading="data.update"
+            @click="updateState(5)"
+          >修改完成</el-button>
+          <el-button
+            size="mini"
+            :loading="data.update"
+            @click="updateState(6)"
+          >取消投诉</el-button>
         </div>
-        <div class="row">
-          <el-button size="mini" :loading="data.update" @click="updateState(4)">继续修改</el-button>
-          <el-button size="mini" :loading="data.update" @click="updateState(7)">判定违规</el-button>
-          <el-button size="mini" :loading="data.update" @click="updateState(5)">修改完成</el-button>
-          <el-button size="mini" :loading="data.update" @click="updateState(6)">取消投诉</el-button>
-        </div>
+      </div>
+      <div v-else class="empty">
+        <img src="@/assets/images/issue_empty.png" alt="empty">
+        <p>太棒了<br>暂无订单问题</p>
       </div>
     </div>
   </div>
@@ -414,11 +471,17 @@ export default {
     },
     onCancelReward() {
       const id = this.id
-      cancelReward(id).then((r) => {
-        if (id === this.id) {
-          this.data.rewardStatusCode = 3
+      this.$confirm('1.悬赏将自动退回品牌方账户\n2.剩余押金余额到期自动解冻', {
+        title: '取消悬赏发放'
+      }).then((r) => {
+        if (r === 'confirm') {
+          cancelReward(id).then((r) => {
+            if (id === this.id) {
+              this.data.rewardStatusCode = 3
+            }
+            this.$message({ message: '操作成功', type: 'success' })
+          })
         }
-        this.$message({ message: '操作成功', type: 'success' })
       })
     },
     loadData(id) {
@@ -454,6 +517,9 @@ export default {
             data.receiver.city,
             data.receiver.county
           ]
+          data.ticket = data.tickets.filter(
+            (i) => i.statusCode > 0 && i.statusCode < 5
+          )[0]
           this.data = data
         }
       })

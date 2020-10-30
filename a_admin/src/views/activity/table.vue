@@ -424,6 +424,13 @@ export default {
           inputPlaceholder: '拒绝理由,最多200字',
           inputValidator: (s) => {
             return s && s.length <= 200
+          },
+          beforeClose: (action, instance, done) => {
+            if (action === 'confirm' && !instance.inputValue) {
+              this.$message({ message: '请输入拒绝理由', type: 'error' })
+            } else {
+              done()
+            }
           }
         }).then((r) => {
           updateActivityState({
@@ -474,6 +481,7 @@ export default {
       updateActivity(obj).then((r) => {
         this.$message({ message: '修改成功', type: 'success' })
         this.detailVisible = false
+        this.getList()
       })
     }
   }

@@ -109,7 +109,7 @@
       </el-table-column>
       <el-table-column label="状态" align="center" width="120">
         <template slot-scope="{ row }">
-          <span>{{ status[row.statusCode] }}</span>
+          <span>{{ status[row.ticketStatusCode] }}</span>
         </template>
       </el-table-column>
 

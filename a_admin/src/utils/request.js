@@ -3,6 +3,15 @@ import { MessageBox, Message } from 'element-ui'
 import store from '@/store'
 import { getToken } from '@/utils/auth'
 
+export function baseConf() {
+  return {
+    url: process.env.VUE_APP_BASE_API,
+    headers: {
+      token: getToken()
+    }
+  }
+}
+
 var LoginFlag = false
 
 // create an axios instance

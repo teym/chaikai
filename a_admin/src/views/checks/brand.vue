@@ -179,7 +179,7 @@ export default {
         companyName: undefined,
         statusCode: 2
       },
-      status: ['全部', '未认证', '审核中', '已认证', '已拒绝'],
+      status: ['全部', '未认证', '审核中', '已通过', '已拒绝'],
       preview: false,
       previewUrl: '',
       detailVisable: false,
@@ -238,6 +238,13 @@ export default {
           inputPlaceholder: '拒绝理由,最多200字',
           inputValidator: (s) => {
             return s && s.length <= 200
+          },
+          beforeClose: (action, instance, done) => {
+            if (action === 'confirm' && !instance.inputValue) {
+              this.$message({ message: '请输入拒绝理由', type: 'error' })
+            } else {
+              done()
+            }
           }
         }).then((r) => {
           updateBrandState({

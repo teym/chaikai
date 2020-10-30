@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <h3 class="filter-item" style="margin-top: 0; line-height: 28px;">公告</h3>
+      <h3 class="filter-item" style="margin-top: 0; line-height: 28px">公告</h3>
       <el-button
         class="filter-item"
         style="float: right"
@@ -41,7 +41,12 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="操作" align="center" width="90" class-name="small-padding fixed-width">
+      <el-table-column
+        label="操作"
+        align="center"
+        width="90"
+        class-name="small-padding fixed-width"
+      >
         <template slot-scope="{ row }">
           <el-button size="mini" @click="handleDetail(row)">编辑</el-button>
         </template>
@@ -88,8 +93,15 @@
         </div>
       </div>
       <div slot="footer">
-        <el-button :loading="detailLoading" @click="handleClose">删除</el-button>
-        <el-button :loading="detailLoading" type="primary" @click="handleSuccess">保存</el-button>
+        <el-button
+          :loading="detailLoading"
+          @click="handleClose"
+        >删除</el-button>
+        <el-button
+          :loading="detailLoading"
+          type="primary"
+          @click="handleSuccess"
+        >保存</el-button>
       </div>
     </el-dialog>
   </div>
@@ -155,6 +167,12 @@ export default {
       this.detailVisable = true
     },
     handleSuccess() {
+      if (!this.detail.content) {
+        return this.$message({ message: '请输入名称', type: 'error' })
+      }
+      if (!this.detail.link) {
+        return this.$message({ message: '请输入跳转链接', type: 'error' })
+      }
       this.detailLoading = true;
       (this.detail.id ? updateNoti : addNoti)(Object.assign({}, this.detail))
         .then((r) => {

@@ -14,7 +14,7 @@
       <el-input
         v-model="listQuery.searchKey"
         placeholder="请输入"
-        style="width: 160px;"
+        style="width: 160px"
         size="mini"
         class="filter-item"
         @keyup.enter.native="handleFilter"
@@ -33,7 +33,7 @@
         v-model="listQuery.statusCode"
         size="mini"
         class="filter-item"
-        style="width: 120px;margin-left: 16px"
+        style="width: 120px; margin-left: 16px"
       >
         <el-option :value="-1" label="全部" />
         <el-option :value="0" label="待支付" />
@@ -57,7 +57,7 @@
       >导出</el-button>
       <el-button
         class="filter-item"
-        style="float:right"
+        style="float: right"
         type="primary"
         size="mini"
         @click="detailVisable = true"
@@ -95,12 +95,12 @@
       </el-table-column>
       <el-table-column label="支付类型" align="center">
         <template slot-scope="{ row }">
-          <span>{{ ['','支付宝','银行卡'][row.recharge.type] }}</span>
+          <span>{{ ["", "支付宝", "银行卡"][row.recharge.type] }}</span>
         </template>
       </el-table-column>
       <el-table-column label="充值方式" align="center">
         <template slot-scope="{ row }">
-          <span>{{ ['','在线支付','线下打款'][row.recharge.payType] }}</span>
+          <span>{{ ["", "在线支付", "线下打款"][row.recharge.payType] }}</span>
         </template>
       </el-table-column>
 
@@ -139,19 +139,29 @@
         <div class="row">
           <h4>充值时间:</h4>
           <div>
-            <el-date-picker v-model="detail.date" size="mini" type="datetime" placeholder="选择日期时间" />
+            <el-date-picker
+              v-model="detail.date"
+              size="mini"
+              type="datetime"
+              placeholder="选择日期时间"
+            />
           </div>
         </div>
         <div class="row">
           <h4>账户ID:</h4>
           <div>
-            <el-input v-model="detail.brAccountId" size="mini" placeholder="请输入企业ID" />
+            <el-input-number
+              v-model="detail.brAccountId"
+              size="mini"
+              placeholder="请输入企业ID"
+              :controls="false"
+            />
           </div>
         </div>
         <div class="row">
           <h4>充值金额:</h4>
           <div>
-            <el-input v-model="detail.amount" size="mini" />
+            <el-input-number v-model="detail.amount" :min="0" size="mini" />
           </div>
         </div>
         <div class="row">
@@ -185,7 +195,11 @@
         <div class="row">
           <h4>备注:</h4>
           <div>
-            <el-input v-model="detail.recharge.remark" size="mini" type="textarea" />
+            <el-input
+              v-model="detail.recharge.remark"
+              size="mini"
+              type="textarea"
+            />
           </div>
         </div>
       </div>
@@ -287,6 +301,21 @@ export default {
     },
     handleCompany() {},
     handleSuccess() {
+      if (!this.detail.tradeNo) {
+        return this.$message({ message: '请输入交易单号', type: 'error' })
+      }
+      if (!this.detail.date) {
+        return this.$message({ message: '请输入充值时间', type: 'error' })
+      }
+      if (!this.detail.brAccountId) {
+        return this.$message({ message: '请输入账户ID', type: 'error' })
+      }
+      if (!this.detail.amount) {
+        return this.$message({ message: '请输入充值金额', type: 'error' })
+      }
+      if (!this.detail.remark) {
+        return this.$message({ message: '请输入备注', type: 'error' })
+      }
       addTopup(
         Object.assign(
           { payTime: moment(this.detail.date).format('YYYY-MM-DD HH:mm:ss') },

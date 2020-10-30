@@ -17,7 +17,7 @@
       </el-row>
     </div>
     <el-row class="layout">
-      <el-col :span="5" class="list">
+      <!-- <el-col :span="5" class="list">
         <div
           v-for="(i, j) in list"
           :key="j"
@@ -37,13 +37,8 @@
             </div>
           </div>
         </div>
-      </el-col>
-      <el-col class="content" :span="12">
-        <div class="tip">
-          <img src="@/assets/images/chat_tip.png" alt="tip">
-          <p>提示：警惕站外沟通交易，平台提供合作保障</p>
-          <el-icon class="el-icon-arrow-right" />
-        </div>
+      </el-col> -->
+      <el-col class="content" :span="16">
         <div class="box">
           <div
             v-for="(item, i) in data.datas"
@@ -97,7 +92,7 @@
           </div>
         </div>
       </el-col>
-      <el-col :span="7" class="detail">
+      <el-col :span="8" class="detail">
         <order :id="active" />
       </el-col>
     </el-row>

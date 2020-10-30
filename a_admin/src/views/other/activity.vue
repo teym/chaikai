@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <h3 class="filter-item" style="margin-top: 0; line-height: 28px;">插图</h3>
+      <h3 class="filter-item" style="margin-top: 0; line-height: 28px">插图</h3>
       <el-button
         class="filter-item"
         style="float: right"
@@ -20,9 +20,9 @@
       highlight-current-row
       style="width: 100%"
     >
-      <el-table-column label="插图" align="center" style="width:160">
+      <el-table-column label="插图" align="center" style="width: 160">
         <template slot-scope="{ row }">
-          <img style="width:150px;height:80px" :src="row.url">
+          <img style="width: 150px; height: 80px" :src="row.url">
         </template>
       </el-table-column>
       <el-table-column label="插图名称" align="center">
@@ -42,14 +42,21 @@
       </el-table-column>
       <el-table-column label="轮播开关" align="center" width="80">
         <template slot-scope="{ row }">
-          <span>{{ row.valid ? '开' :'关' }}</span>
+          <span>{{ row.valid ? "开" : "关" }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="操作" align="center" width="160" class-name="small-padding fixed-width">
+      <el-table-column
+        label="操作"
+        align="center"
+        width="160"
+        class-name="small-padding fixed-width"
+      >
         <template slot-scope="{ row }">
           <el-button size="mini" @click="handleDetail(row)">详情</el-button>
-          <el-button size="mini" @click="handleState(row)">{{ !row.valid ? '开' :'关' }}</el-button>
+          <el-button size="mini" @click="handleState(row)">{{
+            !row.valid ? "开" : "关"
+          }}</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -66,7 +73,14 @@
         <div class="row">
           <h4>插图:</h4>
           <div>
-            <Upload v-model="detail.url" />
+            <Upload
+              v-model="detail.url"
+              :url="conf.url"
+              :headers="conf.headers"
+              :count="7"
+              :limit="conf.limit"
+              tip="702*128像素，支持PNG,JPG格式，小于5M"
+            />
           </div>
         </div>
         <div class="row">
@@ -79,7 +93,11 @@
           <h4>跳转链接:</h4>
           <div>
             <el-input v-model="detail.link" size="mini">
-              <el-select slot="prepend" v-model="detail.linkType" style="width:96px">
+              <el-select
+                slot="prepend"
+                v-model="detail.linkType"
+                style="width: 96px"
+              >
                 <el-option label="小程序" :value="1" />
                 <el-option label="外部URL" :value="2" />
               </el-select>
@@ -89,19 +107,34 @@
         <div class="row">
           <h4>活动ID:</h4>
           <div>
-            <el-input v-model="detail.exIds" size="mini" placeholder="多个ID用,拼接" />
+            <el-input
+              v-model="detail.exIds"
+              size="mini"
+              placeholder="多个ID用,拼接"
+            />
           </div>
         </div>
         <div class="row">
           <h4>插图开关:</h4>
           <div>
-            <el-switch v-model="detail.valid" active-color="#13ce66" inactive-color="#ff4949" />
+            <el-switch
+              v-model="detail.valid"
+              active-color="#13ce66"
+              inactive-color="#ff4949"
+            />
           </div>
         </div>
       </div>
       <div slot="footer">
-        <el-button :loading="detailLoading" @click="handleClose">删除</el-button>
-        <el-button :loading="detailLoading" type="primary" @click="handleSuccess">保存</el-button>
+        <el-button
+          :loading="detailLoading"
+          @click="handleClose"
+        >删除</el-button>
+        <el-button
+          :loading="detailLoading"
+          type="primary"
+          @click="handleSuccess"
+        >保存</el-button>
       </div>
     </el-dialog>
   </div>
@@ -118,12 +151,15 @@ import { clearQueryObject } from '@/utils/index'
 import waves from '@/directive/waves' // waves directive
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 import Upload from '@/components/Upload/SingleImage3'
+import { getConf } from '@/api/oss'
 
 export default {
   name: 'ComplexTable',
   components: { Pagination, Upload },
   directives: { waves },
   data() {
+    const upload = getConf()
+
     return {
       tableKey: 0,
       list: null,
@@ -136,7 +172,21 @@ export default {
       },
       detailVisable: false,
       detail: null,
-      detailLoading: false
+      detailLoading: false,
+      conf: {
+        url: upload.url,
+        headers: upload.headers,
+        limit: {
+          type: {
+            list: ['image/png', 'image/jpg', 'image/jpeg'],
+            tip: '请上传png/jpg格式的图片'
+          },
+          size: {
+            size: 5 * 1024 * 1024,
+            tip: '请上传小于5M的图片'
+          }
+        }
+      }
     }
   },
   // computed: {
@@ -181,6 +231,18 @@ export default {
       })
     },
     handleSuccess() {
+      if (!this.detail.url) {
+        return this.$message({ message: '请上传轮播图', type: 'error' })
+      }
+      if (!this.detail.title) {
+        return this.$message({ message: '请输入名称', type: 'error' })
+      }
+      if (!this.detail.link) {
+        return this.$message({ message: '请输入跳转链接', type: 'error' })
+      }
+      if (!this.detail.exIds) {
+        return this.$message({ message: '请输入活动ID', type: 'error' })
+      }
       this.detailLoading = true;
       (this.detail.id ? updateBanner : addBanner)(
         Object.assign({}, this.detail)

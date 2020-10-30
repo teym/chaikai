@@ -14,7 +14,7 @@
       <el-input
         v-model="listQuery.searchKey"
         placeholder="请输入"
-        style="width: 200px; margin-left: 16px"
+        style="width: 160px; margin-left: 16px"
         size="mini"
         class="filter-item"
         @keyup.enter.native="handleFilter"
@@ -26,6 +26,7 @@
         style="width: 90px; margin-left: 16px"
       >
         <el-option :value="0" label="全部" />
+        <el-option :value="-1" label="未认证" />
         <el-option
           v-for="(item, i) in channels"
           :key="i"
@@ -38,11 +39,39 @@
         v-model="listQuery.timeRange"
         size="mini"
         class="filter-item"
-        style="margin-left: 16px"
+        style="width: 220px; margin-left: 16px"
         type="daterange"
         range-separator="至"
         start-placeholder="开始日期"
         end-placeholder="结束日期"
+      />
+      <el-select
+        v-model="listQuery.sort"
+        size="mini"
+        class="filter-item"
+        style="width: 150px; margin-left: 16px"
+      >
+        <el-option :value="1" label="渠道粉丝从高到低" />
+        <el-option :value="2" label="渠道粉丝从低到高" />
+        <el-option :value="3" label="渠道粉丝区间" />
+      </el-select>
+      <el-input-number
+        v-if="listQuery.sort === 3"
+        v-model="listQuery.min"
+        size="mini"
+        class="filter-item"
+        style="width: 60px"
+        placeholder="min"
+        :controls="false"
+      />
+      <el-input-number
+        v-if="listQuery.sort === 3"
+        v-model="listQuery.min"
+        size="mini"
+        class="filter-item"
+        style="width: 60px"
+        placeholder="max"
+        :controls="false"
       />
 
       <el-button
@@ -122,10 +151,7 @@
 </template>
 
 <script>
-import {
-  fetchBloggerList,
-  fetchBlogger
-} from '@/api/accounts'
+import { fetchBloggerList, fetchBlogger } from '@/api/accounts'
 import { clearQueryObject } from '@/utils/index'
 import { Channels } from '@/utils/constant'
 import moment from 'moment'
@@ -147,6 +173,9 @@ export default {
       listQuery: {
         page: 1,
         size: 20,
+        sort: 1,
+        min: 0,
+        max: 0,
         searchType: 1,
         searchKey: '',
         platformId: 0,
@@ -166,7 +195,11 @@ export default {
   methods: {
     getList() {
       this.listLoading = true
-      const obj = Object.assign({}, this.listQuery)
+      const obj = Object.assign(
+        {},
+        this.listQuery,
+        this.listQuery.sort === 3 ? { min: 0, max: 0 } : {}
+      )
       obj[['', 'accountId', 'nickname'][this.listQuery.searchType]] =
         obj.searchKey
       if (obj.timeRange && obj.timeRange.length > 0) {
@@ -178,6 +211,9 @@ export default {
         )
         obj.timeRange = null
       }
+      // if (obj.platformId < 0) {
+      //   obj.platformId = 0;
+      // }
       fetchBloggerList(clearQueryObject(obj, true)).then(({ data }) => {
         this.list = data.data.map((i) =>
           Object.assign(i, {
