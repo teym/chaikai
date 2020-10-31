@@ -88,7 +88,7 @@
         <div class="row">
           <h4>轮播图名称:</h4>
           <div>
-            <el-input v-model="detail.title" size="mini" />
+            <el-input v-model="detail.title" :maxlength="20" show-word-limit size="mini" />
           </div>
         </div>
         <div class="row">
@@ -215,7 +215,7 @@ export default {
         url: '',
         type: 1,
         exIds: '',
-        valid: true
+        valid: false
       }
       this.detailVisable = true
     },

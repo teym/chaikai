@@ -209,7 +209,7 @@ export default {
         size: 20,
         searchType: 1,
         searchKey: '',
-        ticketStatusCode: 0,
+        ticketStatusCode: 3,
         coopType: 0,
         depositStatusCode: 0,
         rewardStatusCode: 0,

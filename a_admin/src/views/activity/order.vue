@@ -168,7 +168,7 @@
             @click="handleDeposit(row)"
           >押金详情</el-button>
           <el-button
-            v-if="row.statusCode === 5 || row.statusCode === 6"
+            v-if="row.statusCode === 4 || row.statusCode === 5"
             size="mini"
             type="primary"
             @click="handleClose(row)"
