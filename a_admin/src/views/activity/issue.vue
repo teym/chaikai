@@ -21,7 +21,7 @@
         @keyup.enter.native="handleFilter"
       />
       <el-select
-        v-model="listQuery.statusCode"
+        v-model="listQuery.ticketStatusCode"
         size="mini"
         class="filter-item"
         style="width: 120px; margin-left: 16px"
@@ -209,7 +209,7 @@ export default {
         size: 20,
         searchType: 1,
         searchKey: '',
-        statusCode: 0,
+        ticketStatusCode: 0,
         coopType: 0,
         depositStatusCode: 0,
         rewardStatusCode: 0,

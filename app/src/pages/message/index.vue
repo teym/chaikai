@@ -185,6 +185,9 @@ export default {
   border-radius: 0 20rpx 20rpx 20rpx;
   max-width: 470rpx;
 }
+.item .text p{
+  word-break: break-all;
+}
 .item .text.media {
   padding: 0;
   border-radius: 8rpx;
@@ -214,7 +217,6 @@ export default {
 }
 .item.self .text p {
   color: white;
-  word-break: break-all;
 }
 .bar {
   width: 100%;

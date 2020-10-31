@@ -86,8 +86,8 @@
       <div class="rule margin-t" @click="onRule">
         <img src="/static/images/detail_tip.png" alt="tip" />
       </div>
-      <h5 class="middle dark blod margin-t">合作要求</h5>
-      <div class="light_bg pad margin-t">
+      <h5 class="middle dark blod margin-t" v-if="data.coopSubType !== 3">合作要求</h5>
+      <div class="light_bg pad margin-t" v-if="data.coopSubType !== 3">
         <div class="row just pad-t">
               <p class="small normal light">合作篇幅</p>
               <div
