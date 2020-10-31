@@ -30,7 +30,7 @@
         highlight-current-row
         style="width: 100%"
       >
-        <el-table-column label="订购时间" width="260">
+        <el-table-column label="发生时间" width="260">
           <template slot-scope="{ row }">
             <div class="info">
               <span>{{ row.date }}</span>

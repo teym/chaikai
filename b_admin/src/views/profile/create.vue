@@ -174,7 +174,7 @@ export default {
             required: true,
             trigger: "blur",
             validator: validateRequire,
-            msg: "请输入的统一社会信用代码",
+            msg: "请输入统一社会信用代码",
           },
         ],
         businessLicense: [

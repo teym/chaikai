@@ -236,7 +236,7 @@
               <span style="margin-left: 4px"
                 >{{ item.platformName
                 }}<span style="margin-left: 12px"
-                  >活动量：{{ item.activeAmount }}</span
+                  >互动量：{{ item.activeAmount }}</span
                 ></span
               >
             </div>
@@ -258,7 +258,7 @@
               <span style="margin-left: 4px"
                 >{{ item.platformName
                 }}<span style="margin-left: 12px"
-                  >活动量：{{ item.activeAmount }}</span
+                  >互动量：{{ item.activeAmount }}</span
                 ></span
               >
             </div>
@@ -326,7 +326,7 @@
                   <span style="margin-left: 4px"
                     >{{ item.platformName
                     }}<span style="margin-left: 12px"
-                      >活动量：{{ item.activeAmount }}</span
+                      >互动量：{{ item.activeAmount }}</span
                     ></span
                   >
                 </div>
@@ -348,7 +348,7 @@
                   <span style="margin-left: 4px"
                     >{{ item.platformName
                     }}<span style="margin-left: 12px"
-                      >活动量：{{ item.activeAmount }}</span
+                      >互动量：{{ item.activeAmount }}</span
                     ></span
                   >
                 </div>

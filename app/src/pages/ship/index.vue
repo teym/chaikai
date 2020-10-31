@@ -23,6 +23,10 @@
         </div>
       </div>
     </div>
+    <div v-else class="empty">
+      <img src="/static/images/ship_empty.png" alt="empty">
+      <p class="middle light">抱歉，暂未查询到物流信息</p>
+    </div>
   </div>
 </template>
 
