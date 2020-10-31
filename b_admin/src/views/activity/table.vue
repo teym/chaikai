@@ -120,6 +120,10 @@
               row.statusCode
             ]
           }}</span>
+          <span v-if="row.statusCode === 3">
+            <br>
+            {{row.rejectReason}}
+          </span>
         </template>
       </el-table-column>
       <el-table-column

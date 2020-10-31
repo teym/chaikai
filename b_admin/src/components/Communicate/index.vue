@@ -41,7 +41,7 @@
       <el-col class="content" :span="showList ? 12 : 16">
         <a
           class="tip"
-          href="https://www.yuque.com/lftshh/fo41es/uvwnup"
+          href="https://www.yuque.com/lftshh/ki3koh/ocpz0z"
           target="_blank"
         >
           <img src="@/assets/images/chat_tip.png" alt="tip" />

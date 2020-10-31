@@ -88,7 +88,7 @@
       <el-table-column label="状态" align="center">
         <template slot-scope="{ row }">
           <span>{{ status[row.statusCode] }}</span>
-          <span v-if="row.statusCode === 4">
+          <span v-if="row.statusCode === 3" style="color:#999">
             <br>
             {{ row.rejectReason }}
           </span>
