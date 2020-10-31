@@ -179,7 +179,7 @@ export default {
       fetchCompanyList(clearQueryObject(obj, true)).then(({ data }) => {
         this.list = data.data.map((i) =>
           Object.assign(i, {
-            date: moment(i.companyInfo.gmtCreate).format('YYYY-MM-DD HH:mm:ss'),
+            date: moment((i.companyInfo || {}).gmtCreate).format('YYYY-MM-DD HH:mm:ss'),
             brands: (i.brands || []).map((i) =>
               Object.assign(i, {
                 date: moment(i.gmtCreate).format('YYYY-MM-DD HH:mm:ss')
