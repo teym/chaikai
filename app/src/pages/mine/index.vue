@@ -26,7 +26,7 @@
           <img class="right" src="/static/images/arrow_right_white.png" alt="right">
         </div>
         <div class="row i-center" @click="onScope">
-          <p class="small">评分 <span class="blod">{{user.scope || 0}}</span></p>
+          <p class="small">评分 <span class="blod">{{user.scope || 10}}</span></p>
           <img class="right" src="/static/images/arrow_right_white.png" alt="right">
         </div>
       </div>
@@ -201,7 +201,7 @@ export default {
       })])
     },
     onScope () {
-      this.onRouter('scope', {scope: this.user.score, tags: this.user.scoreInfo.items.map(i => (`${i.msg} ${i.number}`)).join(',')})
+      this.onRouter('scope', {scope: this.user.score || 10, tags: this.user.scoreInfo.items.map(i => (`${i.msg} ${i.number}`)).join(',')})
     },
     onOrder (status) {
       router(this).push('/pages/orders/main', {status})

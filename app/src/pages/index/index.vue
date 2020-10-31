@@ -31,7 +31,7 @@
           <div class="item" v-for="(item, index) in data" :key="index" @click="onItem(item)">
             <div class="icon">
               <img :src="item.goods.picUrl" alt="img" mode="aspectFill" />
-              <div v-if="item.statusCode > 6" class="end">
+              <div v-if="item.statusCode > 5" class="end">
                 <p>报名结束</p>
               </div>
             </div>
@@ -43,7 +43,7 @@
               <div class="row just i-center margin-t">
                 <p class="middle dark">
                   名额
-                  <span class="red blod">{{item.totalNum}}</span>
+                  <span class="red blod">{{item.remainingNum || item.totalNum}}</span>
                 </p>
                 <ul v-if="item.cooperationType < 3" class="row tag">
                   <li class="small red">悬赏</li>

@@ -66,8 +66,9 @@
                   class="float"
                   v-if="!expand"
                   @click="expand=true"
-                >展开更多︾</span>
-                <span v-if="expand" @click="expand=false">收起︽</span>
+                >展开更多<img src="/static/images/detail_more.png" alt="more">
+                </span>
+                <span v-if="expand" @click="expand=false">收起<img src="/static/images/detail_less.png" alt="more"></span>
               </p>
             </div>
           </div>
@@ -514,6 +515,10 @@ h5 {
   font-size: 24rpx;
   line-height: 40rpx;
   background-color: white;
+}
+.desc .brand p span img{
+  width: 20rpx;
+  height: 20rpx;
 }
 .desc .brand p .float {
   position: absolute;
