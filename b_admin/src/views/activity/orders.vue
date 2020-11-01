@@ -126,7 +126,11 @@
         <template slot-scope="{ row }">
           <div class="apply">
             <p>规格：{{ row.goodsSku }}</p>
-            <el-popover trigger="click" :content="row.applyReason" placement="bottom">
+            <el-popover
+              trigger="click"
+              :content="row.applyReason"
+              placement="bottom"
+            >
               <p slot="reference">申请理由：{{ row.applyReason }}</p>
             </el-popover>
           </div>
@@ -823,18 +827,14 @@ export default {
       this.$refs.upload
         .submit()
         .then((r) => {
-          if (r.success) {
-            this.batchLoading = false;
-            this.batchVisbale = false;
-            this.getTabs();
-            this.getList();
-          } else {
-            throw r;
-          }
+          this.batchLoading = false;
+          this.batchVisbale = false;
+          this.getTabs();
+          this.getList();
         })
         .catch((e) => {
           this.batchLoading = false;
-          console.log(e);
+          this.batchFile = null;
           this.$message({ message: e.msg, type: "error" });
         });
     },
