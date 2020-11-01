@@ -100,7 +100,12 @@
         </div>
         <div class="row">
           <h4>开票状态:</h4>
-          <p>{{ status[detail.statusCode] }}</p>
+          <p>
+            {{ status[detail.statusCode]
+            }}<span v-if="detail.statusCode === 2" style="color: #999;margin-left:8px">{{
+              detail.rejectReason
+            }}</span>
+          </p>
         </div>
         <div class="row">
           <h4>开票时间:</h4>
@@ -179,7 +184,7 @@
           @pagination="loadDetails"
         />
       </div>
-      <div slot="footer">
+      <div v-if="detail.statusCode === 1" slot="footer">
         <el-button @click="handleClose">拒绝开票</el-button>
         <el-button type="primary" @click="handleSuccess">开票成功</el-button>
       </div>
@@ -218,7 +223,7 @@ export default {
       },
       status: ['全部', '待开票', '已拒绝', '已开票'],
       detailVisable: false,
-      detail: null,
+      detail: {},
       orders: {
         page: 1,
         size: 5,

@@ -48,7 +48,7 @@
           <p>提示：警惕站外沟通交易，平台提供合作保障</p>
           <el-icon class="el-icon-arrow-right" />
         </a>
-        <div class="box">
+        <div class="box" ref="box">
           <div
             v-for="(item, i) in data.datas"
             :key="i"
@@ -237,6 +237,9 @@ export default {
             })
           );
           this.data.sending = false;
+          setTimeout(() => {
+            this.$refs.box.scrollTo(0, this.$refs.box.scrollHeight);
+          }, 0);
           if (done) {
             done();
           }
@@ -318,6 +321,9 @@ export default {
             this.data.nomore = data.pager.totalPages <= page;
             this.data.page = page;
             this.data.loading = false;
+            setTimeout(() => {
+              this.$refs.box.scrollTo(0, this.$refs.box.scrollHeight);
+            }, 0);
           }
         })
         .catch((e) => {

@@ -18,11 +18,12 @@
         />
         <div class="account">
           <img class="bg" :src="bg_img" />
-          <el-row>
+          <div class="row" style="padding-bottom: 12px">
             <h5>账户资产</h5>
-          </el-row>
-          <el-row :gutter="20">
-            <el-col :span="12">
+          </div>
+          <div class="row">
+            <div></div>
+            <div class="col">
               <div @click="$router.push('/user/buy')">
                 <span>{{ activity }}</span
                 >次
@@ -31,8 +32,8 @@
               <el-button size="mini" round @click="$router.push('/user/buy')"
                 >增加次数</el-button
               >
-            </el-col>
-            <el-col :span="12">
+            </div>
+            <div class="col">
               <div @click="$router.push('/user/balance')">
                 <span>{{ amount }}</span
                 >元
@@ -42,8 +43,9 @@
               <el-button size="mini" round @click="$router.push('/user/topup')"
                 >充值金额</el-button
               >
-            </el-col>
-          </el-row>
+            </div>
+            <div></div>
+          </div>
         </div>
       </el-popover>
       <div class="right-menu-item menu-noti" @click="handelMessage">
@@ -189,10 +191,19 @@ export default {
     margin: 0;
     padding: 0;
   }
-  .el-row {
-    .el-col {
-      text-align: center;
+  .row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    position: relative;
+    .col {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       font-size: 14px;
+      padding-left: 0;
+      padding-right: 0;
+      min-width: 120px;
       div {
         display: flex;
         flex-direction: row;
