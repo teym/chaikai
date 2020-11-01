@@ -126,9 +126,9 @@
         <template slot-scope="{ row }">
           <div class="apply">
             <p>规格：{{ row.goodsSku }}</p>
-            <el-tooltip :content="row.applyReason" placement="bottom">
-              <p>申请理由：{{ row.applyReason }}</p>
-            </el-tooltip>
+            <el-popover trigger="click" :content="row.applyReason" placement="bottom">
+              <p slot="reference">申请理由：{{ row.applyReason }}</p>
+            </el-popover>
           </div>
         </template>
       </el-table-column>
