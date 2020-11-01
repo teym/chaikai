@@ -126,7 +126,9 @@
         <template slot-scope="{ row }">
           <div class="apply">
             <p>规格：{{ row.goodsSku }}</p>
-            <p>申请理由：{{ row.applyReason }}</p>
+            <el-tooltip :content="row.applyReason" placement="bottom">
+              <p>申请理由：{{ row.applyReason }}</p>
+            </el-tooltip>
           </div>
         </template>
       </el-table-column>
@@ -1081,7 +1083,7 @@ export default {
   p {
     margin: 0;
     height: 24px;
-    white-space:nowrap;
+    white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
   }
