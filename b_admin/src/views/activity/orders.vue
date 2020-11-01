@@ -124,11 +124,10 @@
       </el-table-column>
       <el-table-column label="申请信息" :index="2">
         <template slot-scope="{ row }">
-          <span>
-            规格：{{ row.goodsSku }}
-            <br />
-            申请理由：{{ row.applyReason }}
-          </span>
+          <div class="apply">
+            <p>规格：{{ row.goodsSku }}</p>
+            <p>申请理由：{{ row.applyReason }}</p>
+          </div>
         </template>
       </el-table-column>
       <el-table-column
@@ -1077,6 +1076,15 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+.apply {
+  p {
+    margin: 0;
+    height: 24px;
+    white-space:nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 }
 </style>
 
