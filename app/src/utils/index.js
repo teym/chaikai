@@ -84,8 +84,8 @@ export function formatAddressConf (conf) {
 }
 
 export function matchURL (u) {
-  const url = /.*(https?:\/\/[-a-zA-Z0-9@:%._+~#=/]+).*/.exec(u)[1]
-  return url
+  const url = /.*(https?:\/\/[-a-zA-Z0-9@:%._+~#=/]+).*/.exec(u || '')
+  return url && url.length > 1 ? url[1] : ''
 }
 
 const AllChannels = [{
@@ -106,11 +106,11 @@ const AllChannels = [{
 }]
 
 const CHS = {
-  1: { img: '/static/images/channel_wb.png' },
-  2: { img: '/static/images/channel_bi.png' },
-  4: { img: '/static/images/channel_xhs.png' },
-  8: { img: '/static/images/channel_dy.png' },
-  16: { img: '/static/images/channel_ks.png' }
+  1: { img: '/static/images/channel_wb.png', match: [/^https?:\/\/t.cn\/.+/, /^https?:\/\/([a-z0-9A-Z]+\.)+weibo.com\/.+/] },
+  2: { img: '/static/images/channel_bi.png', match: [/^https?:\/\/([a-z0-9A-Z]+\.)+bilibili.com\/.+/] },
+  4: { img: '/static/images/channel_xhs.png', match: [/^https?:\/\/xhslink.com\/.+/, /^https?:\/\/([a-z0-9A-Z]+\.)+xiaohongshu.com\/.+/] },
+  8: { img: '/static/images/channel_dy.png', match: [/^https?:\/\/([a-z0-9A-Z]+\.)+douyin.com\/.+/] },
+  16: { img: '/static/images/channel_ks.png', match: [/^https?:v.kuaishou.com\/.+/, /^https?:\/\/([a-z0-9A-Z]+\.)+kuaishou.com\/.+/] }
 }
 export function mapChannel (channels) {
   return (channels || AllChannels).map(i => Object.assign({}, i, CHS[i.platformId]))

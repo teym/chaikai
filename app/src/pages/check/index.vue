@@ -306,7 +306,7 @@ export default {
       router(this).push('/pages/web/main', {url: 'https://mp.weixin.qq.com/s/yPXWeSNE_vZx5WCiqOjqtQ'})
     },
     onGuide () {
-      router(this).push('/pages/web/main', {url: 'https://mp.weixin.qq.com/s/_r3sWoykk70201FeK5yc9g'})
+      router(this).push('/pages/web/main', {url: 'https://docs.qq.com/doc/DU01SUVZrc1JITkxx?pub=1&dver=2.1.0'})
     },
     onOk () {
       if (!this.address) {

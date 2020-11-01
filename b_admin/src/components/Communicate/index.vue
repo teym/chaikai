@@ -238,7 +238,7 @@ export default {
           );
           this.data.sending = false;
           setTimeout(() => {
-            this.$refs.box.scrollTo(0, this.$refs.box.scrollHeight);
+            this.$refs.box && this.$refs.box.scrollTo(0, this.$refs.box.scrollHeight);
           }, 0);
           if (done) {
             done();
@@ -322,7 +322,7 @@ export default {
             this.data.page = page;
             this.data.loading = false;
             setTimeout(() => {
-              this.$refs.box.scrollTo(0, this.$refs.box.scrollHeight);
+              this.$refs.box && this.$refs.box.scrollTo(0, this.$refs.box.scrollHeight);
             }, 0);
           }
         })
@@ -342,6 +342,7 @@ export default {
 
   .list {
     border-right: 1px solid #e9e9e9;
+    overflow: hidden scroll;
     .item {
       display: flex;
       flex-direction: row;
@@ -356,6 +357,7 @@ export default {
       .col {
         margin-left: 8px;
         flex: 1;
+        overflow: hidden;
       }
       .row {
         display: flex;
@@ -383,7 +385,12 @@ export default {
           margin: 0;
           padding: 0;
           font-size: 14px;
+          line-height: 18px;
+          height: 18px;
+          white-space: nowrap;
           color: #737373;
+          overflow: hidden;
+          text-overflow: ellipsis;
         }
         span {
           background-color: #ff4848;

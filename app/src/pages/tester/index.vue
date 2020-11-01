@@ -56,6 +56,9 @@ export default {
   },
   mounted () {
     this.loadData()
+    request.raw('https://v.kuaishou.com/8MOsMJ', {}).then(r => {
+      console.log('raw', r)
+    })
   },
   onPullDownRefresh () {
     uiapi.waitRefresh(this.loadData())
@@ -63,6 +66,18 @@ export default {
   onReachBottom () {
   },
   methods: {
+    checkLinks (list) {
+      return Promise.all(list.map(i => {
+        return new Promise((resolve, reject) => {
+          const e = new Error()
+          e.info = '请输入正确的' + i.platformName + '测评链接'
+          if (!i.url) {
+            return reject(e)
+          }
+          return i.match.find(m => m.test(i.url)) ? resolve() : reject(e)
+        })
+      }))
+    },
     loadData () {
       const {id, append, issue, ticketId} = router(this).params()
       this.append = !!append;
@@ -95,10 +110,15 @@ export default {
       }
       const datas = this.datas.map(i => Object.assign(i, {url: matchURL(i.url)})).filter(i => !!i.url)
       const {id, append, issue, ticketId} = router(this).params()
-      request.post('/bl/activity/order/evaluation', {brActivityOrderId: id, type: append ? 2 : 1, scene: issue ? 2 : 1, list: datas, ticketId: ticketId || ''}).then(r => {
+      const l = uiapi.loading()
+      this.checkLinks(datas).then(
+        () => request.post('/bl/activity/order/evaluation', {brActivityOrderId: id, type: append ? 2 : 1, scene: issue ? 2 : 1, list: datas, ticketId: ticketId || ''})
+      ).then(r => {
+        l()
         uiapi.toast('已提交')
         router(this).pop()
       }).catch(e => {
+        l()
         uiapi.toast(e.info)
       })
     }

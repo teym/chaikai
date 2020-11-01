@@ -151,6 +151,7 @@
 
 <script>
 import { fetchServeList, closeOrder } from '@/api/check'
+import { exportConf } from '@/api/oss'
 import moment from 'moment'
 import { clearQueryObject } from '@/utils/index'
 import waves from '@/directive/waves' // waves directive
@@ -226,7 +227,9 @@ export default {
       this.listQuery.page = 1
       this.getList()
     },
-    handleExport() {},
+    handleExport() {
+      location.href = exportConf('')
+    },
     handleClose(row) {
       this.$prompt('请输入拒绝理由', {
         inputPlaceholder: '拒绝理由,最多200字',
