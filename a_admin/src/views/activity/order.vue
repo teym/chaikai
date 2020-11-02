@@ -26,7 +26,12 @@
         class="filter-item"
         style="width: 160px; margin-left: 16px"
       >
-        <el-option v-for="(i, j) in coopTypes.slice(1)" :key="j" :value="j + 1" :label="i" />
+        <el-option
+          v-for="(i, j) in coopTypes"
+          :key="j"
+          :value="j + 1"
+          :label="i"
+        />
       </el-select>
       <el-select
         v-model="listQuery.depositStatusCode"
@@ -35,7 +40,7 @@
         style="width: 120px; margin-left: 16px"
       >
         <el-option
-          v-for="(i, j) in depositStatus.slice(1)"
+          v-for="(i, j) in depositStatus"
           :key="j"
           :value="j + 1"
           :label="i"
@@ -132,7 +137,11 @@
       <el-table-column label="押金|状态" align="center">
         <template slot-scope="{ row }">
           <span>{{ (row.depositInfo || {}).amount }}<br>
-            {{ depositStatus[(row.depositInfo || {}).statusCode || 0] }}</span>
+            {{
+              ((row.depositInfo || {}).statusCode || 0) > 0
+                ? depositStatus[(row.depositInfo || {}).statusCode || 0]
+                : ""
+            }}</span>
         </template>
       </el-table-column>
       <el-table-column label="悬赏|状态" align="center">
@@ -140,7 +149,11 @@
           <span>
             {{ row.reward }}
             <br>
-            {{ rewardStatus[row.rewardStatusCode] }}
+            {{
+              (row.rewardStatusCode || 0) > 0
+                ? rewardStatus[row.rewardStatusCode]
+                : ""
+            }}
           </span>
         </template>
       </el-table-column>
@@ -301,9 +314,9 @@ export default {
         obj.startTime = moment(this.listQuery.timeRange[0]).format(
           'YYYY-MM-DD HH:mm:ss'
         )
-        obj.endTime = moment(this.listQuery.timeRange[1]).add(1, 'd').format(
-          'YYYY-MM-DD HH:mm:ss'
-        )
+        obj.endTime = moment(this.listQuery.timeRange[1])
+          .add(1, 'd')
+          .format('YYYY-MM-DD HH:mm:ss')
         obj.timeRange = null
       }
       fetchOrderList(clearQueryObject(obj, true)).then(({ data }) => {
