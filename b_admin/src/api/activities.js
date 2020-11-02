@@ -1,4 +1,5 @@
 import request, { baseConf } from '@/utils/request'
+import { exportConf } from "@/api/oss";
 
 export function fetchList(query) {
   return request({
@@ -151,8 +152,8 @@ export function exportToken() {
     method: 'get'
   })
 }
-export function downloadUrl(token, id) {
-  return baseConf().url + '/br/activity/order/export/undelivered?token=' + token + '&brActivityId=' + id
+export function downloadUrl(id) {
+  return exportConf('/br/activity/order/export/undelivered', { brActivityId: id })
 }
 export function importUrl() {
   return baseConf().url + '/br/activity/order/import/undelivered'

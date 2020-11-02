@@ -11,7 +11,7 @@
         <p class="middle light">你还没有消息哦～</p>
       </div>
       <div v-for="(item, j) in datas" :key="j" class="row pad2 item" @click="onGo(item)">
-        <img :src="item.accountInfo.logo" alt="img">
+        <img :src="item.accountInfo.avatar" alt="img">
         <div class="col just flex margin-l">
           <h5 class="middle dark blod">{{item.accountInfo.name}}</h5>
           <p class="small light text">{{item.content}}</p>

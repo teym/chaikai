@@ -589,7 +589,7 @@ import moment from "moment";
 import waves from "@/directive/waves"; // waves directive
 import Pagination from "@/components/Pagination"; // secondary package based on el-pagination
 import Upload from "@/components/Upload/SingleFile";
-import { getConf } from "@/api/oss";
+import { exportConf, getConf } from "@/api/oss";
 
 export default {
   name: "ComplexTable",
@@ -810,17 +810,8 @@ export default {
         this.$message({ message: "无可用数据", type: "info" });
         return;
       }
+      this.batchUrl = downloadUrl(this.listQuery.brActivityId)
       this.batchVisbale = true;
-      this.getBatchShip();
-    },
-    getBatchShip() {
-      exportToken().then((r) => {
-        if (r.data) {
-          this.batchUrl = downloadUrl(r.data, this.listQuery.brActivityId);
-        } else {
-          this.$message({ message: "获取下载链接失败", type: "error" });
-        }
-      });
     },
     handleBatchUpload() {
       this.batchLoading = true;
