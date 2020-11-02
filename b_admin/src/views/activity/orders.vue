@@ -163,10 +163,10 @@
       >
         <template slot-scope="{ row }">
           <div class="pingce" v-for="(c, i) in row.evaluationItems" :key="i">
-            <a target="_blank" :href="c.url">
-              <img :src="channelIcons[c.platformId + ''].icon" alt="" /> </a
+            <a target="_blank" :href="c.channel.homeLink">
+              <img :src="channelIcons[c.platformId + ''].icon" alt="" />
+              <span>{{ c.type === 1 ? "正式" : "追加" }}</span> </a
             ><a :href="c.url">
-              <span>{{ c.type === 1 ? "正式" : "追加" }}</span>
               <span>互动量{{ c.activeAmount }}</span>
               <el-icon class="el-icon-arrow-right"></el-icon>
             </a>
@@ -810,7 +810,7 @@ export default {
         this.$message({ message: "无可用数据", type: "info" });
         return;
       }
-      this.batchUrl = downloadUrl(this.listQuery.brActivityId)
+      this.batchUrl = downloadUrl(this.listQuery.brActivityId);
       this.batchVisbale = true;
     },
     handleBatchUpload() {
@@ -1017,6 +1017,11 @@ export default {
   border-radius: 4px;
   margin: 4px 0;
   font-size: 14px;
+  a{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
   img {
     width: 24px;
     height: 24px;

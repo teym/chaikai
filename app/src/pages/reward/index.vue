@@ -22,10 +22,10 @@ export default {
     }
   },
   mounted () {
-    const {status} = router(this).params()
+    const {status, orderStatus, issueStatus, deadline} = router(this).params()
     switch (status) {
       case '1':
-        this.msg = '提交测评后，15天自动发放'
+        this.msg = orderStatus === '6' ? (issueStatus && (issueStatus !== '6' && issueStatus !== '5') ? '测评投诉中，若处理超时或违规，将取消悬赏发放' : (!deadline ? '将自动发放' : `还剩${deadline}自动发放`)) : '提交测评后，15天自动发放'
         this.state = '待发放'
         this.img = '/static/images/reward_status_3.png'
         break
@@ -48,7 +48,7 @@ export default {
 .content {
   padding-top: 160rpx;
 }
-img{
+img {
   width: 220rpx;
   height: 220rpx;
 }

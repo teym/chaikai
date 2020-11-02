@@ -269,7 +269,9 @@ export default {
       router(this).push('/pages/web/main', {url: 'https://mp.weixin.qq.com/s/yPXWeSNE_vZx5WCiqOjqtQ'})
     },
     onReward () {
-      router(this).push('/pages/reward/main', {status: this.data.rewardStatusCode})
+      const s = diffTime(this.data.deadline, '')
+      console.log('reward', s)
+      router(this).push('/pages/reward/main', {status: this.data.rewardStatusCode, orderStatus: this.data.statusCode, issueStatus: this.data.ticketStatusCode, deadline: s})
     },
     onDepose () {
       router(this).push('/pages/depose/main', {id: this.data.id})

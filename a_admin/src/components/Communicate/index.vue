@@ -17,7 +17,7 @@
       </el-row>
     </div>
     <el-row class="layout">
-      <!-- <el-col :span="5" class="list">
+      <el-col v-if="showList" :span="5" class="list">
         <div
           v-for="(i, j) in list"
           :key="j"
@@ -25,20 +25,29 @@
           :class="{ active: i.originId === active }"
           @click="onActive(i)"
         >
-          <img :src="i.accountInfo.avatar" alt="avatar">
+          <img :src="(i.accountInfo || {}).avatar" alt="avatar">
           <div class="col">
             <div class="row t">
-              <h5>{{ i.accountInfo.name }}</h5>
+              <h5>{{ (i.accountInfo || {}).name }}</h5>
               <span>{{ i.date }}</span>
             </div>
             <div class="row b">
-              <p>{{ i.lastRecord.content }}</p>
+              <p>{{ i.content }}</p>
               <span v-if="i.brUnreadNum > 0">{{ i.brUnreadNum }}</span>
             </div>
           </div>
         </div>
-      </el-col> -->
-      <el-col class="content" :span="16">
+      </el-col>
+      <el-col class="content" :span="showList ? 12 : 16">
+        <!-- <a
+          class="tip"
+          href="https://www.yuque.com/lftshh/ki3koh/ocpz0z"
+          target="_blank"
+        >
+          <img src="@/assets/images/chat_tip.png" alt="tip" />
+          <p>提示：警惕站外沟通交易，平台提供合作保障</p>
+          <el-icon class="el-icon-arrow-right" />
+        </a> -->
         <div ref="box" class="box">
           <div
             v-for="(item, i) in data.datas"
@@ -46,9 +55,13 @@
             class="chat"
             :class="{ mine: item.my }"
           >
-            <img class="logo" :src="item.accountInfo.avatar" alt="logo">
+            <img
+              class="logo"
+              :src="(item.accountInfo || {}).avatar"
+              alt="logo"
+            >
             <div class="col">
-              <span>{{ item.accountInfo.name }}</span>
+              <span>{{ (item.accountInfo || {}).name }}</span>
               <div>
                 <img
                   v-if="item.isImg"
@@ -88,8 +101,8 @@
           </div>
         </div>
       </el-col>
-      <el-col :span="8" class="detail">
-        <order :id="active + ''" />
+      <el-col :span="showList ? 7 : 8" class="detail">
+        <order :id="active" ref="order" />
       </el-col>
     </el-row>
     <el-dialog width="60%" title="预览" :visible.sync="preview" append-to-body>
@@ -135,6 +148,7 @@ export default {
   data() {
     return {
       list: [],
+      showList: false,
       active: null,
       stat: 0,
       page: 0,
@@ -155,14 +169,24 @@ export default {
   },
   created() {
     this.loadList(1)
-    window.showCommunicate = (id) => {
-      this.showDetail = true
+    window.showCommunicate = (id, issue) => {
       this.active = id
+      this.showList = false
+      this.showDetail = true
+      setTimeout(() => {
+        this.$refs.order.showTab(issue ? 'issue' : 'order')
+      }, 0)
+      this.loadList(1)
     }
   },
   methods: {
     show() {
+      this.showList = true
       this.showDetail = true
+      setTimeout(() => {
+        this.$refs.order.showTab('order')
+      }, 0)
+      this.loadList(1)
     },
     onPreview(img) {
       this.previewUrl = img
@@ -213,7 +237,7 @@ export default {
           )
           this.data.sending = false
           setTimeout(() => {
-            this.$refs.box.scrollTo(0, this.$refs.box.scrollHeight)
+            this.$refs.box && this.$refs.box.scrollTo(0, this.$refs.box.scrollHeight)
           }, 0)
           if (done) {
             done()
@@ -257,8 +281,8 @@ export default {
           this.loading = false
           if (!this.active) {
             this.active = this.list[0].originId
-            this.loadData(1)
           }
+          this.loadData(1)
         })
         .catch((e) => {
           this.loading = false
@@ -297,8 +321,7 @@ export default {
             this.data.page = page
             this.data.loading = false
             setTimeout(() => {
-              console.log(this.$refs.box)
-              this.$refs.box.scrollTo(0, this.$refs.box.scrollHeight)
+              this.$refs.box && this.$refs.box.scrollTo(0, this.$refs.box.scrollHeight)
             }, 0)
           }
         })
@@ -318,6 +341,7 @@ export default {
 
   .list {
     border-right: 1px solid #e9e9e9;
+    overflow: hidden scroll;
     .item {
       display: flex;
       flex-direction: row;
@@ -332,6 +356,7 @@ export default {
       .col {
         margin-left: 8px;
         flex: 1;
+        overflow: hidden;
       }
       .row {
         display: flex;
@@ -359,7 +384,12 @@ export default {
           margin: 0;
           padding: 0;
           font-size: 14px;
+          line-height: 18px;
+          height: 18px;
+          white-space: nowrap;
           color: #737373;
+          overflow: hidden;
+          text-overflow: ellipsis;
         }
         span {
           background-color: #ff4848;
@@ -376,7 +406,7 @@ export default {
     }
   }
   .el-col {
-    height: calc(100vh * 0.6);
+    height: calc(100vh * 0.7);
   }
   .content {
     border-right: 1px solid #e9e9e9;

@@ -17,16 +17,25 @@
           </div>
           <div class="row">
             <h4>企业名称:</h4>
-            <p>{{ detail.company }}</p>
+            <p>
+              {{ detail.companyInfo.statusCode === 3 ? detail.company : "" }}
+            </p>
           </div>
           <div class="row">
             <h4>统一社会信用代码:</h4>
-            <p>{{ detail.companyInfo.creditCode }}</p>
+            <p>
+              {{
+                detail.companyInfo.statusCode === 3
+                  ? detail.companyInfo.creditCode
+                  : ""
+              }}
+            </p>
           </div>
           <div class="row">
             <h4>营业执照:</h4>
             <div>
               <el-button
+                v-if="detail.companyInfo.statusCode === 3"
                 size="mini"
                 @click="onPreview(detail.companyInfo.businessLicense)"
               >查看</el-button>
@@ -36,11 +45,23 @@
         <el-col :span="12">
           <div class="row">
             <h4>联系人:</h4>
-            <p>{{ detail.companyInfo.contact }}</p>
+            <p>
+              {{
+                detail.companyInfo.statusCode === 3
+                  ? detail.companyInfo.contact
+                  : ""
+              }}
+            </p>
           </div>
           <div class="row">
             <h4>微信号:</h4>
-            <p>{{ detail.companyInfo.contactWechat }}</p>
+            <p>
+              {{
+                detail.companyInfo.statusCode === 3
+                  ? detail.companyInfo.contactWechat
+                  : ""
+              }}
+            </p>
           </div>
           <div class="row">
             <h4>企业认证:</h4>
