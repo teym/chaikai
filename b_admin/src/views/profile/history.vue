@@ -93,7 +93,8 @@
             支付金额: {{ detail.amount }}
             <br />
             <br />
-            支付方式: {{ detail.recharge ? "支付宝" : "余额" }}
+            支付方式:
+            {{ (detail.serverOrder || {}).type === 1 ? "支付宝" : "余额" }}
             {{ detail.tradeNo ? " 支付单号" + detail.tradeNo : "" }}
           </el-col>
         </el-row>
@@ -108,7 +109,7 @@
 import { mapGetters } from "vuex";
 import { fetchHistory, buyAlipay } from "@/api/user";
 import Pagination from "@/components/Pagination"; // secondary package based on el-pagination
-import moment from 'moment'
+import moment from "moment";
 
 export default {
   name: "Profile",
@@ -154,7 +155,11 @@ export default {
     },
     handlePay(row) {
       this.listLoading = true;
-      buyAlipay({ amount: row.amount, payScene: "BR_SERVER_ORDER", recordId: row.id })
+      buyAlipay({
+        amount: row.amount,
+        payScene: "BR_SERVER_ORDER",
+        recordId: row.id,
+      })
         .then((r) => {
           this.listLoading = false;
           this.tmp = r.data.body.replace("<form ", '<form target="_blank"');
