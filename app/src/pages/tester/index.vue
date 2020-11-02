@@ -56,9 +56,6 @@ export default {
   },
   mounted () {
     this.loadData()
-    request.raw('https://v.kuaishou.com/8MOsMJ', {}).then(r => {
-      console.log('raw', r)
-    })
   },
   onPullDownRefresh () {
     uiapi.waitRefresh(this.loadData())

@@ -103,17 +103,16 @@ export default {
       })
     },
     mapStatus (s, t) {
-      const time = diffTime(t, '0分0秒')
-      console.log('state', t, time);
+      const time = diffTime(t, '')
       switch (s) {
         case 1:
-          return `修改测评还剩${time}，超时将由小二介入`
+          return time ? `修改测评还剩${time}，超时将由小二介入` : '已超时将由小二介入'
         case 2:
-          return `品牌确认修改还剩${time}，超时将自动确认`
+          return time ? `品牌确认修改还剩${time}，超时将自动确认` : '已超时将自动确认'
         case 3:
           return '请等待小二审核'
         case 4:
-          return `修改测评还剩${time}，超时将判违规，并扣除押金`
+          return time ? `修改测评还剩${time}，超时将判违规，并扣除押金` : '已超时将判违规，并扣除押金'
         case 5:
           return ''
         case 6:
@@ -146,11 +145,11 @@ export default {
   width: 32rpx;
   height: 32rpx;
 }
-.btn{
+.btn {
   margin: 54rpx;
   height: 80rpx;
   border-radius: 40rpx;
   color: white;
-  background-color: #FF8E3B;
+  background-color: #ff8e3b;
 }
 </style>
