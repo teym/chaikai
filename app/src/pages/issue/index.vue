@@ -104,6 +104,7 @@ export default {
     },
     mapStatus (s, t) {
       const time = diffTime(t, '0分0秒')
+      console.log('state', t, time);
       switch (s) {
         case 1:
           return `修改测评还剩${time}，超时将由小二介入`

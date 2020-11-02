@@ -53,6 +53,10 @@ function request (method, url, header, body) {
     }
     throw json
   }).catch(e => {
+    console.log(method, '-->', url, e)
+    if (e.json) {
+      return e.json().then(r => { throw Object.assign(r, { info: r.info || r.msg || '请求出错' }) })
+    }
     if (!e.info) { e.info = e.msg || '请求出错' }
     throw e
   })

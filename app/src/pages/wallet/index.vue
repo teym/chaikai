@@ -83,6 +83,7 @@ export default {
           }, 500)
         }).catch(e => {
           l()
+          console.log('error', e)
           uiapi.toast(e.info)
         })
       }).catch(e => {
