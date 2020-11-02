@@ -129,7 +129,7 @@
         <h5>合作方式：</h5>
         <p>{{ ["", "接受悬赏", "达人报价", "免费置换"][data.coopSubType] }}</p>
       </div>
-      <div class="row">
+      <div v-if="data.coopSubType !== 3" class="row">
         <h5>悬赏金额：</h5>
         <div>
           <p>
@@ -142,13 +142,13 @@
           </p>
         </div>
       </div>
-      <div class="row">
+      <div v-if="data.coopSubType !== 3" class="row">
         <h5>悬赏结算：</h5>
         <div>
           <p>{{ ["", "待发放", "已发放", "已取消"][data.rewardStatusCode] }}</p>
         </div>
       </div>
-      <div class="row">
+      <div v-if="data.coopSubType !== 3" class="row">
         <h5>合作要求：</h5>
         <div>
           <div class="row" style="margin-top: 0">
@@ -523,7 +523,7 @@ export default {
             data.receiver.city,
             data.receiver.county
           ]
-          data.ticket = data.tickets.filter(
+          data.ticket = (data.tickets || []).filter(
             (i) => i.statusCode > 0 && i.statusCode < 5
           )[0]
           this.data = data

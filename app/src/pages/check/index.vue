@@ -187,7 +187,7 @@
         <h5 class="middle dark blod">填写申请理由</h5>
         <div class="pad-l pad-t pad-r input light_bg margin-t">
           <textarea v-model="text" maxlength="200" class="middle dark normal textinput" placeholder="表达更多合作意向，能提高通过率喔~"></textarea>
-          <p class="small light normal text-right">{{text.length}}/200</p>
+          <p class="small light normal text-right">{{textLen}}/200</p>
         </div>
       </div>
     </div>
@@ -247,6 +247,9 @@ export default {
     return defaultData()
   },
   computed: {
+    textLen () {
+      return Math.min(200, this.text.length)
+    },
     blReward () {
       return this.data ? this.data.blReward * (this.type === 2 ? parseInt(this.bid) * 2 : 1) : 0
     },
@@ -376,7 +379,7 @@ export default {
   width: 44rpx;
   height: 44rpx;
 }
-.right{
+.right {
   width: 44rpx;
   height: 44rpx;
 }
@@ -407,7 +410,7 @@ export default {
   color: white;
   padding: 4rpx 8rpx;
 }
-.textinput{
+.textinput {
   width: 670rpx;
 }
 .bar {

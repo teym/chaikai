@@ -29,7 +29,7 @@
         <el-option
           v-for="(i, j) in coopTypes"
           :key="j"
-          :value="j + 1"
+          :value="j"
           :label="i"
         />
       </el-select>
@@ -42,7 +42,7 @@
         <el-option
           v-for="(i, j) in depositStatus"
           :key="j"
-          :value="j + 1"
+          :value="j"
           :label="i"
         />
       </el-select>

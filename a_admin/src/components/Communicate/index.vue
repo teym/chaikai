@@ -89,7 +89,7 @@
         </div>
       </el-col>
       <el-col :span="8" class="detail">
-        <order :id="active" />
+        <order :id="active + ''" />
       </el-col>
     </el-row>
     <el-dialog width="60%" title="预览" :visible.sync="preview" append-to-body>

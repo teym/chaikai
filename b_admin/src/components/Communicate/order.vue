@@ -139,17 +139,17 @@
         <h5>合作方式：</h5>
         <p>{{ ["", "接受悬赏", "达人报价", "免费置换"][data.coopSubType] }}</p>
       </div>
-      <div class="row">
+      <div class="row" v-if="data.coopSubType !== 3">
         <h5>悬赏金额：</h5>
         <p>{{ data.reward }}</p>
       </div>
-      <div class="row">
+      <div class="row" v-if="data.coopSubType !== 3">
         <h5>悬赏结算：</h5>
         <div>
           <p>{{ ["", "待发放", "已发放", "已取消"][data.rewardStatusCode] }}</p>
         </div>
       </div>
-      <div class="row">
+      <div class="row" v-if="data.coopSubType !== 3">
         <h5>合作要求：</h5>
         <div>
           <div class="row" style="margin-top: 0">
