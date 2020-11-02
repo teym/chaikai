@@ -120,7 +120,7 @@
               row.statusCode
             ]
           }}</span>
-          <span v-if="row.statusCode === 3">
+          <span style="color:#999" v-if="row.statusCode === 3">
             <br>
             {{row.rejectReason}}
           </span>

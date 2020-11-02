@@ -281,6 +281,7 @@ export default {
         if (!data.goods.brandInfo) {
           data.goods.brandInfo = {}
         }
+        data.statusCode = (moment(data.regEndTime).isAfter(new Date()) && data.remainingNum > 0) ? data.statusCode : 6
         data.extension.bloggerPublishTimeStr = moment(data.extension.bloggerPublishTime).format('截止M月D日前')
         this.data = data
         this.banners = data.goods.banners || [data.picUrl]

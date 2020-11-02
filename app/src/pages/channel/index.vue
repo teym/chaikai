@@ -51,6 +51,8 @@ export default {
     this.data = {}
     this.bind = []
     this.unbind = []
+  },
+  onShow () {
     this.loadData()
   },
   onPullDownRefresh () {

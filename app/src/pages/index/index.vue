@@ -60,6 +60,7 @@
 
 <script>
 import _ from 'underscore'
+import moment from 'moment'
 import navbar from '@/components/navbar'
 import {router, request, uiapi} from '@/utils/index'
 
@@ -112,7 +113,7 @@ export default {
         const olds = page === 1 ? [] : _.head(_.flatten(_.zip(this.datas[0] || [], this.datas[1] || [])),
           (this.datas[0].length || 0) + (this.datas[1].length || 0)
         )
-        const datas = olds.concat(data.data)
+        const datas = olds.concat(data.data).map(i => Object.assign(i, {statusCode: moment(i.regEndTime).isAfter(new Date()) && i.remainingNum > 0 ? i.statusCode : 6}))
         this.datas = _.partition(datas, (i, j) => (j % 2 === 0))
         this.nomore = data.pager.totalPages <= page
         this.page = page

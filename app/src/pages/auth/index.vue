@@ -6,7 +6,7 @@
         <p class="middle dark blod margin-l">{{channel.platformName}}</p>
       </div>
       <div class="light_bg row pad margin2-t">
-        <input class="flex middle dark" type="text" v-model="channel.homeLink" placeholder="请输入主页链接">
+        <input :disabled="channel.statusCode === '1' || channel.statusCode === '3'" class="flex middle dark" type="text" v-model="channel.homeLink" placeholder="请输入主页链接">
       </div>
       <div class="light_bg row center margin2-t shot" @click="onChoseImg">
         <p v-if="!channel.homePic" class="middle light">点击上传主页截图</p>
@@ -22,7 +22,7 @@
         <p class="small margin-t">{{channel.rejectReason}}</p>
       </div>
       <div class="flex"></div>
-      <div v-if="channel.statusCode !== '3'" class="btn middle blod row center" :class="{bg:channel.statusCode !== '1', ibg:channel.statusCode === '1'}" @click="onGo">提交审核</div>
+      <div v-if="channel.statusCode !== '3'" class="btn middle blod row center" :class="{bg:channel.statusCode !== '1', ibg:channel.statusCode === '1'}" @click="onGo">{{ channel.statusCode === '1' ? "审核中" : "提交审核"}}</div>
     </div>
     <done v-if="tip" message="小二会尽快给您反馈结果，请耐心等待～"/>
   </div>
@@ -58,6 +58,9 @@ export default {
   },
   methods: {
     onChoseImg () {
+      if (this.channel.statusCode === '1' || this.channel.statusCode === '3') {
+        return
+      }
       uiapi.chooseImage().then(r => {
         const l = uiapi.loading()
         request.upload('/oss/upload', r).then(({json: {data}}) => {
@@ -91,31 +94,31 @@ export default {
 </script>
 
 <style scoped>
-.channel img{
+.channel img {
   width: 64rpx;
   height: 64rpx;
 }
-.shot{
+.shot {
   height: 300rpx;
 }
-.shot img{
+.shot img {
   width: 100%;
   height: 100%;
 }
-.btn{
+.btn {
   margin: 60rpx;
   height: 80rpx;
   color: white;
   border-radius: 40rpx;
 }
-.reason{
+.reason {
   min-height: 200rpx;
-  color: #F25643;
+  color: #f25643;
 }
-.bg{
-  background-color: #FF8E3B;
+.bg {
+  background-color: #ff8e3b;
 }
-.ibg{
-  background-color: #FF8E3BA0;
+.ibg {
+  background-color: #ff8e3ba0;
 }
 </style>

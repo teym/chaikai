@@ -23,7 +23,12 @@
         style="width: 80px"
       >
         <el-option label="全部" :value="''" />
-        <el-option v-for="(i, j) in statusList" :label="i" :value="(j + 1) + ''" :key="j" />
+        <el-option
+          v-for="(i, j) in statusList"
+          :label="i"
+          :value="j + 1 + ''"
+          :key="j"
+        />
       </el-select>
 
       <el-button
@@ -68,18 +73,7 @@
         <template slot-scope="{ row }">
           <span>{{ [""].concat(statusList)[row.statusCode] }}</span>
           <span style="font-size: 12px; line-height: 1.2"
-            ><br />{{
-              [
-                "",
-                "修改测评还剩5天0时0分，超时将由小二介入",
-                "品牌确认修改还剩3天0时0分，超时将自动确认",
-                "请等待小二审核",
-                "修改测评还剩5天0时0分，超时将判违规，并扣除押金",
-                "",
-                "",
-                "处理超时/违规",
-              ][row.statusCode]
-            }}</span
+            ><br />{{ row.statusMsg }}</span
           >
         </template>
       </el-table-column>
@@ -178,7 +172,10 @@ export default {
       );
       fetchIssues(clearQueryObject(q)).then((response) => {
         this.list = response.data.data.map((i) =>
-          Object.assign(i, { date: formatDeadLine(i.deadline) })
+          Object.assign(i, {
+            date: formatDeadLine(i.deadline),
+            statusMsg: this.mapState(i),
+          })
         );
         this.total = response.data.pager.count;
 
@@ -187,6 +184,22 @@ export default {
           this.listLoading = false;
         }, 1.5 * 1000);
       });
+    },
+    mapState(row) {
+      const time = formatDeadLine(row.deadline);
+      switch (row.statusCode) {
+        case 1:
+          return `修改测评还剩${time}，超时将由小二介入`;
+        case 2:
+          return `品牌确认修改还剩${time}，超时将自动确认`;
+        case 3:
+          return "请等待小二审核";
+        case 4:
+          return `修改测评还剩${time}，超时将判违规，并扣除押金`;
+        case 7:
+          return "处理超时/违规";
+      }
+      return "";
     },
     handleFilter() {
       this.listQuery.page = 1;
