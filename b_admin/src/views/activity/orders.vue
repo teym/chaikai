@@ -355,13 +355,20 @@
               v-if="
                 row.rewardStatusCode !== 2 &&
                 listQuery.statusCode === '6' &&
-                row.ticketStatusCode !== 5 &&
                 row.ticketStatusCode !== 7
               "
               size="mini"
-              :type="row.ticketStatusCode > 0 ? '' : 'primary'"
+              :type="
+                row.ticketStatusCode > 0 && row.ticketStatusCode < 5
+                  ? ''
+                  : 'primary'
+              "
               @click="handleComplain(row)"
-              >{{ row.ticketStatusCode > 0 ? "投诉处理中" : "投诉" }}
+              >{{
+                row.ticketStatusCode > 0 && row.ticketStatusCode < 5
+                  ? "投诉处理中"
+                  : "投诉"
+              }}
             </el-button>
             <el-button
               v-if="
@@ -421,7 +428,7 @@
           <el-row>
             <el-col v-for="(c, i) in detail.evaluationItems" :key="i" :span="8">
               <el-form-item style="">
-                <el-checkbox :disabled="c.type !== 1" :label="c.id">
+                <el-checkbox :disabled="c.type !== 1" :label="c.id" style="display: flex;flex-direction: row;align-items: center;">
                   <span class="ceping">
                     <img :src="channelIcons[c.platformId + ''].icon" alt="" />
                     <span>{{ c.type === 2 ? "追加" : "正式" }}</span>
@@ -467,6 +474,7 @@
       <div slot="footer" class="dialog-footer">
         <el-button @click="formVisible = false">取消</el-button>
         <el-button
+          :disabled="sels.length === 0 || reason.length === 0"
           :loading="formLoading"
           type="primary"
           @click="handleCreateComplain"
@@ -840,7 +848,7 @@ export default {
       this.getShip(row.receiver.logisticsNo);
     },
     handleComplain(row) {
-      if (row.ticketStatusCode > 0) {
+      if (row.ticketStatusCode > 0 && row.ticketStatusCode < 5) {
         this.$router.push("/issue/index");
       } else {
         this.detail = row;
@@ -1052,6 +1060,9 @@ export default {
   padding: 4px;
   border-radius: 4px;
   font-size: 14px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
   img {
     width: 20px;
     height: 20px;
