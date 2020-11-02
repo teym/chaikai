@@ -273,8 +273,8 @@ export default {
         searchType: 1,
         searchKey: '',
         statusCode: 0,
-        coopType: 1,
-        depositStatusCode: 1,
+        coopType: 0,
+        depositStatusCode: 0,
         rewardStatusCode: 0,
         timeRange: [ps, ns]
       },
