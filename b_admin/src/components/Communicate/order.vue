@@ -223,46 +223,36 @@
         </div>
       </div>
       <div v-if="data.build.zhengshi.length > 0" class="row ceping">
-        <h5 style="line-height: 28px">正式测评：</h5>
-        <div>
-          <div
-            v-for="(item, i) in data.build.zhengshi"
-            :key="i"
-            class="row"
-            style="margin-top: 0; align-items: center"
-          >
-            <div class="item" @click="onUrl(item.url)">
-              <img :src="item.icon" alt="" />
-              <span style="margin-left: 4px"
-                >{{ item.platformName
-                }}<span style="margin-left: 12px"
-                  >互动量：{{ item.activeAmount }}</span
-                ></span
-              >
+        <h5 style="line-height: 34px">正式测评：</h5>
+        <div class="box">
+          <div class="item" v-for="(c, i) in data.build.zhengshi" :key="i">
+            <div class="pingce">
+              <a target="_blank" :href="(c.channel || {}).homeLink">
+                <img :src="c.icon" alt="" />
+                <span>{{ c.type === 2 ? "追加" : "正式" }}</span> </a
+              ><a ::href="c.url" target="_blank">
+                <span>互动量{{ c.activeAmount }}</span>
+                <el-icon class="el-icon-arrow-right"></el-icon>
+              </a>
             </div>
-            <span style="margin-left: 12px">{{ item.date }}</span>
+            <span style="margin-left: 12px">{{ c.date }}</span>
           </div>
         </div>
       </div>
       <div v-if="data.build.zhuijia.length > 0" class="row ceping">
-        <h5 style="line-height: 28px">追加测评：</h5>
-        <div>
-          <div
-            v-for="(item, i) in data.build.zhuijia"
-            :key="i"
-            class="row"
-            style="margin-top: 0; align-items: center"
-          >
-            <div class="item" @click="onUrl(item.url)">
-              <img :src="item.icon" alt="" />
-              <span style="margin-left: 4px"
-                >{{ item.platformName
-                }}<span style="margin-left: 12px"
-                  >互动量：{{ item.activeAmount }}</span
-                ></span
-              >
+        <h5 style="line-height: 34px">追加测评：</h5>
+        <div class="box">
+          <div class="item" v-for="(c, i) in data.build.zhuijia" :key="i">
+            <div class="pingce">
+              <a target="_blank" :href="(c.channel || {}).homeLink">
+                <img :src="c.icon" alt="" />
+                <span>{{ c.type === 2 ? "追加" : "正式" }}</span> </a
+              ><a ::href="c.url" target="_blank">
+                <span>互动量{{ c.activeAmount }}</span>
+                <el-icon class="el-icon-arrow-right"></el-icon>
+              </a>
             </div>
-            <span style="margin-left: 12px">{{ item.date }}</span>
+            <span style="margin-left: 12px">{{ c.date }}</span>
           </div>
         </div>
       </div>
@@ -313,46 +303,44 @@
             </div>
           </div>
           <div v-if="ticket.ticketedEvaluations.length > 0" class="row ceping">
-            <h5 style="line-height: 28px">投诉测评：</h5>
-            <div>
+            <h5 style="line-height: 34px">投诉测评：</h5>
+            <div class="box">
               <div
-                v-for="(item, i) in ticket.ticketedEvaluations"
+                class="item"
+                v-for="(c, i) in ticket.ticketedEvaluations"
                 :key="i"
-                class="row"
-                style="margin-top: 0; align-items: center"
               >
-                <div class="item" @click="onUrl(item.url)">
-                  <img :src="item.icon" alt="" />
-                  <span style="margin-left: 4px"
-                    >{{ item.platformName
-                    }}<span style="margin-left: 12px"
-                      >互动量：{{ item.activeAmount }}</span
-                    ></span
-                  >
+                <div class="pingce">
+                  <a target="_blank" :href="(c.channel || {}).homeLink">
+                    <img :src="c.icon" alt="" />
+                    <span>{{ c.type === 2 ? "追加" : "正式" }}</span> </a
+                  ><a ::href="c.url" target="_blank">
+                    <span>互动量{{ c.activeAmount }}</span>
+                    <el-icon class="el-icon-arrow-right"></el-icon>
+                  </a>
                 </div>
-                <span style="margin-left: 12px">{{ item.date }}</span>
+                <span style="margin-left: 12px">{{ c.date }}</span>
               </div>
             </div>
           </div>
           <div v-if="ticket.modifiedEvaluations.length > 0" class="row ceping">
-            <h5 style="line-height: 28px">修改测评：</h5>
-            <div>
+            <h5 style="line-height: 34px">修改测评：</h5>
+            <div class="box">
               <div
-                v-for="(item, i) in ticket.modifiedEvaluations"
+                class="item"
+                v-for="(c, i) in ticket.modifiedEvaluations"
                 :key="i"
-                class="row"
-                style="margin-top: 0; align-items: center"
               >
-                <div class="item" @click="onUrl(item.url)">
-                  <img :src="item.icon" alt="" />
-                  <span style="margin-left: 4px"
-                    >{{ item.platformName
-                    }}<span style="margin-left: 12px"
-                      >互动量：{{ item.activeAmount }}</span
-                    ></span
-                  >
+                <div class="pingce">
+                  <a target="_blank" :href="(c.channel || {}).homeLink">
+                    <img :src="c.icon" alt="" />
+                    <span>{{ c.type === 2 ? "追加" : "正式" }}</span> </a
+                  ><a ::href="c.url" target="_blank">
+                    <span>互动量{{ c.activeAmount }}</span>
+                    <el-icon class="el-icon-arrow-right"></el-icon>
+                  </a>
                 </div>
-                <span style="margin-left: 12px">{{ item.date }}</span>
+                <span style="margin-left: 12px">{{ c.date }}</span>
               </div>
             </div>
           </div>
@@ -508,7 +496,7 @@ export default {
             : [];
 
           const ev = data.evaluationItems.map((i) =>
-            Object.assign({}, i, ChannelIcons[i.platformId + ""], {
+            Object.assign(i, ChannelIcons[i.platformId + ""], {
               date: moment(i.gmtCreate).format("YYYY-MM-DD"),
             })
           );
@@ -523,6 +511,20 @@ export default {
           data.date = moment(data.gmtCreate).format("YYYY-MM-DD HH:mm:ss");
           data.tickets = (data.tickets || []).map((i) =>
             Object.assign(i, {
+              modifiedEvaluations: i.modifiedEvaluations.map((i) =>
+                Object.assign(
+                  i,
+                  { date: moment(i.gmtCreate).format("YYYY-MM-DD") },
+                  ChannelIcons[i.platformId + ""]
+                )
+              ),
+              ticketedEvaluations: i.ticketedEvaluations.map((i) =>
+                Object.assign(
+                  i,
+                  { date: moment(i.gmtCreate).format("YYYY-MM-DD") },
+                  ChannelIcons[i.platformId + ""]
+                )
+              ),
               date: moment(i.gmtCreate).format("YYYY-MM-DD HH:mm:ss"),
               msg: ticketMsg(i),
             })
@@ -595,20 +597,33 @@ export default {
     border-top: 1px solid #e9e9e9;
   }
   .ceping {
-    .item {
-      background-color: #dcdfe6;
-      border-radius: 4px;
-      padding: 4px 8px;
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      img {
-        width: 20px;
-        height: 20px;
-      }
-      span {
-        font-size: 10px;
-        color: #666666;
+    .box {
+      .item {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        .pingce {
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          background-color: #dcdfe6;
+          border: 1px solid #f5f5f5;
+          border-radius: 4px;
+          margin: 4px 0;
+          font-size: 14px;
+          a {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+          }
+          img {
+            width: 24px;
+            height: 24px;
+          }
+          span {
+            margin: 0 4px;
+          }
+        }
       }
     }
   }

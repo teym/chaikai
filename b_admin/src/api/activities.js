@@ -146,6 +146,13 @@ export function complain(data) {
   })
 }
 
+export function readPingce(id) {
+  return request({
+    url:`/br/activity/order/evaluation/${id}/read`,
+    method: 'post'
+  })
+}
+
 export function exportToken() {
   return request({
     url: '/br/activity/order/exportToken',

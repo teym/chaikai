@@ -25,8 +25,8 @@
           <p v-else class="small text-right">去认证</p>
           <img class="right" src="/static/images/arrow_right_white.png" alt="right">
         </div>
-        <div class="row i-center" @click="onScope">
-          <p class="small">评分 <span class="blod">{{user.scope}}</span></p>
+        <div class="row i-center" @click="onScore">
+          <p class="small">评分 <span class="blod">{{user.score}}</span></p>
           <img class="right" src="/static/images/arrow_right_white.png" alt="right">
         </div>
       </div>
@@ -200,7 +200,7 @@ export default {
         this.stat = data
       })])
     },
-    onScope () {
+    onScore () {
       this.onRouter('scope', {scope: this.user.score, tags: this.user.scoreInfo.items.map(i => (`${i.msg} ${i.number}`)).join(',')})
     },
     onOrder (status) {

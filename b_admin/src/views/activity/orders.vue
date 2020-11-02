@@ -165,11 +165,12 @@
           <div class="pingce" v-for="(c, i) in row.evaluationItems" :key="i">
             <a target="_blank" :href="c.channel.homeLink">
               <img :src="channelIcons[c.platformId + ''].icon" alt="" />
-              <span>{{ c.type === 1 ? "正式" : "追加" }}</span> </a
-            ><a :href="c.url">
+              <span>{{ c.type === 2 ? "追加" : "正式" }}</span> </a
+            ><a :href="c.url" target="_blank" @click="onRead(c)">
               <span>互动量{{ c.activeAmount }}</span>
               <el-icon class="el-icon-arrow-right"></el-icon>
             </a>
+            <div v-if="!c.read" class="dot"></div>
           </div>
         </template>
       </el-table-column>
@@ -423,7 +424,7 @@
                 <el-checkbox :disabled="c.type !== 1" :label="c.id">
                   <span class="ceping">
                     <img :src="channelIcons[c.platformId + ''].icon" alt="" />
-                    <span>{{ c.type === 1 ? "正式" : "追加" }}</span>
+                    <span>{{ c.type === 2 ? "追加" : "正式" }}</span>
                     <span>互动量{{ c.activeAmount }}</span>
                   </span>
                 </el-checkbox>
@@ -580,6 +581,7 @@ import {
   exportToken,
   downloadUrl,
   importUrl,
+  readPingce,
 } from "@/api/activities";
 import { ActivityOrderStatus, Channels, ChannelIcons } from "@/utils/constant";
 import { clearQueryObject, formatDeadLine } from "@/utils/index";
@@ -788,6 +790,10 @@ export default {
         .catch((e) => {
           // this.listLoading = false;
         });
+    },
+    onRead(c) {
+      c.read = true;
+      readPingce(c.id);
     },
     handleRemark(row) {
       // this.listLoading = true;
@@ -1017,7 +1023,8 @@ export default {
   border-radius: 4px;
   margin: 4px 0;
   font-size: 14px;
-  a{
+  position: relative;
+  a {
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -1028,6 +1035,15 @@ export default {
   }
   span {
     margin: 0 4px;
+  }
+  .dot {
+    position: absolute;
+    right: -2px;
+    top: -2px;
+    width: 6px;
+    height: 6px;
+    background-color: #ff4949;
+    border-radius: 3px;
   }
 }
 .ceping {
