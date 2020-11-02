@@ -171,7 +171,7 @@ export default {
         obj.startTime = moment(this.listQuery.timeRange[0]).format(
           'YYYY-MM-DD HH:mm:ss'
         )
-        obj.endTime = moment(this.listQuery.timeRange[1]).format(
+        obj.endTime = moment(this.listQuery.timeRange[1]).add(1, 'd').format(
           'YYYY-MM-DD HH:mm:ss'
         )
         obj.timeRange = null
@@ -179,7 +179,7 @@ export default {
       fetchCompanyList(clearQueryObject(obj, true)).then(({ data }) => {
         this.list = data.data.map((i) =>
           Object.assign(i, {
-            date: moment(i.companyInfo.gmtCreate).format('YYYY-MM-DD HH:mm:ss'),
+            date: moment((i.companyInfo || {}).gmtCreate).format('YYYY-MM-DD HH:mm:ss'),
             brands: (i.brands || []).map((i) =>
               Object.assign(i, {
                 date: moment(i.gmtCreate).format('YYYY-MM-DD HH:mm:ss')

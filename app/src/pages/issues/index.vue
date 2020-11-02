@@ -6,7 +6,7 @@
     </div>
     <div v-else class="flex">
       <div v-for="(item, j) in datas" :key="j" class="col pad2 item margin-b white_bg">
-        <div class="row">
+        <div class="row" @click="onOrder(item)">
           <img :src="item.activity.picUrl" alt="img" class="logo" />
           <h5 class="middle medium dark flex margin-l">{{item.activity.title}}</h5>
         </div>
@@ -65,6 +65,9 @@ export default {
       }).catch(e => {
         uiapi.toast(e.info)
       })
+    },
+    onOrder (item) {
+      router(this).push('/pages/order/main', {id: item.id})
     },
     onDetail (item, t) {
       router(this).push('/pages/issue/main', {id: t.id})

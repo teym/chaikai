@@ -39,7 +39,7 @@
         </div>
       </el-col> -->
       <el-col class="content" :span="16">
-        <div class="box">
+        <div ref="box" class="box">
           <div
             v-for="(item, i) in data.datas"
             :key="i"
@@ -63,11 +63,7 @@
           </div>
         </div>
         <div class="bar">
-          <textarea
-            v-model="text"
-            class="input"
-            @keypress.enter="onSend"
-          />
+          <textarea v-model="text" class="input" @keypress.enter="onSend" />
           <div class="row">
             <label for="file" class="file" @click="clickFile">
               <input
@@ -216,6 +212,9 @@ export default {
             })
           )
           this.data.sending = false
+          setTimeout(() => {
+            this.$refs.box.scrollTo(0, this.$refs.box.scrollHeight)
+          }, 0)
           if (done) {
             done()
           }
@@ -297,6 +296,10 @@ export default {
             this.data.nomore = data.pager.totalPages <= page
             this.data.page = page
             this.data.loading = false
+            setTimeout(() => {
+              console.log(this.$refs.box)
+              this.$refs.box.scrollTo(0, this.$refs.box.scrollHeight)
+            }, 0)
           }
         })
         .catch((e) => {

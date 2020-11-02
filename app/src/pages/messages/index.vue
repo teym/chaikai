@@ -111,8 +111,10 @@ export default {
   font-weight: 500;
 }
 .item .text{
-  word-break: break-all;
-  height: 24rpx;
+  height: 36rpx;
+  width: 420rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .item img {
   width: 100rpx;

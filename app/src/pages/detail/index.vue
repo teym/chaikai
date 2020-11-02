@@ -66,8 +66,9 @@
                   class="float"
                   v-if="!expand"
                   @click="expand=true"
-                >展开更多︾</span>
-                <span v-if="expand" @click="expand=false">收起︽</span>
+                >展开更多<img src="/static/images/detail_more.png" alt="more">
+                </span>
+                <span v-if="expand" @click="expand=false">收起<img src="/static/images/detail_less.png" alt="more"></span>
               </p>
             </div>
           </div>
@@ -104,6 +105,7 @@
             <h5>合作方式</h5>
             <div class="round-btn">{{['', '接受悬赏', '接受悬赏/达人报价', '免费置换'][data.cooperationType]}}</div>
           </div>
+          <div v-if="data.cooperationType !== 3">
           <div class="row just line">
             <h5>合作要求</h5>
             <div class="round-btn">{{data.blReward}}/人</div>
@@ -158,6 +160,7 @@
             <div>
               <p v-for="(o, i) in otherReq" :key="i">{{o}}</p>
             </div>
+          </div>
           </div>
         </div>
       </div>
@@ -513,6 +516,10 @@ h5 {
   line-height: 40rpx;
   background-color: white;
 }
+.desc .brand p span img{
+  width: 20rpx;
+  height: 20rpx;
+}
 .desc .brand p .float {
   position: absolute;
   right: 0;
@@ -612,7 +619,7 @@ h5 {
 }
 .task .line .gray {
   color: #7b7f8e;
-  background-color: #c1c6cb;
+  background-color: #ECEDEF;
 }
 
 .bar {

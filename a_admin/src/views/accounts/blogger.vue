@@ -57,7 +57,7 @@
       </el-select>
       <el-input-number
         v-if="listQuery.sort === 3"
-        v-model="listQuery.min"
+        v-model="listQuery.minFansCount"
         size="mini"
         class="filter-item"
         style="width: 60px"
@@ -66,7 +66,7 @@
       />
       <el-input-number
         v-if="listQuery.sort === 3"
-        v-model="listQuery.min"
+        v-model="listQuery.maxFansCount"
         size="mini"
         class="filter-item"
         style="width: 60px"
@@ -174,8 +174,8 @@ export default {
         page: 1,
         size: 20,
         sort: 1,
-        min: 0,
-        max: 0,
+        minFansCount: 0,
+        maxFansCount: 0,
         searchType: 1,
         searchKey: '',
         platformId: 0,
@@ -206,7 +206,7 @@ export default {
         obj.startTime = moment(this.listQuery.timeRange[0]).format(
           'YYYY-MM-DD HH:mm:ss'
         )
-        obj.endTime = moment(this.listQuery.timeRange[1]).format(
+        obj.endTime = moment(this.listQuery.timeRange[1]).add(1, 'd').format(
           'YYYY-MM-DD HH:mm:ss'
         )
         obj.timeRange = null

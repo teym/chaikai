@@ -22,7 +22,7 @@
         <p class="small margin-t">{{channel.rejectReason}}</p>
       </div>
       <div class="flex"></div>
-      <div class="btn middle blod row center bg" @click="onGo">提交审核</div>
+      <div v-if="channel.statusCode !== '3'" class="btn middle blod row center" :class="{bg:channel.statusCode !== '1', ibg:channel.statusCode === '1'}" @click="onGo">提交审核</div>
     </div>
     <done v-if="tip" message="小二会尽快给您反馈结果，请耐心等待～"/>
   </div>
@@ -73,6 +73,9 @@ export default {
       router(this).push('/pages/web/main', {url: 'https://docs.qq.com/doc/DU1R1RkNkU05MZWVj?pub=1&dver=2.1.0'})
     },
     onGo () {
+      if (this.channel.statusCode === '1' || this.channel.statusCode === '3') {
+        return
+      }
       const l = uiapi.loading()
       request.post('/bl/account/channel', Object.assign({}, this.channel)).then(r => {
         l()
@@ -111,5 +114,8 @@ export default {
 }
 .bg{
   background-color: #FF8E3B;
+}
+.ibg{
+  background-color: #FF8E3BA0;
 }
 </style>

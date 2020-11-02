@@ -86,8 +86,8 @@
       <div class="rule margin-t" @click="onRule">
         <img src="/static/images/detail_tip.png" alt="tip" />
       </div>
-      <h5 class="middle dark blod margin-t">合作要求</h5>
-      <div class="light_bg pad margin-t">
+      <h5 class="middle dark blod margin-t" v-if="data.coopSubType !== 3">合作要求</h5>
+      <div class="light_bg pad margin-t" v-if="data.coopSubType !== 3">
         <div class="row just pad-t">
               <p class="small normal light">合作篇幅</p>
               <div
@@ -175,9 +175,9 @@
     <div style="height: 80rpx" class="white_bg"></div>
     <bar background='#FFFFFF'>
     <div class="bar row pad2 i-center white_bg">
-      <div v-if="data.statusCode < 4" class="btn gray small row center margin-l" @click="onCancel">取消申请</div>
-      <div v-if="data.statusCode === 4" class="btn gray small row center margin-l" @click="onShip">查看物流</div>
-      <div v-if="data.statusCode >= 4 && data.statusCode < 7" class="btn gray small row center margin-l" @click="onMessage">留言</div>
+      <div v-if="data.statusCode < 3" class="btn gray small row center margin-l" @click="onCancel">取消申请</div>
+      <div v-if="data.statusCode >= 4 && data.statusCode < 7" class="btn gray small row center margin-l" @click="onShip">查看物流</div>
+      <div v-if="data.statusCode >= 3 && data.statusCode < 7" class="btn gray small row center margin-l" @click="onMessage">留言</div>
       <div v-if="data.statusCode < 7 && data.depositInfo.statusCode < 2" class="btn red small row center margin-l" @click="onPay">支付押金</div>
       <div v-if="data.statusCode === 4" class="btn red small row center margin-l" @click="onRecv">确认收货</div>
       <div v-if="data.statusCode === 5" class="btn red small row center margin-l" @click="onCommit">提交评测</div>

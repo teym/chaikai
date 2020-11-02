@@ -234,7 +234,7 @@
                 {{ item.platformName }}
                 <span
                   style="margin-left: 12px"
-                >活动量：{{ item.activeAmount }}</span>
+                >互动量：{{ item.activeAmount }}</span>
               </span>
             </div>
             <span style="margin-left: 12px">{{ item.date }}</span>
@@ -256,7 +256,7 @@
                 {{ item.platformName }}
                 <span
                   style="margin-left: 12px"
-                >活动量：{{ item.activeAmount }}</span>
+                >互动量：{{ item.activeAmount }}</span>
               </span>
             </div>
             <span style="margin-left: 12px">{{ item.date }}</span>
@@ -325,7 +325,7 @@
                   >{{ item.platformName
                   }}<span
                     style="margin-left: 12px"
-                  >活动量：{{ item.activeAmount }}</span></span>
+                  >互动量：{{ item.activeAmount }}</span></span>
                 </div>
                 <span style="margin-left: 12px">{{ item.date }}</span>
               </div>
@@ -347,34 +347,40 @@
                   >{{ item.platformName
                   }}<span
                     style="margin-left: 12px"
-                  >活动量：{{ item.activeAmount }}</span></span>
+                  >互动量：{{ item.activeAmount }}</span></span>
                 </div>
                 <span style="margin-left: 12px">{{ item.date }}</span>
               </div>
             </div>
           </div>
-        </div>
-        <div v-if="data.ticket && data.ticket.statusCode < 5" class="row">
-          <el-button
-            size="mini"
-            :loading="data.update"
-            @click="updateState(4)"
-          >继续修改</el-button>
-          <el-button
-            size="mini"
-            :loading="data.update"
-            @click="updateState(7)"
-          >判定违规</el-button>
-          <el-button
-            size="mini"
-            :loading="data.update"
-            @click="updateState(5)"
-          >修改完成</el-button>
-          <el-button
-            size="mini"
-            :loading="data.update"
-            @click="updateState(6)"
-          >取消投诉</el-button>
+          <div
+            v-if="ticket.statusCode === 3 || ticket.statusCode === 4"
+            class="row"
+          >
+            <el-button
+              v-if="ticket.statusCode === 3"
+              size="mini"
+              :loading="data.update"
+              @click="updateState(ticket, 4)"
+            >继续修改</el-button>
+            <el-button
+              v-if="ticket.statusCode === 3"
+              size="mini"
+              :loading="data.update"
+              @click="updateState(ticket, 7)"
+            >判定违规</el-button>
+            <el-button
+              v-if="ticket.statusCode === 3"
+              size="mini"
+              :loading="data.update"
+              @click="updateState(ticket, 5)"
+            >修改完成</el-button>
+            <el-button
+              size="mini"
+              :loading="data.update"
+              @click="updateState(ticket, 6)"
+            >取消投诉</el-button>
+          </div>
         </div>
       </div>
       <div v-else class="empty">
@@ -438,10 +444,10 @@ export default {
     onUrl(url) {
       window.open(url, '_blank')
     },
-    updateState(s) {
+    updateState(ticket, s) {
       const id = this.id
       this.data.update = true
-      updateIssueState({ id: this.data.ticket.id, statusCode: s })
+      updateIssueState({ id: ticket.id, statusCode: s })
         .then((r) => {
           if (id === this.id) {
             this.data.update = false
@@ -594,6 +600,17 @@ export default {
         font-size: 10px;
         color: #666666;
       }
+    }
+  }
+  .empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 60px;
+    p {
+      text-align: center;
+      font-size: 14px;
+      line-height: 20px;
     }
   }
 }

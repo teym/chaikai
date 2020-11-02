@@ -14,7 +14,6 @@
             style="margin-bottom: 30px"
             label-width="110px"
             label="活动商品:"
-            :required="true"
           >
             <el-button
               v-if="!postForm.goods"
@@ -42,7 +41,6 @@
             style="margin-bottom: 30px"
             label-width="110px"
             label="商品规格:"
-            :required="true"
           >
             <el-select v-model="postForm.skus" multiple placeholder="请选择">
               <el-option
@@ -70,7 +68,6 @@
             style="margin-bottom: 30px"
             label-width="110px"
             label="报名时间:"
-            :required="true"
           >
             <span slot="label">
               报名时间:
@@ -96,7 +93,6 @@
             style="margin-bottom: 30px"
             label-width="110px"
             label="活动名额:"
-            :required="true"
           >
             <el-input-number
               v-model="postForm.totalNum"
@@ -454,6 +450,7 @@
                 v-model="postForm.extension.bloggerPublishTime"
                 type="date"
                 placeholder="指定达人发布测评时间"
+                :picker-options="dateOptions2"
               />
             </el-form-item>
             <el-form-item
@@ -695,10 +692,16 @@ export default {
   data() {
     const validateRequire = (rule, value, callback) => {
       if (!value) {
-        this.$message({
-          message: rule.name + "为必传项",
-          type: "error",
-        });
+        if (this.tip <= 0) {
+          this.tip += 1;
+          this.$message({
+            message: rule.name + "为必传项",
+            type: "error",
+            onClose: () => {
+              this.tip -= 1;
+            },
+          });
+        }
         callback(new Error(rule.name + "为必传项"));
       } else {
         callback();
@@ -721,22 +724,33 @@ export default {
     // }
     const validateNumberRequire = (rule, value, callback) => {
       if (parseFloat(value) < 0) {
-        this.$message({
-          message: rule.name + "需大于0",
-          type: "error",
-        });
+        if (this.tip <= 0) {
+          this.tip += 1;
+          this.$message({
+            message: rule.name + "需大于0",
+            type: "error",
+            onClose: () => {
+              this.tip -= 1;
+            },
+          });
+        }
         callback(new Error(rule.name + "需大于0"));
       } else {
         callback();
       }
     };
     const validateArrayRequire = (rule, value, callback) => {
-      console.log(rule.name, value);
       if (!((value || {}).length || 0) > 0) {
-        this.$message({
-          message: rule.name + "为必传项",
-          type: "error",
-        });
+        if (this.tip <= 0) {
+          this.tip += 1;
+          this.$message({
+            message: rule.name + "为必传项",
+            type: "error",
+            onClose: () => {
+              this.tip -= 1;
+            },
+          });
+        }
         callback(new Error(rule.name + "为必传项"));
       } else {
         callback();
@@ -746,40 +760,95 @@ export default {
       const v = parseInt(value);
       if (v >= 0 && v >= this.minAmount) {
         if (this.postForm.cooperationType !== 3 && v === 0) {
-          this.$message({
-            message: "请至少设置一项合作要求",
-            type: "error",
-          });
+          if (this.tip <= 0) {
+            this.tip += 1;
+            this.$message({
+              message: "请至少设置一项合作要求",
+              type: "error",
+              onClose: () => {
+                this.tip -= 1;
+              },
+            });
+          }
           callback(new Error("请至少设置一项合作要求"));
         } else {
           callback();
         }
       } else {
-        this.$message({
-          message: "请输入正确的推广悬赏金额",
-          type: "error",
-        });
+        if (this.tip <= 0) {
+          this.tip += 1;
+          this.$message({
+            message: "请输入正确的推广悬赏金额",
+            type: "error",
+            onClose: () => {
+              this.tip -= 1;
+            },
+          });
+        }
         callback(new Error("请输入正确的推广悬赏金额"));
       }
     };
     return {
+      tip: 0,
       postForm: Object.assign({}, defaultForm),
       loading: false,
       brandListOptions: [],
       rules: {
-        goods: [{ validator: validateRequire, trigger:'blur', name: "活动商品" }],
-        skus: [{ validator: validateArrayRequire, trigger:'blur', name: "商品规格" }],
-        title: [{ required: true, validator: validateRequire, trigger:'blur', name: "活动名称" }],
+        goods: [
+          {
+            required: true,
+            validator: validateRequire,
+            trigger: "blur",
+            name: "活动商品",
+          },
+        ],
+        skus: [
+          {
+            required: true,
+            validator: validateArrayRequire,
+            trigger: "blur",
+            name: "商品规格",
+          },
+        ],
+        title: [
+          {
+            required: true,
+            validator: validateRequire,
+            trigger: "blur",
+            name: "活动名称",
+          },
+        ],
         totalNum: [
           {
+            required: true,
             validator: validateNumberRequire,
-            trigger:'blur',
+            trigger: "blur",
             name: "活动名额",
           },
         ],
-        reward: [{ validator: validateAmount, required: true, trigger:'blur' }],
-        regTime: [{ validator: validateArrayRequire, trigger:'blur', name: "报名时间" }],
-        channels: [{ validator: validateArrayRequire, trigger:'blur', name: "推广渠道" }],
+        reward: [
+          {
+            required: true,
+            validator: validateAmount,
+            required: true,
+            trigger: "blur",
+          },
+        ],
+        regTime: [
+          {
+            required: true,
+            validator: validateArrayRequire,
+            trigger: "blur",
+            name: "报名时间",
+          },
+        ],
+        channels: [
+          {
+            validator: validateArrayRequire,
+            trigger: "blur",
+            name: "推广渠道",
+          },
+        ],
       },
       channelList: mapChannel(Channels),
       goodsFormVisible: false,
@@ -798,6 +867,17 @@ export default {
           const n = Date.now();
           return !(
             t > n + 2 * 24 * 60 * 60 * 1000 && t < n + 7 * 24 * 60 * 60 * 1000
+          );
+        },
+      },
+      dateOptions2: {
+        disabledDate: (time) => {
+          const t = time.getTime();
+          const b = Date.now();
+          const n =
+            b + (this.postForm.regTime[1] ? moment(this.postForm.regTime[1]).toDate() - b : 0);
+          return !(
+            t > n + 12 * 24 * 60 * 60 * 1000 && t < n + 25 * 24 * 60 * 60 * 1000
           );
         },
       },
@@ -894,7 +974,7 @@ export default {
                 (i) => i.skuIdUnion
               );
             }
-            response.data.goods = r.data.data[0];
+            response.data.goods = copy ? undefined : r.data.data[0];
             return response.data;
           });
         })
@@ -1035,7 +1115,7 @@ export default {
       this.topics = mapChannel(Channels)
         .filter((i) => this.postForm.channels.indexOf(i.id) >= 0)
         .map((i) => {
-          const obj = this.postForm.topics.find((j) => j.id === i.id);
+          const obj = this.postForm.topics.find((j) => j.platformId === i.id);
           return Object.assign(
             { nickname: "", topic: "", platformName: i.name },
             i,

@@ -75,5 +75,15 @@ export function waitRefresh (p) {
   }
 }
 
-export const muiapi = { alert, toast, loading, chooseImage, chooseAddress, previewImgs, waitRefresh }
+export function scrollTo (sel) {
+  return new Promise((resolve, reject) => {
+    mpvue.pageScrollTo({
+      selector: sel,
+      success: resolve,
+      fail: reject
+    })
+  })
+}
+
+export const muiapi = { alert, toast, loading, chooseImage, chooseAddress, previewImgs, waitRefresh, scrollTo }
 export default muiapi

@@ -41,14 +41,14 @@
       <el-col class="content" :span="showList ? 12 : 16">
         <a
           class="tip"
-          href="https://www.yuque.com/lftshh/fo41es/uvwnup"
+          href="https://www.yuque.com/lftshh/ki3koh/ocpz0z"
           target="_blank"
         >
           <img src="@/assets/images/chat_tip.png" alt="tip" />
           <p>提示：警惕站外沟通交易，平台提供合作保障</p>
           <el-icon class="el-icon-arrow-right" />
         </a>
-        <div class="box">
+        <div class="box" ref="box">
           <div
             v-for="(item, i) in data.datas"
             :key="i"
@@ -237,6 +237,9 @@ export default {
             })
           );
           this.data.sending = false;
+          setTimeout(() => {
+            this.$refs.box && this.$refs.box.scrollTo(0, this.$refs.box.scrollHeight);
+          }, 0);
           if (done) {
             done();
           }
@@ -318,6 +321,9 @@ export default {
             this.data.nomore = data.pager.totalPages <= page;
             this.data.page = page;
             this.data.loading = false;
+            setTimeout(() => {
+              this.$refs.box && this.$refs.box.scrollTo(0, this.$refs.box.scrollHeight);
+            }, 0);
           }
         })
         .catch((e) => {
@@ -336,6 +342,7 @@ export default {
 
   .list {
     border-right: 1px solid #e9e9e9;
+    overflow: hidden scroll;
     .item {
       display: flex;
       flex-direction: row;
@@ -350,6 +357,7 @@ export default {
       .col {
         margin-left: 8px;
         flex: 1;
+        overflow: hidden;
       }
       .row {
         display: flex;
@@ -377,7 +385,12 @@ export default {
           margin: 0;
           padding: 0;
           font-size: 14px;
+          line-height: 18px;
+          height: 18px;
+          white-space: nowrap;
           color: #737373;
+          overflow: hidden;
+          text-overflow: ellipsis;
         }
         span {
           background-color: #ff4848;

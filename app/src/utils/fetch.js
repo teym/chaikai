@@ -1,15 +1,33 @@
 export function fetch (url, { method, headers, body }) {
+  var tmp = {
+    task: null,
+    headers: {},
+    call: () => {
+      // console.log('on header', resp)
+    }
+  }
   return new Promise((resolve, reject) => {
-    mpvue.request({
+    tmp.task = mpvue.request({
       url,
       method,
       data: body,
       header: headers,
       responseType: 'text',
-      success: ({ data, statusCode, header }) => {
+      success: (resp) => {
+        console.log(resp)
+        const { data, statusCode, header } = resp
         const res = {
           headers: { map: header },
           statusCode,
+          text: () => {
+            return new Promise((resolve, reject) => {
+              try {
+                resolve(typeof data === 'string' ? data : '')
+              } catch (e) {
+                reject(e)
+              }
+            })
+          },
           json: () => {
             return new Promise((resolve, reject) => {
               try {
@@ -29,8 +47,12 @@ export function fetch (url, { method, headers, body }) {
       },
       fail: (e) => {
         reject(e)
+      },
+      complete: () => {
+        tmp.task.offHeadersReceived && tmp.task.offHeadersReceived(tmp.call)
       }
     })
+    tmp.task.onHeadersReceived && tmp.task.onHeadersReceived(tmp.call)
   })
 }
 

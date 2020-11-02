@@ -151,6 +151,7 @@
 
 <script>
 import { fetchServeList, closeOrder } from '@/api/check'
+import { exportConf } from '@/api/oss'
 import moment from 'moment'
 import { clearQueryObject } from '@/utils/index'
 import waves from '@/directive/waves' // waves directive
@@ -203,7 +204,7 @@ export default {
         obj.startTime = moment(this.listQuery.timeRange[0]).format(
           'YYYY-MM-DD HH:mm:ss'
         )
-        obj.endTime = moment(this.listQuery.timeRange[1]).format(
+        obj.endTime = moment(this.listQuery.timeRange[1]).add(1, 'd').format(
           'YYYY-MM-DD HH:mm:ss'
         )
         obj.timeRange = null
@@ -226,19 +227,14 @@ export default {
       this.listQuery.page = 1
       this.getList()
     },
-    handleExport() {},
+    handleExport() {
+      location.href = exportConf('')
+    },
     handleClose(row) {
       this.$prompt('请输入拒绝理由', {
         inputPlaceholder: '拒绝理由,最多200字',
         inputValidator: (s) => {
           return s && s.length <= 200
-        },
-        beforeClose: (action, instance, done) => {
-          if (action === 'confirm' && !instance.inputValue) {
-            this.$message({ message: '请输入拒绝理由', type: 'error' })
-          } else {
-            done()
-          }
         }
       }).then((r) => {
         closeOrder({

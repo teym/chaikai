@@ -168,7 +168,7 @@
             @click="handleDeposit(row)"
           >押金详情</el-button>
           <el-button
-            v-if="row.statusCode === 5 || row.statusCode === 6"
+            v-if="row.statusCode === 4 || row.statusCode === 5"
             size="mini"
             type="primary"
             @click="handleClose(row)"
@@ -301,7 +301,7 @@ export default {
         obj.startTime = moment(this.listQuery.timeRange[0]).format(
           'YYYY-MM-DD HH:mm:ss'
         )
-        obj.endTime = moment(this.listQuery.timeRange[1]).format(
+        obj.endTime = moment(this.listQuery.timeRange[1]).add(1, 'd').format(
           'YYYY-MM-DD HH:mm:ss'
         )
         obj.timeRange = null

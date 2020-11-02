@@ -88,7 +88,7 @@
       <el-table-column label="状态" align="center">
         <template slot-scope="{ row }">
           <span>{{ status[row.statusCode] }}</span>
-          <span v-if="row.statusCode === 4">
+          <span v-if="row.statusCode === 3" style="color:#999">
             <br>
             {{ row.rejectReason }}
           </span>
@@ -110,30 +110,30 @@
       >
         <template slot-scope="{ row }">
           <el-button
-            v-if="row.statusCode === 2"
+            v-if="row.statusCode === 2 && row.statusCode !== 3"
             type="primary"
             size="mini"
             @click="handleAction(row, 4)"
           >通过</el-button>
           <el-button
-            v-if="row.statusCode === 2"
+            v-if="row.statusCode === 2 && row.statusCode !== 3"
             size="mini"
             @click="handleAction(row, 3)"
           >拒绝</el-button>
-          <br v-if="row.statusCode === 2">
+          <br v-if="row.statusCode === 2 && row.statusCode !== 3">
           <el-button
-            v-if="row.statusCode >= 2"
+            v-if="row.statusCode >= 2 && row.statusCode !== 3"
             size="mini"
             @click="handlePreview(row)"
           >预览</el-button>
           <el-button
-            v-if="row.statusCode >= 2"
+            v-if="row.statusCode >= 2 && row.statusCode !== 3"
             size="mini"
             @click="handleDetail(row)"
           >详情</el-button>
-          <br v-if="row.statusCode >= 2">
+          <br v-if="row.statusCode >= 2 && row.statusCode !== 3">
           <el-button
-            v-if="row.statusCode === 45"
+            v-if="row.statusCode === 4 || row.statusCode === 5"
             size="mini"
             type="primary"
             @click="handleAction(row, 5)"
@@ -360,7 +360,7 @@ export default {
         size: 20,
         searchType: 1,
         searchKey: '',
-        statusCode: 0,
+        statusCode: 2,
         coopType: 0
       },
       status: [

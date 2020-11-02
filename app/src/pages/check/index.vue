@@ -57,7 +57,7 @@
         <div class="rule margin-t" @click="onRule">
           <img src="/static/images/detail_tip.png" alt="tip" />
         </div>
-        <div class="pad-b">
+        <div class="pad-b" v-if="data.cooperationType !== 3">
           <h5 class="middle dark blod">合作要求</h5>
           <div class="light_bg margin-t pad-l pad-r pad-b">
             <div class="row just pad-t">
@@ -186,8 +186,8 @@
       <div class="pad2-l pad2-r pad-t pad2-b white_bg margin-t">
         <h5 class="middle dark blod">填写申请理由</h5>
         <div class="pad-l pad-t pad-r input light_bg margin-t">
-          <textarea v-model="text" class="middle dark normal" placeholder="表达更多合作意向，能提高通过率喔~"></textarea>
-          <p class="small light normal text-right">12/200</p>
+          <textarea v-model="text" maxlength="200" class="middle dark normal textinput" placeholder="表达更多合作意向，能提高通过率喔~"></textarea>
+          <p class="small light normal text-right">{{text.length}}/200</p>
         </div>
       </div>
     </div>
@@ -306,7 +306,7 @@ export default {
       router(this).push('/pages/web/main', {url: 'https://mp.weixin.qq.com/s/yPXWeSNE_vZx5WCiqOjqtQ'})
     },
     onGuide () {
-      router(this).push('/pages/web/main', {url: 'https://mp.weixin.qq.com/s/_r3sWoykk70201FeK5yc9g'})
+      router(this).push('/pages/web/main', {url: 'https://docs.qq.com/doc/DU01SUVZrc1JITkxx?pub=1&dver=2.1.0'})
     },
     onOk () {
       if (!this.address) {
@@ -406,6 +406,9 @@ export default {
   font-size: 18rpx;
   color: white;
   padding: 4rpx 8rpx;
+}
+.textinput{
+  width: 670rpx;
 }
 .bar {
   /* margin-top: 180rpx; */

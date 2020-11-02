@@ -7,7 +7,12 @@
       <head>
         <h5>
           品牌授权
-          <a href="https://www.yuque.com/docs/share/dc7cd417-178b-401c-9bfd-f33f663acd50" target="_blank"> <el-icon class="el-icon-question" />如何品牌授权 </a>
+          <a
+            href="https://www.yuque.com/docs/share/dc7cd417-178b-401c-9bfd-f33f663acd50"
+            target="_blank"
+          >
+            <el-icon class="el-icon-question" />如何品牌授权
+          </a>
         </h5>
         <el-button type="primary" size="mini" @click="handleAddAuth"
           >新增授权</el-button
@@ -64,9 +69,9 @@
               @click="handleRemove(row)"
               >删除</el-button
             >
-            <el-button type="text" size="mini" @click="handleAuthDetail(row)"
-              >详情</el-button
-            >
+            <el-button type="text" size="mini" @click="handleAuthDetail(row)">{{
+              row.statusCode === 4 ? "重新提交" : "详情"
+            }}</el-button>
           </template>
         </el-table-column>
         <div slot="empty" class="empty" style="padding: 48px 0">

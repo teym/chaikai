@@ -101,7 +101,7 @@
       style="width: 100%"
       ref="table"
     >
-      <el-table-column label="达人" :index="1">
+      <el-table-column label="达人" :index="1" width="260">
         <template slot-scope="{ row }">
           <div class="info">
             <img :src="row.blogger.avatar" alt="pic" />
@@ -124,11 +124,16 @@
       </el-table-column>
       <el-table-column label="申请信息" :index="2">
         <template slot-scope="{ row }">
-          <span>
-            规格：{{ row.goodsSku }}
-            <br />
-            申请理由：{{ row.applyReason }}
-          </span>
+          <div class="apply">
+            <p>规格：{{ row.goodsSku }}</p>
+            <el-popover
+              trigger="click"
+              :content="row.applyReason"
+              placement="bottom"
+            >
+              <p slot="reference">申请理由：{{ row.applyReason }}</p>
+            </el-popover>
+          </div>
         </template>
       </el-table-column>
       <el-table-column
@@ -138,7 +143,13 @@
         width="120"
       >
         <template slot-scope="{ row }">
-          <a v-for="c in row.channels" :key="c.platformId" class="channel" :href="c.homeLink" target="_blank">
+          <a
+            v-for="c in row.channels"
+            :key="c.platformId"
+            class="channel"
+            :href="c.homeLink"
+            target="_blank"
+          >
             <img :src="channelIcons['' + c.platformId].icon" />
             <span>{{ channelIcons[c.platformId + ""].name }}</span>
           </a>
@@ -151,17 +162,15 @@
         width="160"
       >
         <template slot-scope="{ row }">
-          <a
-            v-for="(c, i) in row.evaluationItems"
-            :key="i"
-            class="pingce"
-            target="_blank"
-            :href="c.url"
-          >
-            <img :src="channelIcons[c.platformId + ''].icon" alt="" />
-            <span>{{ c.type === 1 ? "正式" : "追加" }}</span>
-            <span>互动量{{ c.activeAmount }}</span>
-          </a>
+          <div class="pingce" v-for="(c, i) in row.evaluationItems" :key="i">
+            <a target="_blank" :href="c.url">
+              <img :src="channelIcons[c.platformId + ''].icon" alt="" /> </a
+            ><a :href="c.url">
+              <span>{{ c.type === 1 ? "正式" : "追加" }}</span>
+              <span>互动量{{ c.activeAmount }}</span>
+              <el-icon class="el-icon-arrow-right"></el-icon>
+            </a>
+          </div>
         </template>
       </el-table-column>
       <el-table-column
@@ -415,7 +424,7 @@
                   <span class="ceping">
                     <img :src="channelIcons[c.platformId + ''].icon" alt="" />
                     <span>{{ c.type === 1 ? "正式" : "追加" }}</span>
-                    <span>活动量{{ c.activeAmount }}</span>
+                    <span>互动量{{ c.activeAmount }}</span>
                   </span>
                 </el-checkbox>
               </el-form-item>
@@ -470,17 +479,17 @@
       :visible.sync="shipVisible"
       width="520px"
     >
-      <div v-if="ship" class="ship_empty">
-        <img src="@/assets/images/ship_empty.png" alt="empty" />
-        <p>抱歉，暂未查询到物流信息</p>
-      </div>
-      <div v-else>
+      <div v-if="ship && ship.no">
         <h6 style="margin: 8px 0; padding: 0">快递公司: {{ ship.name }}</h6>
         <h6 style="margin: 8px 0; padding: 0">快递单号: {{ ship.no }}</h6>
         <div v-for="(l, i) in ship.list" :key="i" style="margin: 8px 0">
           <p style="margin: 0">{{ l.time }}</p>
           <p style="margin: 8px 0">{{ l.content }}</p>
         </div>
+      </div>
+      <div v-else class="ship_empty">
+        <img src="@/assets/images/ship_empty.png" alt="empty" />
+        <p>抱歉，暂未查询到物流信息</p>
       </div>
     </el-dialog>
     <el-dialog
@@ -818,18 +827,14 @@ export default {
       this.$refs.upload
         .submit()
         .then((r) => {
-          if (r.success) {
-            this.batchLoading = false;
-            this.batchVisbale = false;
-            this.getTabs();
-            this.getList();
-          } else {
-            throw r;
-          }
+          this.batchLoading = false;
+          this.batchVisbale = false;
+          this.getTabs();
+          this.getList();
         })
         .catch((e) => {
           this.batchLoading = false;
-          console.log(e);
+          this.batchFile = null;
           this.$message({ message: e.msg, type: "error" });
         });
     },
@@ -1069,10 +1074,19 @@ export default {
     color: #c3c3c3;
   }
 }
-.ship_empty{
+.ship_empty {
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+.apply {
+  p {
+    margin: 0;
+    height: 24px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 }
 </style>
 

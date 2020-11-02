@@ -26,7 +26,7 @@
           <img class="right" src="/static/images/arrow_right_white.png" alt="right">
         </div>
         <div class="row i-center" @click="onScope">
-          <p class="small">评分 <span class="blod">{{user.scope || 0}}</span></p>
+          <p class="small">评分 <span class="blod">{{user.scope || 10}}</span></p>
           <img class="right" src="/static/images/arrow_right_white.png" alt="right">
         </div>
       </div>
@@ -41,28 +41,28 @@
       </div>
       <div class="row icons pad-t pad-l pad-r margin2-b">
         <div class="flex col center pad-t pad-b" @click="onOrder(2)">
-          <div class="pos_r">
+          <div class="pos_r col center">
             <img src="/static/images/mine_icons_1.png " alt="1">
             <p class="small light margin-t">待缴押金</p>
             <span class="dot flot" v-if="stat.depositToBePaid > 0">{{stat.depositToBePaid}}</span>
           </div>
         </div>
         <div class="flex col center pad-t pad-b" @click="onOrder(3)">
-          <div class="pos_r">
+          <div class="pos_r col center">
             <img src="/static/images/mine_icons_2.png " alt="2">
             <p class="small light margin-t">待发货</p>
             <span class="dot flot" v-if="stat.toBeDelivered > 0">{{stat.toBeDelivered}}</span>
           </div>
         </div>
         <div class="flex col center pad-t pad-b" @click="onOrder(4)">
-          <div class="pos_r">
+          <div class="pos_r col center">
             <img src="/static/images/mine_icons_3.png " alt="3">
             <p class="small light margin-t">待收货</p>
             <span class="dot flot" v-if="stat.toBeReceived > 0">{{stat.toBeReceived}}</span>
           </div>
         </div>
         <div class="flex col center pad-t pad-b" @click="onOrder(5)">
-          <div class="pos_r">
+          <div class="pos_r col center">
             <img src="/static/images/mine_icons_4.png " alt="4">
             <p class="small light margin-t">待测评</p>
             <span class="dot flot" v-if="stat.toBeEvaluated > 0">{{stat.toBeEvaluated}}</span>
@@ -138,7 +138,7 @@ export default {
       return this.user.areas.map(i => i.name).join('|')
     }
   },
-  mounted () {
+  onShow () {
     if (api.isLogin()) {
       this.loadData()
     }
@@ -201,7 +201,7 @@ export default {
       })])
     },
     onScope () {
-      this.onRouter('scope', {scope: this.user.score, tags: this.user.scoreInfo.items.map(i => (`${i.msg} ${i.number}`)).join(',')})
+      this.onRouter('scope', {scope: this.user.score || 10, tags: this.user.scoreInfo.items.map(i => (`${i.msg} ${i.number}`)).join(',')})
     },
     onOrder (status) {
       router(this).push('/pages/orders/main', {status})
@@ -210,7 +210,7 @@ export default {
       router(this).push('/pages/' + p + '/main', d)
     },
     onQa () {
-      router(this).push('/pages/web/main', {url: 'https://www.yuque.com/books/share/95006af3-760c-4e91-a236-1f0113fa823e?#'})
+      router(this).push('/pages/web/main', {url: 'https://docs.qq.com/doc/DU1JsSWdVRk9CS1lO?pub=1&dver=2.1.0'})
     }
   }
 }

@@ -65,7 +65,7 @@
         <div class="row">
           <h4>公告标题:</h4>
           <div>
-            <el-input v-model="detail.content" size="mini" />
+            <el-input v-model="detail.content" :maxlength="20" show-word-limit size="mini" />
           </div>
         </div>
         <div class="row">

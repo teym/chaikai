@@ -6,9 +6,7 @@
         <h1>已提交和审核</h1>
         <p>
           审核通过后，将通过短信进行通知
-          <br />为加快小二审核效率，请完成最后一步品牌授权，即可招募达人
         </p>
-        <el-button size="mini" @click="onAddNew">新增品牌授权</el-button>
       </div>
     </div>
     <el-form
@@ -22,7 +20,7 @@
       <div class="createPost-main-container">
         <el-form-item label="品牌名称:" prop="name">
           <el-input
-            :max="50"
+            :maxlength="50"
             show-word-limit
             v-model="postForm.name"
             placeholder="请输入品牌名称"
@@ -46,7 +44,7 @@
           <el-input
             v-model="postForm.story"
             type="textarea"
-            :max="300"
+            :maxlength="300"
             show-word-limit
             placeholder="请输入您的品牌故事，帮助达人和粉丝更好了解贵品牌"
           />

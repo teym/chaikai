@@ -21,7 +21,7 @@
         @keyup.enter.native="handleFilter"
       />
       <el-select
-        v-model="listQuery.statusCode"
+        v-model="listQuery.ticketStatusCode"
         size="mini"
         class="filter-item"
         style="width: 120px; margin-left: 16px"
@@ -209,7 +209,7 @@ export default {
         size: 20,
         searchType: 1,
         searchKey: '',
-        statusCode: 0,
+        ticketStatusCode: 3,
         coopType: 0,
         depositStatusCode: 0,
         rewardStatusCode: 0,
@@ -251,7 +251,7 @@ export default {
         obj.startTime = moment(this.listQuery.timeRange[0]).format(
           'YYYY-MM-DD HH:mm:ss'
         )
-        obj.endTime = moment(this.listQuery.timeRange[1]).format(
+        obj.endTime = moment(this.listQuery.timeRange[1]).add(1, 'd').format(
           'YYYY-MM-DD HH:mm:ss'
         )
         obj.timeRange = null

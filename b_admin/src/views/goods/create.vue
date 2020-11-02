@@ -150,7 +150,7 @@
               </el-col>
             </el-row>
             <el-row v-if="postForm.skuGroups.length < 2">
-              <el-button @click="handleAddSku">添加规格项目</el-button>
+              <el-button @click="handleAddSku">添加规格项</el-button>
             </el-row>
           </div>
         </el-form-item>

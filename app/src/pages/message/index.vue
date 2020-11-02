@@ -19,6 +19,7 @@
           </div>
         </div>
       </div>
+      <div class="mark"></div>
     </div>
     <bar background="white">
       <div class="bar row pad2-l pad2-r">
@@ -80,6 +81,9 @@ export default {
         this.page = page
         this.loading = false
         this.nomore = data.pager.totalPages <= page
+        setTimeout(() => {
+          uiapi.scrollTo('.mark')
+        }, 0)
       }).catch(e => {
         uiapi.toast(e.info)
       })
@@ -128,6 +132,7 @@ export default {
           this.datas.splice(this.datas.length, 0, data)
           this.sending = false
           l()
+          uiapi.scrollTo('.mark')
           if (success) success()
         }).catch(e => {
           this.sending = false
@@ -185,6 +190,9 @@ export default {
   border-radius: 0 20rpx 20rpx 20rpx;
   max-width: 470rpx;
 }
+.item .text p {
+  word-break: break-all;
+}
 .item .text.media {
   padding: 0;
   border-radius: 8rpx;
@@ -214,7 +222,6 @@ export default {
 }
 .item.self .text p {
   color: white;
-  word-break: break-all;
 }
 .bar {
   width: 100%;

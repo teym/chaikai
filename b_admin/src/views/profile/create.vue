@@ -27,14 +27,14 @@
       <div class="createPost-main-container">
         <el-form-item label="公司名称:" prop="name">
           <el-input
-            :disabled="stat.statusCode === 3"
+            :disabled="stat.statusCode === 2 || stat.statusCode === 3"
             v-model="postForm.name"
             placeholder="请输入公司名称"
           />
         </el-form-item>
         <el-form-item label="统一社会信用代码:" prop="creditCode">
           <el-input
-            :disabled="stat.statusCode === 3"
+            :disabled="stat.statusCode === 2 || stat.statusCode === 3"
             v-model="postForm.creditCode"
             placeholder="请输入统一社会信用代码"
           />
@@ -46,7 +46,7 @@
           :required="true"
         >
           <Upload
-            :disabled="stat.statusCode === 3"
+            :disabled="stat.statusCode === 2 || stat.statusCode === 3"
             :url="conf.url"
             :headers="conf.headers"
             :count="7"
@@ -57,14 +57,14 @@
         </el-form-item>
         <el-form-item label="联系人:" prop="contact">
           <el-input
-            :disabled="stat.statusCode === 3"
+            :disabled="stat.statusCode === 2 || stat.statusCode === 3"
             v-model="postForm.contact"
             placeholder="请输入联系人"
           />
         </el-form-item>
         <el-form-item label="微信号:" prop="contactWechat">
           <el-input
-            :disabled="stat.statusCode === 3"
+            :disabled="stat.statusCode === 2 || stat.statusCode === 3"
             v-model="postForm.contactWechat"
             placeholder="请输入微信号"
           />
@@ -76,6 +76,7 @@
 
         <el-button
           type="primary"
+          :disabled="stat.statusCode === 2 || stat.statusCode === 3"
           v-if="stat.statusCode !== 3"
           @click="submitForm"
           >{{
@@ -174,7 +175,7 @@ export default {
             required: true,
             trigger: "blur",
             validator: validateRequire,
-            msg: "请输入的统一社会信用代码",
+            msg: "请输入统一社会信用代码",
           },
         ],
         businessLicense: [
