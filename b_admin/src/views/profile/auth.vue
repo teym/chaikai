@@ -4,9 +4,7 @@
       <div>
         <img src="@/assets/images/user_done.png" alt="done" />
         <h1>已提交和审核</h1>
-        <p>
-          审核通过后，将通过短信进行通知
-        </p>
+        <p>审核通过后，将通过短信进行通知</p>
       </div>
     </div>
     <el-form
@@ -20,6 +18,7 @@
       <div class="createPost-main-container">
         <el-form-item label="品牌名称:" prop="name">
           <el-input
+            :disabled="postForm.statusCode === 3 || postForm.statusCode === 2"
             :maxlength="50"
             show-word-limit
             v-model="postForm.name"
@@ -33,6 +32,7 @@
           :required="true"
         >
           <Upload
+            :disabled="postForm.statusCode === 3 || postForm.statusCode === 2"
             :url="conf.url"
             :headers="conf.headers"
             :count="7"
@@ -42,6 +42,7 @@
         </el-form-item>
         <el-form-item label="品牌故事:" prop="story">
           <el-input
+            :disabled="postForm.statusCode === 3 || postForm.statusCode === 2"
             v-model="postForm.story"
             type="textarea"
             :maxlength="300"
@@ -56,6 +57,7 @@
           :required="true"
         >
           <Upload
+            :disabled="postForm.statusCode === 3 || postForm.statusCode === 2"
             :url="conf.url"
             :headers="conf.headers"
             :count="7"
@@ -79,6 +81,7 @@
           label="品牌授权资质:"
         >
           <Upload
+            :disabled="postForm.statusCode === 3 || postForm.statusCode === 2"
             :url="conf.url"
             :headers="conf.headers"
             :count="7"
