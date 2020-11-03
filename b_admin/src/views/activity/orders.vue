@@ -275,13 +275,7 @@
               }[row.rewardStatusCode + ""]
             }}</strong>
             <br />
-            {{
-              row.rewardStatusCode === 1
-                ? "还剩" + row.deadlineText + "自动发放"
-                : row.rewardStatusCode === 3
-                ? "测评违规/不符合悬赏规范，已退回至品牌方"
-                : ""
-            }}
+            {{ row.rewardMsg }}
           </span>
         </template>
       </el-table-column>
@@ -428,7 +422,15 @@
           <el-row>
             <el-col v-for="(c, i) in detail.evaluationItems" :key="i" :span="8">
               <el-form-item style="">
-                <el-checkbox :disabled="c.type !== 1" :label="c.id" style="display: flex;flex-direction: row;align-items: center;">
+                <el-checkbox
+                  :disabled="c.type !== 1"
+                  :label="c.id"
+                  style="
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                  "
+                >
                   <span class="ceping">
                     <img :src="channelIcons[c.platformId + ''].icon" alt="" />
                     <span>{{ c.type === 2 ? "追加" : "正式" }}</span>
@@ -715,7 +717,27 @@ export default {
           this.list = response.data.data.map((i) =>
             Object.assign(
               { brRemark: "", deadlineText: formatDeadLine(i.deadline) },
-              i
+              i,
+              {
+                rewardMsg: ((t) => {
+                  if (t.rewardStatusCode === 1) {
+                    const deadline = formatDeadLine(t.deadline);
+                    console.log(t.statusCode, t.ticketStatusCode, deadline);
+                    return t.statusCode === 6
+                      ? t.ticketStatusCode &&
+                        t.ticketStatusCode !== 6 &&
+                        t.ticketStatusCode !== 5
+                        ? "测评投诉中，若处理超时或违规，将取消悬赏发放"
+                        : !deadline
+                        ? "将自动发放"
+                        : `还剩${deadline}自动发放`
+                      : "提交测评后，15天自动发放";
+                  } else if (t.rewardStatusCode === 3) {
+                    return "测评逾期/测评违规/不符合悬赏规范/未达成合作";
+                  }
+                  return "";
+                })(i),
+              }
             )
           );
           this.total = response.data.pager.count;
