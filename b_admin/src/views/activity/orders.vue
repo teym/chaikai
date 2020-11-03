@@ -268,14 +268,12 @@
         <template slot-scope="{ row }">
           <span>
             <strong>{{
-              {
-                "1": "待发放",
-                "2": "已发放",
-                "3": "已取消",
-              }[row.rewardStatusCode + ""]
+              row.coopSubType === 3
+                ? "无"
+                : ["", "待发放", "已发放", "已取消"][row.rewardStatusCode]
             }}</strong>
             <br />
-            {{ row.rewardMsg }}
+            {{ row.coopSubType === 3 ? "" : row.rewardMsg }}
           </span>
         </template>
       </el-table-column>
