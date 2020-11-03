@@ -122,10 +122,6 @@
           </div>
         </el-table>
       </div>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="showDetail = false">取消</el-button>
-        <el-button type="primary" @click="showDetail = false">确定</el-button>
-      </div>
     </el-dialog>
   </div>
 </template>

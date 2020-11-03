@@ -73,6 +73,9 @@ export default {
       }
     }
   },
+  mounted(){
+    console.log(this.layout, this.pageSizes);
+  },
   methods: {
     handleSizeChange(val) {
       this.$emit('pagination', { page: this.currentPage, limit: val })

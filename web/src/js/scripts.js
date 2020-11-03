@@ -1,6 +1,19 @@
 (function($) {
   "use strict"; // Start of use strict
 
+    (function(a, b, c, d, e, j, s) {
+        a[d] = a[d] || function() {
+            (a[d].a = a[d].a || []).push(arguments)
+        };
+        j = b.createElement(c),
+            s = b.getElementsByTagName(c)[0];
+        j.async = true;
+        j.charset = 'UTF-8';
+        j.src = 'https://static.meiqia.com/widget/loader.js';
+        s.parentNode.insertBefore(j, s);
+    })(window, document, 'script', '_MEIQIA');
+    _MEIQIA('entId', '6c328d6c66f45c74ec9e069445bb97ca');
+
   // Smooth scrolling using jQuery easing
   $('a.js-scroll-trigger[href*="#"]:not([href="#"])').click(function() {
     if (location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') && location.hostname == this.hostname) {

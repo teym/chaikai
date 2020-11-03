@@ -268,20 +268,12 @@
         <template slot-scope="{ row }">
           <span>
             <strong>{{
-              {
-                "1": "待发放",
-                "2": "已发放",
-                "3": "已取消",
-              }[row.rewardStatusCode + ""]
+              row.coopSubType === 3
+                ? "无"
+                : ["", "待发放", "已发放", "已取消"][row.rewardStatusCode]
             }}</strong>
             <br />
-            {{
-              row.rewardStatusCode === 1
-                ? "还剩" + row.deadlineText + "自动发放"
-                : row.rewardStatusCode === 3
-                ? "测评违规/不符合悬赏规范，已退回至品牌方"
-                : ""
-            }}
+            {{ row.coopSubType === 3 ? "" : row.rewardMsg }}
           </span>
         </template>
       </el-table-column>
@@ -371,11 +363,7 @@
               }}
             </el-button>
             <el-button
-              v-if="
-                listQuery.statusCode === '6' &&
-                row.rewardStatusCode === 2 &&
-                !row.scoreInfo
-              "
+              v-if="listQuery.statusCode === '6' && row.rewardStatusCode === 2"
               size="mini"
               type="primary"
               @click="handleCommend(row)"
@@ -428,7 +416,15 @@
           <el-row>
             <el-col v-for="(c, i) in detail.evaluationItems" :key="i" :span="8">
               <el-form-item style="">
-                <el-checkbox :disabled="c.type !== 1" :label="c.id" style="display: flex;flex-direction: row;align-items: center;">
+                <el-checkbox
+                  :disabled="c.type !== 1"
+                  :label="c.id"
+                  style="
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                  "
+                >
                   <span class="ceping">
                     <img :src="channelIcons[c.platformId + ''].icon" alt="" />
                     <span>{{ c.type === 2 ? "追加" : "正式" }}</span>
@@ -439,7 +435,7 @@
             </el-col>
           </el-row>
         </el-checkbox-group>
-        <h6>请选择您要投诉的测评（只支持正式测评）</h6>
+        <h6>请选择您要投诉的测评问题（最多可选3项）</h6>
         <p class="light">
           以下为官方接受的所有测评问题 |
           不合理的问题达人有权选择忽视，两天后官方会介入审核您的投诉
@@ -455,7 +451,7 @@
             </div>
           </el-col>
           <el-col :span="16">
-            <el-checkbox-group v-model="reason" :min="1" :max="3">
+            <el-checkbox-group v-model="reason" :max="3">
               <el-checkbox
                 v-for="(row, i) in reasonList"
                 :key="i"
@@ -508,9 +504,15 @@
       width="360px"
     >
       <div class="commend">
-        <el-rate v-model="commend.value" class="big" @change="onValue" />
+        <el-rate
+          :disabled="commend.disabled"
+          v-model="commend.value"
+          class="big"
+          @change="onValue"
+        />
         <p>{{ commend.scopes.msg }}</p>
         <el-checkbox-group
+          :disabled="commend.disabled"
           v-model="commend.tags"
           size="small"
           class="check_btns"
@@ -525,9 +527,9 @@
             >{{ item.msg }}</el-checkbox-button
           >
         </el-checkbox-group>
-        <span>合作结束15天后默认好评</span>
+        <span v-if="!commend.disabled">合作结束15天后默认好评</span>
       </div>
-      <div slot="footer" class="dialog-footer">
+      <div slot="footer" class="dialog-footer" v-if="!commend.disabled">
         <el-button @click="commendVisible = false">取消</el-button>
         <el-button
           :loading="formLoading"
@@ -715,7 +717,27 @@ export default {
           this.list = response.data.data.map((i) =>
             Object.assign(
               { brRemark: "", deadlineText: formatDeadLine(i.deadline) },
-              i
+              i,
+              {
+                rewardMsg: ((t) => {
+                  if (t.rewardStatusCode === 1) {
+                    const deadline = formatDeadLine(t.deadline);
+                    console.log(t.statusCode, t.ticketStatusCode, deadline);
+                    return t.statusCode === 6
+                      ? t.ticketStatusCode &&
+                        t.ticketStatusCode !== 6 &&
+                        t.ticketStatusCode !== 5
+                        ? "测评投诉中，若处理超时或违规，将取消悬赏发放"
+                        : !deadline
+                        ? "将自动发放"
+                        : `还剩${deadline}自动发放`
+                      : "提交测评后，15天自动发放";
+                  } else if (t.rewardStatusCode === 3) {
+                    return "测评逾期/测评违规/不符合悬赏规范/未达成合作";
+                  }
+                  return "";
+                })(i),
+              }
             )
           );
           this.total = response.data.pager.count;
@@ -856,10 +878,16 @@ export default {
       }
     },
     handleCommend(row) {
+      const v = row.scoreInfo ? row.scoreInfo.score - 5 : 5;
+      const ids = row.scoreInfo
+        ? row.scoreInfo.scoreItemIds.split(",").map((i) => parseInt(i))
+        : [];
+        console.log(v, ids);
       this.commend = {
-        value: 5,
-        tags: [],
-        scopes: this.scopes[4],
+        value: v,
+        tags: ids,
+        scopes: this.scopes[v - 1],
+        disabled: !!row.scoreInfo,
       };
       this.detail = row;
       this.commendVisible = true;
@@ -1116,5 +1144,9 @@ export default {
 <style>
 .pass_confirm {
   width: 280px;
+}
+.check_btn.is-checked .el-checkbox-button__inner{
+  background-color: #4244FF;
+  color: white;
 }
 </style>

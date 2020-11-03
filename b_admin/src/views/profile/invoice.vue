@@ -77,6 +77,8 @@
       <pagination
         v-show="total > 0"
         :total="total"
+        layout="total,sizes,prev,pager,next,jumper"
+        :pageSizes="[10, 20, 30, 40, 50, 100]"
         :page.sync="listQuery.page"
         :limit.sync="listQuery.size"
         @pagination="fetchData"
@@ -105,7 +107,7 @@
           </el-form-item>
         </el-form>
         <p>关联订单</p>
-        <el-table :data="sel" border fit style="width: 100%">
+        <el-table :data="selList" border fit style="width: 100%">
           <el-table-column label="订单编号">
             <template slot-scope="{ row }">
               <div class="info">
@@ -145,6 +147,11 @@
             <p style="margin: 0; color: #999">暂无记录</p>
           </div>
         </el-table>
+        <pagination
+          :total="sel.length"
+          :page.sync="selpage"
+          :limit.sync="selsize"
+        />
       </div>
       <div slot="footer" class="dialog-footer">
         <el-button @click="formVisible = false">取消</el-button>
@@ -158,8 +165,9 @@
 
 <script>
 import { mapGetters } from "vuex";
+import _ from "underscore";
 import { fetchInvoice, createInvoice } from "@/api/user";
-import moment from 'moment'
+import moment from "moment";
 import Pagination from "@/components/Pagination"; // secondary package based on el-pagination
 
 export default {
@@ -174,9 +182,11 @@ export default {
       listQuery: {
         type: "1",
         page: 1,
-        size: 10,
+        size: 20,
       },
       sel: [],
+      selpage: 1,
+      selsize: 5,
       formVisible: false,
       form: {
         statusCode: 1,
@@ -190,7 +200,15 @@ export default {
   computed: {
     ...mapGetters(["name", "avatar", "roles", "amount"]),
     totalAmount() {
-      return this.sel.map((i) => i.amount).reduce((a, b) => a + b, 0);
+      return (
+        this.sel.map((i) => i.amount).reduce((a, b) => a + b, 0) || 0
+      ).toFixed(2);
+    },
+    selList() {
+      return _.first(
+        _.rest(this.sel || [], (this.selpage - 1) * this.selsize),
+        this.selsize
+      );
     },
   },
   created() {
@@ -201,7 +219,11 @@ export default {
       this.listLoading = true;
       fetchInvoice(this.listQuery)
         .then((r) => {
-          this.list = ((r.data || {}).data || []).map(i=>Object.assign(i, {date: moment(i.orderTime).format('YYYY-MM-DD HH:mm:ss')}));
+          this.list = ((r.data || {}).data || []).map((i) =>
+            Object.assign(i, {
+              date: moment(i.orderTime).format("YYYY-MM-DD HH:mm:ss"),
+            })
+          );
           this.total = ((r.data || {}).pager || {}).count || 0;
           this.listLoading = false;
         })
@@ -231,17 +253,17 @@ export default {
       }
     },
     handleSubmit() {
-      if(!this.form.company){
-        this.$message({message:'请填写发票抬头',type:'error'})
-        return
+      if (!this.form.company) {
+        this.$message({ message: "请填写发票抬头", type: "error" });
+        return;
       }
-      if(!this.form.rise){
-        this.$message({message:'请填写税号',type:'error'})
-        return
+      if (!this.form.rise) {
+        this.$message({ message: "请填写税号", type: "error" });
+        return;
       }
-      if(!this.form.receiveMail){
-        this.$message({message:'请填写接收邮箱',type:'error'})
-        return
+      if (!this.form.receiveMail) {
+        this.$message({ message: "请填写接收邮箱", type: "error" });
+        return;
       }
       this.formLoading = true;
       createInvoice(

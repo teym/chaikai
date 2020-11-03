@@ -113,10 +113,6 @@
           <p>{{ detail.company.name }}</p>
         </div>
         <div class="row">
-          <h4>提现理由:</h4>
-          <p>{{ detail.withdraw.remark }}</p>
-        </div>
-        <div class="row">
           <h4>退款方式:</h4>
           <p>{{ ["", "支付宝", "银行卡"][detail.withdraw.type] }}</p>
         </div>
@@ -172,7 +168,7 @@ export default {
         page: 1,
         size: 20,
         companyName: '',
-        statusCode: -1
+        statusCode: 0
       },
       status: ['处理中', '等待支付', '成功', '失败', '已拒绝', '已关闭'],
       detailVisable: false,
@@ -195,7 +191,7 @@ export default {
       fetchBWithdrawList(clearQueryObject(obj)).then(({ data }) => {
         this.list = data.data.map((i) =>
           Object.assign(i, {
-            date: moment(i.gmtCreate).format('YYYY-MM-DD HH:mm:dd')
+            date: moment(i.gmtCreate).format('YYYY-MM-DD HH:mm:ss')
           })
         )
         this.total = data.pager.count

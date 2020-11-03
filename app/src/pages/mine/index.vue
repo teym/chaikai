@@ -107,6 +107,8 @@ import navbar from '@/components/navbar'
 import login from '../login/index'
 import {router, api, signal, request, mapChannel, uiapi} from '@/utils/index'
 
+const meiqiaPlugin = requirePlugin('meiqia')
+
 export default {
   components: {
     navbar,
@@ -176,7 +178,6 @@ export default {
           weixin: data.wechatNo,
           contact: data.realName})
 
-        const meiqiaPlugin = wx.requirePlugin('meiqia')
         meiqiaPlugin.setClientInfo({
           user_info: {
             tel: data.telephone,
@@ -186,7 +187,13 @@ export default {
           },
           ent_id: '249463',
           app_id: 'wx48bf43cf5cf1886d',
-          open_id: data.wechatOpenId
+          open_id: data.wechatOpenId,
+          success: function () {
+            console.log('meiqia success')
+          },
+          fail: function (res) {
+            console.log('meiqia', res)
+          }
         })
       }).catch(e => {
         uiapi.toast(e.info)

@@ -195,7 +195,7 @@ export default {
   methods: {
     getList() {
       this.listLoading = true
-      const obj = Object.assign(
+      var obj = Object.assign(
         {},
         this.listQuery,
         this.listQuery.sort === 3 ? { min: 0, max: 0 } : {}
@@ -206,15 +206,16 @@ export default {
         obj.startTime = moment(this.listQuery.timeRange[0]).format(
           'YYYY-MM-DD HH:mm:ss'
         )
-        obj.endTime = moment(this.listQuery.timeRange[1]).add(1, 'd').format(
-          'YYYY-MM-DD HH:mm:ss'
-        )
+        obj.endTime = moment(this.listQuery.timeRange[1])
+          .add(1, 'd')
+          .format('YYYY-MM-DD HH:mm:ss')
         obj.timeRange = null
       }
-      // if (obj.platformId < 0) {
-      //   obj.platformId = 0;
-      // }
-      fetchBloggerList(clearQueryObject(obj, true)).then(({ data }) => {
+      obj = clearQueryObject(obj, true)
+      if (obj.platformId < 0) {
+        obj.platformId = 0
+      }
+      fetchBloggerList(obj).then(({ data }) => {
         this.list = data.data.map((i) =>
           Object.assign(i, {
             date: moment(i.gmtCreate).format('YYYY-MM-DD HH:mm:ss')
