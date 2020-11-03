@@ -439,7 +439,7 @@
             </el-col>
           </el-row>
         </el-checkbox-group>
-        <h6>请选择您要投诉的测评（只支持正式测评）</h6>
+        <h6>请选择您要投诉的测评问题（最多可选3项）</h6>
         <p class="light">
           以下为官方接受的所有测评问题 |
           不合理的问题达人有权选择忽视，两天后官方会介入审核您的投诉
@@ -455,7 +455,7 @@
             </div>
           </el-col>
           <el-col :span="16">
-            <el-checkbox-group v-model="reason" :min="1" :max="3">
+            <el-checkbox-group v-model="reason" :max="3">
               <el-checkbox
                 v-for="(row, i) in reasonList"
                 :key="i"
