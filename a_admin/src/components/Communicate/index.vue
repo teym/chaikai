@@ -174,7 +174,7 @@ export default {
       this.showList = false
       this.showDetail = true
       setTimeout(() => {
-        this.$refs.order.showTab(issue ? 'issue' : 'order')
+        this.$refs.order.update(issue ? 'issue' : 'order')
       }, 0)
       this.loadList(1)
     }
@@ -184,7 +184,7 @@ export default {
       this.showList = true
       this.showDetail = true
       setTimeout(() => {
-        this.$refs.order.showTab('order')
+        this.$refs.order.update('order')
       }, 0)
       this.loadList(1)
     },

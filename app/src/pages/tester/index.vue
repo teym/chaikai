@@ -101,11 +101,17 @@ export default {
       this.datas.splice(i, 1)
     },
     onOK () {
-      if (this.datas.length <= 0) {
+      const datas = this.datas.map(i => Object.assign(i, {url: matchURL(i.url)}))
+      for (let index = 0; index < datas.length; index++) {
+        const element = datas[index]
+        if (!element.url) {
+          return uiapi.toast('请输入' + element.platformName + '测评链接')
+        }
+      }
+      if (datas.length <= 0) {
         uiapi.toast('请输入测评链接')
         return
       }
-      const datas = this.datas.map(i => Object.assign(i, {url: matchURL(i.url)})).filter(i => !!i.url)
       const {id, append, issue, ticketId} = router(this).params()
       const l = uiapi.loading()
       this.checkLinks(datas).then(

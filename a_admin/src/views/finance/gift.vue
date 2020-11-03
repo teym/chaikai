@@ -14,8 +14,10 @@
       </el-select>
       <el-input
         v-model="listQuery.searchKey"
-        :placeholder="'请输入' + (listQuery.searchType === 2 ? '用户昵称':'公司名称')"
-        style="width: 160px;"
+        :placeholder="
+          '请输入' + (listQuery.searchType === 2 ? '用户昵称' : '公司名称')
+        "
+        style="width: 160px"
         size="mini"
         class="filter-item"
         @keyup.enter.native="handleFilter"
@@ -37,7 +39,7 @@
       >导出</el-button>
       <el-button
         class="filter-item"
-        style="float:right"
+        style="float: right"
         type="primary"
         size="mini"
         @click="detailVisable = true"
@@ -79,7 +81,11 @@
         </template>
       </el-table-column>
 
-      <el-table-column v-if="listQuery.searchType === 3" label="赠送原因" align="center">
+      <el-table-column
+        v-if="listQuery.searchType === 3"
+        label="赠送原因"
+        align="center"
+      >
         <template slot-scope="{ row }">
           <span>{{ row.remark }}</span>
         </template>
@@ -89,7 +95,11 @@
           <span>{{ row.remark || row.msg }}</span>
         </template>
       </el-table-column>
-      <el-table-column v-if="listQuery.searchType === 3" label="赠送次数" align="center">
+      <el-table-column
+        v-if="listQuery.searchType === 3"
+        label="赠送次数"
+        align="center"
+      >
         <template slot-scope="{ row }">
           <span>{{ row.amount }}</span>
         </template>
@@ -121,7 +131,7 @@
     <el-dialog width="60%" title="新增充值" :visible.sync="detailVisable">
       <div class="detail">
         <div class="row">
-          <h4>{{ listQuery.searchType === 2 ?'用户':'账户' }}ID:</h4>
+          <h4>{{ listQuery.searchType === 2 ? "用户" : "账户" }}ID:</h4>
           <div>
             <el-input v-model="detail.accountId" size="mini" />
           </div>
@@ -214,6 +224,15 @@ export default {
       } else {
         obj.companyName = obj.searchKey
       }
+      if (obj.timeRange.length > 0) {
+        obj.startTime = moment(this.listQuery.timeRange[0]).format(
+          'YYYY-MM-DD HH:mm:ss'
+        )
+        obj.endTime = moment(this.listQuery.timeRange[0]).format(
+          'YYYY-MM-DD HH:mm:ss'
+        )
+        obj.timeRange = ''
+      }
       obj.type = obj.searchType === 3 ? 107 : 106;
       (obj.searchType === 2 ? fetchCGiftList : fetchBGiftList)(
         clearQueryObject(obj, true)
@@ -243,8 +262,19 @@ export default {
     },
     handleSuccess() {
       const obj = Object.assign({}, this.detail)
-      obj.type =
-        this.listQuery.searchType === 3 ? 107 : 106;
+      obj.type = this.listQuery.searchType === 3 ? 107 : 106
+      if (!obj.accountId) {
+        return this.$message({ message: '请输入账号ID', type: 'error' })
+      }
+      if (!parseFloat(obj.amount) > 0) {
+        return this.$message({
+          message: '请输入' + (this.listQuery.searchType === 3 ? '次数' : '金额'),
+          type: 'error'
+        })
+      }
+      if (!obj.remark) {
+        return this.$message({ message: '请输入备注', type: 'error' })
+      }
       (this.listQuery.searchType === 2 ? addCGift : addBGift)(
         clearQueryObject(obj, true)
       ).then(() => {

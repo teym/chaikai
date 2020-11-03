@@ -420,7 +420,10 @@ export default {
     }
   },
   methods: {
-    showTab(tab) {
+    update(tab) {
+      if (this.id) {
+        this.loadData(this.id);
+      }
       this.active = tab === "issue" ? 3 : 1;
     },
     onUrl(url) {
