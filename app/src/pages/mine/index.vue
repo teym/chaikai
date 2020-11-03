@@ -186,7 +186,13 @@ export default {
           },
           ent_id: '249463',
           app_id: 'wx48bf43cf5cf1886d',
-          open_id: data.wechatOpenId
+          open_id: data.wechatOpenId,
+          success: function () {
+            console.log('meiqia success')
+          },
+          fail: function (res) {
+            console.log(res)
+          }
         })
       }).catch(e => {
         uiapi.toast(e.info)

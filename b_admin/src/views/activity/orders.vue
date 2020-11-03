@@ -363,11 +363,7 @@
               }}
             </el-button>
             <el-button
-              v-if="
-                listQuery.statusCode === '6' &&
-                row.rewardStatusCode === 2 &&
-                !row.scoreInfo
-              "
+              v-if="listQuery.statusCode === '6' && row.rewardStatusCode === 2"
               size="mini"
               type="primary"
               @click="handleCommend(row)"
@@ -508,9 +504,15 @@
       width="360px"
     >
       <div class="commend">
-        <el-rate v-model="commend.value" class="big" @change="onValue" />
+        <el-rate
+          :disabled="commend.disabled"
+          v-model="commend.value"
+          class="big"
+          @change="onValue"
+        />
         <p>{{ commend.scopes.msg }}</p>
         <el-checkbox-group
+          :disabled="commend.disabled"
           v-model="commend.tags"
           size="small"
           class="check_btns"
@@ -525,9 +527,9 @@
             >{{ item.msg }}</el-checkbox-button
           >
         </el-checkbox-group>
-        <span>合作结束15天后默认好评</span>
+        <span v-if="!commend.disabled">合作结束15天后默认好评</span>
       </div>
-      <div slot="footer" class="dialog-footer">
+      <div slot="footer" class="dialog-footer" v-if="!commend.disabled">
         <el-button @click="commendVisible = false">取消</el-button>
         <el-button
           :loading="formLoading"
@@ -876,10 +878,16 @@ export default {
       }
     },
     handleCommend(row) {
+      const v = row.scoreInfo ? row.scoreInfo.score - 5 : 5;
+      const ids = row.scoreInfo
+        ? row.scoreInfo.scoreItemIds.split(",").map((i) => parseInt(i))
+        : [];
+        console.log(v, ids);
       this.commend = {
-        value: 5,
-        tags: [],
-        scopes: this.scopes[4],
+        value: v,
+        tags: ids,
+        scopes: this.scopes[v - 1],
+        disabled: !!row.scoreInfo,
       };
       this.detail = row;
       this.commendVisible = true;
@@ -1136,5 +1144,9 @@ export default {
 <style>
 .pass_confirm {
   width: 280px;
+}
+.check_btn.is-checked .el-checkbox-button__inner{
+  background-color: #4244FF;
+  color: white;
 }
 </style>
