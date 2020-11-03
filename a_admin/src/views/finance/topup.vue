@@ -60,7 +60,7 @@
         style="float: right"
         type="primary"
         size="mini"
-        @click="detailVisable = true"
+        @click="handleNew"
       >新增充值</el-button>
     </div>
 
@@ -111,7 +111,7 @@
       </el-table-column>
       <el-table-column label="备注" align="center">
         <template slot-scope="{ row }">
-          <span>{{ row.recharge.remark }}</span>
+          <span>{{ row.remark }}</span>
         </template>
       </el-table-column>
       <el-table-column label="状态" align="center">
@@ -155,7 +155,9 @@
               size="mini"
               placeholder="请输入企业ID"
               :controls="false"
+              @blur="handleCompany"
             />
+            <p v-if="company">{{ company.company }}</p>
           </div>
         </div>
         <div class="row">
@@ -195,11 +197,7 @@
         <div class="row">
           <h4>备注:</h4>
           <div>
-            <el-input
-              v-model="detail.recharge.remark"
-              size="mini"
-              type="textarea"
-            />
+            <el-input v-model="detail.remark" size="mini" type="textarea" />
           </div>
         </div>
       </div>
@@ -218,6 +216,7 @@ import { clearQueryObject } from '@/utils/index'
 import waves from '@/directive/waves' // waves directive
 import { mapGetters } from 'vuex'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
+import { fetchCompanyList } from '@/api/accounts'
 // import preview from "./preview";
 
 export default {
@@ -249,12 +248,13 @@ export default {
         recharge: {
           description: '',
           type: 1,
-          payType: 1,
-          remark: ''
+          payType: 1
         },
+        remark: '',
         raeType: 1,
         type: 102
-      }
+      },
+      company: null
     }
   },
   computed: {
@@ -264,6 +264,23 @@ export default {
     this.getList()
   },
   methods: {
+    handleNew() {
+      this.detail = {
+        amount: 0,
+        tradeNo: '',
+        brAccountId: '',
+        date: '',
+        recharge: {
+          description: '',
+          type: 1,
+          payType: 1
+        },
+        remark: '',
+        raeType: 1,
+        type: 102
+      }
+      this.detailVisable = true
+    },
     getList() {
       this.listLoading = true
       const obj = Object.assign({}, this.listQuery)
@@ -299,7 +316,16 @@ export default {
       this.listQuery.page = 1
       this.getList()
     },
-    handleCompany() {},
+    handleCompany() {
+      this.company = null
+      fetchCompanyList({
+        accountId: this.detail.brAccountId,
+        page: 1,
+        size: 1
+      }).then((r) => {
+        this.company = r.data.data[0] || { company: '未查询到账户' }
+      })
+    },
     handleSuccess() {
       if (!this.detail.tradeNo) {
         return this.$message({ message: '请输入交易单号', type: 'error' })
@@ -315,6 +341,9 @@ export default {
       }
       if (!this.detail.remark) {
         return this.$message({ message: '请输入备注', type: 'error' })
+      }
+      if (!this.company.id) {
+        return this.$message({ message: '请检查充值账户', type: 'error' })
       }
       addTopup(
         Object.assign(
