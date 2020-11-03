@@ -77,6 +77,8 @@
       <pagination
         v-show="total > 0"
         :total="total"
+        layout="total,sizes,prev,pager,next,jumper"
+        :pageSizes="[10, 20, 30, 40, 50, 100]"
         :page.sync="listQuery.page"
         :limit.sync="listQuery.size"
         @pagination="fetchData"

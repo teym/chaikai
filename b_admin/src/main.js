@@ -31,6 +31,9 @@ import * as filters from './filters' // global filters
 if (process.env.NODE_ENV === 'production') {
   const { mockXHR } = require('../mock')
   mockXHR()
+}else{
+
+Vue.config.devtools = true
 }
 
 Vue.use(Element, {
