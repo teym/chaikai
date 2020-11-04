@@ -311,7 +311,7 @@ export default {
     onGuide () {
       router(this).push('/pages/web/main', {url: 'https://docs.qq.com/doc/DU01SUVZrc1JITkxx?pub=1&dver=2.1.0'})
     },
-    createOrder () {
+    createOrder (check) {
       const {id} = router(this).params()
       const idsum = _.reduce(_.keys(this.active).map(i => parseInt(i)), (i, j) => i + j, 0)
 
@@ -326,7 +326,8 @@ export default {
         skuUnion: this.sku,
         depositInfo: {
           type: this.pay
-        }
+        },
+        checkApplied: !!check
       })
     },
     payOrder () {
@@ -361,7 +362,7 @@ export default {
       const l = uiapi.loading()
       var p = null
       if (this.pay === 1) {
-        p = this.createOrder().catch(e => {
+        p = this.createOrder(true).catch(e => {
           if (e.code === 200013) {
             return this.payOrder()
           } else {
