@@ -1,5 +1,5 @@
 module.exports = {
-  title: 'Xiaoer Admin',
+  title: '小二后台',
 
   /**
    * @type {boolean} true | false

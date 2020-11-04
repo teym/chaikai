@@ -1,5 +1,5 @@
 module.exports = {
-  title: 'ChiKai Admin',
+  title: '品牌后台',
 
   /**
    * @type {boolean} true | false

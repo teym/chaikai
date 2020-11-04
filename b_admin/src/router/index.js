@@ -116,7 +116,7 @@ export const asyncRoutes = [
         component: () => import('@/views/goods/create'),
         name: 'goods-create',
         hidden: true,
-        meta: { title: 'Create' }
+        meta: { title: '创建商品' }
       }
     ]
   },
