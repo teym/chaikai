@@ -145,8 +145,9 @@
       </div>
       <div class="row" v-if="data.coopSubType !== 3">
         <h5>悬赏结算：</h5>
-        <div>
+        <div style="flex:1">
           <p>{{ ["", "待发放", "已发放", "已取消"][data.rewardStatusCode] }}</p>
+          <span>{{ data.rewardMsg }}</span>
         </div>
       </div>
       <div class="row" v-if="data.coopSubType !== 3">
@@ -230,7 +231,7 @@
               <a target="_blank" :href="(c.channel || {}).homeLink">
                 <img :src="c.icon" alt="" />
                 <span>{{ c.type === 2 ? "追加" : "正式" }}</span> </a
-              ><a ::href="c.url" target="_blank">
+              ><a :href="c.url" target="_blank">
                 <span>互动量{{ c.activeAmount }}</span>
                 <el-icon class="el-icon-arrow-right"></el-icon>
               </a>
@@ -247,7 +248,7 @@
               <a target="_blank" :href="(c.channel || {}).homeLink">
                 <img :src="c.icon" alt="" />
                 <span>{{ c.type === 2 ? "追加" : "正式" }}</span> </a
-              ><a ::href="c.url" target="_blank">
+              ><a :href="c.url" target="_blank">
                 <span>互动量{{ c.activeAmount }}</span>
                 <el-icon class="el-icon-arrow-right"></el-icon>
               </a>
@@ -314,7 +315,7 @@
                   <a target="_blank" :href="(c.channel || {}).homeLink">
                     <img :src="c.icon" alt="" />
                     <span>{{ c.type === 2 ? "追加" : "正式" }}</span> </a
-                  ><a ::href="c.url" target="_blank">
+                  ><a :href="c.url" target="_blank">
                     <span>互动量{{ c.activeAmount }}</span>
                     <el-icon class="el-icon-arrow-right"></el-icon>
                   </a>
@@ -335,7 +336,7 @@
                   <a target="_blank" :href="(c.channel || {}).homeLink">
                     <img :src="c.icon" alt="" />
                     <span>{{ c.type === 2 ? "追加" : "正式" }}</span> </a
-                  ><a ::href="c.url" target="_blank">
+                  ><a :href="c.url" target="_blank">
                     <span>互动量{{ c.activeAmount }}</span>
                     <el-icon class="el-icon-arrow-right"></el-icon>
                   </a>
@@ -535,6 +536,23 @@ export default {
           data.ticket = (data.tickets || []).filter(
             (i) => i.statusCode <= 4
           )[0];
+          data.rewardMsg = ((t) => {
+            if (t.rewardStatusCode === 1) {
+              const deadline = formatDeadLine(t.deadline);
+              return t.statusCode === 6
+                ? t.ticketStatusCode &&
+                  t.ticketStatusCode !== 6 &&
+                  t.ticketStatusCode !== 5
+                  ? "测评投诉中，若处理超时或违规，将取消悬赏发放"
+                  : !deadline
+                  ? "将自动发放"
+                  : `还剩${deadline}自动发放`
+                : "提交测评后，15天自动发放";
+            } else if (t.rewardStatusCode === 3) {
+              return "测评逾期/测评违规/不符合悬赏规范/未达成合作";
+            }
+            return "";
+          })(data);
           this.data = data;
         }
       });

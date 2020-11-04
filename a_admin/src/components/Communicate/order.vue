@@ -24,20 +24,26 @@
       </div>
       <div class="row">
         <h5>申请时间：</h5>
-        <p>{{ data.gmtCreate }}</p>
+        <p>{{ data.date }}</p>
       </div>
       <div class="row">
         <h5>订单状态：</h5>
         <div>
-          <p>已测评</p>
-          <span>{{ data.gmtCreate }}</span>
+          <p>{{ activityStatus[data.statusCode] }}</p>
+          <!-- <span>{{ data.date }}</span> -->
         </div>
       </div>
       <div class="row">
         <h5>押金状态：</h5>
         <div>
-          <p>已冻结</p>
-          <span>测评投诉中，若处理超时或违规，将扣除</span>
+          <p>
+            {{
+              ["", "未缴押金", "已冻结", "已解冻", "已扣除"][
+                (data.depositInfo || {}).statusCode || 1
+              ]
+            }}
+          </p>
+          <!-- <span>测评投诉中，若处理超时或违规，将扣除</span> -->
         </div>
       </div>
       <div class="row">
@@ -102,8 +108,8 @@
               <el-option
                 v-for="(item, i) in logistics"
                 :key="i"
-                :label="item.value"
-                :value="item.value"
+                :label="item"
+                :value="item"
               />
             </el-select>
             <el-input
@@ -113,7 +119,7 @@
             />
           </div>
         </div>
-        <div v-if="data.statusCode > 2 && data.statusCode < 4" class="row">
+        <div v-if="data.statusCode > 2 && data.statusCode <= 5" class="row">
           <div style="width: 64px" />
           <el-button
             size="mini"
@@ -131,21 +137,20 @@
       </div>
       <div v-if="data.coopSubType !== 3" class="row">
         <h5>悬赏金额：</h5>
-        <div>
-          <p>
-            {{ data.reward }}
-            <span
-              v-if="data.rewardStatusCode === 1"
-              style="color: red"
-              @click="onCancelReward"
-            >取消发放</span>
-          </p>
-        </div>
+        <p>
+          {{ data.reward
+          }}<span
+            v-if="data.rewardStatusCode === 1"
+            style="color: red, margin-left:4px"
+            @click="onCancelReward"
+          >取消发放</span>
+        </p>
       </div>
       <div v-if="data.coopSubType !== 3" class="row">
         <h5>悬赏结算：</h5>
-        <div>
+        <div style="flex:1">
           <p>{{ ["", "待发放", "已发放", "已取消"][data.rewardStatusCode] }}</p>
+          <span>{{ data.rewardMsg }}</span>
         </div>
       </div>
       <div v-if="data.coopSubType !== 3" class="row">
@@ -199,7 +204,9 @@
           </div>
           <div v-if="data.activity.discountInfo" class="row">
             <h5>优惠信息：</h5>
-            <p>{{ data.activity.discountInfo }}</p>
+            <p>
+              {{ data.activity.discountInfo }}
+            </p>
           </div>
           <div v-if="data.build.keywords.length > 0" class="row">
             <h5>附带关键词：</h5>
@@ -220,46 +227,34 @@
         </div>
       </div>
       <div v-if="data.build.zhengshi.length > 0" class="row ceping">
-        <h5 style="line-height: 28px">正式测评：</h5>
-        <div>
-          <div
-            v-for="(item, i) in data.build.zhengshi"
-            :key="i"
-            class="row"
-            style="margin-top: 0; align-items: center"
-          >
-            <div class="item" @click="onUrl(item.url)">
-              <img :src="item.img" alt>
-              <span style="margin-left: 4px">
-                {{ item.platformName }}
-                <span
-                  style="margin-left: 12px"
-                >互动量：{{ item.activeAmount }}</span>
-              </span>
+        <h5 style="line-height: 34px">正式测评：</h5>
+        <div class="box">
+          <div v-for="(c, i) in data.build.zhengshi" :key="i" class="item">
+            <div class="pingce">
+              <a target="_blank" :href="(c.channel || {}).homeLink">
+                <img :src="c.icon" alt="">
+                <span>{{ c.type === 2 ? "追加" : "正式" }}</span> </a><a :href="c.url" target="_blank">
+                <span>互动量{{ c.activeAmount }}</span>
+                <el-icon class="el-icon-arrow-right" />
+              </a>
             </div>
-            <span style="margin-left: 12px">{{ item.date }}</span>
+            <span style="margin-left: 12px">{{ c.date }}</span>
           </div>
         </div>
       </div>
       <div v-if="data.build.zhuijia.length > 0" class="row ceping">
-        <h5 style="line-height: 28px">追加测评：</h5>
-        <div>
-          <div
-            v-for="(item, i) in data.build.zhuijia"
-            :key="i"
-            class="row"
-            style="margin-top: 0; align-items: center"
-          >
-            <div class="item" @click="onUrl(item.url)">
-              <img :src="item.img" alt>
-              <span style="margin-left: 4px">
-                {{ item.platformName }}
-                <span
-                  style="margin-left: 12px"
-                >互动量：{{ item.activeAmount }}</span>
-              </span>
+        <h5 style="line-height: 34px">追加测评：</h5>
+        <div class="box">
+          <div v-for="(c, i) in data.build.zhuijia" :key="i" class="item">
+            <div class="pingce">
+              <a target="_blank" :href="(c.channel || {}).homeLink">
+                <img :src="c.icon" alt="">
+                <span>{{ c.type === 2 ? "追加" : "正式" }}</span> </a><a :href="c.url" target="_blank">
+                <span>互动量{{ c.activeAmount }}</span>
+                <el-icon class="el-icon-arrow-right" />
+              </a>
             </div>
-            <span style="margin-left: 12px">{{ item.date }}</span>
+            <span style="margin-left: 12px">{{ c.date }}</span>
           </div>
         </div>
       </div>
@@ -304,52 +299,48 @@
           <div class="row">
             <h5>投诉理由：</h5>
             <div>
-              <p v-for="(ii, jj) in ticket.items" :key="jj" class="mb">
-                {{ ii.content }}
+              <p v-for="(i, j) in ticket.items" :key="j" class="mb">
+                {{ i.content }}
               </p>
             </div>
           </div>
           <div v-if="ticket.ticketedEvaluations.length > 0" class="row ceping">
-            <h5 style="line-height: 28px">投诉测评：</h5>
-            <div>
+            <h5 style="line-height: 34px">投诉测评：</h5>
+            <div class="box">
               <div
-                v-for="(item, ii) in ticket.ticketedEvaluations"
-                :key="ii"
-                class="row"
-                style="margin-top: 0; align-items: center"
+                v-for="(c, i) in ticket.ticketedEvaluations"
+                :key="i"
+                class="item"
               >
-                <div class="item" @click="onUrl(item.url)">
-                  <img :src="item.icon" alt="">
-                  <span
-                    style="margin-left: 4px"
-                  >{{ item.platformName
-                  }}<span
-                    style="margin-left: 12px"
-                  >互动量：{{ item.activeAmount }}</span></span>
+                <div class="pingce">
+                  <a target="_blank" :href="(c.channel || {}).homeLink">
+                    <img :src="c.icon" alt="">
+                    <span>{{ c.type === 2 ? "追加" : "正式" }}</span> </a><a :href="c.url" target="_blank">
+                    <span>互动量{{ c.activeAmount }}</span>
+                    <el-icon class="el-icon-arrow-right" />
+                  </a>
                 </div>
-                <span style="margin-left: 12px">{{ item.date }}</span>
+                <span style="margin-left: 12px">{{ c.date }}</span>
               </div>
             </div>
           </div>
           <div v-if="ticket.modifiedEvaluations.length > 0" class="row ceping">
-            <h5 style="line-height: 28px">修改测评：</h5>
-            <div>
+            <h5 style="line-height: 34px">修改测评：</h5>
+            <div class="box">
               <div
-                v-for="(item, ii) in ticket.modifiedEvaluations"
-                :key="ii"
-                class="row"
-                style="margin-top: 0; align-items: center"
+                v-for="(c, i) in ticket.modifiedEvaluations"
+                :key="i"
+                class="item"
               >
-                <div class="item" @click="onUrl(item.url)">
-                  <img :src="item.icon" alt="">
-                  <span
-                    style="margin-left: 4px"
-                  >{{ item.platformName
-                  }}<span
-                    style="margin-left: 12px"
-                  >互动量：{{ item.activeAmount }}</span></span>
+                <div class="pingce">
+                  <a target="_blank" :href="(c.channel || {}).homeLink">
+                    <img :src="c.icon" alt="">
+                    <span>{{ c.type === 2 ? "追加" : "正式" }}</span> </a><a :href="c.url" target="_blank">
+                    <span>互动量{{ c.activeAmount }}</span>
+                    <el-icon class="el-icon-arrow-right" />
+                  </a>
                 </div>
-                <span style="margin-left: 12px">{{ item.date }}</span>
+                <span style="margin-left: 12px">{{ c.date }}</span>
               </div>
             </div>
           </div>
@@ -399,7 +390,10 @@ import {
   updateAddress,
   cancelReward
 } from './api'
-import { ChannelIcons } from '@/utils/constant'
+import { ChannelIcons, ActivityOrderStatus } from '@/utils/constant'
+import { formatDeadLine } from '@/utils/index'
+import _ from 'underscore'
+
 import moment from 'moment'
 
 const DefObj = {
@@ -416,14 +410,18 @@ const DefObj = {
     address: {},
     addrs: []
   },
-  update: false
+  update: false,
+  tickets: []
 }
 export default {
-  props: { id: { type: String, default: '' }},
+  props: ['id'],
   data() {
     return {
       active: 1,
       data: DefObj,
+      activityStatus: _.object(
+        ActivityOrderStatus.map((i) => [i.value, i.name])
+      ),
       addrs,
       logistics: ['顺丰', '圆通', '中通']
     }
@@ -475,7 +473,7 @@ export default {
         .then((r) => {
           this.data.update = false
           this.$message({ message: '修改成功', type: 'success' })
-          this.loadData()
+          this.loadData(id)
         })
         .catch((e) => {
           this.data.update = false
@@ -498,6 +496,24 @@ export default {
     },
     loadData(id) {
       this.data = DefObj
+      const ticketMsg = (tt) => {
+        const t = formatDeadLine(tt.deadline)
+        switch (tt.statusCode) {
+          case 1: // "待修改",
+            return `修改测评还剩${t}，超时将由小二介入`
+          case 2: // "待确认",
+            return `品牌确认修改还剩${t}，超时将自动确认`
+          case 3: // "小二审核中",
+            return '请等待小二审核'
+          case 4: // "待重评",
+            return `修改测评还剩${t}，超时将判违规，并扣除押金`
+          // case 5: //"已修改",
+          // case 6: //"已取消",
+          case 7: // "已违规",
+            return '处理超时/违规'
+        }
+        return ''
+      }
       fetchOrder(id).then(({ data }) => {
         if (id === this.id) {
           data.build = {}
@@ -517,7 +533,7 @@ export default {
             : []
 
           const ev = data.evaluationItems.map((i) =>
-            Object.assign({}, i, ChannelIcons[i.platformId + ''], {
+            Object.assign(i, ChannelIcons[i.platformId + ''], {
               date: moment(i.gmtCreate).format('YYYY-MM-DD')
             })
           )
@@ -529,9 +545,47 @@ export default {
             data.receiver.city,
             data.receiver.county
           ]
+          data.date = moment(data.gmtCreate).format('YYYY-MM-DD HH:mm:ss')
+          data.tickets = (data.tickets || []).map((i) =>
+            Object.assign(i, {
+              modifiedEvaluations: i.modifiedEvaluations.map((i) =>
+                Object.assign(
+                  i,
+                  { date: moment(i.gmtCreate).format('YYYY-MM-DD') },
+                  ChannelIcons[i.platformId + '']
+                )
+              ),
+              ticketedEvaluations: i.ticketedEvaluations.map((i) =>
+                Object.assign(
+                  i,
+                  { date: moment(i.gmtCreate).format('YYYY-MM-DD') },
+                  ChannelIcons[i.platformId + '']
+                )
+              ),
+              date: moment(i.gmtCreate).format('YYYY-MM-DD HH:mm:ss'),
+              msg: ticketMsg(i)
+            })
+          )
           data.ticket = (data.tickets || []).filter(
-            (i) => i.statusCode > 0 && i.statusCode < 5
+            (i) => i.statusCode <= 4
           )[0]
+          data.rewardMsg = ((t) => {
+            if (t.rewardStatusCode === 1) {
+              const deadline = formatDeadLine(t.deadline)
+              return t.statusCode === 6
+                ? t.ticketStatusCode &&
+                  t.ticketStatusCode !== 6 &&
+                  t.ticketStatusCode !== 5
+                  ? '测评投诉中，若处理超时或违规，将取消悬赏发放'
+                  : !deadline
+                    ? '将自动发放'
+                    : `还剩${deadline}自动发放`
+                : '提交测评后，15天自动发放'
+            } else if (t.rewardStatusCode === 3) {
+              return '测评逾期/测评违规/不符合悬赏规范/未达成合作'
+            }
+            return ''
+          })(data)
           this.data = data
         }
       })
@@ -586,25 +640,44 @@ export default {
         margin-bottom: 6px;
       }
     }
+    .ticket {
+      border-bottom: 1px solid #f5f5f5;
+    }
+    .ticket:last-of-type {
+      border-bottom: none;
+    }
   }
   .address {
     border-top: 1px solid #e9e9e9;
   }
   .ceping {
-    .item {
-      background-color: #dcdfe6;
-      border-radius: 4px;
-      padding: 4px 8px;
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      img {
-        width: 20px;
-        height: 20px;
-      }
-      span {
-        font-size: 10px;
-        color: #666666;
+    .box {
+      .item {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        .pingce {
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          background-color: #dcdfe6;
+          border: 1px solid #f5f5f5;
+          border-radius: 4px;
+          margin: 4px 0;
+          font-size: 14px;
+          a {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+          }
+          img {
+            width: 24px;
+            height: 24px;
+          }
+          span {
+            margin: 0 4px;
+          }
+        }
       }
     }
   }
