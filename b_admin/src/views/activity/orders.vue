@@ -365,9 +365,9 @@
             <el-button
               v-if="listQuery.statusCode === '6' && row.rewardStatusCode === 2"
               size="mini"
-              type="primary"
+              :type="row.scoreInfo ? '' : 'primary'"
               @click="handleCommend(row)"
-              >评价</el-button
+              >{{ row.scoreInfo ? "已评价" : "评价" }}</el-button
             >
             <el-button
               v-if="
@@ -882,7 +882,7 @@ export default {
       const ids = row.scoreInfo
         ? row.scoreInfo.scoreItemIds.split(",").map((i) => parseInt(i))
         : [];
-        console.log(v, ids);
+      console.log(v, ids);
       this.commend = {
         value: v,
         tags: ids,
@@ -1145,8 +1145,8 @@ export default {
 .pass_confirm {
   width: 280px;
 }
-.check_btn.is-checked .el-checkbox-button__inner{
-  background-color: #4244FF;
+.check_btn.is-checked .el-checkbox-button__inner {
+  background-color: #4244ff;
   color: white;
 }
 </style>
