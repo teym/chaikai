@@ -311,6 +311,30 @@ export default {
     onGuide () {
       router(this).push('/pages/web/main', {url: 'https://docs.qq.com/doc/DU01SUVZrc1JITkxx?pub=1&dver=2.1.0'})
     },
+    createOrder () {
+      const {id} = router(this).params()
+      const idsum = _.reduce(_.keys(this.active).map(i => parseInt(i)), (i, j) => i + j, 0)
+
+      return request.post('/bl/activity/order/apply', {
+        activity: {id},
+        applyReason: this.text,
+        coopSubType: this.type,
+        receiver: this.address,
+        platformIdSum: idsum,
+        reward: this.reward,
+        blReward: this.blReward,
+        skuUnion: this.sku,
+        depositInfo: {
+          type: this.pay
+        }
+      })
+    },
+    payOrder () {
+      const {id} = router(this).params()
+      return request.post('/wxpay/mini', {amount: 0.01 /* this.data.goods.price */, brActivityId: id, payScene: 'BL_PAY_DEPOSIT'}).then(({json: {data}}) => {
+        return api.pay(data)
+      })
+    },
     onOk () {
       if (!this.address) {
         uiapi.toast('请填写收货地址')
@@ -333,37 +357,31 @@ export default {
         })
         return
       }
-      const {id} = router(this).params()
+
       const l = uiapi.loading()
-      const idsum = _.reduce(_.keys(this.active).map(i => parseInt(i)), (i, j) => i + j, 0)
-      request.post('/bl/activity/order/apply', {
-        activity: {id},
-        applyReason: this.text,
-        coopSubType: this.type,
-        receiver: this.address,
-        platformIdSum: idsum,
-        reward: this.reward,
-        blReward: this.blReward,
-        skuUnion: this.sku
-      }).then(r => {
-        return this.pay === 1 ? request.post('/wxpay/mini', {amount: 0.01 /* this.data.goods.price */, brActivityId: id, payScene: 'BL_PAY_DEPOSIT'}).then(({json: {data}}) => {
-          return api.pay(data)
-        })
-          .catch(e => {
-            uiapi.toast(e.info)
-          }) : Promise.resolve()
-      })
-        .then(r => {
-          l()
-          if (this.pay !== 1) {
-            uiapi.toast('申请已提交')
+      var p = null
+      if (this.pay === 1) {
+        p = this.createOrder().catch(e => {
+          if (e.code === 200013) {
+            return this.payOrder()
+          } else {
+            throw e
           }
-          router(this).replace('/pages/orders/main')
-        }).catch(e => {
-          // console.log(e)
-          l()
-          uiapi.toast(e.info)
+        }).then(r => {
+          return this.createOrder()
         })
+      } else {
+        p = this.createOrder()
+      }
+
+      p.then((r) => {
+        l()
+        uiapi.toast('申请已提交')
+        router(this).replace('/pages/orders/main')
+      }).catch(e => {
+        l()
+        uiapi.toast(e.info)
+      })
     },
     onCopy (str) {
       api.copy(str).then(r => {

@@ -19,7 +19,7 @@
 		 */
 
 		var defaults = {
-			speed : 2000,
+			speed : 5000,
 			bodyID : 'fsvs-body',
 			selector : '> .slide',
 			mouseSwipeDisance : 40,
