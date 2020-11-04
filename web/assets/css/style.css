@@ -788,7 +788,7 @@ html.fsvs #fsvs-pagination li>span {
 	width: 22px;
 	height: 22px;
 	line-height: 22px;
-	border: 1px solid white;
+	border: 1px solid transparent;
 	display: block
 }
 
@@ -801,17 +801,17 @@ html.fsvs #fsvs-pagination li>span>span {
 	width: 12px;
 	height: 12px;
 	line-height: 12px;
-	border: 1px solid white;
 	display: block;
+	background-color: #B3B3B3;
 	margin: 4px
 }
 
 html.fsvs #fsvs-pagination li.active>span {
-	border: 1px dashed white
+	border: 1px solid #FA8915
 }
 
 html.fsvs #fsvs-pagination li.active>span>span {
-	background: white
+	background: #FA8915
 }
 
 html.fsvs #fsvs-pagination li:last-child {
@@ -819,7 +819,7 @@ html.fsvs #fsvs-pagination li:last-child {
 }
 
 html.fsvs #fsvs-body>.slide {
-	padding: 48px 0 0 0;
+	padding: 64px 0 0 0;
 	text-align: center
 }
 
@@ -831,22 +831,6 @@ html.fsvs #fsvs-body>.slide {
 
 body {
 	font-family: 'Open Sans', sans-serif
-}
-
-body.active-nth-slide-1 #fsvs-pagination li.active>span>span {
-	background: #e65019
-}
-
-body.active-nth-slide-2 #fsvs-pagination li.active>span>span {
-	background: #1c7d44
-}
-
-body.active-nth-slide-3 #fsvs-pagination li.active>span>span {
-	background: #bc303a
-}
-
-body.active-nth-slide-4 #fsvs-pagination li.active>span>span {
-	background: #1a242f
 }
 
 .row {
@@ -915,7 +899,7 @@ body.active-nth-slide-4 #fsvs-pagination li.active>span>span {
 	left: 0;
 	width: 100vw;
 	z-index: 999;
-	padding: 8px 0;
+	padding: 16px 0;
 }
 
 #mainNav .nav {
@@ -1070,7 +1054,7 @@ header.headbar {
 	background-size: cover;
 	color: white;
 	text-align: left;
-	padding: 16px 0;
+	padding: 32px 0;
 }
 
 header.headbar h2 {
