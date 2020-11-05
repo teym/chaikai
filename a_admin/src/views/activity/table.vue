@@ -88,7 +88,7 @@
       <el-table-column label="状态" align="center">
         <template slot-scope="{ row }">
           <span>{{ status[row.statusCode] }}</span>
-          <span v-if="row.statusCode === 3" style="color:#999">
+          <span v-if="row.statusCode === 3" style="color: #999">
             <br>
             {{ row.rejectReason }}
           </span>
@@ -412,22 +412,26 @@ export default {
       // this.loadQR(row.id)
     },
     handleAction(row, state) {
-      if (state === 4 || state === 6) {
-        this.$confirm(state === 4 ? '确认通过?' : '确认关闭?').then((r) => {
+      if (state === 4) {
+        this.$confirm('确认通过?').then((r) => {
           updateActivityState({ id: row.id, statusCode: state }).then((r) => {
             row.statusCode = state
             this.$message({ message: '操作成功', type: 'success' })
           })
         })
       } else {
-        this.$prompt('请输入拒绝理由', {
-          inputPlaceholder: '拒绝理由,最多200字',
+        this.$prompt(state === 6 ? '请输入关闭理由' : '请输入拒绝理由', {
+          inputPlaceholder:
+            state === 6 ? '关闭理由,最多200字' : '拒绝理由,最多200字',
           inputValidator: (s) => {
             return s && s.length <= 200
           },
           beforeClose: (action, instance, done) => {
             if (action === 'confirm' && !instance.inputValue) {
-              this.$message({ message: '请输入拒绝理由', type: 'error' })
+              this.$message({
+                message: state === 6 ? '请输入关闭理由' : '请输入拒绝理由',
+                type: 'error'
+              })
             } else {
               done()
             }
