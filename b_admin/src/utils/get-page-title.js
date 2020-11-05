@@ -1,10 +1,13 @@
 import defaultSettings from '@/settings'
 
 const title = defaultSettings.title || 'Vue Element Admin'
+const test = process.env.VUE_APP_BASE_API.indexOf('test') > 0;
+
+console.log('istest', test, process.env.VUE_APP_BASE_API);
 
 export default function getPageTitle(pageTitle) {
   if (pageTitle) {
-    return `${title}-${pageTitle}`
+    return `${test ? '[测试]' : ''}${title}-${pageTitle}`
   }
-  return `${title}`
+  return `${test ? '[测试]' : ''}${title}`
 }

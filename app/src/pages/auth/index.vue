@@ -30,7 +30,7 @@
 
 <script>
 import _ from 'underscore'
-import {router, uiapi, request} from '@/utils/index'
+import {router, uiapi, request, matchURL} from '@/utils/index'
 import done from '@/components/done'
 
 export default {
@@ -78,6 +78,10 @@ export default {
     onGo () {
       if (this.channel.statusCode === '1' || this.channel.statusCode === '3') {
         return
+      }
+      this.channel.homeLink = matchURL(this.channel.homeLink)
+      if (!this.channel.homeLink) {
+        return uiapi.toast('提交输入正确的主页链接')
       }
       const l = uiapi.loading()
       request.post('/bl/account/channel', Object.assign({}, this.channel)).then(r => {
