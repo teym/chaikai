@@ -76,7 +76,14 @@
           </div>
         </div>
         <div class="bar">
-          <textarea v-model="text" class="input" @keypress.enter="onSend" />
+          <textarea
+            v-model="text"
+            class="input"
+            @keypress.enter="onSend"
+            :placeholder="
+              orderDone ? '合作已结束，无法发送消息' : '支持发送图文消息'
+            "
+          />
           <div class="row">
             <label for="file" class="file" @click="clickFile">
               <input
@@ -103,7 +110,7 @@
         </div>
       </el-col>
       <el-col :span="showList ? 7 : 8" class="detail">
-        <order ref="order" :id="active" />
+        <order ref="order" :id="active" @order="onOrder" />
       </el-col>
     </el-row>
     <el-dialog width="60%" title="预览" :visible.sync="preview" append-to-body>
@@ -166,6 +173,7 @@ export default {
       text: "",
       preview: false,
       previewUrl: "",
+      orderDone: false,
     };
   },
   created() {
@@ -185,7 +193,7 @@ export default {
       this.showList = true;
       this.showDetail = true;
       setTimeout(() => {
-        this.$refs.order.update('order');
+        this.$refs.order.update("order");
       }, 0);
       this.loadList(1);
     },
@@ -194,11 +202,17 @@ export default {
       this.preview = true;
     },
     onSend() {
+      if (this.orderDone) {
+        return;
+      }
       this.realSend(Promise.resolve(this.text), () => {
         this.text = "";
       });
     },
     clickFile() {
+      if (this.orderDone) {
+        return;
+      }
       this.$refs.fileinput.click();
     },
     onFile(e) {
@@ -263,7 +277,17 @@ export default {
         sending: false,
       };
       this.text = "";
+      this.orderDone = false;
       this.loadData(1);
+    },
+    onCount() {
+      const count = this.list
+        .map((i) => i.brUnreadNum || 0)
+        .reduce((a, b) => a + b, 0);
+      this.$emit("count", count);
+    },
+    onOrder(done) {
+      this.orderDone = done;
     },
     loadList(page) {
       this.loading = true;
@@ -285,6 +309,7 @@ export default {
             this.active = this.list[0].originId;
           }
           this.loadData(1);
+          this.onCount();
         })
         .catch((e) => {
           this.loading = false;
@@ -322,6 +347,12 @@ export default {
             this.data.nomore = data.pager.totalPages <= page;
             this.data.page = page;
             this.data.loading = false;
+            const t = this.list.find((i) => i.originId === act);
+            if (t) {
+              t.brUnreadNum = 0;
+            }
+            this.onCount();
+
             setTimeout(() => {
               this.$refs.box &&
                 this.$refs.box.scrollTo(0, this.$refs.box.scrollHeight);

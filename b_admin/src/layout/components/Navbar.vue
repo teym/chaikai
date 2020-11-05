@@ -49,7 +49,7 @@
         </div>
       </el-popover>
       <div class="right-menu-item menu-noti" @click="handelMessage">
-        <el-badge is-dot class="nav_img_box">
+        <el-badge :value="count" class="nav_img_box">
           <img
             class="nav_img_icon"
             src="@/assets/images/nav_noti.png"
@@ -78,7 +78,7 @@
         >帮助</el-button
       >
     </div>
-    <Communicate ref="communicate" />
+    <Communicate ref="communicate" @count="onCount" />
   </div>
 </template>
 
@@ -99,6 +99,7 @@ export default {
   data() {
     return {
       bg_img: bg,
+      count: 0,
     };
   },
   computed: {
@@ -117,6 +118,9 @@ export default {
     },
     onHelp() {
       window._MEIQIA("showPanel");
+    },
+    onCount(t) {
+      this.count = t;
     },
   },
 };

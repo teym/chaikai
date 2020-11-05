@@ -354,8 +354,9 @@ export default {
       }).then((r) => {
         closeOrder({
           id: row.id,
-          rejectReason: r.value
+          reason: r.value
         }).then(() => {
+          row.statusCode = 7
           this.$message({ message: '操作成功', type: 'success' })
         })
       })

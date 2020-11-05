@@ -554,6 +554,8 @@ export default {
             return "";
           })(data);
           this.data = data;
+          const done = !(data && data.statusCode > 2 && data.statusCode < 7 && data.rewardStatusCode === 1)
+          this.$emit('order', done)
         }
       });
     },
