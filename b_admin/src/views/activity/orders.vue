@@ -89,6 +89,14 @@
           >
         </div>
       </div>
+      <div v-show="listQuery.statusCode === '6'" class="row row2">
+        <div class="place" />
+        <div class="right">
+          <el-button type="primary" size="mini" @click="handleExport"
+            >导出</el-button
+          >
+        </div>
+      </div>
     </div>
 
     <el-table
@@ -882,7 +890,6 @@ export default {
       const ids = row.scoreInfo
         ? row.scoreInfo.scoreItemIds.split(",").map((i) => parseInt(i))
         : [];
-      console.log(v, ids);
       this.commend = {
         value: v,
         tags: ids,
@@ -933,6 +940,11 @@ export default {
     },
     handleDetail(row) {
       window.showCommunicate(row.id);
+    },
+    handleExport() {
+      window.location = exportConf("/br/activity/order/export/evaluated", {
+        brActivityId: this.listQuery.brActivityId,
+      });
     },
   },
 };
