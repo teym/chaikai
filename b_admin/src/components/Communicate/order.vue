@@ -360,6 +360,14 @@
               >确认修改</el-button
             >
           </div>
+          <div v-if="ticket.statusCode === 1" class="row">
+            <el-button
+              size="mini"
+              :loading="data.update"
+              @click="updateState(ticket, 6)"
+              >取消投诉</el-button
+            >
+          </div>
         </div>
       </div>
       <div v-else class="empty">
