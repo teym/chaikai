@@ -499,7 +499,7 @@ export default {
               )
             : [];
 
-          const ev = data.evaluationItems.map((i) =>
+          const ev = (data.evaluationItems || []).map((i) =>
             Object.assign(i, ChannelIcons[i.platformId + ""], {
               date: moment(i.gmtCreate).format("YYYY-MM-DD"),
             })

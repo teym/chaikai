@@ -284,7 +284,7 @@ export default {
       const count = this.list
         .map((i) => i.brUnreadNum || 0)
         .reduce((a, b) => a + b, 0);
-      this.$emit("count", count);
+      this.$emit("count", { count, list: this.list.length });
     },
     onOrder(done) {
       this.orderDone = done;
@@ -347,11 +347,13 @@ export default {
             this.data.nomore = data.pager.totalPages <= page;
             this.data.page = page;
             this.data.loading = false;
-            const t = this.list.find((i) => i.originId === act);
-            if (t) {
-              t.brUnreadNum = 0;
+            if (this.showDetail) {
+              const t = this.list.find((i) => i.originId === act);
+              if (t) {
+                t.brUnreadNum = 0;
+              }
+              this.onCount();
             }
-            this.onCount();
 
             setTimeout(() => {
               this.$refs.box &&

@@ -49,7 +49,7 @@
         </div>
       </el-popover>
       <div class="right-menu-item menu-noti" @click="handelMessage">
-        <el-badge :value="count" class="nav_img_box">
+        <el-badge :value="count" :hidden="count <= 0" class="nav_img_box">
           <img
             class="nav_img_icon"
             src="@/assets/images/nav_noti.png"
@@ -100,6 +100,7 @@ export default {
     return {
       bg_img: bg,
       count: 0,
+      list: 0,
     };
   },
   computed: {
@@ -114,13 +115,18 @@ export default {
       this.$router.push(`/login`);
     },
     handelMessage() {
-      this.$refs.communicate.show();
+      if (this.list > 0 || this.count > 0) {
+        this.$refs.communicate.show();
+      } else {
+        this.$message({ message: "暂无最新消息", type: "info" });
+      }
     },
     onHelp() {
       window._MEIQIA("showPanel");
     },
     onCount(t) {
-      this.count = t;
+      this.count = t.count;
+      this.list = t.list;
     },
   },
 };
