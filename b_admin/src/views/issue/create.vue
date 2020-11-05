@@ -91,10 +91,10 @@ export default {
     const validateRequire = (rule, value, callback) => {
       if (value === '') {
         this.$message({
-          message: rule.field + '为必传项',
+          message: rule.field + '为必填项',
           type: 'error'
         })
-        callback(new Error(rule.field + '为必传项'))
+        callback(new Error(rule.field + '为必填项'))
       } else {
         callback()
       }

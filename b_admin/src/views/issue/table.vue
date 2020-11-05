@@ -86,7 +86,6 @@
         <template slot-scope="{ row }">
           <el-button
             v-if="row.statusCode !== 2"
-            type="primary"
             size="mini"
             @click="handleDetail(row)"
             >查看</el-button

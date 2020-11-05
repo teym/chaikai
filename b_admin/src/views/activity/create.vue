@@ -695,14 +695,14 @@ export default {
         if (this.tip <= 0) {
           this.tip += 1;
           this.$message({
-            message: rule.name + "为必传项",
+            message: rule.name + "为必填项",
             type: "error",
             onClose: () => {
               this.tip -= 1;
             },
           });
         }
-        callback(new Error(rule.name + "为必传项"));
+        callback(new Error(rule.name + "为必填项"));
       } else {
         callback();
       }
@@ -744,14 +744,14 @@ export default {
         if (this.tip <= 0) {
           this.tip += 1;
           this.$message({
-            message: rule.name + "为必传项",
+            message: rule.name + "为必填项",
             type: "error",
             onClose: () => {
               this.tip -= 1;
             },
           });
         }
-        callback(new Error(rule.name + "为必传项"));
+        callback(new Error(rule.name + "为必填项"));
       } else {
         callback();
       }

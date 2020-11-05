@@ -131,5 +131,6 @@ export default {
 }
 .tip {
   margin: 0;
+  color: #999;
 }
 </style>

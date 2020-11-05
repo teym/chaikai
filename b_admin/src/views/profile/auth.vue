@@ -1,6 +1,6 @@
 <template>
   <div class="create-container">
-    <div v-if="tip" class="tip">
+    <div v-if="done" class="tip">
       <div>
         <img src="@/assets/images/user_done.png" alt="done" />
         <h1>已提交和审核</h1>
@@ -38,6 +38,7 @@
             :count="7"
             :limit="conf.limit"
             v-model="postForm.logo"
+            tip="最低尺寸要求: 18像素 x 18像素 请上传小于5M的图片, 支持图片格式: png, jpg"
           />
         </el-form-item>
         <el-form-item label="品牌故事:" prop="story">
@@ -63,7 +64,9 @@
             :count="7"
             :limit="conf.limit"
             v-model="postForm.trademarkRegistration"
+            tip="请上传小于5M的图片，支持图片格式：jpg,jpeg,png"
           />
+          <p>若办理过变更、转让、续展，请一并提供商标总局颁发变更受理通知书</p>
         </el-form-item>
         <el-form-item label="品牌关系:" prop="relationType">
           <el-radio-group
@@ -87,6 +90,7 @@
             :count="7"
             :limit="conf.limit"
             v-model="postForm.qualification"
+            tip="请上传小于5M的图片，支持图片格式：jpg,jpeg,png"
           />
         </el-form-item>
 
@@ -138,10 +142,16 @@ export default {
   data() {
     const validateRequire = (rule, value, callback) => {
       if (value === "") {
-        this.$message({
-          message: "请填写" + rule.name,
-          type: "error",
-        });
+        if (this.tip <= 0) {
+          this.tip += 1;
+          this.$message({
+            message: "请填写" + rule.name,
+            type: "error",
+            onClose: () => {
+              this.tip -= 1;
+            },
+          });
+        }
         callback(new Error("请填写" + rule.name));
       } else {
         callback();
@@ -151,10 +161,16 @@ export default {
       if (validURL(value)) {
         callback();
       } else {
-        this.$message({
-          message: "请上传" + rule.name,
-          type: "error",
-        });
+        if (this.tip <= 0) {
+          this.tip += 1;
+          this.$message({
+            message: "请上传" + rule.name,
+            type: "error",
+            onClose: () => {
+              this.tip -= 1;
+            },
+          });
+        }
         callback(new Error("请上传" + rule.name));
       }
     };
@@ -162,7 +178,8 @@ export default {
     return {
       postForm: Object.assign({}, defaultForm),
       loading: false,
-      tip: false,
+      done: false,
+      tip: 0,
       rules: {
         name: [
           {
@@ -172,7 +189,14 @@ export default {
             name: "品牌名称",
           },
         ],
-        story: [{}],
+        story: [
+          {
+            required: true,
+            trigger: "blur",
+            validator: validateRequire,
+            name: "品牌故事",
+          },
+        ],
         relationType: [{ validator: validateRequire, name: "品牌关系" }],
         logo: [{ validator: validateSourceUri, name: "品牌LOGO" }],
         trademarkRegistration: [
@@ -206,7 +230,7 @@ export default {
   methods: {
     onAddNew() {
       this.$router.push("/user/auth");
-      this.tip = false;
+      this.done = false;
       this.postForm = Object.assign({}, defaultForm);
     },
     fetchData(id) {
@@ -228,7 +252,7 @@ export default {
             createPv(Object.assign({}, this.postForm))
               .then((r) => {
                 this.loading = false;
-                this.tip = true;
+                this.done = true;
               })
               .catch((e) => {
                 this.loading = false;
@@ -238,7 +262,7 @@ export default {
             submitPv(Object.assign({}, this.postForm))
               .then((r) => {
                 this.loading = false;
-                this.tip = true;
+                this.done = true;
               })
               .catch((e) => {
                 this.loading = false;

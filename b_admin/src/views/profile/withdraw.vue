@@ -13,13 +13,13 @@
         </el-form-item>
         <el-form-item label="提现方式">
           <el-radio-group v-model="form.type">
-            <el-radio-button label="1">银行卡</el-radio-button>
-            <el-radio-button label="2">支付宝</el-radio-button>
+            <el-radio-button label="2">银行卡</el-radio-button>
+            <el-radio-button label="1">支付宝</el-radio-button>
           </el-radio-group>
         </el-form-item>
 
         <el-form-item
-          v-if="form.type === '2'"
+          v-if="form.type === '1'"
           label="支付宝帐号"
           prop="alipayAccount"
         >
@@ -29,7 +29,7 @@
           />
         </el-form-item>
         <el-form-item
-          v-if="form.type === '2'"
+          v-if="form.type === '1'"
           label="帐号名称"
           prop="alipayAccountName"
         >
@@ -40,7 +40,7 @@
         </el-form-item>
 
         <el-form-item
-          v-if="form.type === '1'"
+          v-if="form.type === '2'"
           label="户名"
           prop="bandAccountName"
         >
@@ -49,10 +49,10 @@
             placeholder="请输入银行卡户名"
           />
         </el-form-item>
-        <el-form-item v-if="form.type === '1'" label="卡号" prop="bandCardNo">
+        <el-form-item v-if="form.type === '2'" label="卡号" prop="bandCardNo">
           <el-input v-model="form.bandCardNo" placeholder="请输入银行卡卡号" />
         </el-form-item>
-        <el-form-item v-if="form.type === '1'" label="开户行" prop="bandName">
+        <el-form-item v-if="form.type === '2'" label="开户行" prop="bandName">
           <el-input v-model="form.bandName" placeholder="请输入银行卡开户行" />
         </el-form-item>
 
@@ -148,7 +148,7 @@ export default {
           },
         ],
         alipayAccount:
-          this.form.type !== "2"
+          this.form.type !== "1"
             ? []
             : [
                 {
@@ -158,7 +158,7 @@ export default {
                 },
               ],
         alipayAccountName:
-          this.form.type !== "2"
+          this.form.type !== "1"
             ? []
             : [
                 {
@@ -168,7 +168,7 @@ export default {
                 },
               ],
         bandAccountName:
-          this.form.type !== "1"
+          this.form.type !== "2"
             ? []
             : [
                 {
@@ -178,7 +178,7 @@ export default {
                 },
               ],
         bandCardNo:
-          this.form.type !== "1"
+          this.form.type !== "2"
             ? []
             : [
                 {
@@ -188,7 +188,7 @@ export default {
                 },
               ],
         bandName:
-          this.form.type !== "1"
+          this.form.type !== "2"
             ? []
             : [
                 {

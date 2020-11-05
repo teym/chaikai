@@ -90,7 +90,7 @@
       :limit.sync="listQuery.size"
       @pagination="getList"
     />
-    <el-dialog width="60%" title="开票详情" :visible.sync="detailVisable">
+    <el-dialog width="60%" title="提现详情" :visible.sync="detailVisable">
       <div v-if="detail" class="detail">
         <div class="row">
           <h4>提现状态:</h4>
