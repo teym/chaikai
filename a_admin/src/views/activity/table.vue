@@ -136,7 +136,7 @@
             v-if="row.statusCode === 4 || row.statusCode === 5"
             size="mini"
             type="primary"
-            @click="handleAction(row, 5)"
+            @click="handleAction(row, 6)"
           >关闭</el-button>
         </template>
       </el-table-column>
