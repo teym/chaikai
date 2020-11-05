@@ -640,13 +640,14 @@ import {
   submitData,
   updateData,
 } from "@/api/activities";
+import _ from "underscore";
 import { Channels, ChannelIcons, mapChannel } from "@/utils/constant";
 import { clearQueryObject } from "@/utils/index";
 import address from "./components/address";
 import Pagination from "@/components/Pagination"; // secondary package based on el-pagination
 import moment from "moment";
 
-const defaultForm = {
+const defaultForm = () => ({
   goods: null,
   skus: [],
   regTime: [],
@@ -675,7 +676,7 @@ const defaultForm = {
     awardAmount: "",
   },
   statusCode: 1,
-};
+});
 
 export default {
   name: "ArticleDetail",
@@ -707,21 +708,6 @@ export default {
         callback();
       }
     };
-    // const validateSourceUri = (rule, value, callback) => {
-    //   if (value) {
-    //     if (validURL(value)) {
-    //       callback()
-    //     } else {
-    //       this.$message({
-    //         message: '外链url填写不正确',
-    //         type: 'error'
-    //       })
-    //       callback(new Error('外链url填写不正确'))
-    //     }
-    //   } else {
-    //     callback()
-    //   }
-    // }
     const validateNumberRequire = (rule, value, callback) => {
       if (parseFloat(value) < 0) {
         if (this.tip <= 0) {
@@ -790,7 +776,7 @@ export default {
     };
     return {
       tip: 0,
-      postForm: Object.assign({}, defaultForm),
+      postForm: defaultForm(),
       loading: false,
       brandListOptions: [],
       rules: {
@@ -875,7 +861,10 @@ export default {
           const t = time.getTime();
           const b = Date.now();
           const n =
-            b + (this.postForm.regTime[1] ? moment(this.postForm.regTime[1]).toDate() - b : 0);
+            b +
+            (this.postForm.regTime[1]
+              ? moment(this.postForm.regTime[1]).toDate() - b
+              : 0);
           return !(
             t > n + 12 * 24 * 60 * 60 * 1000 && t < n + 25 * 24 * 60 * 60 * 1000
           );
@@ -889,7 +878,11 @@ export default {
           data: ["单篇|100"],
           desc: "合作篇幅选中“无需求”时，禁选最低图片数9张",
         },
-        { title: "测评形式", data: ["限定图文|30", "限定视频|100"], desc: "" },
+        {
+          title: "测评形式",
+          data: ["限定图文|30", "限定视频|100"],
+          desc: "",
+        },
         {
           title: "最低字数",
           data: ["200字|25", "400字|120"],
@@ -917,6 +910,7 @@ export default {
           desc: "",
         },
       ],
+      s: 0,
     };
   },
   computed: {
@@ -951,7 +945,7 @@ export default {
       );
     },
   },
-  created() {
+  mounted() {
     const id = this.$route.query && this.$route.query.id;
     if (id) {
       this.loadData(id);

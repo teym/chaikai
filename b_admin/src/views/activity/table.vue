@@ -31,23 +31,23 @@
           mode="horizontal"
           @select="handleSelect"
         >
-          <el-menu-item :index="''" style="padding: 0 0;margin: 0 20px">
+          <el-menu-item :index="''" style="padding: 0 0; margin: 0 20px">
             全部
             <span v-if="stat.total > 0" class="pill">{{ stat.total }}</span>
           </el-menu-item>
-          <el-menu-item index="5" style="padding: 0 0;margin: 0 20px">
+          <el-menu-item index="5" style="padding: 0 0; margin: 0 20px">
             报名中
             <span v-if="stat.signingUp > 0" class="pill">{{
               stat.signingUp
             }}</span>
           </el-menu-item>
-          <el-menu-item index="4" style="padding: 0 0;margin: 0 20px">
+          <el-menu-item index="4" style="padding: 0 0; margin: 0 20px">
             未开始
             <span v-if="stat.notStarted > 0" class="pill">{{
               stat.notStarted
             }}</span>
           </el-menu-item>
-          <el-menu-item index="6" style="padding: 0 0;margin: 0 20px">
+          <el-menu-item index="6" style="padding: 0 0; margin: 0 20px">
             报名结束
             <span v-if="stat.signUpClosed > 0" class="pill">{{
               stat.signUpClosed
@@ -120,9 +120,9 @@
               row.statusCode
             ]
           }}</span>
-          <span style="color:#999" v-if="row.statusCode === 3">
-            <br>
-            {{row.rejectReason}}
+          <span style="color: #999" v-if="row.statusCode === 3">
+            <br />
+            {{ row.rejectReason }}
           </span>
         </template>
       </el-table-column>
