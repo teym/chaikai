@@ -94,7 +94,12 @@
       <div v-if="detail" class="detail">
         <div class="row">
           <h4>提现状态:</h4>
-          <p>{{ status[detail.statusCode] }}</p>
+          <p>
+            {{ status[detail.statusCode]
+            }}<span v-if="detail.statusCode === 4" style="color:#999;margin-left:8px">{{
+              detail.rejectReason
+            }}</span>
+          </p>
         </div>
         <div class="row">
           <h4>申请时间:</h4>
@@ -227,7 +232,7 @@ export default {
           statusCode: 4
         }).then(() => {
           this.detailVisable = false
-          this.detail.statusCode = 2
+          this.detail.statusCode = 4
           this.detail.rejectReason = r.value
           this.$message({ message: '操作成功', type: 'success' })
         })
