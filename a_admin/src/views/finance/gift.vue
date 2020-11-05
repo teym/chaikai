@@ -228,7 +228,7 @@ export default {
         obj.startTime = moment(this.listQuery.timeRange[0]).format(
           'YYYY-MM-DD HH:mm:ss'
         )
-        obj.endTime = moment(this.listQuery.timeRange[0]).format(
+        obj.endTime = moment(this.listQuery.timeRange[0]).add(1, 'd').format(
           'YYYY-MM-DD HH:mm:ss'
         )
         obj.timeRange = ''

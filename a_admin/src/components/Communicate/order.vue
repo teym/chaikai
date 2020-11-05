@@ -532,7 +532,7 @@ export default {
             )
             : []
 
-          const ev = data.evaluationItems.map((i) =>
+          const ev = (data.evaluationItems || []).map((i) =>
             Object.assign(i, ChannelIcons[i.platformId + ''], {
               date: moment(i.gmtCreate).format('YYYY-MM-DD')
             })
@@ -548,14 +548,14 @@ export default {
           data.date = moment(data.gmtCreate).format('YYYY-MM-DD HH:mm:ss')
           data.tickets = (data.tickets || []).map((i) =>
             Object.assign(i, {
-              modifiedEvaluations: i.modifiedEvaluations.map((i) =>
+              modifiedEvaluations: (i.modifiedEvaluations || []).map((i) =>
                 Object.assign(
                   i,
                   { date: moment(i.gmtCreate).format('YYYY-MM-DD') },
                   ChannelIcons[i.platformId + '']
                 )
               ),
-              ticketedEvaluations: i.ticketedEvaluations.map((i) =>
+              ticketedEvaluations: (i.ticketedEvaluations || []).map((i) =>
                 Object.assign(
                   i,
                   { date: moment(i.gmtCreate).format('YYYY-MM-DD') },
