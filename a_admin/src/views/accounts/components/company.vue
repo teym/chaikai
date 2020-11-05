@@ -97,10 +97,16 @@
         </el-table-column>
         <el-table-column label="商标证书" align="center">
           <template slot-scope="{ row }">
-            <el-button
-              size="mini"
-              @click="onPreview(row.trademarkRegistration)"
-            >查看</el-button>
+            <el-image
+              v-if="
+                row.trademarkRegistrations &&
+                  row.trademarkRegistrations.length > 0
+              "
+              style="width: 60px; height: 60px"
+              :src="row.trademarkRegistrations[0]"
+              :preview-src-list="row.trademarkRegistrations"
+            />
+            <span v-else>无</span>
           </template>
         </el-table-column>
         <el-table-column label="品牌关系" align="center">
@@ -112,11 +118,12 @@
         </el-table-column>
         <el-table-column label="品牌授权资质" align="center">
           <template slot-scope="{ row }">
-            <el-button
-              v-if="row.qualification"
-              size="mini"
-              @click="onPreview(row.qualification)"
-            >查看</el-button>
+            <el-image
+              v-if="row.qualifications && row.qualifications.length > 0"
+              style="width: 60px; height: 60px"
+              :src="row.qualifications[0]"
+              :preview-src-list="row.qualifications"
+            />
             <span v-else>无</span>
           </template>
         </el-table-column>

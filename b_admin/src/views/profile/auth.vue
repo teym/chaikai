@@ -25,17 +25,11 @@
             placeholder="请输入品牌名称"
           />
         </el-form-item>
-        <el-form-item
-          prop="logo"
-          style="margin-bottom: 30px"
-          label="品牌LOGO:"
-          :required="true"
-        >
-          <Upload
+        <el-form-item prop="logo" style="margin-bottom: 30px" label="品牌LOGO:">
+          <UploadS
             :disabled="postForm.statusCode === 3 || postForm.statusCode === 2"
             :url="conf.url"
             :headers="conf.headers"
-            :count="7"
             :limit="conf.limit"
             v-model="postForm.logo"
             tip="最低尺寸要求: 18像素 x 18像素 请上传小于5M的图片, 支持图片格式: png, jpg"
@@ -52,18 +46,17 @@
           />
         </el-form-item>
         <el-form-item
-          prop="trademarkRegistration"
+          prop="trademarkRegistrations"
           style="margin-bottom: 30px"
           label="商标注册书:"
-          :required="true"
         >
           <Upload
             :disabled="postForm.statusCode === 3 || postForm.statusCode === 2"
             :url="conf.url"
             :headers="conf.headers"
-            :count="7"
+            :count="5"
             :limit="conf.limit"
-            v-model="postForm.trademarkRegistration"
+            v-model="postForm.trademarkRegistrations"
             tip="请上传小于5M的图片，支持图片格式：jpg,jpeg,png"
           />
           <p>若办理过变更、转让、续展，请一并提供商标总局颁发变更受理通知书</p>
@@ -72,6 +65,7 @@
           <el-radio-group
             v-model="postForm.relationType"
             :disabled="postForm.statusCode === 3 || postForm.statusCode === 2"
+            @change="onType"
           >
             <el-radio :label="'1'">品牌方</el-radio>
             <el-radio :label="'2'">代理商</el-radio>
@@ -79,7 +73,7 @@
         </el-form-item>
         <el-form-item
           v-if="postForm.relationType === '2'"
-          prop="qualification"
+          prop="qualifications"
           style="margin-bottom: 30px"
           label="品牌授权资质:"
         >
@@ -87,9 +81,9 @@
             :disabled="postForm.statusCode === 3 || postForm.statusCode === 2"
             :url="conf.url"
             :headers="conf.headers"
-            :count="7"
+            :count="5"
             :limit="conf.limit"
-            v-model="postForm.qualification"
+            v-model="postForm.qualifications"
             tip="请上传小于5M的图片，支持图片格式：jpg,jpeg,png"
           />
         </el-form-item>
@@ -114,24 +108,29 @@
 </template>
 
 <script>
-import Upload from "@/components/Upload/SingleImage3";
+import UploadS from "@/components/Upload/SingleImage3";
+import Upload from "@/components/Upload/SingleImage2";
 import { validURL } from "@/utils/validate";
+import _ from "underscore";
 import { getPv, createPv, updatePv, submitPv } from "@/api/goods";
 import { getConf } from "@/api/oss";
 
-const defaultForm = {
+const defaultForm = () => ({
   name: "",
   logo: "",
   story: "",
   trademarkRegistration: "",
   qualification: "",
+  trademarkRegistrations: [],
+  qualifications: [],
   relationType: "1",
-};
+});
 
 export default {
   name: "ArticleDetail",
   components: {
     Upload,
+    UploadS,
   },
   props: {
     isEdit: {
@@ -141,7 +140,26 @@ export default {
   },
   data() {
     const validateRequire = (rule, value, callback) => {
-      if (value === "") {
+      console.log("v", rule.name, this.postForm.relationType, value);
+      if (!value || value.length <= 0) {
+        if (this.tip <= 0) {
+          this.tip += 1;
+          this.$message({
+            message: "请填写" + rule.name,
+            type: "error",
+            onClose: () => {
+              this.tip -= 1;
+            },
+          });
+        }
+        callback(new Error("请填写" + rule.name));
+      } else {
+        callback();
+      }
+    };
+    const validateQRequire = (rule, value, callback) => {
+      console.log("q", this.postForm.relationType, value);
+      if (this.postForm.relationType === "2" && (!value || value.length <= 0)) {
         if (this.tip <= 0) {
           this.tip += 1;
           this.$message({
@@ -176,7 +194,7 @@ export default {
     };
     const upload = getConf();
     return {
-      postForm: Object.assign({}, defaultForm),
+      postForm: defaultForm(),
       loading: false,
       done: false,
       tip: 0,
@@ -197,12 +215,22 @@ export default {
             name: "品牌故事",
           },
         ],
-        relationType: [{ validator: validateRequire, name: "品牌关系" }],
-        logo: [{ validator: validateSourceUri, name: "品牌LOGO" }],
-        trademarkRegistration: [
-          { validator: validateSourceUri, name: "商标注册书" },
+        relationType: [
+          { required: true, validator: validateRequire, name: "品牌关系" },
         ],
-        qualification: [{ validator: validateSourceUri, name: "品牌授权资质" }],
+        logo: [
+          { required: true, validator: validateSourceUri, name: "品牌LOGO" },
+        ],
+        trademarkRegistrations: [
+          { required: true, validator: validateRequire, name: "商标注册书" },
+        ],
+        qualifications: [
+          {
+            required: false,
+            validator: validateQRequire,
+            name: "品牌授权资质",
+          },
+        ],
       },
       conf: {
         url: upload.url,
@@ -233,10 +261,13 @@ export default {
       this.done = false;
       this.postForm = Object.assign({}, defaultForm);
     },
+    onType(type) {
+      this.rules.qualifications[0].required = type === "2";
+    },
     fetchData(id) {
       getPv(id)
-        .then((response) => {
-          this.postForm = response.data;
+        .then(({ data }) => {
+          this.postForm = data;
         })
         .catch((err) => {
           console.log(err);

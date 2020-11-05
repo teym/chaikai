@@ -71,7 +71,11 @@
       </el-table-column>
       <el-table-column label="商标证书" align="center">
         <template slot-scope="{ row }">
-          <p @click="handlePreview(row.trademarkRegistration)">查看</p>
+          <el-image
+            style="width: 60px; height: 60px"
+            :src="row.trademarkRegistrations[0]"
+            :preview-src-list="row.trademarkRegistrations"
+          />
         </template>
       </el-table-column>
       <el-table-column label="品牌关系" align="center">
@@ -81,12 +85,12 @@
       </el-table-column>
       <el-table-column label="品牌授权资质" align="center">
         <template slot-scope="{ row }">
-          <p
+          <el-image
             v-if="row.relationType === 2"
-            @click="handlePreview(row.qualification)"
-          >
-            查看
-          </p>
+            style="width: 60px; height: 60px"
+            :src="row.qualifications[0]"
+            :preview-src-list="row.qualifications"
+          />
           <span v-else>无</span>
         </template>
       </el-table-column>
@@ -138,9 +142,6 @@
       :limit.sync="listQuery.size"
       @pagination="getList"
     />
-    <el-dialog width="60%" title="预览" :visible.sync="preview" append-to-body>
-      <img style="width: 100%" :src="previewUrl" alt="img">
-    </el-dialog>
     <el-dialog
       width="60%"
       title="企业详情"
@@ -180,8 +181,6 @@ export default {
         statusCode: 2
       },
       status: ['全部', '未认证', '审核中', '已通过', '已拒绝'],
-      preview: false,
-      previewUrl: '',
       detailVisable: false,
       detail: null
     }
@@ -219,11 +218,6 @@ export default {
     handleFilter() {
       this.listQuery.page = 1
       this.getList()
-    },
-
-    handlePreview(url) {
-      this.previewUrl = url
-      this.preview = true
     },
     handleAction(row, state) {
       if (state === 3) {

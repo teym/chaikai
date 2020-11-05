@@ -1,6 +1,7 @@
 <template>
-  <div>
+  <div :class="{ upload: true, disabled: disabled }">
     <el-upload
+      :disabled="disabled"
       :action="url"
       :headers="headers"
       :file-list="list"
@@ -12,7 +13,7 @@
       :limit="count"
       :class="{ full: full }"
     >
-      <i class="el-icon-plus"></i>
+      <i v-if="!disabled" class="el-icon-plus"></i>
       <p slot="tip" v-if="tip" class="tip">{{ tip }}</p>
     </el-upload>
     <el-dialog :visible.sync="previewVisible" width="60%">
@@ -61,6 +62,10 @@ export default {
     limit: {
       type: Object,
       default: () => ({}),
+    },
+    disabled: {
+      type: Boolean,
+      default: false,
     },
   },
   data() {
@@ -136,5 +141,8 @@ export default {
 .tip {
   margin: 0;
   color: #999;
+}
+.upload.disabled .el-upload {
+  display: none;
 }
 </style>
