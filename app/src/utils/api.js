@@ -119,6 +119,11 @@ export function pixelRate () {
   return mobile.windowWidth / 375
 }
 
+export function isIOS () {
+  const mobile = mpvue.getSystemInfoSync()
+  return mobile.platform === 'ios'
+}
+
 export function download (url, header) {
   return new Promise((resolve, reject) => {
     mpvue.downloadFile({ url, header, success: resolve, fail: reject })
@@ -129,5 +134,5 @@ export function canvasContext (id) {
   return mpvue.createCanvasContext(id)
 }
 
-export const mapi = { launchOptions, onLaunch, copy, login, userInfo, pay, imageInfo, saveCanvas, saveImage, pixelRate, download, canvasContext }
+export const mapi = { launchOptions, onLaunch, copy, login, userInfo, pay, imageInfo, saveCanvas, saveImage, pixelRate, download, canvasContext, isIOS }
 export default mapi

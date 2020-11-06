@@ -90,7 +90,7 @@
           <img class="right" src="/static/images/arrow_right.png" alt="right">
         </div>
       </div>
-      <button class="btn-row row just line" open-type="contact" :session-from="session" >
+      <button class="btn-row row just line" open-type="contact" >
         <p class="middle light">联系客服</p>
         <div class="row i-center">
           <img class="right" src="/static/images/arrow_right.png" alt="right">
@@ -173,10 +173,15 @@ export default {
       return Promise.all([request.get('/bl/account').then(({json: {data}}) => {
         this.user = data
         this.channels = mapChannel(data.channels).filter(i => i.statusCode === 3)
-        this.session = JSON.stringify({tel: data.telephone,
+        // this.session = JSON.stringify({tel: data.telephone,
+        //   name: data.nickname,
+        //   weixin: data.wechatNo,
+        //   contact: data.realName})
+
+        console.log({tel: data.telephone,
           name: data.nickname,
           weixin: data.wechatNo,
-          contact: data.realName})
+          contact: data.realName}, data.wechatMaOpenId)
 
         meiqiaPlugin.setClientInfo({
           user_info: {
@@ -187,7 +192,7 @@ export default {
           },
           ent_id: '249463',
           app_id: 'wx48bf43cf5cf1886d',
-          open_id: data.wechatOpenId,
+          open_id: data.wechatMaOpenId,
           success: function () {
             console.log('meiqia success')
           },

@@ -25,7 +25,7 @@
       <div class="bar row pad2-l pad2-r">
       <img class="margin-r" src="/static/images/message_order.png" alt="order" @click="onOrder">
       <img class="margin-r" src="/static/images/message_img.png" alt="img" @click="onImg">
-      <textarea :disabled="done" auto-height class="input light_bg dark middle" placeholder-style="color:#C1C6CB;font-size:28rpx" v-model="text" :placeholder="done ? '合作已结束，无法发送消息' :'合作期间可以发送图文消息...'"/>
+      <textarea :disabled="done" auto-height class="input light_bg dark middle" :style="{paddingTop: ios? 0:'14rpx',paddingBottom:ios? 0: '14rpx'}" placeholderStyle="color:#C1C6CB;font-size:28rpx;line-height:36rpx;height:36rpx;margin-top:0;margin-bottom:0;padding-top:0;padding-bottom:0" v-model="text" :placeholder="done ? '合作已结束，无法发送消息' :'合作期间可以发送图文消息...'"/>
       <div class="margin-l btn row center middle" :class="{red_bg: !!text, red_i_bg: !text}" @click="onSend">发送</div>
       </div>
     </bar>
@@ -35,7 +35,7 @@
 <script>
 // import _ from 'underscore'
 import bar from '@/components/bar'
-import {router, uiapi, request, formatMsgTime, isImgMsg, imgMsgUrl, makeImgMsg, resetData} from '@/utils/index'
+import {router, api, uiapi, request, formatMsgTime, isImgMsg, imgMsgUrl, makeImgMsg, resetData} from '@/utils/index'
 
 function defaultData () {
   return {
@@ -43,7 +43,8 @@ function defaultData () {
     text: '',
     page: 1,
     loading: false,
-    done: false
+    done: false,
+    ios: api.isIOS()
   }
 }
 
@@ -235,10 +236,13 @@ export default {
 }
 .bar .input {
   width: 374rpx;
+  /* width: 406rpx; */
   height: auto;
-  min-height: 32rpx;
+  min-height: 36rpx;
   border-radius: 8rpx;
-  padding: 16rpx;
+  padding: 14rpx 16rpx;
+  font-size: 28rpx;
+  line-height: 36rpx;
 }
 .bar .btn {
   width: 128rpx;

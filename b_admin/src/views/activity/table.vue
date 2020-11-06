@@ -318,7 +318,7 @@ export default {
     },
     handleCreate() {
       if (this.statusCode !== 3) {
-        this.$alert("无法发布活动，为保障品牌合作规范，请先完成企业认证").then(
+        this.$alert("无法发布活动，为保障品牌合作规范，请先完成企业认证", {title:'提示', confirmButtonText:'去认证'}).then(
           (r) => {
             if (r === "confirm") {
               this.$router.push("/user/create");
@@ -326,7 +326,7 @@ export default {
           }
         );
       } else if (this.goodsCount === 0) {
-        this.$alert("无法发布活动，请先创建活动商品").then((r) => {
+        this.$alert("无法发布活动，请先创建活动商品",{title:'提示', confirmButtonText:'创建商品'}).then((r) => {
           if (r === "confirm") {
             this.$router.push("/goods/create");
           }
