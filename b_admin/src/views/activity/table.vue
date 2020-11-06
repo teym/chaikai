@@ -235,6 +235,7 @@
 import {
   fetchList,
   fetchStat,
+  fetchPv,
   updateData,
   removeData,
   updateNum,
@@ -268,14 +269,16 @@ export default {
       formLoading: false,
       previewVisible: false,
       previewQR: "",
+      goodsCount: 0,
     };
   },
   computed: {
     ...mapGetters(["name", "avatar", "telephone", "statusCode", "brandCount"]),
   },
-  created() {
+  mounted() {
     this.getTabs();
     this.getList();
+    this.getGoods();
   },
   methods: {
     getTabs() {
@@ -300,6 +303,11 @@ export default {
           this.listLoading = false;
         });
     },
+    getGoods() {
+      fetchPv(clearQueryObject({ page: 1, size: 1 })).then((r) => {
+        this.goodsCount = r.data.pager.count;
+      });
+    },
     handleSelect(e) {
       this.listQuery.statusCode = e;
       this.handleFilter();
@@ -310,21 +318,19 @@ export default {
     },
     handleCreate() {
       if (this.statusCode !== 3) {
-        this.$alert("无法创建商品，为保障品牌合作规范，请先完成企业认证").then(
+        this.$alert("无法发布活动，为保障品牌合作规范，请先完成企业认证").then(
           (r) => {
             if (r === "confirm") {
               this.$router.push("/user/create");
             }
           }
         );
-      } else if (this.brandCount === 0) {
-        this.$alert("无法创建商品，为保障品牌合作规范，请先完成品牌授权").then(
-          (r) => {
-            if (r === "confirm") {
-              this.$router.push("/user/auth");
-            }
+      } else if (this.goodsCount === 0) {
+        this.$alert("无法发布活动，请先创建活动商品").then((r) => {
+          if (r === "confirm") {
+            this.$router.push("/goods/create");
           }
-        );
+        });
       } else {
         this.$router.push("/activity/create");
       }
