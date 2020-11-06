@@ -30,10 +30,10 @@
         </li>
       </ul>
       <div v-else tabindex="0" class="el-upload el-upload--picture-card">
-        <i class="el-icon-plus"></i
-        >
+        <i class="el-icon-plus"></i>
       </div>
     </el-upload>
+    <p class="tip">{{tip}}</p>
     <el-dialog :visible.sync="previewVisible" width="60%">
       <img width="100%" :src="previewUrl" alt="preview" />
     </el-dialog>
@@ -119,3 +119,10 @@ export default {
   },
 };
 </script>
+
+<style lang="css">
+.tip {
+  margin: 0;
+  color: #999;
+}
+</style>
