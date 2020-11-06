@@ -4,17 +4,35 @@
       :disabled="disabled"
       :action="url"
       :headers="headers"
-      :file-list="list"
-      list-type="picture-card"
+      :show-file-list="false"
+      :on-change="handleChange"
       :before-upload="beforeUpload"
       :on-success="handleSuccess"
       :on-preview="handlePreview"
       :on-remove="handleRemove"
-      :limit="count"
-      :class="{ full: full }"
     >
-      <i class="el-icon-plus"></i>
-      <p v-if="tip" class="tip" slot="tip">{{ tip }}</p>
+      <ul v-if="fileurl" class="el-upload-list el-upload-list--picture-card">
+        <li tabindex="0" class="el-upload-list__item is-success">
+          <img :src="fileurl" alt="" class="el-upload-list__item-thumbnail" />
+          <label class="el-upload-list__item-status-label"
+            ><i class="el-icon-upload-success el-icon-check"></i></label
+          ><span class="el-upload-list__item-actions"
+            ><span
+              class="el-upload-list__item-preview"
+              @click.stop="handlePreview"
+              ><i class="el-icon-zoom-in"></i></span
+            ><span
+              v-if="!disabled"
+              class="el-upload-list__item-delete"
+              @click.stop="handleRemove"
+              ><i class="el-icon-delete"></i></span
+          ></span>
+        </li>
+      </ul>
+      <div v-else tabindex="0" class="el-upload el-upload--picture-card">
+        <i class="el-icon-plus"></i
+        >
+      </div>
     </el-upload>
     <el-dialog :visible.sync="previewVisible" width="60%">
       <img width="100%" :src="previewUrl" alt="preview" />
@@ -23,19 +41,6 @@
 </template>
 
 <script>
-const arrEq = (a, b) => {
-  const a1 = a || [];
-  const b1 = b || [];
-  if (a1.length !== b1.length) {
-    return false;
-  }
-  for (let index = 0; index < a1.length; index++) {
-    if (a1[index] !== b1[index]) {
-      return false;
-    }
-  }
-  return true;
-};
 export default {
   name: "SingleImageUpload3",
   props: {
@@ -45,7 +50,7 @@ export default {
     },
     headers: {
       type: Object,
-      default: {},
+      default: () => ({}),
     },
     url: {
       type: String,
@@ -53,7 +58,7 @@ export default {
     },
     disabled: {
       type: Boolean,
-      default: false
+      default: false,
     },
     tip: {
       type: String,
@@ -66,47 +71,37 @@ export default {
   },
   data() {
     return {
-      count: 1,
-      list: this.value
-        ? [{ name: "file." + this.value.split(".").pop(), url: this.value }]
-        : [],
       previewVisible: false,
       previewUrl: "",
-      full: !!this.value,
+      fileurl: this.value,
     };
   },
   watch: {
     value(cur, old) {
-      if (cur !== this.list[0]) {
-        this.list = cur
-          ? [{ name: "file." + cur.split(".").pop(), url: cur }]
-          : [];
-        this.full = this.list.length >= this.count;
-      }
+      this.fileurl = cur;
     },
   },
   methods: {
+    handleChange(img, list) {
+      console.log("change", img, list);
+      this.fileurl = img.url;
+    },
     handleSuccess(resp, img, list) {
-      console.log("success", img, list);
-      this.list = list || [];
+      this.fileurl = resp.data;
       this.emitInput();
     },
-    handlePreview(img, i) {
-      console.log("preview", img, i);
-      this.previewUrl = img.url;
+    handlePreview() {
+      this.previewUrl = this.fileurl;
       this.previewVisible = true;
     },
-    handleRemove(img, list) {
-      console.log("remove", img, list);
-      this.list = list || [];
+    handleRemove() {
+      console.log("remove");
+      this.fileurl = "";
       this.emitInput();
     },
     emitInput() {
-      const i = this.list[0] || {};
-      const url = (i.response ? i.response.data : i.url) || "";
-      console.log("change", url);
+      const url = this.fileurl;
       this.$emit("input", url);
-      this.full = this.list.length >= this.count;
     },
     beforeUpload(file, i) {
       console.log("upload", file, i);
@@ -124,13 +119,3 @@ export default {
   },
 };
 </script>
-
-<style lang="scss">
-.full .el-upload {
-  display: none;
-}
-.tip {
-  margin: 0;
-  color: #999;
-}
-</style>
