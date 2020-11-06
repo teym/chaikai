@@ -4,16 +4,7 @@
       <div>
         <img src="@/assets/images/user_done.png" alt="done" />
         <h1>已提交和审核</h1>
-        <p>
-          审核通过后，将通过短信进行通知
-          <br />为加快小二审核效率，
-          <router-link :to="{ path: '/user/auth' }"
-            >请完成最后一步品牌授权</router-link
-          >，即可招募达人
-        </p>
-        <el-button size="mini" @click="$router.push('/user/auth')"
-          >新增品牌授权</el-button
-        >
+        <p>审核通过后，将通过短信进行通知</p>
       </div>
     </div>
     <el-form

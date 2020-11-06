@@ -14,7 +14,11 @@
             <el-icon class="el-icon-question" />如何品牌授权
           </a>
         </h5>
-        <el-button type="primary" size="mini" @click="handleAddAuth"
+        <el-button
+          :disabled="statusCode !== 3"
+          type="primary"
+          size="mini"
+          @click="handleAddAuth"
           >新增授权</el-button
         >
       </head>
@@ -102,7 +106,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["name", "avatar", "roles"]),
+    ...mapGetters(["name", "avatar", "roles", "statusCode"]),
   },
   created() {
     this.fetchPvList();
