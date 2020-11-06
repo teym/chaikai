@@ -18,6 +18,7 @@
       <div class="createPost-main-container">
         <el-form-item label="品牌名称:" prop="name">
           <el-input
+            style="width: 320px"
             :disabled="postForm.statusCode === 3 || postForm.statusCode === 2"
             :maxlength="50"
             show-word-limit
@@ -37,6 +38,8 @@
         </el-form-item>
         <el-form-item label="品牌故事:" prop="story">
           <el-input
+            style="width: 320px"
+            size="middle"
             :disabled="postForm.statusCode === 3 || postForm.statusCode === 2"
             v-model="postForm.story"
             type="textarea"
@@ -51,6 +54,8 @@
           label="商标注册书:"
         >
           <Upload
+            key="1"
+            ref="upload1"
             :disabled="postForm.statusCode === 3 || postForm.statusCode === 2"
             :url="conf.url"
             :headers="conf.headers"
@@ -78,6 +83,8 @@
           label="品牌授权资质:"
         >
           <Upload
+            key="2"
+            ref="upload2"
             :disabled="postForm.statusCode === 3 || postForm.statusCode === 2"
             :url="conf.url"
             :headers="conf.headers"
@@ -140,7 +147,6 @@ export default {
   },
   data() {
     const validateRequire = (rule, value, callback) => {
-      console.log("v", rule.name, this.postForm.relationType, value);
       if (!value || value.length <= 0) {
         if (this.tip <= 0) {
           this.tip += 1;
@@ -158,7 +164,6 @@ export default {
       }
     };
     const validateQRequire = (rule, value, callback) => {
-      console.log("q", this.postForm.relationType, value);
       if (this.postForm.relationType === "2" && (!value || value.length <= 0)) {
         if (this.tip <= 0) {
           this.tip += 1;
@@ -248,26 +253,24 @@ export default {
       },
     };
   },
-  created() {
+  mounted() {
     const id = this.$route.query && this.$route.query.id;
     if (id) {
       this.fetchData(id);
     }
-    this.tempRoute = Object.assign({}, this.$route);
   },
   methods: {
-    onAddNew() {
-      this.$router.push("/user/auth");
-      this.done = false;
-      this.postForm = Object.assign({}, defaultForm);
-    },
     onType(type) {
       this.rules.qualifications[0].required = type === "2";
     },
     fetchData(id) {
       getPv(id)
         .then(({ data }) => {
+          this.rules.qualifications[0].required = data.relationType === "2";
           this.postForm = data;
+          // this.$refs.upload2.$forceUpdate();
+          // this.$forceUpdate()
+          console.log('abcd', this.postForm.qualifications);
         })
         .catch((err) => {
           console.log(err);
@@ -278,7 +281,6 @@ export default {
         if (valid) {
           this.loading = true;
           const id = this.$route.query && this.$route.query.id;
-
           if (!id) {
             createPv(Object.assign({}, this.postForm))
               .then((r) => {
@@ -289,8 +291,7 @@ export default {
                 this.loading = false;
               });
           } else {
-            updatePv(Object.assign({}, this.postForm));
-            submitPv(Object.assign({}, this.postForm))
+            updatePv(Object.assign({}, this.postForm, { statusCode: 2 }))
               .then((r) => {
                 this.loading = false;
                 this.done = true;
@@ -316,8 +317,6 @@ export default {
   border-radius: 4px;
   padding: 20px;
   .el-form {
-    width: 50%;
-
     .el-button {
       margin-left: 130px;
     }

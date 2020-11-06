@@ -75,7 +75,7 @@ export function getPv(id) {
 export function updatePv(data) {
   return request({
     url: '/br/account/brand',
-    method: 'post',
+    method: 'put',
     data
   })
 }

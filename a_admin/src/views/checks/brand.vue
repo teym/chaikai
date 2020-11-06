@@ -80,13 +80,13 @@
       </el-table-column>
       <el-table-column label="品牌关系" align="center">
         <template slot-scope="{ row }">
-          <span>{{ ["", "品牌方", "代理商"][row.relationType] }}</span>
+          <span>{{ ({'1':"品牌方", '2':"代理商"})[row.relationType] }}</span>
         </template>
       </el-table-column>
       <el-table-column label="品牌授权资质" align="center">
         <template slot-scope="{ row }">
           <el-image
-            v-if="row.relationType === 2"
+            v-if="row.relationType === '2' && row.qualifications && row.qualifications.length > 0"
             style="width: 60px; height: 60px"
             :src="row.qualifications[0]"
             :preview-src-list="row.qualifications"

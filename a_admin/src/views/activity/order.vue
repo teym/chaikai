@@ -339,14 +339,14 @@ export default {
     },
     handleExport() {},
     handleClose(row) {
-      this.$prompt('请输入拒绝理由', {
-        inputPlaceholder: '拒绝理由,最多200字',
+      this.$prompt('请输入关闭理由', {
+        inputPlaceholder: '关闭理由,最多20字',
         inputValidator: (s) => {
-          return s && s.length <= 200
+          return s && s.length <= 20
         },
         beforeClose: (action, instance, done) => {
           if (action === 'confirm' && !instance.inputValue) {
-            this.$message({ message: '请输入拒绝理由', type: 'error' })
+            this.$message({ message: '请输入关闭理由', type: 'error' })
           } else {
             done()
           }

@@ -76,6 +76,15 @@ export default {
       full: false,
     };
   },
+  mounted() {
+    const list = this.value.map((i, j) => ({
+      name: j + "." + i.split(".").pop(),
+      url: i,
+    }));
+    console.log("init", list);
+    this.list = list;
+    this.full = list.length >= this.count;
+  },
   watch: {
     value(cur, old) {
       const ls = this.list.map((i) => (i.response ? i.response.data : i.url));
@@ -84,7 +93,6 @@ export default {
           name: j + "." + i.split(".").pop(),
           url: i,
         }));
-        console.log("update", list);
         this.list = list;
         this.full = list.length >= this.count;
       }
