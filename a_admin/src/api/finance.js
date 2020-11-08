@@ -1,4 +1,5 @@
 import request from '@/utils/request'
+import { exportConf } from '@/api/oss'
 
 export function fetchInvoiceList(query) {
   return request({
@@ -6,6 +7,9 @@ export function fetchInvoiceList(query) {
     method: 'get',
     params: query
   })
+}
+export function exportInvoiceList(query) {
+  return exportConf('/sys/export/finance/invoice/list', query)
 }
 export function fetchInvoiceOrderList(query) {
   return request({
@@ -29,6 +33,9 @@ export function fetchBWithdrawList(query) {
     params: query
   })
 }
+export function exportBWithdrawList(query) {
+  return exportConf('/sys/export/finance/withdraw/list', query)
+}
 
 export function updateBWithdraw(data) {
   return request({
@@ -45,6 +52,9 @@ export function fetchTopupList(query) {
     params: query
   })
 }
+export function exportTopupList(query) {
+  return exportConf('/sys/export/finance/recharge/list', query)
+}
 export function addTopup(data) {
   return request({
     url: '/sys/finance/recharge',
@@ -60,12 +70,19 @@ export function fetchCWithdrawList(query) {
   })
 }
 
+export function exportCWithdrawList(query) {
+  return exportConf('/sys/export/finance/bl/withdraw/list', query)
+}
+
 export function fetchBGiftList(query) {
   return request({
     url: '/sys/finance/br/giveaway/list',
     method: 'get',
     params: query
   })
+}
+export function exportBGiftList(query) {
+  return exportConf('/sys/export/finance/br/giveaway/list', query)
 }
 export function addBGift(data) {
   return request({
@@ -80,6 +97,9 @@ export function fetchCGiftList(query) {
     method: 'get',
     params: query
   })
+}
+export function exportCGiftList(query) {
+  return exportConf('/sys/export/finance/bl/giveaway/list', query)
 }
 export function addCGift(data) {
   return request({

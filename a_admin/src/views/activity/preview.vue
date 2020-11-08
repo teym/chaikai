@@ -189,7 +189,7 @@
       </div>
       <div class="row">
         <h6>商品链接：</h6>
-        <p>{{ data.goods.link }}</p>
+        <p><a :href="data.goods.importUrl" target="_blank">{{ data.goods.importUrl }}</a></p>
       </div>
       <div class="row">
         <h6>商品价值：</h6>
@@ -229,7 +229,7 @@ export function mapChannel(channels) {
 }
 
 export default {
-  props: { item: { type: Object }},
+  props: { item: { type: Object, default: () => ({}) }},
   data() {
     return {
       data: {

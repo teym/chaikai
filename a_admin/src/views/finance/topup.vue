@@ -210,7 +210,7 @@
 </template>
 
 <script>
-import { fetchTopupList, addTopup } from '@/api/finance'
+import { fetchTopupList, addTopup, exportTopupList } from '@/api/finance'
 import moment from 'moment'
 import { clearQueryObject } from '@/utils/index'
 import waves from '@/directive/waves' // waves directive
@@ -290,9 +290,9 @@ export default {
         obj.startTime = moment(this.listQuery.timeRange[0]).format(
           'YYYY-MM-DD HH:mm:ss'
         )
-        obj.endTime = moment(this.listQuery.timeRange[0]).add(1, 'd').format(
-          'YYYY-MM-DD HH:mm:ss'
-        )
+        obj.endTime = moment(this.listQuery.timeRange[0])
+          .add(1, 'd')
+          .format('YYYY-MM-DD HH:mm:ss')
         obj.timeRange = ''
       }
       if (parseInt(obj.statusCode) < 0) {
@@ -315,6 +315,24 @@ export default {
     handleFilter() {
       this.listQuery.page = 1
       this.getList()
+    },
+    handleExport() {
+      const obj = Object.assign({}, this.listQuery)
+      obj[['key', 'companyName', 'id', 'orderNo'][this.listQuery.searchType]] =
+        obj.searchKey
+      if (obj.timeRange && obj.timeRange.length > 0) {
+        obj.startTime = moment(this.listQuery.timeRange[0]).format(
+          'YYYY-MM-DD HH:mm:ss'
+        )
+        obj.endTime = moment(this.listQuery.timeRange[0])
+          .add(1, 'd')
+          .format('YYYY-MM-DD HH:mm:ss')
+        obj.timeRange = ''
+      }
+      if (parseInt(obj.statusCode) < 0) {
+        obj.statusCode = undefined
+      }
+      window.location.href = exportTopupList(clearQueryObject(obj, true))
     },
     handleCompany() {
       this.company = null

@@ -195,6 +195,7 @@
 <script>
 import {
   fetchInvoiceList,
+  exportInvoiceList,
   fetchInvoiceOrderList,
   updateInvoice
 } from '@/api/finance'
@@ -261,7 +262,10 @@ export default {
       this.listQuery.page = 1
       this.getList()
     },
-
+    handleExport() {
+      const obj = Object.assign({}, this.listQuery)
+      window.location.href = exportInvoiceList(clearQueryObject(obj, true))
+    },
     handleClose() {
       this.$prompt('请输入拒绝理由', {
         inputPlaceholder: '拒绝理由,最多200字',

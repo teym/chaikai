@@ -151,7 +151,7 @@
 </template>
 
 <script>
-import { fetchBWithdrawList, updateBWithdraw } from '@/api/finance'
+import { fetchBWithdrawList, exportBWithdrawList, updateBWithdraw } from '@/api/finance'
 import moment from 'moment'
 import { clearQueryObject } from '@/utils/index'
 import waves from '@/directive/waves' // waves directive
@@ -211,7 +211,13 @@ export default {
       this.listQuery.page = 1
       this.getList()
     },
-
+    handleExport() {
+      const obj = Object.assign({}, this.listQuery)
+      if (parseInt(obj.statusCode) < 0) {
+        obj.statusCode = undefined
+      }
+      window.location.href = exportBWithdrawList(clearQueryObject(obj))
+    },
     handleClose() {
       this.$prompt('请输入拒绝理由', {
         inputPlaceholder: '拒绝理由,最多200字',

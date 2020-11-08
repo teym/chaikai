@@ -1,4 +1,5 @@
 import request from '@/utils/request'
+import { exportConf } from '@/api/oss'
 
 export function fetchCompanyList(query) {
   return request({
@@ -87,6 +88,9 @@ export function fetchOrderList(query) {
     params: query
   })
 }
+export function exportOrderList(query) {
+  return exportConf('/sys/export/activity/order/list', query)
+}
 export function closeOrder(data) {
   return request({
     url: '/sys/activity/order/close',
@@ -109,10 +113,17 @@ export function fetchIssueList(query) {
   })
 }
 
+export function exportIssueList(query) {
+  return exportConf('/sys/export/activity/order/ticket/list', query)
+}
+
 export function fetchServeList(query) {
   return request({
     url: '/sys/finance/subscribe/list',
     method: 'get',
     params: query
   })
+}
+export function exportServeList(query) {
+  return exportConf('/sys/export/finance/subscribe/list', query)
 }

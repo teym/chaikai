@@ -150,8 +150,7 @@
 </template>
 
 <script>
-import { fetchServeList, closeOrder } from '@/api/check'
-import { exportConf } from '@/api/oss'
+import { fetchServeList, exportServeList, closeOrder } from '@/api/check'
 import moment from 'moment'
 import { clearQueryObject } from '@/utils/index'
 import waves from '@/directive/waves' // waves directive
@@ -204,9 +203,9 @@ export default {
         obj.startTime = moment(this.listQuery.timeRange[0]).format(
           'YYYY-MM-DD HH:mm:ss'
         )
-        obj.endTime = moment(this.listQuery.timeRange[1]).add(1, 'd').format(
-          'YYYY-MM-DD HH:mm:ss'
-        )
+        obj.endTime = moment(this.listQuery.timeRange[1])
+          .add(1, 'd')
+          .format('YYYY-MM-DD HH:mm:ss')
         obj.timeRange = null
       }
       fetchServeList(clearQueryObject(obj, true)).then(({ data }) => {
@@ -228,7 +227,18 @@ export default {
       this.getList()
     },
     handleExport() {
-      location.href = exportConf('')
+      const obj = Object.assign({}, this.listQuery)
+      obj[['', 'orderNo', 'companyName'][obj.searchType]] = obj.searchKey
+      if (obj.timeRange && obj.timeRange.length > 0) {
+        obj.startTime = moment(this.listQuery.timeRange[0]).format(
+          'YYYY-MM-DD HH:mm:ss'
+        )
+        obj.endTime = moment(this.listQuery.timeRange[1])
+          .add(1, 'd')
+          .format('YYYY-MM-DD HH:mm:ss')
+        obj.timeRange = null
+      }
+      window.location.href = exportServeList(clearQueryObject(obj, true))
     },
     handleClose(row) {
       this.$prompt('请输入拒绝理由', {

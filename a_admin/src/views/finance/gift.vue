@@ -171,6 +171,8 @@
 import {
   fetchCGiftList,
   fetchBGiftList,
+  exportCGiftList,
+  exportBGiftList,
   addBGift,
   addCGift
 } from '@/api/finance'
@@ -259,6 +261,27 @@ export default {
       this.listQuery.page = 1
       this.listQuery.list = []
       this.getList()
+    },
+    handleExport() {
+      const obj = Object.assign({}, this.listQuery)
+      if (obj.searchType === 2) {
+        obj.blAccountName = obj.searchKey
+      } else {
+        obj.companyName = obj.searchKey
+      }
+      if (obj.timeRange && obj.timeRange.length > 0) {
+        obj.startTime = moment(this.listQuery.timeRange[0]).format(
+          'YYYY-MM-DD HH:mm:ss'
+        )
+        obj.endTime = moment(this.listQuery.timeRange[0])
+          .add(1, 'd')
+          .format('YYYY-MM-DD HH:mm:ss')
+        obj.timeRange = ''
+      }
+      obj.type = obj.searchType === 3 ? 107 : 106
+      window.location.href = (obj.searchType === 2
+        ? exportCGiftList
+        : exportBGiftList)(clearQueryObject(obj, true))
     },
     handleAdd() {
       this.detailVisable = true

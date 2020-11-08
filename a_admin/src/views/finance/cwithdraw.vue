@@ -120,7 +120,7 @@
 </template>
 
 <script>
-import { fetchCWithdrawList, addTopup } from '@/api/finance'
+import { fetchCWithdrawList, exportCWithdrawList, addTopup } from '@/api/finance'
 import moment from 'moment'
 import { clearQueryObject } from '@/utils/index'
 import waves from '@/directive/waves' // waves directive
@@ -191,6 +191,24 @@ export default {
     handleFilter() {
       this.listQuery.page = 1
       this.getList()
+    },
+    handleExport() {
+      const obj = Object.assign({}, this.listQuery)
+      obj[['key', 'blAccountName', 'blAccountId'][this.listQuery.searchType]] =
+        obj.searchKey
+      if (obj.timeRange && obj.timeRange.length > 0) {
+        obj.startTime = moment(this.listQuery.timeRange[0]).format(
+          'YYYY-MM-DD HH:mm:ss'
+        )
+        obj.endTime = moment(this.listQuery.timeRange[0]).add(1, 'd').format(
+          'YYYY-MM-DD HH:mm:ss'
+        )
+        obj.timeRange = ''
+      }
+      if (parseInt(obj.statusCode) < 0) {
+        obj.statusCode = undefined
+      }
+      window.location.href = exportCWithdrawList(clearQueryObject(obj, true))
     },
     handleCompany() {},
     handleSuccess() {

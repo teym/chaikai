@@ -182,7 +182,7 @@
 </template>
 
 <script>
-import { fetchIssueList } from '@/api/check'
+import { fetchIssueList, exportIssueList } from '@/api/check'
 import moment from 'moment'
 import { clearQueryObject } from '@/utils/index'
 import waves from '@/directive/waves' // waves directive
@@ -274,7 +274,24 @@ export default {
       this.listQuery.page = 1
       this.getList()
     },
-    handleExport() {},
+    handleExport() {
+      const obj = Object.assign({}, this.listQuery)
+      obj[
+        ['', 'orderId', 'activityTitle', 'companyName', 'bloggerName'][
+          obj.searchType
+        ]
+      ] = obj.searchKey
+      if (obj.timeRange && obj.timeRange.length > 0) {
+        obj.startTime = moment(this.listQuery.timeRange[0]).format(
+          'YYYY-MM-DD HH:mm:ss'
+        )
+        obj.endTime = moment(this.listQuery.timeRange[1]).add(1, 'd').format(
+          'YYYY-MM-DD HH:mm:ss'
+        )
+        obj.timeRange = null
+      }
+      window.location.href = exportIssueList(clearQueryObject(obj, true))
+    },
     handleDetail(row) {
       window.showCommunicate(row.id)
     }
