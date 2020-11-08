@@ -52,7 +52,7 @@
         </el-table-column>
         <el-table-column label="详情描述">
           <template slot-scope="{ row }">
-            <span>{{ row.remark }}</span>
+            <span @click="onDetail(row)">{{ row.remark || " " }}</span>
           </template>
         </el-table-column>
         <el-table-column label="余额变动">
@@ -65,27 +65,6 @@
             <span>{{ row.lastBalance }}</span>
           </template>
         </el-table-column>
-        <!-- <el-table-column
-          label="操作"
-          align="center"
-          width="230"
-          class-name="small-padding fixed-width"
-        >
-          <template slot-scope="{row}">
-            <el-button
-              v-if="row.statusCode === 1 || row.statusCode === 3"
-              type="text"
-              size="mini"
-              @click="handleDetail(row)"
-            >详情</el-button>
-            <el-button
-              v-if="row.statusCode === 1 || row.statusCode === 3"
-              type="text"
-              size="mini"
-              @click="handlePay(row)"
-            >去支付</el-button>
-          </template>
-        </el-table-column> -->
         <div slot="empty" class="empty" style="padding: 48px 0">
           <img src="@/assets/images/goods_empty.png" alt="empty" />
           <p style="margin: 0; color: #999">暂无记录</p>
@@ -100,35 +79,153 @@
         @pagination="fetchData"
       />
     </div>
-    <!-- <el-dialog
-      custom-class="custom-dialog"
-      title="增加活动名额"
-      :visible.sync="formVisible"
-      width="420px"
-    >
-      <el-form label-width="60px">
-        <el-form-item label="活动名额">
-          <span>{{ detail.totalNum }}</span>
-        </el-form-item>
-        <el-form-item label="剩余名额">
-          <span>{{ detail.remainingNum }}</span>
-        </el-form-item>
-        <el-form-item label="增加名额">
-          <el-input v-model="append" placeholder="#话题" />
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="formVisible = false">取消</el-button>
-        <el-button :loading="formLoading" type="primary" @click="handleAddNumber">确定</el-button>
+    <el-dialog :title="detailTitle" :visible.sync="detailVisable" width="420px">
+      <div v-if="detail && detail.type === 101" class="detail">
+        <div class="row">
+          <h4>提交时间:</h4>
+          <p>{{ detail.date }}</p>
+        </div>
+        <div class="row">
+          <h4>订购单号:</h4>
+          <p>{{ detail.id }}</p>
+        </div>
+        <div class="row">
+          <h4>订购服务:</h4>
+          <p>置换活动</p>
+        </div>
+        <div class="row">
+          <h4>订购状态:</h4>
+          <p>
+            {{
+              ["处理中", "待支付", "订购成功", "订购失败", "已拒绝", "已关闭"][
+                detail.statusCode
+              ]
+            }}
+          </p>
+        </div>
+        <div v-if="detail.serverOrder" class="row">
+          <h4>订购详情:</h4>
+          <div>
+            <p>订购次数 {{ detail.serverOrder.amount }}次</p>
+            <p>支付金额 {{ detail.amount }}</p>
+            <p>
+              支付方式 {{ ["", "支付宝", "余额"][detail.serverOrder.type] }}
+            </p>
+            <p>支付单号 {{ detail.orderNo }}</p>
+          </div>
+        </div>
       </div>
-    </el-dialog>-->
+      <div v-if="detail && detail.type === 102" class="detail">
+        <div class="row">
+          <h4>充值时间:</h4>
+          <p>
+            {{ detail.date }}
+          </p>
+        </div>
+        <div class="row">
+          <h4>订单编号:</h4>
+          <p>{{ detail.orderNo }}</p>
+        </div>
+        <div class="row">
+          <h4>交易单号:</h4>
+          <p>{{ detail.orderNo }}</p>
+        </div>
+        <div class="row">
+          <h4>充值金额:</h4>
+          <p>{{ detail.orderNo }}</p>
+        </div>
+        <div class="row">
+          <h4>状态:</h4>
+          <p>
+            {{
+              ["处理中", "等待支付", "成功", "失败", "已拒绝", "已关闭"][
+                detail.statusCode
+              ]
+            }}
+          </p>
+        </div>
+        <div class="row">
+          <h4>支付方式:</h4>
+          <p>{{ detail.recharge.type === 1 ? "支付宝" : "银联" }}</p>
+        </div>
+        <div class="row">
+          <h4>支付类型:</h4>
+          <p>{{ detail.recharge.payType === 1 ? "线上支付" : "线下打款" }}</p>
+        </div>
+        <div class="row">
+          <h4>备注:</h4>
+          <p>{{ detail.remark }}</p>
+        </div>
+      </div>
+
+      <div v-if="detail && detail.type === 103" class="detail">
+        <div class="row">
+          <h4>提现状态:</h4>
+          <p>
+            {{
+              ["处理中", "等待支付", "成功", "失败", "已拒绝", "已关闭"][
+                detail.statusCode
+              ]
+            }}<span
+              v-if="detail.statusCode === 4"
+              style="color: #999; margin-left: 8px"
+              >{{ detail.rejectReason }}</span
+            >
+          </p>
+        </div>
+        <div class="row">
+          <h4>申请时间:</h4>
+          <p>{{ detail.date }}</p>
+        </div>
+        <div class="row">
+          <h4>提现单号:</h4>
+          <p>{{ detail.orderNo }}</p>
+        </div>
+        <div class="row">
+          <h4>提现金额:</h4>
+          <p>{{ detail.amount }}</p>
+        </div>
+        <div class="row">
+          <h4>企业ID:</h4>
+          <p>{{ (detail.company || {}).id }}</p>
+        </div>
+        <div class="row">
+          <h4>企业名称:</h4>
+          <p>{{ (detail.company || {}).name }}</p>
+        </div>
+        <div class="row">
+          <h4>退款方式:</h4>
+          <p>{{ ["", "支付宝", "银行卡"][detail.withdraw.type] }}</p>
+        </div>
+        <div v-if="detail.withdraw.type === 1" class="row">
+          <h4>账号名称:</h4>
+          <p>{{ detail.withdraw.alipayAccountName }}</p>
+        </div>
+        <div v-if="detail.withdraw.type === 1" class="row">
+          <h4>支付宝账号:</h4>
+          <p>{{ detail.withdraw.alipayAccount }}</p>
+        </div>
+        <div v-if="detail.withdraw.type === 2" class="row">
+          <h4>账号名称:</h4>
+          <p>{{ detail.withdraw.bandAccountName }}</p>
+        </div>
+        <div v-if="detail.withdraw.type === 2" class="row">
+          <h4>银行名称:</h4>
+          <p>{{ detail.withdraw.bandName }}</p>
+        </div>
+        <div v-if="detail.withdraw.type === 2" class="row">
+          <h4>银行卡号:</h4>
+          <p>{{ detail.withdraw.bandCardNo }}</p>
+        </div>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import { mapGetters } from "vuex";
 import { fetchHistory } from "@/api/user";
-import moment from 'moment';
+import moment from "moment";
 import Pagination from "@/components/Pagination"; // secondary package based on el-pagination
 
 export default {
@@ -144,6 +241,9 @@ export default {
         page: 1,
         size: 10,
       },
+      detail: null,
+      detailTitle: "",
+      detailVisable: false,
     };
   },
   computed: {
@@ -165,11 +265,20 @@ export default {
         this.listLoading = false;
       });
     },
-    handleDetail(row) {
-      this.$router.push({ path: "/user/auth", query: { id: row.id } });
-    },
-    handlePay() {
-      this.$router.push("/user/auth");
+    onDetail(row) {
+      if (row.type === 104 || row.type === 105) {
+        return window.showCommunicate(row.brActivityOrderId);
+      } else {
+        this.detailTitle = {
+          101: "服务订购",
+          102: "账户充值",
+          103: "账户提现",
+          104: "悬赏订单",
+          105: "悬赏退回",
+        }[row.type];
+        this.detail = row;
+        this.detailVisable = true;
+      }
     },
   },
 };
@@ -215,6 +324,32 @@ export default {
       .el-button {
         float: right;
       }
+    }
+  }
+}
+.detail {
+  .row {
+    display: flex;
+    flex-direction: row;
+    h4 {
+      width: 80px;
+      margin: 0;
+      padding: 0;
+      line-height: 28px;
+    }
+    h6 {
+      width: 80px;
+      margin: 0;
+      padding: 0;
+      line-height: 28px;
+    }
+    p {
+      margin: 0;
+      padding: 0;
+      line-height: 28px;
+    }
+    .el-radio {
+      margin-top: 6px;
     }
   }
 }
