@@ -66,6 +66,13 @@ export function fetchActivity(id) {
     method: 'get'
   })
 }
+export function fetchGoods(query) {
+  return request({
+    url: '/sys/activity/goods/list',
+    method: 'get',
+    params: query
+  })
+}
 export function fetchActivityQR(id) {
   return request({
     url: `/br/activity/${id}/miniapp/qrcode`,

@@ -149,180 +149,19 @@
       :limit.sync="listQuery.size"
       @pagination="getList"
     />
-    <el-dialog width="60%" title="活动详情" :visible.sync="detailVisible">
-      <div v-if="detail" class="detail">
-        <h3>基本信息</h3>
-        <div class="row">
-          <h4>活动ID:</h4>
-          <p>{{ detail.id }}</p>
-        </div>
-        <div class="row">
-          <h4>活动名称:</h4>
-          <div>
-            <el-input v-model="detail.title" size="mini" />
-          </div>
-        </div>
-        <div class="row">
-          <h4>报名时间:</h4>
-          <div>
-            <el-date-picker
-              v-model="detail.date"
-              size="mini"
-              type="daterange"
-              range-separator="至"
-              start-placeholder="开始日期"
-              end-placeholder="结束日期"
-            />
-          </div>
-        </div>
-        <div class="row">
-          <h4>活动名额:</h4>
-          <p>{{ detail.totalNum }}</p>
-        </div>
-        <div class="row">
-          <h4>活动商品:</h4>
-          <p>{{ detail.goods.title }}</p>
-        </div>
-        <div class="row">
-          <h4>活动规格:</h4>
-          <p>{{ detail.goods.skuUnionList.map((i) => i.name).join(", ") }}</p>
-        </div>
-        <div class="row">
-          <h4>测评指引:</h4>
-          <div>
-            <el-input
-              v-for="(l, j) in detail.guideList"
-              :key="j"
-              v-model="l.txt"
-              size="mini"
-            >
-              <el-button
-                slot="append"
-                size="mini"
-                icon="el-icon-delete"
-                @click="detail.guideList.splice(j, 1)"
-              >删除</el-button>
-            </el-input>
-            <el-button
-              size="mini"
-              icon="el-icon-add"
-              @click="
-                detail.guideList.splice(detail.guideList.length, 0, { txt: '' })
-              "
-            >添加</el-button>
-          </div>
-        </div>
-        <h3>活动设置</h3>
-        <div class="row">
-          <h4>私密活动:</h4>
-          <el-checkbox :checked="detail.displayType" label="" />
-        </div>
-        <div class="row">
-          <h4>收货地限制:</h4>
-          <div>
-            <el-checkbox
-              disabled
-              :checked="detail.extension.receiveAreaLimit"
-              label=""
-            />
-            <div v-if="detail.extension.receiveAreaLimit">
-              <p>
-                {{
-                  detail.extension.receiveAreas[0].type === 1
-                    ? "不可收货"
-                    : "可收货"
-                }}
-              </p>
-              <p>
-                {{
-                  detail.extension.receiveAreas
-                    .map((i) => (i.province || "") + (i.city || ""))
-                    .join(", ")
-                }}
-              </p>
-            </div>
-          </div>
-        </div>
-        <h3>合作任务</h3>
-        <div class="row">
-          <h4>报名渠道:</h4>
-          <p>
-            {{
-              detail.extension.channels.map((i) => i.platformName).join(", ")
-            }}
-          </p>
-        </div>
-        <div class="row">
-          <h4>合作方式</h4>
-          <p>{{ coopTypes[detail.cooperationType] }}</p>
-        </div>
-        <div class="row">
-          <h4>悬赏要求</h4>
-          <div>
-            <div class="row">
-              <h6>合作篇幅</h6>
-              <p>{{ detail.extension.articleType > 0 ? "单篇" : "无要求" }}</p>
-            </div>
-            <div class="row">
-              <h6>内容形式</h6>
-              <p>
-                {{ ["无要求", "图文", "视频"][detail.extension.contentType] }}
-              </p>
-            </div>
-            <div class="row">
-              <h6>最低字数</h6>
-              <p>
-                {{ ["无要求", "200字", "400字"][detail.extension.minWordNum] }}
-              </p>
-            </div>
-            <div class="row">
-              <h6>最低图片数</h6>
-              <p>{{ ["无要求", "6张", "9张"][detail.extension.minPicNum] }}</p>
-            </div>
-            <div class="row">
-              <h6>最低视频时长</h6>
-              <p>
-                {{
-                  ["无要求", "15秒", "30秒", "1分钟", "2分钟"][
-                    detail.extension.minVideoLength
-                  ]
-                }}
-              </p>
-            </div>
-            <div class="row">
-              <h6>账号话题</h6>
-              <div>
-                <p v-for="(c, i) in detail.extension.channels" :key="i">
-                  {{ c.platformName }}@{{ c.nickname }}#{{ c.topic }}
-                </p>
-              </div>
-            </div>
-            <div v-if="detail.extension.discountInfo" class="row">
-              <h6>优惠信息</h6>
-              <p>{{ detail.extension.discountInfo }}</p>
-            </div>
-            <div v-if="detail.extension.keywords" class="row">
-              <h6>附带关键词</h6>
-              <p>{{ detail.extension.keywords }}</p>
-            </div>
-            <div v-if="detail.extension.length > 0" class="row">
-              <h6>其他要求</h6>
-              <div>
-                <p v-for="(o, i) in detail.extension.otherReq" :key="i">
-                  {{ o }}
-                </p>
-              </div>
-            </div>
-            <div class="row">
-              <h6>悬赏金额</h6>
-              <p>{{ detail.reward }}元/人</p>
-            </div>
-          </div>
-        </div>
-      </div>
+    <el-dialog width="80%" title="活动详情" :visible.sync="detailVisible">
+      <detail
+        v-if="detailVisible && detail"
+        :id="detail.id + ''"
+        ref="detail"
+      />
       <div slot="footer">
         <el-button @click="detailVisible = false">取消</el-button>
-        <el-button type="primary" @click="onSave">确定</el-button>
+        <el-button
+          type="primary"
+          :loading="detailLoading"
+          @click="onSave"
+        >确定</el-button>
       </div>
     </el-dialog>
     <el-dialog width="415px" title="预览" :visible.sync="previewVisible">
@@ -336,19 +175,20 @@ import {
   fetchActivityList,
   updateActivityState,
   fetchActivity,
-  updateActivity,
+  // updateActivity,
   fetchActivityQR
 } from '@/api/check'
-import moment from 'moment'
+// import moment from 'moment'
 import { clearQueryObject } from '@/utils/index'
 import waves from '@/directive/waves' // waves directive
 import { mapGetters } from 'vuex'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
-import preview from './preview'
+import preview from './components/preview'
+import detail from './components/detail'
 
 export default {
   name: 'ComplexTable',
-  components: { Pagination, preview },
+  components: { Pagination, preview, detail },
   directives: { waves },
   data() {
     return {
@@ -375,6 +215,7 @@ export default {
       ],
       coopTypes: ['全部', '接受悬赏', '接受悬赏/达人报价', '免费置换'],
       detailVisible: false,
+      detailLoading: false,
       detail: null,
       previewVisible: false
     }
@@ -451,14 +292,25 @@ export default {
       }
     },
     handleDetail(row) {
-      this.detail = null
+      this.detail = row
       this.detailVisible = true
-      this.loadDetail(row.id)
     },
-    loadQR(id) {
-      fetchActivityQR(id).then((r) => {
-        this.previewQR = r.data ? 'data:image/png;base64,' + r.data : ''
-      })
+    onSave() {
+      this.detailLoading = true
+      this.$refs.detail
+        .submitForm()
+        .then((r) => {
+          this.detailLoading = false
+          this.$notify({
+            title: '成功',
+            message: '操作成功',
+            type: 'success',
+            duration: 2000
+          })
+        })
+        .catch((e) => {
+          this.detailLoading = false
+        })
     },
     loadDetail(id) {
       fetchActivity(id).then((r) => {
@@ -478,15 +330,9 @@ export default {
         this.detail = r.data
       })
     },
-    onSave() {
-      const obj = Object.assign({}, this.detail)
-      obj.guidelines = obj.guideList.map((i) => i.txt)
-      obj.regStartTime = moment(obj.date[0]).format('YYYY-MM-DD 00:00:00')
-      obj.regEndTime = moment(obj.date[1]).format('YYYY-MM-DD 00:00:00')
-      updateActivity(obj).then((r) => {
-        this.$message({ message: '修改成功', type: 'success' })
-        this.detailVisible = false
-        this.getList()
+    loadQR(id) {
+      fetchActivityQR(id).then((r) => {
+        this.previewQR = r.data ? 'data:image/png;base64,' + r.data : ''
       })
     }
   }

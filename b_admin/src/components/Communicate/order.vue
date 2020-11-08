@@ -33,7 +33,7 @@
         <h5>订单状态：</h5>
         <div>
           <p>{{ activityStatus[data.statusCode] }}</p>
-          <span style="color: #999">{{ data.rejectReason }}</span>
+          <span v-if="data.statusCode === 7" style="color: #999">{{ data.statusDesc }}</span>
         </div>
       </div>
       <div class="row">

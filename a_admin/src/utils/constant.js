@@ -9,11 +9,11 @@ export const ActivityOrderStatus = [
 ]
 
 export const Channels = [
-  { id: 1, name: '微博' },
-  { id: 2, name: 'B站' },
-  { id: 4, name: '小红书' },
-  { id: 8, name: '抖音' },
-  { id: 16, name: '快手' }
+  { id: 1, name: '微博', platformId: 1 },
+  { id: 2, name: 'B站', platformId: 2 },
+  { id: 4, name: '小红书', platformId: 4 },
+  { id: 8, name: '抖音', platformId: 8 },
+  { id: 16, name: '快手', platformId: 16 }
 ]
 export const ChannelIcons = {
   '1': { icon: require('@/assets/images/channel_wb.png'), name: '微博' },

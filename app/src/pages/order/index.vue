@@ -261,7 +261,7 @@ export default {
         case 6:
           return ''
         case 7:
-          return '' // `已逾期${s}，将按天扣除押金`
+          return data.statusDesc || '' // `已逾期${s}，将按天扣除押金`
       }
       return ''
     },
