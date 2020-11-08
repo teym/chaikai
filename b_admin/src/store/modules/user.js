@@ -107,7 +107,7 @@ const actions = {
   // get user info
   getInfo({ commit, state }) {
     return new Promise((resolve, reject) => {
-      Promise.all([getInfo(), fetchStat(), fetchPv({ page: 1, size: 5 }), fetchFinance()]).then(([r1, r2, r3, r4]) => {
+      Promise.all([getInfo(), fetchStat(), fetchPv({ page: 1, size: 5, statusCode: 3 }), fetchFinance()]).then(([r1, r2, r3, r4]) => {
         console.log(r1);
         if (r1.code === 20003) {
           throw r1

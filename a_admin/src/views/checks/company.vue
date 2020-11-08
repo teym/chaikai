@@ -43,7 +43,7 @@
     >
       <el-table-column label="账号ID|企业名称">
         <template slot-scope="{ row }">
-          <span>{{ row.id }}</span><br>
+          <span>{{ row.account.id }}</span><br>
           <span>{{ row.name }}</span>
         </template>
       </el-table-column>

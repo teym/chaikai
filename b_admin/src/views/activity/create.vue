@@ -1109,7 +1109,10 @@ export default {
       this.topics = mapChannel(Channels)
         .filter((i) => this.postForm.channels.indexOf(i.id) >= 0)
         .map((i) => {
-          const obj = this.postForm.topics.find((j) => j.platformId === i.id);
+          const obj = this.postForm.topics.find(
+            (j) =>
+              parseInt(j.platformId || j.id) === parseInt(i.platformId || i.id)
+          );
           return Object.assign(
             { nickname: "", topic: "", platformName: i.name },
             i,

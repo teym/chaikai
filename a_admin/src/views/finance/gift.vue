@@ -42,7 +42,7 @@
         style="float: right"
         type="primary"
         size="mini"
-        @click="detailVisable = true"
+        @click="handleAdd"
       >新增</el-button>
     </div>
 
@@ -224,13 +224,13 @@ export default {
       } else {
         obj.companyName = obj.searchKey
       }
-      if (obj.timeRange.length > 0) {
+      if (obj.timeRange && obj.timeRange.length > 0) {
         obj.startTime = moment(this.listQuery.timeRange[0]).format(
           'YYYY-MM-DD HH:mm:ss'
         )
-        obj.endTime = moment(this.listQuery.timeRange[0]).add(1, 'd').format(
-          'YYYY-MM-DD HH:mm:ss'
-        )
+        obj.endTime = moment(this.listQuery.timeRange[0])
+          .add(1, 'd')
+          .format('YYYY-MM-DD HH:mm:ss')
         obj.timeRange = ''
       }
       obj.type = obj.searchType === 3 ? 107 : 106;
@@ -260,6 +260,14 @@ export default {
       this.listQuery.list = []
       this.getList()
     },
+    handleAdd() {
+      this.detailVisable = true
+      this.detail = {
+        amount: 0,
+        accountId: '',
+        remark: ''
+      }
+    },
     handleSuccess() {
       const obj = Object.assign({}, this.detail)
       obj.type = this.listQuery.searchType === 3 ? 107 : 106
@@ -268,7 +276,8 @@ export default {
       }
       if (!parseFloat(obj.amount) > 0) {
         return this.$message({
-          message: '请输入' + (this.listQuery.searchType === 3 ? '次数' : '金额'),
+          message:
+            '请输入' + (this.listQuery.searchType === 3 ? '次数' : '金额'),
           type: 'error'
         })
       }

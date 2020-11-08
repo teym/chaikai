@@ -175,7 +175,7 @@
     <div style="height: 80rpx" class="white_bg"></div>
     <bar background='#FFFFFF'>
     <div class="bar row pad2 i-center white_bg">
-      <div v-if="data.statusCode < 3" class="btn gray small row center margin-l" @click="onCancel">取消申请</div>
+      <div v-if="data.statusCode === 1 || data.statusCode === 3" class="btn gray small row center margin-l" @click="onCancel">取消申请</div>
       <div v-if="data.statusCode >= 4 && data.statusCode < 7" class="btn gray small row center margin-l" @click="onShip">查看物流</div>
       <div v-if="data.statusCode >= 3 && data.statusCode < 7" class="btn gray small row center margin-l" @click="onMessage">留言</div>
       <div v-if="data.statusCode < 7 && data.depositInfo.statusCode < 2" class="btn red small row center margin-l" @click="onPay">支付押金</div>

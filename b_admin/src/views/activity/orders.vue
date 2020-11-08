@@ -918,6 +918,7 @@ export default {
           this.$message({ message: "已评价" });
           this.formLoading = false;
           this.commendVisible = false;
+          this.getList()
         })
         .catch((e) => {
           this.formLoading = false;

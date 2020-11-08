@@ -162,7 +162,7 @@ export default {
       const obj = Object.assign({}, this.listQuery)
       obj[['key', 'blAccountName', 'blAccountId'][this.listQuery.searchType]] =
         obj.searchKey
-      if (obj.timeRange.length > 0) {
+      if (obj.timeRange && obj.timeRange.length > 0) {
         obj.startTime = moment(this.listQuery.timeRange[0]).format(
           'YYYY-MM-DD HH:mm:ss'
         )

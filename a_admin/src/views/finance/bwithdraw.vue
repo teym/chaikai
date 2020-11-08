@@ -142,7 +142,7 @@
           <p>{{ detail.withdraw.bandCardNo }}</p>
         </div>
       </div>
-      <div slot="footer">
+      <div v-if="detail && detail.statusCode === 0" slot="footer">
         <el-button @click="handleClose">拒绝提现</el-button>
         <el-button type="primary" @click="handleSuccess">提现成功</el-button>
       </div>

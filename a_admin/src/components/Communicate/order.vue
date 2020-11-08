@@ -141,7 +141,7 @@
           {{ data.reward
           }}<span
             v-if="data.rewardStatusCode === 1"
-            style="color: red, margin-left:4px"
+            style="color: red; margin-left:4px"
             @click="onCancelReward"
           >取消发放</span>
         </p>
