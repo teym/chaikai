@@ -1,9 +1,6 @@
 <template>
   <div class="createPost-container">
-    <el-form
-      ref="postForm"
-      :model="postForm"
-    >
+    <el-form ref="postForm" :model="postForm">
       <div class="createPost-main-container">
         <div class="form-container">
           <h3>基本信息</h3>
@@ -466,6 +463,7 @@
       custom-class="custom-dialog"
       title="选择区域"
       :visible.sync="addressFormVisible"
+      append-to-body
     >
       <div class="address-form">
         <p>
@@ -494,14 +492,12 @@
       title="账号话题"
       :visible.sync="topicFormVisible"
       width="820px"
+      append-to-body
     >
       <el-form label-width="80px">
         <el-form-item v-for="i in topics" :key="i.id" :label="i.platformName">
           <div slot="label" class="topic_label">
-            <el-checkbox
-              v-model="i.checked"
-              :disabled="i.id === 2"
-            />
+            <el-checkbox v-model="i.checked" :disabled="i.id === 2" />
             <img :src="i.icon" :alt="i.platformName">
           </div>
           <el-input

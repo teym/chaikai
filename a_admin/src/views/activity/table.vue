@@ -149,7 +149,7 @@
       :limit.sync="listQuery.size"
       @pagination="getList"
     />
-    <el-dialog width="80%" title="活动详情" :visible.sync="detailVisible">
+    <el-dialog width="80%" title="活动详情" :visible.sync="detailVisible" append-to-body>
       <detail
         v-if="detailVisible && detail"
         :id="detail.id + ''"
@@ -301,6 +301,7 @@ export default {
         .submitForm()
         .then((r) => {
           this.detailLoading = false
+          this.detailVisible = false
           this.$notify({
             title: '成功',
             message: '操作成功',
