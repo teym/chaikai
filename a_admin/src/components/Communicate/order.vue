@@ -30,7 +30,7 @@
         <h5>订单状态：</h5>
         <div>
           <p>{{ activityStatus[data.statusCode] }}</p>
-          <!-- <span>{{ data.date }}</span> -->
+          <span style="color: #999">{{ data.rejectReason }}</span>
         </div>
       </div>
       <div class="row">
@@ -141,14 +141,14 @@
           {{ data.reward
           }}<span
             v-if="data.rewardStatusCode === 1"
-            style="color: red; margin-left:4px"
+            style="color: red; margin-left: 4px"
             @click="onCancelReward"
           >取消发放</span>
         </p>
       </div>
       <div v-if="data.coopSubType !== 3" class="row">
         <h5>悬赏结算：</h5>
-        <div style="flex:1">
+        <div style="flex: 1">
           <p>{{ ["", "待发放", "已发放", "已取消"][data.rewardStatusCode] }}</p>
           <span>{{ data.rewardMsg }}</span>
         </div>

@@ -297,7 +297,6 @@ export default {
       this.active = Object.assign({}, this.active, _.object([[sku.id, item]]))
     },
     onOk () {
-      console.log('on ok')
       if (this.data.statusCode > 5 || this.data.applied) {
         return
       }

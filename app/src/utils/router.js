@@ -5,7 +5,7 @@ export function mrouter (component) {
   function push (path, params) {
     const query = _.map(params, (v, k) => (`${k}=${encodeURIComponent(v)}`)).join('&')
     const url = path + (query ? '?' : '') + query
-    if (conf.tabBar.list.find(i => path.endsWith(i.pagePath))) {
+    if ((conf.tabBar || {list: []}).list.find(i => path.endsWith(i.pagePath))) {
       mpvue.switchTab({ url })
     } else {
       mpvue.navigateTo({ url })
@@ -14,7 +14,7 @@ export function mrouter (component) {
   function replace (path, params) {
     const query = _.map(params, (v, k) => (`${k}=${encodeURIComponent(v)}`)).join('&')
     const url = path + (query ? '?' : '') + query
-    if (conf.tabBar.list.find(i => path.endsWith(i.pagePath))) {
+    if ((conf.tabBar || {list: []}).list.find(i => path.endsWith(i.pagePath))) {
       mpvue.switchTab({ url })
     } else {
       mpvue.redirectTo({ url })

@@ -38,24 +38,17 @@ export default {
   },
   methods: {
     onLogin (e) {
+      const {back} = router(this).params()
       api.login().then(r => {
-        signal.emit('logined')
-        if (!this.embed) {
-          router(this).pop()
-        } else {
-          this.$emit('logined')
-        }
+        signal.emit('logined', {back})
+        router(this).pop()
       })
     },
     onPro (t) {
       router(this).push('/pages/web/main', {url: t === 1 ? 'https://docs.qq.com/doc/DU2x5UUdNQlVrRGps?pub=1&dver=2.1.0' : 'https://docs.qq.com/doc/DU1F1ZXV4Y2dNVFlD?pub=1&dver=2.1.0'})
     },
     onCancel (e) {
-      if (!this.embed) {
-        router(this).replaceAll('/pages/index/main')
-      } else {
-        router(this).pop()
-      }
+      router(this).pop()
     }
   }
 }
@@ -79,10 +72,10 @@ export default {
   color: white;
   border: none;
 }
-button.btn::after{
+button.btn::after {
   border: none !important;
 }
-button.btn[disabled]{
+button.btn[disabled] {
   background-color: #ff8e3baa;
   color: white;
 }
@@ -92,7 +85,7 @@ button.btn[disabled]{
 .bar .light {
   color: #999999;
 }
-.bar img{
+.bar img {
   width: 44rpx;
   height: 44rpx;
 }

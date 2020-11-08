@@ -98,26 +98,23 @@
       </button>
     </div>
   </div>
-  <login v-else :embed="true" @logined="onLogined"/>
 </div>
 </template>
 
 <script>
 import navbar from '@/components/navbar'
-import login from '../login/index'
 import {router, api, signal, request, mapChannel, uiapi} from '@/utils/index'
 
 const meiqiaPlugin = requirePlugin('meiqia')
 
 export default {
   components: {
-    navbar,
-    login
+    navbar
   },
   data () {
     return {
       user: {
-        nickname: 'mpvue',
+        nickname: '',
         avatar: '',
         score: 10,
         areas: []
@@ -140,18 +137,6 @@ export default {
       return this.user.areas.map(i => i.name).join('|')
     }
   },
-  onShow () {
-    if (api.isLogin()) {
-      this.loadData()
-    }
-  },
-  onPullDownRefresh () {
-    if (api.isLogin()) {
-      uiapi.waitRefresh(this.loadData())
-    } else {
-      uiapi.waitRefresh(Promise.resolve({}))
-    }
-  },
   created () {
     this.logined = api.isLogin()
     this.onUser = () => {
@@ -163,6 +148,18 @@ export default {
     signal.remove('logined', this.onUser)
   },
   methods: {
+    onShow () {
+      if (api.isLogin()) {
+        this.loadData()
+      }
+    },
+    onPullDownRefresh () {
+      if (api.isLogin()) {
+        uiapi.waitRefresh(this.loadData())
+      } else {
+        uiapi.waitRefresh(Promise.resolve({}))
+      }
+    },
     onLogined () {
       this.logined = api.isLogin()
       if (this.logined) {

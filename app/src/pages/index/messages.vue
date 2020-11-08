@@ -23,7 +23,6 @@
         </div>
       </div>
     </div>
-    <login v-else :embed="true" @logined="onLogined"/>
   </div>
 </template>
 
@@ -31,7 +30,6 @@
 // import _ from 'underscore'
 import navbar from '@/components/navbar'
 import {router, api, signal, uiapi, request, formatMsgTime, isImgMsg} from '@/utils/index'
-import login from '../login/index'
 
 export default {
   data () {
@@ -45,13 +43,7 @@ export default {
   },
 
   components: {
-    navbar,
-    login
-  },
-  mounted () {
-    if (api.isLogin()) {
-      this.loadData(1)
-    }
+    navbar
   },
   created () {
     this.logined = api.isLogin()
@@ -63,20 +55,25 @@ export default {
   beforeDestroy () {
     signal.remove('logined', this.onUser)
   },
-  onPullDownRefresh () {
-    if (api.isLogin()) {
-      uiapi.waitRefresh(this.loadData(1))
-    } else {
-      uiapi.waitRefresh(Promise.resolve({}))
-    }
-  },
-  onReachBottom () {
-    if (this.loading || this.nomore) {
-      return
-    }
-    this.loadData(this.page + 1)
-  },
   methods: {
+    onShow () {
+      if (api.isLogin()) {
+        this.loadData(1)
+      }
+    },
+    onPullDownRefresh () {
+      if (api.isLogin()) {
+        uiapi.waitRefresh(this.loadData(1))
+      } else {
+        uiapi.waitRefresh(Promise.resolve({}))
+      }
+    },
+    onReachBottom () {
+      if (this.loading || this.nomore) {
+        return
+      }
+      this.loadData(this.page + 1)
+    },
     onLogined () {
       this.logined = api.isLogin()
       if (this.logined) {

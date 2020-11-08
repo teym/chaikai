@@ -1,139 +1,114 @@
 <template>
-  <div class="container">
-    <navbar :fixed="true" background="white">
-      <div class="navbar">
-        <p>
-          活动
-          <span>今日还可申请{{todayNum}}次</span>
-        </p>
+  <div class="container col">
+    <div class="flex col">
+      <home ref="home" v-if="tab === 0"/>
+      <messages ref="messages" v-if="tab === 1"/>
+      <mine ref="mine" v-if="tab === 2"/>
+    </div>
+    <bar background="#FFFFFF">
+    <div class="tab row i-center">
+      <div class="tab1 item row center">
+        <div class="col i-center" :class="{active:tab === 0}" @click="onHome">
+          <img v-if="tab === 0" src="/static/tabs/home-active.png" alt="home">
+          <img v-else src="/static/tabs/home.png" alt="home">
+          <p>活动</p>
+        </div>
       </div>
-    </navbar>
-    <div class="content flex">
-      <swiper
-        class="banners"
-        :indicator-dots="true"
-        :autoplay="true"
-        :interval="2000"
-        :circular="true"
-        indicator-color="white"
-        indicator-active-color="#FF8E3B"
-        previous-margin="0"
-        next-margin="0"
-      >
-        <block v-for="(item, index) in banners" :index="index" :key="index">
-          <swiper-item class="banner" @click="onBanner(item)">
-            <img :src="item.url" alt="banner" mode="aspectFill" />
-          </swiper-item>
-        </block>
-      </swiper>
-      <div class="items row">
-        <div v-for="(data, j) in datas" :key="j" class="col flex">
-          <div class="item" v-for="(item, index) in data" :key="index" @click="onItem(item)">
-            <div class="icon">
-              <img :src="item.goods.picUrl" alt="img" mode="aspectFill" />
-              <div v-if="item.statusCode > 5" class="end">
-                <p>报名结束</p>
-              </div>
-            </div>
-            <div class="pad">
-              <h5 class="middle dark medium title">{{item.title}}</h5>
-              <div class="row just i-center margin-t">
-                <p class="small light">价值：{{item.goods.price || 0}}元</p>
-              </div>
-              <div class="row just i-center margin-t">
-                <p class="middle dark">
-                  名额
-                  <span class="red blod">{{item.remainingNum || item.totalNum}}</span>
-                </p>
-                <ul v-if="item.cooperationType < 3" class="row tag">
-                  <li class="small red">悬赏</li>
-                  <li v-if="item.cooperationType === 2" class="small red margin-l">报价</li>
-                </ul>
-              </div>
-            </div>
-          </div>
+      <div class="tab2 item row center">
+        <div class="col i-center" :class="{active:tab === 1}" @click="onMessages">
+          <img v-if="tab === 1" src="/static/tabs/messages-active.png" alt="home">
+          <img v-else src="/static/tabs/messages.png" alt="home">
+          <p>消息</p>
+        </div>
+      </div>
+      <div class="tab3 item row center">
+        <div class="col i-center" :class="{active:tab === 2}" @click="onMine">
+          <img v-if="tab === 2" src="/static/tabs/mine-active.png" alt="home">
+          <img v-else src="/static/tabs/mine.png" alt="home">
+          <p>我的</p>
         </div>
       </div>
     </div>
+    </bar>
   </div>
 </template>
 
 <script>
-import _ from 'underscore'
-import moment from 'moment'
-import navbar from '@/components/navbar'
-import {router, request, uiapi} from '@/utils/index'
+import bar from '@/components/bar'
+import home from './home'
+import messages from './messages'
+import mine from './mine'
+import {router, api, signal} from '@/utils/index'
 
 export default {
   data () {
     return {
-      banners: [],
-      datas: [[], []],
-      page: 1,
-      loading: false,
-      todayNum: 0
+      tab: 0
     }
   },
 
   components: {
-    navbar
+    bar,
+    home,
+    messages,
+    mine
   },
-  mounted () {
-    this.loadData(1)
+  created () {
+    this.onUser = ({back}) => {
+      if (back === 'messages') {
+        this.onMessages()
+      } else if (back === 'mine') {
+        this.onMine()
+      }
+    }
+    signal.add('logined', this.onUser)
+  },
+  onShow () {
+    const tab = this.currentTab()
+    if (tab && tab.onShow) {
+      tab.onShow()
+    }
   },
   onPullDownRefresh () {
-    uiapi.waitRefresh(this.loadData(1))
+    const tab = this.currentTab()
+    if (tab && tab.onPullDownRefresh) {
+      tab.onPullDownRefresh()
+    }
   },
   onReachBottom () {
-    if (this.loading || this.nomore) {
-      return
+    const tab = this.currentTab()
+    if (tab && tab.onReachBottom) {
+      tab.onReachBottom()
     }
-    this.loadData(this.page + 1)
-  },
-  onTabItemTap (item) {
-    console.log('tab', item)
   },
   methods: {
-    loadData (page) {
-      this.loading = true
-      if (page === 1) {
-        request.get('/banner/list', {page: 1, size: 20, type: 1, valid: true}).then(({json: {data}}) => {
-          this.banners = data
-        }).catch(e => {
-          console.log(e)
-        })
-        request.get('/bl/activity/qualification', {}).then(({json: {data}}) => {
-          this.todayNum = data.todayApplyNumRemaining
-        }).catch(e => {
-          this.todayNum = 0
-          console.log(e)
-        })
-      }
-      return request.get('/bl/activity/list', {page, size: 20}).then(({json: {data}}) => {
-        const olds = page === 1 ? [] : _.head(_.flatten(_.zip(this.datas[0] || [], this.datas[1] || [])),
-          (this.datas[0].length || 0) + (this.datas[1].length || 0)
-        )
-        const datas = olds.concat(data.data).map(i => Object.assign(i, {statusCode: moment(i.regEndTime).isAfter(new Date()) && i.remainingNum > 0 ? i.statusCode : 6}))
-        this.datas = _.partition(datas, (i, j) => (j % 2 === 0))
-        this.nomore = data.pager.totalPages <= page
-        this.page = page
-        this.loading = false
-      }).catch(e => {
-        this.loading = false
-      })
+    currentTab () {
+      return [this.$refs.home, this.$refs.messages, this.$refs.mine][this.tab]
     },
-    onItem (item) {
-      router(this).push('/pages/detail/main', {id: item.id})
+    onHome () {
+      this.tab = 0
+      setTimeout(() => {
+        this.$refs.home && this.$refs.home.onShow && this.$refs.home.onShow()
+      }, 0)
     },
-    onBanner (item) {
-      if (item.linkType === 1) {
-        const [page, query] = item.link.split('?')
-        const params = query ? _.object(query.split('&').map(i => i.split('=').map(j => decodeURIComponent(j)))) : {}
-        console.log('banner', page, params)
-        router(this).push(page, params)
+    onMessages () {
+      if (api.isLogin()) {
+        this.tab = 1
+        setTimeout(() => {
+          this.$refs.messages && this.$refs.messages.onShow && this.$refs.messages.onShow()
+        }, 0)
       } else {
-        router(this).push('/pages/web/main', {url: item.link})
-        console.log('banner', '/pages/web/main', {url: item.link})
+        router(this).push('/pages/login/main', {back: 'messages'})
+      }
+    },
+    onMine () {
+      if (api.isLogin()) {
+        this.tab = 2
+        setTimeout(() => {
+          this.$refs.mine && this.$refs.mine.onShow && this.$refs.mine.onShow()
+        }, 0)
+      } else {
+        router(this).push('/pages/login/main', {back: 'mine'})
       }
     }
   }
@@ -141,99 +116,27 @@ export default {
 </script>
 
 <style scoped>
-.navbar {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  padding: 0 32rpx;
+.tab {
+  height: 88rpx;
 }
-.navbar p {
-  font-size: 44rpx;
-  font-weight: 500;
+.tab .tab1 {
+  flex: 1;
 }
-.navbar p span {
-  font-size: 28rpx;
-  color: #c1c6cb;
-  font-weight: normal;
-  margin-left: 16rpx;
+.tab .tab2 {
+  flex: 2;
 }
-
-.banners {
-  width: 750rpx;
-  height: 400rpx;
+.tab .tab3 {
+  flex: 1;
 }
-.banner {
-  width: 750rpx;
-  height: 400rpx;
+.tab .item img {
+  width: 48rpx;
+  height: 48rpx;
 }
-.banner img {
-  width: 686rpx;
-  height: 400rpx;
-  border-radius: 16rpx;
-  margin: 0 32rpx;
+.tab .item p {
+  font-size: 24rpx;
+  color: #999;
 }
-.items {
-  padding: 0 20rpx;
-  margin: 12rpx 0;
-}
-.items .col {
-  margin: 0 12rpx;
-}
-.item {
-  margin: 12rpx 0;
-  border-radius: 16rpx;
-  overflow: hidden;
-  background: white;
-  box-shadow: 0 4rpx 14rpx 0 rgba(193, 198, 203, 0.15);
-}
-.item .icon {
-  width: 100%;
-  padding-top: 100%;
-  position: relative;
-}
-.item .icon img {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-}
-.item .icon .end {
-  width: 180rpx;
-  height: 180rpx;
-  border-radius: 90rpx;
-  background-color: #00000066;
-  align-items: center;
-  justify-content: center;
-  display: flex;
-  position: absolute;
-  left: 25%;
-  top: 25%;
-}
-.item .icon .end p {
-  color: white;
-  font-size: 32rpx;
-}
-
-.item .title {
-  font-size: 28rpx;
-  font-weight: 400;
-  line-height: 40rpx;
-  color: #494c5e;
-  width: 100%;
-  word-break: break-all;
-}
-
-.tag {
-  display: flex;
-  flex-direction: row;
-}
-.tag li {
-  font-size: 16rpx;
+.tab .item .active p {
   color: #ff8e3b;
-  border-radius: 8rpx;
-  border: 1rpx solid #ff8e3b;
-  padding: 4rpx 8rpx;
 }
 </style>

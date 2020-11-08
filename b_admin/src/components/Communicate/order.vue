@@ -33,7 +33,7 @@
         <h5>订单状态：</h5>
         <div>
           <p>{{ activityStatus[data.statusCode] }}</p>
-          <!-- <span>{{ data.date }}</span> -->
+          <span style="color: #999">{{ data.rejectReason }}</span>
         </div>
       </div>
       <div class="row">
