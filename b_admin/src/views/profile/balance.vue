@@ -128,11 +128,11 @@
         </div>
         <div class="row">
           <h4>交易单号:</h4>
-          <p>{{ detail.orderNo }}</p>
+          <p>{{ detail.tradeNo }}</p>
         </div>
         <div class="row">
           <h4>充值金额:</h4>
-          <p>{{ detail.orderNo }}</p>
+          <p>{{ detail.amount }}</p>
         </div>
         <div class="row">
           <h4>状态:</h4>
