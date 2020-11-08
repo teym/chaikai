@@ -221,6 +221,7 @@
           <h4>收货地限制:</h4>
           <div>
             <el-checkbox
+              disabled
               :checked="detail.extension.receiveAreaLimit"
               label=""
             />
