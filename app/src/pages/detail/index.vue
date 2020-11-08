@@ -259,6 +259,13 @@ export default {
   onPullDownRefresh () {
     uiapi.waitRefresh(this.loadData())
   },
+  onShareAppMessage () {
+    return {
+      title: this.data.title,
+      path: `/pages/detail/main?id=${this.data.id}`,
+      imageUrl: this.data.picUrl
+    }
+  },
   methods: {
     reset () {
       resetData(this, defaultData())

@@ -170,33 +170,7 @@ export default {
       return Promise.all([request.get('/bl/account').then(({json: {data}}) => {
         this.user = data
         this.channels = mapChannel(data.channels).filter(i => i.statusCode === 3)
-        // this.session = JSON.stringify({tel: data.telephone,
-        //   name: data.nickname,
-        //   weixin: data.wechatNo,
-        //   contact: data.realName})
-
-        console.log({tel: data.telephone,
-          name: data.nickname,
-          weixin: data.wechatNo,
-          contact: data.realName}, data.wechatMaOpenId)
-
-        meiqiaPlugin.setClientInfo({
-          user_info: {
-            tel: data.telephone,
-            name: data.nickname,
-            weixin: data.wechatNo,
-            contact: data.realName
-          },
-          ent_id: '249463',
-          app_id: 'wx48bf43cf5cf1886d',
-          open_id: data.wechatMaOpenId,
-          success: function () {
-            console.log('meiqia success')
-          },
-          fail: function (res) {
-            console.log('meiqia', res)
-          }
-        })
+        this.sendUserInfo(data)
       }).catch(e => {
         uiapi.toast(e.info)
       }),
@@ -208,6 +182,49 @@ export default {
       request.get('/bl/activity/order/stat').then(({json: {data}}) => {
         this.stat = data
       })])
+    },
+    sendUserInfo (data) {
+      var params = {
+      // 成功回调
+        success: function () {
+          console.log('设置顾客信息成功')
+        },
+        // 失败回调
+        fail: function (res) {
+          console.log('设置失败：' + res.toString())
+        }
+      }
+      // 用户信息：可以设置用户的一些基本信息
+      let userInfo = {
+        tel: data.telephone,
+        name: data.nickname,
+        weixin: data.wechatNo,
+        contact: data.realName
+      }
+      // 位置信息
+      // let locationInfo = {
+      //   country: 'China',
+      //   province: '上海'
+      // }
+      // 客服指定分配信息
+      let agentInfo = {
+      // agent_token: '6188facb88864f97e24907385895bf06', // 指定分配客服的 token，可以在 工作台设置 - ID查询 中查看
+        group_token: '54d4e2c3ea5a5349dc2cc6930fe3b9e8' // 指定分配分组的 token，可以在 工作台设置 - ID查询 中查看
+      // fallback: 1 // 指定分配客服不在线时候的处理情况：1 指定分配客服不在线，则发送留言；2 指定分配客服不在线，分配给组内的人，分配失败，则发送留言；3 指定分配客服不在线，分配给企业随机一个人，分配失败，则发送留言；
+      }
+      params.user_info = userInfo
+      params.agent_info = agentInfo
+      // params.location_info = location_info;
+      // 美洽企业ID
+      params.ent_id = '249463'
+      // // 小程序 token
+      params.token = '1234567890'
+      // // 小程序 AppID
+      params.app_id = 'wx48bf43cf5cf1886d'
+      // // 用户 openId
+      params.open_id = 'data.wechatMaOpenId'
+      // // 调用接口
+      meiqiaPlugin.setClientInfo(params)
     },
     onScore () {
       this.onRouter('scope', {scope: this.user.score, tags: this.user.scoreInfo.items.map(i => (`${i.msg} ${i.number}`)).join(',')})
