@@ -63,6 +63,13 @@ export default {
     }
     signal.add('logined', this.onUser)
   },
+  onShareAppMessage () {
+    return {
+      title: '通告来啦~',
+      path: '/pages/index/main',
+      imageUrl: 'https://apart-static.oss-cn-hangzhou.aliyuncs.com/others/20201108233304.jpg'
+    }
+  },
   onShow () {
     const tab = this.currentTab()
     if (tab && tab.onShow) {
