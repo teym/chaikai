@@ -41,7 +41,7 @@ export default {
         redirect_uri: encodeURIComponent(
           `${location.protocol}//${location.host}/#/sso`
         ),
-        state: 'adminTest',
+        state: 'admin',
         href: ''
       })
     }
