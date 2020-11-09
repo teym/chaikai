@@ -38,7 +38,7 @@ export default {
       window.WwLogin({
         id: "sso_qr",
         appid: "ww9bd117a014bf30bf",
-        agentid: "1000016",
+        agentid: "1000005",
         redirect_uri: encodeURIComponent(
           `${location.protocol}//${location.host}/#/sso`
         ),
