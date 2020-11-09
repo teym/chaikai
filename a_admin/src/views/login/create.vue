@@ -34,6 +34,7 @@ export default {
       // }, 100);
       console.log('redir')
     } else {
+      console.log('sso', `${location.protocol}//${location.host}/#/sso`)
       window.WwLogin({
         id: 'sso_qr',
         appid: 'ww9bd117a014bf30bf',
