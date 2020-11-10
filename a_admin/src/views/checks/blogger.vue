@@ -121,7 +121,6 @@
             @click="handleAction(row, 2)"
           >拒绝</el-button>
           <el-button
-            v-if="row.statusCode === 1"
             size="mini"
             @click="handleDetail(row)"
           >详情</el-button>

@@ -79,10 +79,11 @@ export default {
       if (this.channel.statusCode === '1' || this.channel.statusCode === '3') {
         return
       }
-      this.channel.homeLink = matchURL(this.channel.homeLink)
-      if (!this.channel.homeLink) {
+      const link = matchURL(this.channel.homeLink)
+      if (!link) {
         return uiapi.toast('提交输入正确的主页链接')
       }
+      this.channel.homeLink = link
       const l = uiapi.loading()
       request.post('/bl/account/channel', Object.assign({}, this.channel)).then(r => {
         l()

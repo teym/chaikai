@@ -15,7 +15,7 @@
           </swiper-item>
         </block>
       </swiper>
-      <div v-if="data.statusCode > 5" class="stop">报名结束</div>
+      <div v-if="data && !valide" class="stop">报名结束</div>
       <div class="info">
         <h4>{{data.title}}</h4>
         <div class="row just">
@@ -24,11 +24,11 @@
         </div>
         <div class="row count">
           <p>
-            {{data.totalNum - data.applyNum}}
+            {{data.remainingNum}}
             <span>剩余名额</span>
           </p>
           <p>
-            {{data.applyNum}}
+            {{data.totalNum - data.remainingNum}}
             <span>申请</span>
           </p>
         </div>
@@ -167,7 +167,7 @@
     </div>
     <bar background='#FFFFFF'>
       <div class="bar">
-        <div class="btn" :class="{disabled: data.applied || data.statusCode > 5}" @click="onOk">{{data.applied ? '已申请' : (data.statusCode > 5 ? '报名结束' :'立即申请')}}</div>
+        <div class="btn" :class="{disabled: data.applied || !valide}" @click="onOk">{{data.applied ? '已申请' : (!valide ? '报名结束' :'立即申请')}}</div>
       </div>
     </bar>
     <div v-if="tip" class="pop">
@@ -240,9 +240,11 @@ export default {
     return defaultData()
   },
   computed: {
+    valide () {
+      return this.data && (this.data.statusCode < 6 || this.data.remainingNum <= 0 || moment(this.data.regEndTime).isAfter(new Date()))
+    },
     leftTime () {
-      const t = this.data ? diffTime(this.data.regEndTime, '') : ''
-      return t ? '报名剩余' + t : '报名已结束'
+      return this.valide ? '报名剩余' + diffTime(this.data.regEndTime, '') : '报名已结束'
     },
     receiveAreas () {
       return (((this.data || {}).extension || {}).receiveAreas || []).map(i => ((i.province || '') + (i.city || ''))).join(',')
@@ -304,7 +306,7 @@ export default {
       this.active = Object.assign({}, this.active, _.object([[sku.id, item]]))
     },
     onOk () {
-      if (this.data.statusCode > 5 || this.data.applied) {
+      if (!this.valide || this.data.applied) {
         return
       }
       if (!api.isLogin()) {

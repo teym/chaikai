@@ -133,7 +133,12 @@
         <div class="row">
           <h4>{{ listQuery.searchType === 2 ? "用户" : "账户" }}ID:</h4>
           <div>
-            <el-input v-model="detail.accountId" size="mini" />
+            <el-input
+              v-model="detail.accountId"
+              size="mini"
+              @blur="handleAccount"
+            />
+            <p v-if="company">{{ company.name }}</p>
           </div>
         </div>
         <div v-if="listQuery.searchType === 3" class="row">
@@ -181,6 +186,7 @@ import { clearQueryObject } from '@/utils/index'
 import waves from '@/directive/waves' // waves directive
 // import { mapGetters } from "vuex";
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
+import { fetchCompanyList, fetchBloggerList } from '@/api/accounts'
 // import preview from "./preview";
 
 export default {
@@ -208,7 +214,8 @@ export default {
         amount: 0,
         accountId: '',
         remark: ''
-      }
+      },
+      company: null
     }
   },
   // computed: {
@@ -284,12 +291,46 @@ export default {
         : exportBGiftList)(clearQueryObject(obj, true))
     },
     handleAdd() {
-      this.detailVisable = true
+      this.company = null
       this.detail = {
         amount: 0,
         accountId: '',
         remark: ''
       }
+      this.detailVisable = true
+    },
+    handleAccount() {
+      if (this.listQuery.searchType === 2) {
+        this.handleBlogger()
+      } else {
+        this.handleCompany()
+      }
+    },
+    handleBlogger() {
+      this.company = null
+      fetchBloggerList({
+        accountId: this.detail.accountId,
+        page: 1,
+        size: 1
+      }).then((r) => {
+        const d = r.data.data[0]
+        this.company = d
+          ? Object.assign({}, d, { name: d.nickname })
+          : { name: '未查询到账户' }
+      })
+    },
+    handleCompany() {
+      this.company = null
+      fetchCompanyList({
+        accountId: this.detail.accountId,
+        page: 1,
+        size: 1
+      }).then((r) => {
+        const d = r.data.data[0]
+        this.company = d
+          ? Object.assign({}, d, { name: d.company })
+          : { name: '未查询到账户' }
+      })
     },
     handleSuccess() {
       const obj = Object.assign({}, this.detail)
@@ -306,6 +347,9 @@ export default {
       }
       if (!obj.remark) {
         return this.$message({ message: '请输入备注', type: 'error' })
+      }
+      if (!(this.company && this.company.id)) {
+        return this.$message({ message: '请检查账号ID', type: 'error' })
       }
       (this.listQuery.searchType === 2 ? addCGift : addBGift)(
         clearQueryObject(obj, true)

@@ -36,8 +36,8 @@
           <div class="row">
             <h4>钱包收入:</h4>
             <div class="row">
-              <p>{{ detail.id }}</p>
-              <el-button size="mini" @click="handleFinance">明细</el-button>
+              <p>{{ (detail.financeInfo || {}).totalAmount || 0 }}</p>
+              <el-button style="margin-left: 8px" size="mini" @click="handleFinance">明细</el-button>
             </div>
           </div>
         </el-col>

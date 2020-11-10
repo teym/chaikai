@@ -87,7 +87,7 @@
               <el-option label="无" :value="0" />
               <el-option label="最新" :value="101" />
               <el-option label="最热" :value="102" />
-              <el-option label="重点" :value="103" />
+              <!-- <el-option label="重点" :value="103" /> -->
             </el-select>
           </div>
         </div>

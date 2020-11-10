@@ -259,7 +259,7 @@ export default {
       fetchCompanyList({ page: 1, size: 1, accountId: item.brAccountId }).then(
         (r) => {
           const d = r.data.data[0] || {}
-          d.brands = d.brands.map((i) =>
+          d.brands = (d.brands || []).map((i) =>
             Object.assign(
               { date: moment(i.gmtCreate).format('YYYY-MM-DD HH:mm:ss') },
               i

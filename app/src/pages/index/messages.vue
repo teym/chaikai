@@ -1,5 +1,5 @@
 <template>
-  <div class="container white_bg">
+  <div class="container flex white_bg">
     <navbar :fixed="true" background="white">
       <div class="navbar row i-center pad2-l">
         <p>消息</p>
