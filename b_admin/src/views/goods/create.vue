@@ -375,7 +375,7 @@ export default {
     onBrand(e) {
       if (e === 0) {
         this.postForm.brand = {};
-        this.$router.push("/user/auth");
+        this.$router.push("/user/index");
       }
     },
     handleAddSku() {
