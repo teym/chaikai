@@ -516,6 +516,7 @@ h5 {
 }
 .desc .brand .collapse {
   max-height: 80rpx;
+  overflow: hidden;
 }
 .desc .brand p span {
   color: #ff8e3b;
