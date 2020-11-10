@@ -79,7 +79,7 @@
         </el-form-item>
         <div class="bar">
           <el-checkbox v-model="checked">已阅读并同意</el-checkbox>
-          <a href="https://docs.qq.com/doc/DU3BISlJkZ2ZyTGVY?pub=1" target="_blank">《品牌入住协议》</a>
+          <a href="https://docs.qq.com/doc/DU3BISlJkZ2ZyTGVY?pub=1" target="_blank">《品牌入驻协议》</a>
           <router-link class="right" :to="{ path: '/login' }"
             >有账号，去登陆</router-link
           >
@@ -219,7 +219,7 @@ export default {
     handleLogin() {
       if (!this.checked) {
         this.$message({
-          message: "请先阅读并同意《品牌入住协议》",
+          message: "请先阅读并同意《品牌入驻协议》",
           type: "error",
         });
         return;
