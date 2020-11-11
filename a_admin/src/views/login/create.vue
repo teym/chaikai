@@ -5,6 +5,8 @@
 </template>
 
 <script>
+import { ssoConf } from '@/utils/index'
+
 export default {
   name: 'Login',
   data() {
@@ -34,15 +36,15 @@ export default {
       // }, 100);
       console.log('redir')
     } else {
-      console.log('sso', `${location.protocol}//${location.host}/#/sso`)
+      console.log('sso', `${location.protocol}//${location.host}/#/sso`, ssoConf())
       window.WwLogin({
         id: 'sso_qr',
         appid: 'ww9bd117a014bf30bf',
-        agentid: process.env.SSO_ID,
+        agentid: ssoConf().id,
         redirect_uri: encodeURIComponent(
           `${location.protocol}//${location.host}/#/sso`
         ),
-        state: process.env.SSO_STATE,
+        state: ssoConf().state,
         href: ''
       })
     }

@@ -367,3 +367,10 @@ export function removeClass(ele, cls) {
     ele.className = ele.className.replace(reg, ' ')
   }
 }
+
+export function ssoConf () {
+  return {
+    id: process.env.VUE_APP_SSO_ID,
+    state: process.env.VUE_APP_SSO_STATE
+  }
+}
