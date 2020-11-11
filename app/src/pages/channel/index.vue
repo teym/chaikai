@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container col">
     <div v-if="bind.length > 0">
       <div class="light_bg pad2 row head">
         <h5 class="middle dark blod">已入驻渠道</h5>
@@ -51,6 +51,8 @@ export default {
     this.data = {}
     this.bind = []
     this.unbind = []
+    const l = uiapi.loading()
+    this.loadData().then(l).catch(l)
   },
   onShow () {
     this.loadData()

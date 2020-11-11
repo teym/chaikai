@@ -106,6 +106,7 @@ import navbar from '@/components/navbar'
 import {router, api, signal, request, mapChannel, uiapi} from '@/utils/index'
 
 const meiqiaPlugin = requirePlugin('meiqia')
+// meiqiaPlugin.setDebugMode(true)
 
 export default {
   components: {
@@ -184,22 +185,24 @@ export default {
       })])
     },
     sendUserInfo (data) {
+      // 用户信息：可以设置用户的一些基本信息
+      let userInfo = {
+        tel: data.telephone + '',
+        name: data.nickname,
+        weixin: data.wechatNo,
+        contact: data.realName,
+        '自定义信息': 'aabbccdd'
+      }
+      console.log('info', userInfo)
       var params = {
       // 成功回调
         success: function () {
-          console.log('设置顾客信息成功')
+          console.log('设置顾客信息成功', userInfo)
         },
         // 失败回调
         fail: function (res) {
           console.log('设置失败：' + res.toString())
         }
-      }
-      // 用户信息：可以设置用户的一些基本信息
-      let userInfo = {
-        tel: data.telephone,
-        name: data.nickname,
-        weixin: data.wechatNo,
-        contact: data.realName
       }
       // 位置信息
       // let locationInfo = {
@@ -218,7 +221,7 @@ export default {
       // 美洽企业ID
       params.ent_id = '249463'
       // // 小程序 token
-      params.token = '1234567890'
+      params.token = '108gemechat'
       // // 小程序 AppID
       params.app_id = 'wx48bf43cf5cf1886d'
       // // 用户 openId

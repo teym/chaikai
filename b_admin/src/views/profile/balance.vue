@@ -46,13 +46,10 @@
                 "103": "账户提现",
                 "104": "悬赏订单",
                 "105": "悬赏退回",
+                "106": "其它",
+                "107": "其它",
               }[row.type + ""]
             }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="详情描述">
-          <template slot-scope="{ row }">
-            <span @click="onDetail(row)">{{ row.remark || " " }}</span>
           </template>
         </el-table-column>
         <el-table-column label="余额变动">
@@ -63,6 +60,39 @@
         <el-table-column label="上次余额">
           <template slot-scope="{ row }">
             <span>{{ row.lastBalance }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="详情描述">
+          <template slot-scope="{ row }">
+            <el-button
+              size="mini"
+              v-if="row.type === 104 || row.type === 105"
+              @click="onDetail(row)"
+              >订单详情</el-button
+            >
+            <el-button
+              size="mini"
+              v-if="row.type === 103"
+              @click="onDetail(row)"
+              >提现详情</el-button
+            >
+            <el-button
+              size="mini"
+              v-if="row.type === 102"
+              @click="onDetail(row)"
+              >充值详情</el-button
+            >
+            <el-button
+              size="mini"
+              v-if="row.type === 101"
+              @click="onDetail(row)"
+              >订购详情</el-button
+            >
+            <span
+              v-if="row.type === 106 || row.type === 107"
+              @click="onDetail(row)"
+              >{{ row.remark || "--" }}</span
+            >
           </template>
         </el-table-column>
         <div slot="empty" class="empty" style="padding: 48px 0">
@@ -266,6 +296,9 @@ export default {
       });
     },
     onDetail(row) {
+      if (row.type > 105) {
+        return;
+      }
       if (row.type === 104 || row.type === 105) {
         return window.showCommunicate(row.brActivityOrderId);
       } else {
