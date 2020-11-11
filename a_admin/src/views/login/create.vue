@@ -38,11 +38,11 @@ export default {
       window.WwLogin({
         id: 'sso_qr',
         appid: 'ww9bd117a014bf30bf',
-        agentid: '1000004',
+        agentid: process.env.SSO_ID,
         redirect_uri: encodeURIComponent(
           `${location.protocol}//${location.host}/#/sso`
         ),
-        state: 'admin',
+        state: process.env.SSO_STATE,
         href: ''
       })
     }
