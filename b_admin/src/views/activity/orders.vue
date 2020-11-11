@@ -334,8 +334,8 @@
             <el-button
               v-if="listQuery.statusCode === '1'"
               size="mini"
-              type="primary"
-              :icon="row.candidate ? 'el-icon-checked' : 'el-icon-plus'"
+              :type="row.candidate ? '' : 'primary'"
+              :icon="row.candidate ? 'el-icon-check' : 'el-icon-plus'"
               @click="handleAction(row, 'CANDIDATE')"
               >{{ row.candidate ? "已" : "" }}候选</el-button
             >
@@ -918,7 +918,7 @@ export default {
           this.$message({ message: "已评价" });
           this.formLoading = false;
           this.commendVisible = false;
-          this.getList()
+          this.getList();
         })
         .catch((e) => {
           this.formLoading = false;
@@ -1055,10 +1055,10 @@ export default {
         font-size: 12px;
         color: #4244ff;
         line-height: 25px;
-        padding: 0 8px;
+        padding: 2px 8px;
         border-radius: 12px;
-        background-color: #4244ff26;
-        margin-right: 8px;
+        background-color: #ececff;
+        margin-right: 6px;
       }
     }
   }
