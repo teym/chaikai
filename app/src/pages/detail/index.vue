@@ -28,7 +28,7 @@
             <span>剩余名额</span>
           </p>
           <p>
-            {{data.totalNum - data.remainingNum}}
+            {{data.applyNum}}
             <span>申请</span>
           </p>
         </div>
@@ -241,7 +241,7 @@ export default {
   },
   computed: {
     valide () {
-      return this.data && (this.data.statusCode < 6 || this.data.remainingNum <= 0 || moment(this.data.regEndTime).isAfter(new Date()))
+      return this.data && (this.data.statusCode < 6 && this.data.remainingNum > 0 && moment(this.data.regEndTime).isAfter(new Date()))
     },
     leftTime () {
       return this.valide ? '报名剩余' + diffTime(this.data.regEndTime, '') : '报名已结束'

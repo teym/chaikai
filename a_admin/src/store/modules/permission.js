@@ -83,9 +83,8 @@ const actions = {
     // }
     return getRoutes().then(r => {
       // asyncRoutes.filter(i=>)
-      const as = r.data.filter(i => i.displayName).map(i => ([i.displayName, { obj: i, ch: _.object((i.list || []).map(j => [j.displayName, j])) }]))
-      const accessedRoutes = asyncRoutes.filter((i) => (i.path !== '*' && !as[i.path])).map(i => Object.assign(i, { children: (i.children || []).filter(j => !((as[i.path] || {}).ch || {})[j.path]) }))
-      // console.log(as, accessedRoutes)
+      const as = _.object(r.data.filter(i => i.url).map(i => ([i.url, { obj: i, ch: _.object((i.list || []).map(j => [j.url, j])) }])))
+      const accessedRoutes = asyncRoutes.filter((i) => (as[i.path] || i.path === '*')).map(i => Object.assign(i, { children: (i.children || []).filter(j => ((as[i.path] || {}).ch || {})[j.path]) }))
       commit('SET_ROUTES', accessedRoutes)
       return accessedRoutes
     })

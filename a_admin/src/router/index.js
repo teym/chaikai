@@ -83,7 +83,7 @@ export const constantRoutes = [
         path: 'dashboard',
         component: () => import('@/views/dashboard/index'),
         name: 'Dashboard',
-        meta: { title: '后台首页', icon: 'dashboard', affix: true }
+        meta: { title: '后台首页', icon: 'dashboard' }
       }
     ]
   }
@@ -94,6 +94,19 @@ export const constantRoutes = [
  * the routes that need to be dynamically loaded based on user roles
  */
 export const asyncRoutes = [
+  {
+    path: '/system',
+    component: Layout,
+    redirect: '/index',
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/system/index'),
+        name: 'System',
+        meta: { title: '角色配置', icon: 'table' }
+      }
+    ]
+  },
   {
     path: '/check',
     component: Layout,
