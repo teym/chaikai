@@ -109,9 +109,8 @@ export default {
       } else {
         const reg = 'https?:\\/\\/[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b([-a-zA-Z0-9()@:%_\\+.~#?&//=]*)?'
         const link = (new RegExp(reg)).exec(item.content)[0]
-        console.log('go', link)
         if (link) {
-          router(this).push('/pages/web/main', {url: link})
+          router(this).push('/pages/copy/main', {url: link})
         }
       }
     },

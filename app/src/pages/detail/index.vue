@@ -350,11 +350,9 @@ export default {
       if (item.linkType === 1) {
         const [page, query] = item.link.split('?')
         const params = query ? _.object(query.split('&').map(i => i.split('=').map(j => decodeURIComponent(j)))) : {}
-        console.log('banner', page, params)
         router(this).push(page, params)
       } else {
         router(this).push('/pages/web/main', {url: item.link})
-        console.log('banner', '/pages/web/main', {url: item.link})
       }
     },
     onCopy (str) {

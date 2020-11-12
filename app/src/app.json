@@ -20,7 +20,8 @@
     "pages/depose/main",
     "pages/ship/main",
     "pages/tester/main",
-    "pages/web/main"
+    "pages/web/main",
+    "pages/copy/main"
   ],
   "window": {
     "backgroundTextStyle": "light",

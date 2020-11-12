@@ -81,7 +81,7 @@ export default {
       }
     },
     onItem (item) {
-      router(this).push('/pages/web/main', {url: item.homeLink})
+      router(this).push('/pages/copy/main', {url: item.homeLink})
     },
     onUnbind (item) {
       const l = uiapi.loading()

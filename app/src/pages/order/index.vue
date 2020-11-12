@@ -307,7 +307,7 @@ export default {
       router(this).push('/pages/message/main', {id: this.data.id})
     },
     onWeb (item) {
-      router(this).push('/pages/web/main', {url: item.url})
+      router(this).push('/pages/copy/main', {url: item.url})
     },
     onActivity () {
       router(this).push('/pages/detail/main', {id: this.data.activity.id})

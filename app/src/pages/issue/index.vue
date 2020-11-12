@@ -125,7 +125,7 @@ export default {
       router(this).push('/pages/tester/main', {id: this.data.brActivityOrderId, issue: true, ticketId: this.data.id})
     },
     onDetail (item) {
-      router(this).push('/pages/web/main', {url: item.url})
+      router(this).push('/pages/copy/main', {url: item.url})
     }
   }
 }
