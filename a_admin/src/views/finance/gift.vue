@@ -62,12 +62,12 @@
       </el-table-column>
       <el-table-column v-if="listQuery.searchType === 2" label="用户ID">
         <template slot-scope="{ row }">
-          <span>{{ row.blAccount.id }}</span>
+          <span>{{ row.blAccountId }}</span>
         </template>
       </el-table-column>
       <el-table-column v-else label="账户ID">
         <template slot-scope="{ row }">
-          <span>{{ row.company.id }}</span>
+          <span>{{ row.brAccountId }}</span>
         </template>
       </el-table-column>
       <el-table-column v-if="listQuery.searchType === 2" label="用户昵称">
