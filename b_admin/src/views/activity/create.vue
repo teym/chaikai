@@ -122,6 +122,11 @@
               @click="handleAddGuide"
               >添加指引</el-button
             >
+            <div class="guide-guide">
+              <p>测评指引（示例）：</p>
+              <p># 本产品水油分离，用前请摇匀</p>
+              <p># 产品特点丝绒雾面，服帖不拔干</p>
+            </div>
           </el-form-item>
         </div>
       </div>
@@ -1494,6 +1499,18 @@ export default {
   }
   div:nth-of-type(2) {
     border-left: 1px solid #dfe6ec;
+  }
+}
+.guide-guide {
+  background-color: #F3F3F9;
+  border-radius: 4px;
+  padding: 8px 12px;
+  margin-top: 8px;
+  p {
+    color: #9090D2;
+    font-size: 14px;
+    line-height: 20px;
+    margin: 0;
   }
 }
 </style>

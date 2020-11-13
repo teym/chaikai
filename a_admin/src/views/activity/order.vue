@@ -26,12 +26,7 @@
         class="filter-item"
         style="width: 160px; margin-left: 16px"
       >
-        <el-option
-          v-for="(i, j) in coopTypes"
-          :key="j"
-          :value="j"
-          :label="i"
-        />
+        <el-option v-for="(i, j) in coopTypes" :key="j" :value="j" :label="i" />
       </el-select>
       <el-select
         v-model="listQuery.depositStatusCode"
@@ -245,7 +240,12 @@
 </template>
 
 <script>
-import { fetchOrderList, exportOrderList, closeOrder, fetchDeposit } from '@/api/check'
+import {
+  fetchOrderList,
+  exportOrderList,
+  closeOrder,
+  fetchDeposit
+} from '@/api/check'
 import moment from 'moment'
 import { clearQueryObject } from '@/utils/index'
 import waves from '@/directive/waves' // waves directive
@@ -388,7 +388,11 @@ export default {
     },
     loadDeposit(id) {
       fetchDeposit(id).then((r) => {
-        r.data.records = r.data.records.map(i => Object.assign(i, { date: moment(i.gmtCreate).format('YYYY-MM-DD HH:mm:ss') }))
+        r.data.records = r.data.records.map((i) =>
+          Object.assign(i, {
+            date: moment(i.gmtCreate).format('YYYY-MM-DD HH:mm:ss')
+          })
+        )
         this.detail = r.data
       })
     }
