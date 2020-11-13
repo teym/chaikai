@@ -230,10 +230,10 @@
           </el-table-column>
           <el-table-column label="产生时间" align="center">
             <template slot-scope="{ row }">
-              <span>{{ row.gmtCreate }}</span>
+              <span>{{ row.date }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="罚款金额" align="center">
+          <el-table-column label="金额" align="center">
             <template slot-scope="{ row }">
               <span>{{ row.raeType === 1 ? "+" : "-" }}{{ row.amount }}</span>
             </template>
@@ -388,6 +388,7 @@ export default {
     },
     loadDeposit(id) {
       fetchDeposit(id).then((r) => {
+        r.data.records = r.data.records.map(i => Object.assign(i, { date: moment(i.gmtCreate).format('YYYY-MM-DD HH:mm:ss') }))
         this.detail = r.data
       })
     }
