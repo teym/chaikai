@@ -332,7 +332,7 @@ export default {
     },
     payOrder () {
       const {id} = router(this).params()
-      return request.post('/wxpay/mini', {amount: 0.01 /* this.data.goods.price */, brActivityId: id, payScene: 'BL_PAY_DEPOSIT'}).then(({json: {data}}) => {
+      return request.post('/wxpay/mini', {amount: this.data.goods.price, brActivityId: id, payScene: 'BL_PAY_DEPOSIT'}).then(({json: {data}}) => {
         return api.pay(data)
       })
     },
