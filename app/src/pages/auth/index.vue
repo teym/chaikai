@@ -73,7 +73,7 @@ export default {
       })
     },
     onGuide () {
-      router(this).push('/pages/web/main', {url: 'https://docs.qq.com/doc/DU1R1RkNkU05MZWVj?pub=1&dver=2.1.0'})
+      router(this).push('/pages/web/main', {url: 'https://static.ckgift.cn/th/OVxLJ'})
     },
     onGo () {
       if (this.channel.statusCode === '1' || this.channel.statusCode === '3') {

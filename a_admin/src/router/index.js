@@ -260,6 +260,12 @@ export const asyncRoutes = [
         component: () => import('@/views/other/publish'),
         name: 'publish-table',
         meta: { title: '公告管理', icon: 'table' }
+      },
+      {
+        path: 'web',
+        component: () => import('@/views/other/web'),
+        name: 'web-table',
+        meta: { title: 'H5编辑', icon: 'table' }
       }
     ]
   },

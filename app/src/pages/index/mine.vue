@@ -185,6 +185,7 @@ export default {
       })])
     },
     sendUserInfo (data) {
+      console.log(data)
       // 用户信息：可以设置用户的一些基本信息
       let userInfo = {
         tel: data.telephone + '',
@@ -225,7 +226,7 @@ export default {
       // // 小程序 AppID
       params.app_id = 'wx48bf43cf5cf1886d'
       // // 用户 openId
-      params.open_id = 'data.wechatMaOpenId'
+      params.open_id = data.wechatMaOpenId
       // // 调用接口
       meiqiaPlugin.setClientInfo(params)
     },
@@ -239,7 +240,7 @@ export default {
       router(this).push('/pages/' + p + '/main', d)
     },
     onQa () {
-      router(this).push('/pages/web/main', {url: 'https://docs.qq.com/doc/DU1JsSWdVRk9CS1lO?pub=1&dver=2.1.0'})
+      router(this).push('/pages/web/main', {url: 'https://static.ckgift.cn/th/3bDRz'})
     }
   }
 }

@@ -55,3 +55,38 @@ export function removeNoti(id) {
     method: 'delete'
   })
 }
+
+export function fetchWebList(query) {
+  return request({
+    url: '/sys/h5/article/list',
+    method: 'get',
+    params: query
+  })
+}
+export function fetchWeb(id) {
+  return request({
+    url: '/sys/h5/article/' + id,
+    method: 'get'
+  })
+}
+export function createWeb(data) {
+  return request({
+    url: '/sys/h5/article',
+    method: 'post',
+    data
+  })
+}
+export function updateWeb(data) {
+  return request({
+    url: '/sys/h5/article',
+    method: 'put',
+    data
+  })
+}
+
+export function removeWeb(id) {
+  return request({
+    url: '/sys/h5/article/' + id,
+    method: 'delete'
+  })
+}

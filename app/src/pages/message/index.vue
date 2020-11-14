@@ -146,7 +146,7 @@ export default {
       }
     },
     onTip () {
-      router(this).push('/pages/web/main', {url: 'https://mp.weixin.qq.com/s/ITxTHJ0Euw0TDUxprKpBsQ'})
+      router(this).push('/pages/web/main', {url: 'https://static.ckgift.cn/th/5BxR5'})
     }
   }
 }

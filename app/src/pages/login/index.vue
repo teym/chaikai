@@ -45,7 +45,7 @@ export default {
       })
     },
     onPro (t) {
-      router(this).push('/pages/web/main', {url: t === 1 ? 'https://docs.qq.com/doc/DU2x5UUdNQlVrRGps?pub=1&dver=2.1.0' : 'https://docs.qq.com/doc/DU1F1ZXV4Y2dNVFlD?pub=1&dver=2.1.0'})
+      router(this).push('/pages/web/main', {url: t === 1 ? 'https://static.ckgift.cn/th/QWxLV' : 'https://static.ckgift.cn/th/W5pLA'})
     },
     onCancel (e) {
       router(this).pop()

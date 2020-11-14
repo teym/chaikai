@@ -306,10 +306,10 @@ export default {
       }
     },
     onRule () {
-      router(this).push('/pages/web/main', {url: 'https://mp.weixin.qq.com/s/yPXWeSNE_vZx5WCiqOjqtQ'})
+      router(this).push('/pages/web/main', {url: 'https://static.ckgift.cn/th/zwz06'})
     },
     onGuide () {
-      router(this).push('/pages/web/main', {url: 'https://docs.qq.com/doc/DU01SUVZrc1JITkxx?pub=1&dver=2.1.0'})
+      router(this).push('/pages/web/main', {url: 'https://static.ckgift.cn/th/0LDjo'})
     },
     createOrder (check) {
       const {id} = router(this).params()
