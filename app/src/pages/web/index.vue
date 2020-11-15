@@ -1,6 +1,6 @@
 <template>
   <div class="container" >
-    <web-view v-if="src" :src="src" @load="onLoad"></web-view>
+    <web-view v-if="src" :src="src" @load="onLoad" @message="onMessage"></web-view>
   </div>
 </template>
 
@@ -15,12 +15,15 @@ export default {
   },
   mounted () {
     const {url} = router(this).params()
-    console.log('load', url)
     this.src = url
+    this.src = 'http://192.168.50.244:8082/template.html?id=5BxR5'
   },
   methods: {
     onLoad (e) {
       console.log(e)
+    },
+    onMessage (m) {
+      console.log(m)
     }
   }
 }

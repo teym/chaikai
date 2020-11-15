@@ -73,7 +73,7 @@ export default {
       })
     },
     onGuide () {
-      router(this).push('/pages/web/main', {url: 'https://static.ckgift.cn/th/OVxLJ'})
+      router(this).push('/pages/web/main', {url: 'https://sstest.ckgift.cn/th/article.html?id=OVxLJ'})
     },
     onGo () {
       if (this.channel.statusCode === '1' || this.channel.statusCode === '3') {

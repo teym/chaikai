@@ -45,7 +45,7 @@ export default {
       })
     },
     onPro (t) {
-      router(this).push('/pages/web/main', {url: t === 1 ? 'https://static.ckgift.cn/th/QWxLV' : 'https://static.ckgift.cn/th/W5pLA'})
+      router(this).push('/pages/web/main', {url: t === 1 ? 'https://sstest.ckgift.cn/th/article.html?id=QWxLV' : 'https://sstest.ckgift.cn/th/article.html?id=W5pLA'})
     },
     onCancel (e) {
       router(this).pop()

@@ -306,10 +306,10 @@ export default {
       }
     },
     onRule () {
-      router(this).push('/pages/web/main', {url: 'https://static.ckgift.cn/th/zwz06'})
+      router(this).push('/pages/web/main', {url: 'https://sstest.ckgift.cn/th/article.html?id=zwz06'})
     },
     onGuide () {
-      router(this).push('/pages/web/main', {url: 'https://static.ckgift.cn/th/0LDjo'})
+      router(this).push('/pages/web/main', {url: 'https://sstest.ckgift.cn/th/article.html?id=0LDjo'})
     },
     createOrder (check) {
       const {id} = router(this).params()

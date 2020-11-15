@@ -240,7 +240,7 @@ export default {
       router(this).push('/pages/' + p + '/main', d)
     },
     onQa () {
-      router(this).push('/pages/web/main', {url: 'https://static.ckgift.cn/th/3bDRz'})
+      router(this).push('/pages/web/main', {url: 'https://sstest.ckgift.cn/th/article.html?id=3bDRz'})
     }
   }
 }

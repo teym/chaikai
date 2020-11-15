@@ -146,7 +146,7 @@ export default {
       }
     },
     onTip () {
-      router(this).push('/pages/web/main', {url: 'https://static.ckgift.cn/th/5BxR5'})
+      router(this).push('/pages/web/main', {url: 'https://sstest.ckgift.cn/th/article.html?id=5BxR5'})
     }
   }
 }
