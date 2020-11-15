@@ -341,7 +341,7 @@ export default {
       }
     },
     onRule () {
-      router(this).push('/pages/web/main', {url: 'https://sstest.ckgift.cn/th/article.html?id=zwz06'})
+      router(this).push('/pages/web/main', {url: request.rawConf().web + '?id=zwz06'})
     },
     onHot (item) {
       if (!item) {

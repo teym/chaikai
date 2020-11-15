@@ -18,9 +18,17 @@ function mapHeaders (headers) {
 // }
 const conf = {
   // host: 'http://192.168.50.17:8888/api',
+  // web: 'https://sstest.ckgift.cn/th/article.html',
+
   host: 'https://apartest.ckgift.cn/api',
+  web: 'https://sstest.ckgift.cn/th/article.html',
+
+  // host: 'https://apart.ckgift.cn/api',
+  // web: 'https://ss.ckgift.cn/h/article.html',
+
   token: '',
   base: {}
+
 }
 
 function setup (cache) {
@@ -104,5 +112,9 @@ function uploadFile (path, file) {
   })
 }
 
-export const mrequest = { get: requestGet, raw: requestRaw, post: requestPost, put: requestPut, conf: requestConf, setup, upload: uploadFile }
+function rawConf () {
+  return Object.assign({}, conf)
+}
+
+export const mrequest = { get: requestGet, raw: requestRaw, post: requestPost, put: requestPut, conf: requestConf, rawConf: rawConf, setup, upload: uploadFile }
 export default mrequest

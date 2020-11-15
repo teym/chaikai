@@ -23,7 +23,7 @@
 
 <script>
 // import _ from 'underscore'
-import {api, signal, router} from '@/utils/index'
+import {api, signal, router, request} from '@/utils/index'
 
 export default {
   props: {
@@ -45,7 +45,7 @@ export default {
       })
     },
     onPro (t) {
-      router(this).push('/pages/web/main', {url: t === 1 ? 'https://sstest.ckgift.cn/th/article.html?id=QWxLV' : 'https://sstest.ckgift.cn/th/article.html?id=W5pLA'})
+      router(this).push('/pages/web/main', {url: request.rawConf().web + (t === 1 ? '?id=QWxLV' : '?id=W5pLA')})
     },
     onCancel (e) {
       router(this).pop()

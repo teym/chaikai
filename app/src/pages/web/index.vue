@@ -16,7 +16,6 @@ export default {
   mounted () {
     const {url} = router(this).params()
     this.src = url
-    this.src = 'http://192.168.50.244:8082/template.html?id=5BxR5'
   },
   methods: {
     onLoad (e) {
