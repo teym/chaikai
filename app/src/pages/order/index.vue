@@ -266,7 +266,7 @@ export default {
       return ''
     },
     onRule () {
-      router(this).push('/pages/web/main', {url: request.rawConf().web + '?id=zwz06'})
+      router(this).push('/pages/web/main', {url: 'https://mp.weixin.qq.com/s/yPXWeSNE_vZx5WCiqOjqtQ'})
     },
     onReward () {
       const s = diffTime(this.data.deadline, '')

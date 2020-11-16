@@ -21,10 +21,10 @@ const conf = {
   // web: 'https://sstest.ckgift.cn/th/article.html',
 
   host: 'https://apartest.ckgift.cn/api',
-  web: 'https://sstest.ckgift.cn/th/article.html',
+  // web: 'https://sstest.ckgift.cn/th/article.html',
 
   // host: 'https://apart.ckgift.cn/api',
-  // web: 'https://ss.ckgift.cn/h/article.html',
+  web: 'https://ss.ckgift.cn/h/article.html',
 
   token: '',
   base: {}

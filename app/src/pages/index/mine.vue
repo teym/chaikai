@@ -240,7 +240,7 @@ export default {
       router(this).push('/pages/' + p + '/main', d)
     },
     onQa () {
-      router(this).push('/pages/web/main', {url: request.rawConf().web + '?id=3bDRz'})
+      router(this).push('/pages/web/main', {url: request.rawConf().web + '?id=JlxL4'})
     }
   }
 }
