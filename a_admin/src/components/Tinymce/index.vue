@@ -140,6 +140,7 @@ export default {
         language: this.languageTypeList['zh'],
         height: this.height,
         body_class: 'panel-body ',
+        content_style: 'body{margin: 0;padding: 0;line-height: 1;}img{max-width: 100%;height: auto;display: block;}img[alt="inline"]{display:inline-block;}body > p{margin: 0;}',
         object_resizing: false,
         toolbar: this.toolbar.length > 0 ? this.toolbar : toolbar,
         menubar: this.menubar,
