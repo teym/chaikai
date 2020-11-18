@@ -92,7 +92,26 @@
         </el-table-column>
         <el-table-column label="品牌故事">
           <template slot-scope="{ row }">
-            <span>{{ row.story }}</span>
+            <el-popover
+              placement="bottom"
+              title="品牌故事"
+              width="400"
+              trigger="click"
+              :content="row.story"
+            >
+              <p
+                slot="reference"
+                style="
+                  height: 23px;
+                  overflow: hidden;
+                  word-break: keep-all;
+                  text-overflow: ellipsis;
+                  margin: 0;
+                "
+              >
+                {{ row.story }}
+              </p>
+            </el-popover>
           </template>
         </el-table-column>
         <el-table-column label="商标证书" align="center">

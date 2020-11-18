@@ -158,7 +158,7 @@ export default {
       setTimeout(() => {
         this.detail = {
           title: '',
-          content: '<div></div>'
+          content: ''
         }
       }, 0)
 
