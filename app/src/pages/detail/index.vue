@@ -94,7 +94,7 @@
               <p>产品详情</p>
               <img src="/static/images/detail_dot_r.png" alt="dot_l" />
             </div>
-            <div v-html="data.goods.detail"></div>
+            <div class="html" v-html="data.goods.detail"></div>
           </div>
         </div>
         <div class="block task" v-if="tab===2">
@@ -290,6 +290,8 @@ export default {
         if (!data.goods.brandInfo) {
           data.goods.brandInfo = {}
         }
+        data.goods.detail = data.goods.detail.replace(/<img /g, '<img style="max-width:100%;height:auto;display:block;" ')
+
         data.statusCode = (moment(data.regEndTime).isAfter(new Date()) && data.remainingNum > 0) ? data.statusCode : 6
         data.extension.bloggerPublishTimeStr = moment(data.extension.bloggerPublishTime).format('截止M月D日前')
         this.data = data
@@ -579,6 +581,9 @@ h5 {
   color: #494c5e;
   font-weight: 500;
   margin: 0 12rpx;
+}
+.desc .text .html{
+  max-width: 100%;
 }
 .task {
   padding: 0 24rpx;
