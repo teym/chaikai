@@ -1045,11 +1045,11 @@ export default {
     handleGoods(goods) {
       if (!goods.activityAlive) {
         this.postForm.goods = goods;
+        this.postForm.skus = [];
         this.goodsFormVisible = false;
       }
     },
     handleFilter() {
-      console.log("key", this.goods);
       this.fetchPv(1);
     },
     handleGoodsPage(p) {

@@ -73,7 +73,7 @@ export default {
       })
     },
     onGuide () {
-      router(this).push('/pages/web/main', {url: request.rawConf().web + '?id=OVxLJ'})
+      router(this).push('/pages/web/main', {url: request.rawConf().web + '?id=0LDjo'})
     },
     onGo () {
       if (this.channel.statusCode === '1' || this.channel.statusCode === '3') {

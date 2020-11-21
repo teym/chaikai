@@ -66,7 +66,26 @@
       </el-table-column>
       <el-table-column label="品牌故事" align="center">
         <template slot-scope="{ row }">
-          <span>{{ row.story }}</span>
+          <el-popover
+            placement="bottom"
+            title="品牌故事"
+            width="400"
+            trigger="click"
+            :content="row.story"
+          >
+            <p
+              slot="reference"
+              style="
+                height: 23px;
+                overflow: hidden;
+                word-break: keep-all;
+                text-overflow: ellipsis;
+                margin: 0;
+              "
+            >
+              {{ row.story }}
+            </p>
+          </el-popover>
         </template>
       </el-table-column>
       <el-table-column label="商标证书" align="center">
@@ -80,13 +99,17 @@
       </el-table-column>
       <el-table-column label="品牌关系" align="center">
         <template slot-scope="{ row }">
-          <span>{{ ({'1':"品牌方", '2':"代理商"})[row.relationType] }}</span>
+          <span>{{ { "1": "品牌方", "2": "代理商" }[row.relationType] }}</span>
         </template>
       </el-table-column>
       <el-table-column label="品牌授权资质" align="center">
         <template slot-scope="{ row }">
           <el-image
-            v-if="row.relationType === '2' && row.qualifications && row.qualifications.length > 0"
+            v-if="
+              row.relationType === '2' &&
+                row.qualifications &&
+                row.qualifications.length > 0
+            "
             style="width: 60px; height: 60px"
             :src="row.qualifications[0]"
             :preview-src-list="row.qualifications"

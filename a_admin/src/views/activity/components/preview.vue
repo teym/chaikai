@@ -91,7 +91,7 @@
             <div class="row center">
               <p>产品详情</p>
             </div>
-            <div v-html="data.goods.detail" />
+            <div class="html" v-html="data.goods.detail" />
           </div>
         </div>
         <div v-if="tab === 2" class="block task">
@@ -691,5 +691,14 @@ h5 {
 <style>
 .banners1x1 .el-carousel__container {
   height: 375px;
+}
+</style>
+
+<style>
+.desc .text .html img{
+  max-width: 100%;
+  height: auto;
+  margin-left: auto;
+  margin-right: auto;
 }
 </style>

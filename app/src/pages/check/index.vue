@@ -306,10 +306,10 @@ export default {
       }
     },
     onRule () {
-      router(this).push('/pages/web/main', {url: request.rawConf().web + '?id=zwz06'})
+      router(this).push('/pages/web/main', {url: 'https://mp.weixin.qq.com/s/yPXWeSNE_vZx5WCiqOjqtQ'})
     },
     onGuide () {
-      router(this).push('/pages/web/main', {url: request.rawConf().web + '?id=0LDjo'})
+      router(this).push('/pages/web/main', {url: request.rawConf().web + '?id=zwz06'})
     },
     createOrder (check) {
       const {id} = router(this).params()

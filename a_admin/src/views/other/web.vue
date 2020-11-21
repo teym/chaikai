@@ -51,7 +51,7 @@
       :limit.sync="listQuery.size"
       @pagination="getList"
     />
-    <el-dialog width="60%" title="编辑" :visible.sync="detailVisable">
+    <el-dialog width="60%" title="编辑" :visible.sync="detailVisable" append-to-body>
       <div v-if="detail" class="detail">
         <div class="row">
           <h4>页面标题:</h4>
