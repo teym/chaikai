@@ -189,7 +189,11 @@
       </div>
       <div class="row">
         <h6>商品链接：</h6>
-        <p><a :href="data.goods.importUrl" target="_blank">{{ data.goods.importUrl }}</a></p>
+        <p>
+          <a :href="data.goods.importUrl" target="_blank">{{
+            data.goods.importUrl
+          }}</a>
+        </p>
       </div>
       <div class="row">
         <h6>商品价值：</h6>
@@ -265,8 +269,15 @@ export default {
     }
   },
   mounted() {
-    const data = Object.assign({}, this.item)
-    data.extension = data.extension || {}
+    const data = Object.assign({}, this.item, {
+      goods: Object.assign({}, this.item.goods, {
+        detail: this.item.goods.detail.replace(
+          /<img /g,
+          '<img style="max-width:100%;height:auto;display:block;"'
+        )
+      }),
+      extension: this.item.extension || {}
+    })
     this.data = data
     this.banners = data.goods.banners
     this.channels = mapChannel(data.extension.channels || [])
@@ -695,7 +706,7 @@ h5 {
 </style>
 
 <style>
-.desc .text .html img{
+.desc .text .html img {
   max-width: 100%;
   height: auto;
   margin-left: auto;

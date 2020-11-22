@@ -200,7 +200,7 @@ const defaultForm = () => ({
   itemId: 0,
   picUrl: "",
   banners: [],
-  detail: "",
+  detail: "<div></div>",
   skuGroups: [],
 });
 
