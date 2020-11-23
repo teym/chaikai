@@ -16,6 +16,7 @@ export default {
   mounted () {
     const {url} = router(this).params()
     this.src = url
+    console.log('web load', url)
   },
   methods: {
     onLoad (e) {
