@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <div class="content">
+    <div v-if="init" class="content">
       <swiper
         class="banners"
         :indicator-dots="true"
@@ -27,10 +27,10 @@
             {{data.remainingNum}}
             <span>剩余名额</span>
           </p>
-          <p>
+          <!-- <p>
             {{data.applyNum}}
             <span>申请</span>
-          </p>
+          </p> -->
         </div>
         <div class="row just channel">
           <span>报名渠道</span>
@@ -165,7 +165,7 @@
         </div>
       </div>
     </div>
-    <bar background='#FFFFFF'>
+    <bar v-if="init" background='#FFFFFF'>
       <div class="bar">
         <div class="btn" :class="{disabled: data.applied || !valide}" @click="onOk">{{data.applied ? '已申请' : (!valide ? '报名结束' :'立即申请')}}</div>
       </div>
@@ -207,6 +207,7 @@ import {router, uiapi, api, request, mapChannel, diffTime, resetData} from '@/ut
 
 function defaultData () {
   return {
+    init: false,
     data: {
       goods: {
         brandInfo: {},
@@ -280,6 +281,7 @@ export default {
       return {id: scene}
     },
     loadData () {
+      const l = this.init ? () => {} : uiapi.loading()
       const {id} = this.param()
       request.get('/banner/list', {page: 1, size: 1, type: 2, valid: true, brActivityId: id}).then(({json: {data}}) => {
         this.hot = data[0]
@@ -300,7 +302,10 @@ export default {
         this.topics = _.filter(this.channels, i => i.topic)
         this.keywords = data.extension.keywords ? data.extension.keywords.split(' ') : []
         this.otherReq = data.extension.otherReq ? data.extension.otherReq.split('+').map(i => ({'1': '产品和达人同框露脸', '2': '使用前后效果对比', '3': '提供评测原图使用权'}[i])) : []
+        this.init = true
+        l()
       }).catch(e => {
+        l()
         uiapi.toast(e.info)
       })
     },
