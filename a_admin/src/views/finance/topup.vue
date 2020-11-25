@@ -235,7 +235,7 @@ export default {
         type: 102,
         searchType: 1,
         searchKey: '',
-        statusCode: 0,
+        statusCode: 2,
         timeRange: []
       },
       status: ['处理中', '等待支付', '成功', '失败', '已拒绝', '已关闭'],
@@ -298,7 +298,7 @@ export default {
       if (parseInt(obj.statusCode) < 0) {
         obj.statusCode = undefined
       }
-      fetchTopupList(clearQueryObject(obj, true)).then(({ data }) => {
+      fetchTopupList(clearQueryObject(obj)).then(({ data }) => {
         this.list = data.data.map((i) =>
           Object.assign(i, {
             date: moment(i.gmtCreate).format('YYYY-MM-DD HH:mm:ss')
