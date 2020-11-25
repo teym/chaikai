@@ -76,7 +76,7 @@ export default {
     mapState (status) {
       switch (status) {
         case 1:
-          this.msg = this.info.statusCode >= 2 ? '申请成功，需在6小时内支付押金，超时将视作放弃活动名额' : '若申请成功，需在6小时内支付押金，超时将视作放弃活动名额'
+          this.msg = this.info.statusCode >= 2 ? '申请成功，需在24小时内支付押金，超时将视作放弃活动名额' : '若申请成功，需在24小时内支付押金，超时将视作放弃活动名额'
           this.state = '未缴纳'
           this.img = '/static/images/issue_status_2.png'
           break
