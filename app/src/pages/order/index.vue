@@ -88,13 +88,13 @@
       </div>
       <h5 class="middle dark blod margin-t" v-if="data.coopSubType !== 3">合作要求</h5>
       <div class="light_bg pad margin-t" v-if="data.coopSubType !== 3">
-        <div class="row just pad-t">
+        <div v-if="data.activity.extension.articleType > 0" class="row just pad-t">
               <p class="small normal light">合作篇幅</p>
               <div
                 class="small medium light text-right flex"
               >{{data.activity.extension.articleType > 0 ? '单篇' : '无要求'}}</div>
             </div>
-            <div class="row just pad-t">
+            <div v-if="data.activity.extension.contentType > 0" class="row just pad-t">
               <p class="small normal light">内容形式</p>
               <div
                 class="small medium light text-right flex"

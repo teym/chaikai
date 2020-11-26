@@ -60,13 +60,13 @@
         <div class="pad-b" v-if="data.cooperationType !== 3">
           <h5 class="middle dark blod">合作要求</h5>
           <div class="light_bg margin-t pad-l pad-r pad-b">
-            <div class="row just pad-t">
+            <div v-if="data.extension.articleType > 0" class="row just pad-t">
               <p class="small normal light">合作篇幅</p>
               <div
                 class="small blod light text-right flex"
               >{{data.extension.articleType > 0 ? '单篇' : '无要求'}}</div>
             </div>
-            <div class="row just pad-t">
+            <div v-if="data.extension.contentType > 0" class="row just pad-t">
               <p class="small normal light">内容形式</p>
               <div
                 class="small blod light text-right flex"

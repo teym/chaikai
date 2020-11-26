@@ -110,11 +110,11 @@
             <h5>合作要求</h5>
             <div class="round-btn">{{data.blReward}}/人</div>
           </div>
-          <div class="row just line">
+          <div v-if="data.extension.articleType > 0" class="row just line">
             <h6>合作篇幅</h6>
             <p>{{data.extension.articleType > 0 ? '单篇' : '无要求'}}</p>
           </div>
-          <div class="row just line">
+          <div v-if="data.extension.contentType > 0" class="row just line">
             <h6>内容形式</h6>
             <p>{{['无要求', '图文', '视频'][data.extension.contentType]}}</p>
           </div>
