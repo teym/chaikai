@@ -190,7 +190,7 @@
       >
         <template slot-scope="{ row }">
           <div v-for="c in row.channels" :key="c.platformId" class="channel">
-            <span>{{ c.fansCount }}</span>
+            <span>{{ ((parseFloat(c.fansCount) || 0) / 10000).toFixed(2) }}</span>
           </div>
         </template>
       </el-table-column>
