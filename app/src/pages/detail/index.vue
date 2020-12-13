@@ -335,6 +335,14 @@ export default {
           uiapi.alert({ title: '温馨提示', content: e.info, confirmText: '去认证', confirmColor: '#ff8e3b' }).then(r => {
             router(this).push('/pages/channel/main')
           })
+        } else if (e.code === 200010) {
+          uiapi.alert({ title: '温馨提示', content: e.info, confirmText: '去处理', confirmColor: '#ff8e3b' }).then(r => {
+            router(this).push('/pages/credit/main')
+          })
+        } else if (e.code === 200011) {
+          uiapi.alert({ title: '温馨提示', content: e.info, confirmText: '去处理', confirmColor: '#ff8e3b' }).then(r => {
+            router(this).push('/pages/issues/main')
+          })
         } else {
           uiapi.toast(e.info)
         }

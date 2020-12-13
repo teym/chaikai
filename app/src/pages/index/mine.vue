@@ -1,109 +1,160 @@
 <template>
-<div class="container">
-  <img v-if="logined" class="bg pos_a" src="/static/images/mine_bg.png" alt="bg">
-  <navbar :fixed="true">
-    <div class="navbar row i-center pad2-l">
-      <span :class="{white:logined,black:!logined}" class="blod">我的</span>
-    </div>
-  </navbar>
-  <div v-if="logined" class="content col flex">
-    <div class="row just info pad2-l pad2-r margin-t">
-      <div class="row" @click="onRouter('profile')">
-        <img class="logo" :src="user.avatar" alt="logo">
-        <div class="col just margin-l">
-          <h5 class="big blod">{{user.nickname}}</h5>
-          <p class="small">{{tags}}</p>
-        </div>
+  <div class="container">
+    <img
+      v-if="logined"
+      class="bg pos_a"
+      src="/static/images/mine_bg.png"
+      alt="bg"
+    />
+    <navbar :fixed="true">
+      <div class="navbar row i-center pad2-l">
+        <span :class="{ white: logined, black: !logined }" class="blod"
+          >我的</span
+        >
       </div>
-      <div class="col just end">
-        <div class="row i-center" @click="onRouter('channel')">
-          <ul class="row channel i-center" v-if="channels.length > 0">
-            <li v-for="(i, j) in channels" :key="j" :style="{'z-index': 9 - j}">
-              <img :src="i.img" :alt="i.platformName" />
-            </li>
-          </ul>
-          <p v-else class="small text-right">去认证</p>
-          <img class="right" src="/static/images/arrow_right_white.png" alt="right">
-        </div>
-        <div class="row i-center" @click="onScore">
-          <p class="small">评分 <span class="blod">{{user.score}}</span></p>
-          <img class="right" src="/static/images/arrow_right_white.png" alt="right">
-        </div>
-      </div>
-    </div>
-    <div class="flex white_bg round pad2-l pad2-r">
-      <div class="row just">
-        <h5 class="big blod dark">活动订单</h5>
-        <div class="row i-center" @click="onRouter('orders')">
-          <p class="small light">查看全部</p>
-          <img class="right" src="/static/images/arrow_right.png" alt="right">
-        </div>
-      </div>
-      <div class="row icons pad-t pad-l pad-r margin2-b">
-        <div class="flex col center pad-t pad-b" @click="onOrder(2)">
-          <div class="pos_r col center">
-            <img src="/static/images/mine_icons_1.png " alt="1">
-            <p class="small light margin-t">待缴押金</p>
-            <span class="dot flot" v-if="stat.depositToBePaid > 0">{{stat.depositToBePaid}}</span>
+    </navbar>
+    <div v-if="logined" class="content col flex">
+      <div class="row just info pad2-l pad2-r margin-t">
+        <div class="row" @click="onRouter('profile')">
+          <img class="logo" :src="user.avatar" alt="logo" />
+          <div class="col just margin-l">
+            <h5 class="big blod">{{ user.nickname }}</h5>
+            <p class="small">{{ tags }}</p>
           </div>
         </div>
-        <div class="flex col center pad-t pad-b" @click="onOrder(3)">
-          <div class="pos_r col center">
-            <img src="/static/images/mine_icons_2.png " alt="2">
-            <p class="small light margin-t">待发货</p>
-            <span class="dot flot" v-if="stat.toBeDelivered > 0">{{stat.toBeDelivered}}</span>
+        <div class="col just end">
+          <div class="row i-center" @click="onRouter('channel')">
+            <ul class="row channel i-center" v-if="channels.length > 0">
+              <li
+                v-for="(i, j) in channels"
+                :key="j"
+                :style="{ 'z-index': 9 - j }"
+              >
+                <img :src="i.img" :alt="i.platformName" />
+              </li>
+            </ul>
+            <p v-else class="small text-right">去认证</p>
+            <img
+              class="right"
+              src="/static/images/arrow_right_white.png"
+              alt="right"
+            />
           </div>
-        </div>
-        <div class="flex col center pad-t pad-b" @click="onOrder(4)">
-          <div class="pos_r col center">
-            <img src="/static/images/mine_icons_3.png " alt="3">
-            <p class="small light margin-t">待收货</p>
-            <span class="dot flot" v-if="stat.toBeReceived > 0">{{stat.toBeReceived}}</span>
-          </div>
-        </div>
-        <div class="flex col center pad-t pad-b" @click="onOrder(5)">
-          <div class="pos_r col center">
-            <img src="/static/images/mine_icons_4.png " alt="4">
-            <p class="small light margin-t">待测评</p>
-            <span class="dot flot" v-if="stat.toBeEvaluated > 0">{{stat.toBeEvaluated}}</span>
+          <div class="row i-center" @click="onScore">
+            <p class="small">
+              评分 <span class="blod">{{ user.score }}</span>
+            </p>
+            <img
+              class="right"
+              src="/static/images/arrow_right_white.png"
+              alt="right"
+            />
           </div>
         </div>
       </div>
-      <div class="row just line" @click="onRouter('issues')">
-        <p class="middle light">订单问题</p>
-        <div class="row i-center">
-          <span class="dot fill" v-if="stat.hasTicket > 0">{{stat.hasTicket}}</span>
-          <img class="right" src="/static/images/arrow_right.png" alt="right">
+      <div class="flex white_bg round pad2-l pad2-r">
+        <div class="row just">
+          <h5 class="big blod dark">活动订单</h5>
+          <div class="row i-center" @click="onRouter('orders')">
+            <p class="small light">查看全部</p>
+            <img
+              class="right"
+              src="/static/images/arrow_right.png"
+              alt="right"
+            />
+          </div>
         </div>
+        <div class="row icons pad-t pad-l pad-r margin2-b">
+          <div class="flex col center pad-t pad-b" @click="onOrder(3)">
+            <div class="pos_r col center">
+              <img src="/static/images/mine_icons_2.png " alt="2" />
+              <p class="small light margin-t">待发货</p>
+              <span class="dot flot" v-if="stat.toBeDelivered > 0">{{
+                stat.toBeDelivered
+              }}</span>
+            </div>
+          </div>
+          <div class="flex col center pad-t pad-b" @click="onOrder(4)">
+            <div class="pos_r col center">
+              <img src="/static/images/mine_icons_3.png " alt="3" />
+              <p class="small light margin-t">待收货</p>
+              <span class="dot flot" v-if="stat.toBeReceived > 0">{{
+                stat.toBeReceived
+              }}</span>
+            </div>
+          </div>
+          <div class="flex col center pad-t pad-b" @click="onOrder(5)">
+            <div class="pos_r col center">
+              <img src="/static/images/mine_icons_4.png " alt="4" />
+              <p class="small light margin-t">待测评</p>
+              <span class="dot flot" v-if="stat.toBeEvaluated > 0">{{
+                stat.toBeEvaluated
+              }}</span>
+            </div>
+          </div>
+          <div class="flex col center pad-t pad-b" @click="onOrder(8)">
+            <div class="pos_r col center">
+              <img src="/static/images/mine_icons_1.png " alt="1" />
+              <p class="small light margin-t">已逾期</p>
+              <span class="dot flot" v-if="stat.depositToBePaid > 0">{{
+                stat.depositToBePaid
+              }}</span>
+            </div>
+          </div>
+        </div>
+        <div class="row just line" @click="onRouter('issues')">
+          <p class="middle light">订单问题</p>
+          <div class="row i-center">
+            <span class="dot fill" v-if="stat.hasTicket > 0">{{
+              stat.hasTicket
+            }}</span>
+            <img
+              class="right"
+              src="/static/images/arrow_right.png"
+              alt="right"
+            />
+          </div>
+        </div>
+        <div class="row just line" @click="onRouter('wallet')">
+          <p class="middle light">钱包收入</p>
+          <div class="row i-center">
+            <span class="big red blod">{{ amount }}</span>
+            <img
+              class="right"
+              src="/static/images/arrow_right.png"
+              alt="right"
+            />
+          </div>
+        </div>
+        <div class="row just line" @click="onQa()">
+          <p class="middle light">常见问题</p>
+          <div class="row i-center">
+            <span class="small light">学习平台规则</span>
+            <img
+              class="right"
+              src="/static/images/arrow_right.png"
+              alt="right"
+            />
+          </div>
+        </div>
+        <button class="btn-row row just line" open-type="contact">
+          <p class="middle light">联系客服</p>
+          <div class="row i-center">
+            <img
+              class="right"
+              src="/static/images/arrow_right.png"
+              alt="right"
+            />
+          </div>
+        </button>
       </div>
-      <div class="row just line" @click="onRouter('wallet')">
-        <p class="middle light">钱包收入</p>
-        <div class="row i-center">
-          <span class="big red blod">{{amount}}</span>
-          <img class="right" src="/static/images/arrow_right.png" alt="right">
-        </div>
-      </div>
-      <div class="row just line" @click="onQa()">
-        <p class="middle light">常见问题</p>
-        <div class="row i-center">
-          <span class="small light">学习平台规则</span>
-          <img class="right" src="/static/images/arrow_right.png" alt="right">
-        </div>
-      </div>
-      <button class="btn-row row just line" open-type="contact" >
-        <p class="middle light">联系客服</p>
-        <div class="row i-center">
-          <img class="right" src="/static/images/arrow_right.png" alt="right">
-        </div>
-      </button>
     </div>
   </div>
-</div>
 </template>
 
 <script>
 import navbar from '@/components/navbar'
-import {router, api, signal, request, mapChannel, uiapi} from '@/utils/index'
+import { router, api, signal, request, mapChannel, uiapi } from '@/utils/index'
 
 const meiqiaPlugin = requirePlugin('meiqia')
 // meiqiaPlugin.setDebugMode(true)
@@ -135,7 +186,7 @@ export default {
   },
   computed: {
     tags () {
-      return this.user.areas.map(i => i.name).join('|')
+      return this.user.areas.map((i) => i.name).join('|')
     }
   },
   created () {
@@ -168,21 +219,31 @@ export default {
       }
     },
     loadData () {
-      return Promise.all([request.get('/bl/account').then(({json: {data}}) => {
-        this.user = data
-        this.channels = mapChannel(data.channels).filter(i => i.statusCode === 3)
-        this.sendUserInfo(data)
-      }).catch(e => {
-        uiapi.toast(e.info)
-      }),
-      request.get('/bl/account/finance').then(({json: {data}}) => {
-        this.amount = data.totalAmount
-      }).catch(e => {
-        console.log(e)
-      }),
-      request.get('/bl/activity/order/stat').then(({json: {data}}) => {
-        this.stat = data
-      })])
+      return Promise.all([
+        request
+          .get('/bl/account')
+          .then(({ json: { data } }) => {
+            this.user = data
+            this.channels = mapChannel(data.channels).filter(
+              (i) => i.statusCode === 3
+            )
+            this.sendUserInfo(data)
+          })
+          .catch((e) => {
+            uiapi.toast(e.info)
+          }),
+        request
+          .get('/bl/account/finance')
+          .then(({ json: { data } }) => {
+            this.amount = data.totalAmount
+          })
+          .catch((e) => {
+            console.log(e)
+          }),
+        request.get('/bl/activity/order/stat').then(({ json: { data } }) => {
+          this.stat = data
+        })
+      ])
     },
     sendUserInfo (data) {
       console.log(data)
@@ -192,11 +253,11 @@ export default {
         name: data.nickname,
         weixin: data.wechatNo,
         contact: data.realName,
-        '自定义信息': 'aabbccdd'
+        自定义信息: 'aabbccdd'
       }
       console.log('info', userInfo)
       var params = {
-      // 成功回调
+        // 成功回调
         success: function () {
           console.log('设置顾客信息成功', userInfo)
         },
@@ -212,9 +273,9 @@ export default {
       // }
       // 客服指定分配信息
       let agentInfo = {
-      // agent_token: '6188facb88864f97e24907385895bf06', // 指定分配客服的 token，可以在 工作台设置 - ID查询 中查看
+        // agent_token: '6188facb88864f97e24907385895bf06', // 指定分配客服的 token，可以在 工作台设置 - ID查询 中查看
         group_token: '54d4e2c3ea5a5349dc2cc6930fe3b9e8' // 指定分配分组的 token，可以在 工作台设置 - ID查询 中查看
-      // fallback: 1 // 指定分配客服不在线时候的处理情况：1 指定分配客服不在线，则发送留言；2 指定分配客服不在线，分配给组内的人，分配失败，则发送留言；3 指定分配客服不在线，分配给企业随机一个人，分配失败，则发送留言；
+        // fallback: 1 // 指定分配客服不在线时候的处理情况：1 指定分配客服不在线，则发送留言；2 指定分配客服不在线，分配给组内的人，分配失败，则发送留言；3 指定分配客服不在线，分配给企业随机一个人，分配失败，则发送留言；
       }
       params.user_info = userInfo
       params.agent_info = agentInfo
@@ -231,16 +292,23 @@ export default {
       meiqiaPlugin.setClientInfo(params)
     },
     onScore () {
-      this.onRouter('scope', {scope: this.user.score, tags: this.user.scoreInfo.items.map(i => (`${i.msg} ${i.number}`)).join(',')})
+      this.onRouter('scope', {
+        scope: this.user.score,
+        tags: this.user.scoreInfo.items
+          .map((i) => `${i.msg} ${i.number}`)
+          .join(',')
+      })
     },
     onOrder (status) {
-      router(this).push('/pages/orders/main', {status})
+      router(this).push('/pages/orders/main', { status })
     },
     onRouter (p, d) {
       router(this).push('/pages/' + p + '/main', d)
     },
     onQa () {
-      router(this).push('/pages/web/main', {url: request.rawConf().web + '?id=JlxL4'})
+      router(this).push('/pages/web/main', {
+        url: request.rawConf().web + '?id=JlxL4'
+      })
     }
   }
 }

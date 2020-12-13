@@ -28,30 +28,6 @@
         </div>
       </div>
 
-      <div class="pad2-l pad2-r pad-t pad-b margin-t white_bg row just i-center">
-        <h5 class="middle dark medium">选择合作方式：</h5>
-        <ul class="row">
-          <li
-            @click="type = 3"
-            v-if="data.cooperationType === 3"
-            :class="{red: type === 3, red_bg: type === 3, light: type !== 3, light_bg: type !== 3}"
-            class="small row center pad-l pad-r round-btn"
-          >免费置换</li>
-          <li
-            @click="type = 1"
-            v-if="data.cooperationType !== 3"
-            :class="{red: type === 1, red_bg: type === 1, light: type !== 1, light_bg: type !== 1}"
-            class="small row center pad-l pad-r round-btn"
-          >接受悬赏</li>
-          <li
-            @click="type = 2"
-            v-if="data.cooperationType === 2"
-            :class="{red: type === 2, red_bg: type === 2, light: type !== 2, light_bg: type !== 2}"
-            class="small row center pad-l pad-r round-btn margin-l"
-          >达人报价</li>
-        </ul>
-      </div>
-
       <div class="pad2-l pad2-r pad-t pad-b margin-t white_bg task">
         <h5 class="middle dark blod">合作任务</h5>
         <div class="rule margin-t" @click="onRule">
@@ -141,46 +117,33 @@
           </li>
         </ul>
       </div>
-      <div class="pad2-l pad2-r pad-t pad-b white_bg margin-t price">
-        <div v-if="type === 2">
+      <div class="pad2-l pad2-r pad-t pad-b margin-t white_bg row just i-center">
+        <h5 class="middle dark medium">选择合作方式：</h5>
+        <ul class="row">
+          <li
+            @click="type = 3"
+            v-if="data.cooperationType === 3"
+            :class="{red: type === 3, red_bg: type === 3, light: type !== 3, light_bg: type !== 3}"
+            class="small row center pad-l pad-r round-btn"
+          >免费置换</li>
+          <li
+            @click="type = 1"
+            v-if="data.cooperationType !== 3"
+            :class="{red: type === 1, red_bg: type === 1, light: type !== 1, light_bg: type !== 1}"
+            class="small row center pad-l pad-r round-btn"
+          >接受悬赏</li>
+          <li
+            @click="type = 2"
+            v-if="data.cooperationType === 2"
+            :class="{red: type === 2, red_bg: type === 2, light: type !== 2, light_bg: type !== 2}"
+            class="small row center pad-l pad-r round-btn margin-l"
+          >达人报价</li>
+        </ul>
+      </div>
+      <div v-if="type === 1" class="pad2-l pad2-r pad-t pad-b white_bg margin-t price">
+        <div class="row i-center">
           <h5 class="middle dark blod">报价金额</h5>
-          <ul class="row margin-t">
-            <li
-              class="small row center pad-l pad-r round-btn margin-r"
-              :class="{red: bid===1,red_bg:bid===1, dark: bid!==1,light_bg:bid!==1}"
-              @click="bid=1"
-            >2倍悬赏</li>
-            <li
-              class="small row center pad-l pad-r round-btn margin-r"
-              :class="{red: bid===2,red_bg:bid===2, dark: bid!==2,light_bg:bid!==2}"
-              @click="bid=2"
-            >4倍悬赏</li>
-            <li
-              class="small row center pad-l pad-r round-btn margin-r"
-              :class="{red: bid===3,red_bg:bid===3, dark: bid!==3,light_bg:bid!==3}"
-              @click="bid=3"
-            >6倍悬赏</li>
-          </ul>
-        </div>
-        <div class="row just i-center margin-t">
-          <h5 class="middle dark blod">押金支付方式</h5>
-          <div class="row i-center" @click="onGuide">
-            <p class="small light normal margin-l">审核不通过自动退回</p>
-            <img class="right" src="/static/images/arrow_right.png" alt="icon" />
-          </div>
-        </div>
-        <div class="row just i-center pay margin-t" @click="pay=1">
-          <h6 class="middle normal dark row i-center">
-            立即缴纳
-            <span class="first margin-l">优先推荐</span>
-          </h6>
-          <img class="check-img" v-if="pay !== 1" src="/static/images/check.png" alt="check" />
-          <img class="check-img" v-else src="/static/images/checked.png" alt="checked" />
-        </div>
-        <div class="row just i-center margin-t" @click="pay=2">
-          <h6 class="middle normal dark row">报名成功后支付</h6>
-          <img class="check-img" v-if="pay !== 2" src="/static/images/check.png" alt="check" />
-          <img class="check-img" v-else src="/static/images/checked.png" alt="checked" />
+          <div class="flex row i-center small dark inputline"><input v-model="bid" type="text" placeholder="请输入报价金额">悬赏</div> 
         </div>
       </div>
       <div class="pad2-l pad2-r pad-t pad2-b white_bg margin-t">
@@ -231,7 +194,7 @@ function defaultData () {
     type: 1,
     price: null,
     pay: 1,
-    bid: 1,
+    bid: '',
     loading: false,
     active: {},
     tip: false,
@@ -251,10 +214,10 @@ export default {
       return Math.min(200, this.text.length)
     },
     blReward () {
-      return this.data ? this.data.blReward * (this.type === 2 ? parseInt(this.bid) * 2 : 1) : 0
+      return this.data ? (this.type === 2 ? (parseInt(this.bid) || 0) : this.data.blReward) : 0
     },
     reward () {
-      return this.data ? this.data.reward * (this.type === 2 ? parseInt(this.bid) * 2 : 1) : 0
+      return this.data ? (this.type === 2 ? (parseInt(this.bid) || 0) : this.data.blReward) : 0
     }
   },
   mounted () {
@@ -428,6 +391,14 @@ export default {
   font-size: 18rpx;
   color: white;
   padding: 4rpx 8rpx;
+}
+.inputline {
+  justify-content: flex-end;
+}
+.inputline input{
+  border: 1px solid #C1C6CB;
+  border-radius: 8rpx;
+  padding: 0 16rpx;
 }
 .textinput {
   width: 670rpx;

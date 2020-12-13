@@ -25,6 +25,18 @@
         </div>
       </div>
     </div>
+    <div v-if="data.statusCode > 7 && data.tickets.length > 0" class="margin-t white_bg pad2">
+      <h5 class="middle dark blod">测评罚款</h5>
+      <div class="row just channel margin-t" v-for="(item, i) in data.tickets" :key="i">
+        <div class="row i-center">
+          <p class="light middle margin-l">测评逾期</p>
+        </div>
+        <div class="row i-center" @click="onFine(item)">
+          <p class="light small">{{['','待修改','待确认','小二审核中','待重评','已修改','已取消','已违规'][item.statusCode]}}</p>
+          <img class="right" src="/static/images/arrow_right.png" alt="right" />
+        </div>
+      </div>
+    </div>
     <div v-if="data.statusCode > 5 && data.statusCode < 7" class="margin-t white_bg pad2">
       <h5 class="middle dark blod">我的测评</h5>
       <div class="row just channel margin-t" v-for="(item, i) in evaluations" :key="i">
@@ -46,16 +58,6 @@
         </div>
         <div class="row i-center">
           <p class="small light">{{['','待发放','已发放','已取消'][data.rewardStatusCode]}}</p>
-          <img class="right" src="/static/images/arrow_right.png" alt="right" />
-        </div>
-      </div>
-      <div class="row just i-center margin-t" @click="onDepose">
-        <div class="row i-center">
-          <h5 class="middle dark blod">押金金额</h5>
-          <span class="middle red margin-l">{{data.depositInfo.amount}}元</span>
-        </div>
-        <div class="row i-center">
-          <p class="small light">{{['','未缴纳', '已冻结', '已解冻', '已扣除'][data.depositInfo.statusCode]}}</p>
           <img class="right" src="/static/images/arrow_right.png" alt="right" />
         </div>
       </div>
@@ -350,6 +352,9 @@ export default {
     },
     onIssue (item) {
       router(this).push('/pages/issue/main', { id: item.id })
+    },
+    onFine (item) {
+      router(this).push('/pages/fine/main', { id: item.id })
     },
     onCopy (txt) {
       console.log('copy', txt)

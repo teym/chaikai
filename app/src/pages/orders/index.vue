@@ -2,8 +2,8 @@
   <div class="container light_bg">
     <div class="col flex">
       <div class="tabs row white_bg pad2-l pad2-r">
-        <div v-for="(tab, i) in status" :key="i" class="col i-center tab" :class="{active: i === active}" @click="onActive(i)">
-          <p class="margin2-t">{{tab}}</p>
+        <div v-for="(tab, i) in status" :key="i" class="col i-center tab" :class="{active: tab.key === active}" @click="onActive(tab.key)">
+          <p class="margin2-t">{{tab.name}}</p>
           <div class="margin2-t"></div>
         </div>
       </div>
@@ -18,7 +18,7 @@
             <p class="middle dark">{{item.activity.title}}</p>
             <div class="row just i-center">
               <p class="small light">{{item.date}}</p>
-              <span class="red small">{{['', '待审核', '待缴押金', '待发货', '待收货', '待测评', '已测评', '已关闭'][item.statusCode]}}</span>
+              <span class="red small">{{['', '待审核', '', '待发货', '待收货', '待测评', '已测评', '已关闭', '已逾期'][item.statusCode]}}</span>
             </div>
           </div>
         </div>
@@ -36,7 +36,7 @@ export default {
   data () {
     return {
       active: 0,
-      status: ['全部', '待缴押金', '待发货', '待收货', '待测评', '已测评'],
+      status: [{name: '全部', key: 0}, {name: '待发货', key: 3}, {name: '待收货', key: 4}, {name: '待测评', key: 5}, {name: '已逾期', key: 8}/*, {name: '已测评', key: 6}*/],
       datas: [],
       loading: false,
       page: 1,
