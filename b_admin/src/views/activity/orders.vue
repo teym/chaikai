@@ -190,7 +190,9 @@
       >
         <template slot-scope="{ row }">
           <div v-for="c in row.channels" :key="c.platformId" class="channel">
-            <span>{{ ((parseFloat(c.fansCount) || 0) / 10000).toFixed(2) }}</span>
+            <span>{{
+              ((parseFloat(c.fansCount) || 0) / 10000).toFixed(2)
+            }}</span>
           </div>
         </template>
       </el-table-column>
@@ -286,29 +288,6 @@
         </template>
       </el-table-column>
       <el-table-column
-        :index="12"
-        v-if="listQuery.statusCode !== '1'"
-        label="押金状态"
-      >
-        <template slot-scope="{ row }">
-          <span>
-            <strong>{{
-              ["", "未缴押金", "已冻结", "已解冻", "已扣除"][
-                (row.depositInfo || {}).statusCode || 1
-              ]
-            }}</strong>
-            <br />
-            {{
-              listQuery.statusCode === "2"
-                ? "押金支付还剩" + row.deadlineText + ",超时将视作放弃名额"
-                : listQuery.statusCode === "3"
-                ? "发布测评后15天自动退还"
-                : ""
-            }}
-          </span>
-        </template>
-      </el-table-column>
-      <el-table-column
         :index="13"
         v-if="listQuery.statusCode !== '2' && listQuery.statusCode !== '7'"
         label="操作"
@@ -344,7 +323,8 @@
                 listQuery.statusCode === '3' ||
                 listQuery.statusCode === '4' ||
                 listQuery.statusCode === '5' ||
-                listQuery.statusCode === '6'
+                listQuery.statusCode === '6' ||
+                listQuery.statusCode === '8'
               "
               size="mini"
               type="primary"
@@ -367,6 +347,8 @@
               >{{
                 row.ticketStatusCode > 0 && row.ticketStatusCode < 5
                   ? "投诉处理中"
+                  : row.ticketStatusCode === 7
+                  ? "已违规"
                   : "投诉"
               }}
             </el-button>
@@ -379,7 +361,9 @@
             >
             <el-button
               v-if="
-                listQuery.statusCode === '4' || listQuery.statusCode === '5'
+                listQuery.statusCode === '4' ||
+                listQuery.statusCode === '5' ||
+                listQuery.statusCode === '8'
               "
               size="mini"
               type="primary"

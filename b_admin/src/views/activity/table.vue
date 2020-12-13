@@ -79,11 +79,6 @@
           <span>{{ row.pendingEvaNum }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="待缴押金">
-        <template slot-scope="{ row }">
-          <span>{{ row.notPayDepositNum }}</span>
-        </template>
-      </el-table-column>
       <el-table-column label="待发货">
         <template slot-scope="{ row }">
           <span>{{ row.undeliveredNum }}</span>

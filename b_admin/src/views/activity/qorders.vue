@@ -204,29 +204,6 @@
         </template>
       </el-table-column>
       <el-table-column
-        :index="12"
-        v-if="listQuery.statusCode !== '1'"
-        label="押金状态"
-      >
-        <template slot-scope="{ row }">
-          <span>
-            <strong>{{
-              ["", "未缴押金", "已冻结", "已解冻", "已扣除"][
-                (row.depositInfo || {}).statusCode || 1
-              ]
-            }}</strong>
-            <br />
-            {{
-              listQuery.statusCode === "2"
-                ? "押金支付还剩" + row.deadlineText + ",超时将视作放弃名额"
-                : listQuery.statusCode === "3"
-                ? "发布测评后15天自动退还"
-                : ""
-            }}
-          </span>
-        </template>
-      </el-table-column>
-      <el-table-column
         :index="13"
         v-if="listQuery.statusCode !== '2' && listQuery.statusCode !== '7'"
         label="操作"
@@ -327,28 +304,6 @@
       :limit.sync="listQuery.size"
       @pagination="getList"
     />
-    <!-- <el-dialog
-      custom-class="custom-dialog"
-      title="增加活动名额"
-      :visible.sync="formVisible"
-      width="420px"
-    >
-      <el-form label-width="60px">
-        <el-form-item label="活动名额">
-          <span>{{ detail.totalNum }}</span>
-        </el-form-item>
-        <el-form-item label="剩余名额">
-          <span>{{ detail.remainingNum }}</span>
-        </el-form-item>
-        <el-form-item label="增加名额">
-          <el-input v-model="append" placeholder="#话题" />
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="formVisible = false">取消</el-button>
-        <el-button :loading="formLoading" type="primary" @click="handleAddNumber">确定</el-button>
-      </div>
-    </el-dialog>-->
   </div>
 </template>
 

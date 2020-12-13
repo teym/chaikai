@@ -238,6 +238,7 @@
             >
               <el-radio-button :label="1">接受悬赏</el-radio-button>
               <el-radio-button :label="2">接受悬赏/达人报价</el-radio-button>
+              <el-radio-button :label="4">免费置换/达人报价</el-radio-button>
               <el-radio-button :label="3">免费置换</el-radio-button>
             </el-radio-group>
             <div class="tip_desc" v-if="postForm.cooperationType === 1">
@@ -261,6 +262,16 @@
               <a @click="priceVisable = true">《合作要求价格表》</a>
               <br />
               --支持优质达人报价完成合作要求
+            </div>
+            <div class="tip_desc" v-if="postForm.cooperationType === 4">
+              --达人测评内容需满足
+              <a
+                href="https://www.yuque.com/docs/share/e005dc55-8a78-4411-a811-aa51ae1b23db?"
+                target="_blank"
+                >《基础合作规范》</a
+              >
+              <br />--品牌方无法提出：[合作篇幅]、[内容形式]、[图片数量]、[视频长度]等要求,并消耗一次置换活动次数
+              <br />--支持优质达人报价
             </div>
             <div class="tip_desc" v-if="postForm.cooperationType === 3">
               --达人测评内容需满足
@@ -1502,12 +1513,12 @@ export default {
   }
 }
 .guide-guide {
-  background-color: #F3F3F9;
+  background-color: #f3f3f9;
   border-radius: 4px;
   padding: 8px 12px;
   margin-top: 8px;
   p {
-    color: #9090D2;
+    color: #9090d2;
     font-size: 14px;
     line-height: 20px;
     margin: 0;

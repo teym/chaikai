@@ -190,6 +190,12 @@ export const asyncRoutes = [
         meta: { title: '订单问题', icon: 'table' }
       },
       {
+        path: 'fine',
+        component: () => import('@/views/activity/fine'),
+        name: 'fine-table',
+        meta: { title: '测评罚款', icon: 'table' }
+      },
+      {
         path: 'serve',
         component: () => import('@/views/activity/serve'),
         name: 'serve-table',

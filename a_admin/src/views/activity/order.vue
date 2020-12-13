@@ -29,19 +29,6 @@
         <el-option v-for="(i, j) in coopTypes" :key="j" :value="j" :label="i" />
       </el-select>
       <el-select
-        v-model="listQuery.depositStatusCode"
-        size="mini"
-        class="filter-item"
-        style="width: 120px; margin-left: 16px"
-      >
-        <el-option
-          v-for="(i, j) in depositStatus"
-          :key="j"
-          :value="j"
-          :label="i"
-        />
-      </el-select>
-      <el-select
         v-model="listQuery.rewardStatusCode"
         size="mini"
         class="filter-item"
@@ -61,10 +48,10 @@
         style="width: 120px; margin-left: 16px"
       >
         <el-option
-          v-for="(item, i) in status"
-          :key="i"
-          :value="i"
-          :label="item"
+          v-for="i in status"
+          :key="i.key"
+          :value="i.key"
+          :label="i.name"
         />
       </el-select>
 
@@ -129,16 +116,6 @@
           <span>{{ coopTypes[row.coopSubType] }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="押金|状态" align="center">
-        <template slot-scope="{ row }">
-          <span>{{ (row.depositInfo || {}).amount }}<br>
-            {{
-              ((row.depositInfo || {}).statusCode || 0) > 0
-                ? depositStatus[(row.depositInfo || {}).statusCode || 0]
-                : ""
-            }}</span>
-        </template>
-      </el-table-column>
       <el-table-column label="悬赏|状态" align="center">
         <template slot-scope="{ row }">
           <span>
@@ -159,7 +136,10 @@
       </el-table-column>
       <el-table-column label="状态" align="center">
         <template slot-scope="{ row }">
-          <span>{{ status[row.statusCode] }}</span>
+          <span>{{
+            (status.find((i) => i.key === row.statusCode) || {}).name
+          }}</span><br>
+          <span style="color:#999">{{ row.statusDesc }}</span>
         </template>
       </el-table-column>
 
@@ -172,11 +152,7 @@
         <template slot-scope="{ row }">
           <el-button size="mini" @click="handleDetail(row)">订单详情</el-button>
           <el-button
-            size="mini"
-            @click="handleDeposit(row)"
-          >押金详情</el-button>
-          <el-button
-            v-if="row.statusCode === 4 || row.statusCode === 5"
+            v-if="row.statusCode === 4 || row.statusCode === 5 || row.statusCode === 8"
             size="mini"
             type="primary"
             @click="handleClose(row)"
@@ -192,60 +168,11 @@
       :limit.sync="listQuery.size"
       @pagination="getList"
     />
-    <el-dialog width="60%" title="押金" :visible.sync="depositVisable">
-      <div v-if="detail" class="detail">
-        <h3>押金信息</h3>
-        <div class="row">
-          <h4>押金金额:</h4>
-          <p>{{ detail.amount }}</p>
-        </div>
-        <div class="row">
-          <h4>押金余额:</h4>
-          <p>{{ detail.remainingAmount }}</p>
-        </div>
-        <div class="row">
-          <h4>押金状态:</h4>
-          <p>{{ depositStatus[detail.statusCode] }}</p>
-        </div>
-        <div class="row">
-          <h4>状态描述:</h4>
-          <p />
-        </div>
-        <h3>明细</h3>
-        <el-table :data="detail.records" border fit>
-          <el-table-column label="类型" align="center">
-            <template slot-scope="{ row }">
-              <span>{{ row.intro }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column label="详情" align="center">
-            <template slot-scope="{ row }">
-              <span>{{ row.intro }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column label="产生时间" align="center">
-            <template slot-scope="{ row }">
-              <span>{{ row.date }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column label="金额" align="center">
-            <template slot-scope="{ row }">
-              <span>{{ row.raeType === 1 ? "+" : "-" }}{{ row.amount }}</span>
-            </template>
-          </el-table-column>
-        </el-table>
-      </div>
-    </el-dialog>
   </div>
 </template>
 
 <script>
-import {
-  fetchOrderList,
-  exportOrderList,
-  closeOrder,
-  fetchDeposit
-} from '@/api/check'
+import { fetchOrderList, exportOrderList, closeOrder } from '@/api/check'
 import moment from 'moment'
 import { clearQueryObject } from '@/utils/index'
 import waves from '@/directive/waves' // waves directive
@@ -274,22 +201,20 @@ export default {
         searchKey: '',
         statusCode: 0,
         coopType: 0,
-        depositStatusCode: 0,
         rewardStatusCode: 0,
         timeRange: [ps, ns]
       },
       status: [
-        '全部',
-        '待审核',
-        '待缴押金',
-        '待发货',
-        '待收货',
-        '待测评',
-        '已测评',
-        '已关闭'
+        { name: '全部', key: 0 },
+        { name: '待审核', key: 1 },
+        { name: '待发货', key: 3 },
+        { name: '待收货', key: 4 },
+        { name: '待测评', key: 5 },
+        { name: '已逾期', key: 8 },
+        { name: '已测评', key: 6 },
+        { name: '已关闭', key: 7 }
       ],
       coopTypes: ['全部', '接受悬赏', '达人报价', '免费置换'],
-      depositStatus: ['全部', '未缴押金', '已冻结', '已解冻', '已扣除'],
       rewardStatus: ['全部', '待发放', '已发放', '已取消'],
       depositVisable: false,
       detail: null
@@ -379,22 +304,8 @@ export default {
         })
       })
     },
-    handleDeposit(row) {
-      this.loadDeposit(row.id)
-      this.depositVisable = true
-    },
     handleDetail(row) {
       window.showCommunicate(row.id)
-    },
-    loadDeposit(id) {
-      fetchDeposit(id).then((r) => {
-        r.data.records = r.data.records.map((i) =>
-          Object.assign(i, {
-            date: moment(i.gmtCreate).format('YYYY-MM-DD HH:mm:ss')
-          })
-        )
-        this.detail = r.data
-      })
     }
   }
 }

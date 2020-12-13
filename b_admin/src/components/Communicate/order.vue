@@ -37,19 +37,6 @@
         </div>
       </div>
       <div class="row">
-        <h5>押金状态：</h5>
-        <div>
-          <p>
-            {{
-              ["", "未缴押金", "已冻结", "已解冻", "已扣除"][
-                (data.depositInfo || {}).statusCode || 1
-              ]
-            }}
-          </p>
-          <!-- <span>测评投诉中，若处理超时或违规，将扣除</span> -->
-        </div>
-      </div>
-      <div class="row">
         <h5>用户名称：</h5>
         <p>{{ data.blogger.nickname }}</p>
       </div>

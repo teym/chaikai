@@ -19,6 +19,10 @@
             <h4>擅长领域:</h4>
             <p>{{ detail.areas.map((i) => i.name).join("/") }}</p>
           </div>
+          <div class="row">
+            <h4>信用等级:</h4>
+            <p>{{ detail.creditLevel || "无" }}</p>
+          </div>
         </el-col>
         <el-col :span="12">
           <div class="row">
@@ -37,7 +41,11 @@
             <h4>钱包收入:</h4>
             <div class="row">
               <p>{{ (detail.financeInfo || {}).totalAmount || 0 }}</p>
-              <el-button style="margin-left: 8px" size="mini" @click="handleFinance">明细</el-button>
+              <el-button
+                style="margin-left: 8px"
+                size="mini"
+                @click="handleFinance"
+              >明细</el-button>
             </div>
           </div>
         </el-col>

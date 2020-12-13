@@ -1,9 +1,9 @@
 export const ActivityOrderStatus = [
   { name: '待审核', value: '1' },
-  { name: '待缴押金', value: '2' },
   { name: '待发货', value: '3' },
   { name: '待收货', value: '4' },
   { name: '待测评', value: '5' },
+  { name: '已逾期', value: '8' },
   { name: '已测评', value: '6' },
   { name: '已关闭', value: '7' }
 ]

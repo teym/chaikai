@@ -30,20 +30,9 @@
         <h5>订单状态：</h5>
         <div>
           <p>{{ activityStatus[data.statusCode] }}</p>
-          <span v-if="data.statusCode === 7" style="color: #999">{{ data.statusDesc }}</span>
-        </div>
-      </div>
-      <div class="row">
-        <h5>押金状态：</h5>
-        <div>
-          <p>
-            {{
-              ["", "未缴押金", "已冻结", "已解冻", "已扣除"][
-                (data.depositInfo || {}).statusCode || 1
-              ]
-            }}
-          </p>
-          <!-- <span>测评投诉中，若处理超时或违规，将扣除</span> -->
+          <span v-if="data.statusCode === 7" style="color: #999">{{
+            data.statusDesc
+          }}</span>
         </div>
       </div>
       <div class="row">
@@ -451,16 +440,37 @@ export default {
     updateState(ticket, s) {
       const id = this.id
       this.data.update = true
-      updateIssueState({ id: ticket.id, statusCode: s })
-        .then((r) => {
-          if (id === this.id) {
+      const proc = (str) => {
+        updateIssueState({ id: ticket.id, statusCode: s, reason: str })
+          .then((r) => {
+            if (id === this.id) {
+              this.data.update = false
+              this.loadData(id)
+            }
+          })
+          .catch((e) => {
             this.data.update = false
-            this.loadData(id)
+          })
+      }
+      if (s === 7) {
+        this.$prompt('悬赏将立即退回品牌方账户', '请输入违规理由', {
+          inputPlaceholder: '违规理由,最多20字',
+          inputValidator: (s) => {
+            return s && s.length <= 20
+          },
+          beforeClose: (action, instance, done) => {
+            if (action === 'confirm' && !instance.inputValue) {
+              this.$message({ message: '请输入违规理由', type: 'error' })
+            } else {
+              done()
+            }
           }
+        }).then((r) => {
+          proc(r.value)
         })
-        .catch((e) => {
-          this.data.update = false
-        })
+      } else {
+        proc()
+      }
     },
     updateAddr() {
       const id = this.id
@@ -481,7 +491,7 @@ export default {
     },
     onCancelReward() {
       const id = this.id
-      this.$confirm('1.悬赏将自动退回品牌方账户\n2.剩余押金余额到期自动解冻', {
+      this.$confirm('悬赏将自动退回品牌方账户', {
         title: '取消悬赏发放'
       }).then((r) => {
         if (r === 'confirm') {
@@ -541,9 +551,9 @@ export default {
           data.build.zhuijia = ev.filter((i) => i.type === 2)
           data.build.address = data.receiver
           data.build.addrs = [
-            data.receiver.province,
-            data.receiver.city,
-            data.receiver.county
+            (data.receiver || {}).province || '',
+            (data.receiver || {}).city || '',
+            (data.receiver || {}).county || ''
           ]
           data.date = moment(data.gmtCreate).format('YYYY-MM-DD HH:mm:ss')
           data.tickets = (data.tickets || []).map((i) =>
