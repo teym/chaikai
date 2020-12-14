@@ -62,16 +62,27 @@
         </div>
       </div>
     </div>
+    <bar v-if="data.statusCode < 3">
+      <div class="bar">
+        <div class="btn" @click="onOk">
+          {{ data.statusCode === 1 ? "去处理" : "去支付" }}
+        </div>
+      </div>
+    </bar>
   </div>
 </template>
 
 <script>
 // import _ from 'underscore'
 import moment from 'moment'
+import bar from '@/components/bar'
 import { router, request, uiapi } from '@/utils/index'
 
 export default {
-  props: ['credit'],
+  props: ['id'],
+  components: {
+    bar
+  },
   data () {
     return {
       data: {},
@@ -96,14 +107,14 @@ export default {
     // let app = getApp()
   },
   mounted () {
-    this.loadData(1)
+    this.loadData()
   },
   onPullDownRefresh () {
-    uiapi.waitRefresh(this.loadData(1))
+    uiapi.waitRefresh(this.loadData())
   },
   onReachBottom () {},
   methods: {
-    loadData (page) {
+    loadData () {
       this.loading = true
       const { id } = router(this).params()
       return Promise.all([
@@ -117,7 +128,7 @@ export default {
           }),
         request
           .get('/bl/activity/order/fine/record/list', { fineId: id })
-          .then(({json: {data}}) => {
+          .then(({ json: { data } }) => {
             this.datas = data.map((i) =>
               Object.assign(i, {
                 date: moment(i.gmtCreate).format('YYYY-MM-DD HH:mm:ss')
@@ -154,5 +165,26 @@ export default {
 }
 .item {
   border-bottom: 1rpx solid #f5f5f5;
+}
+.bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: white;
+  width: 750rpx;
+  height: 96rpx;
+}
+.bar .btn {
+  margin: 8rpx 58rpx;
+  flex: 1;
+  height: 80rpx;
+  border-radius: 40rpx;
+  background-color: #ff8e3b;
+  color: white;
+  font-size: 30rpx;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 </style>

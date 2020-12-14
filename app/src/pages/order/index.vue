@@ -3,7 +3,7 @@
     <div class="white_bg pad2 row">
       <div class="flex col c-center margin2-l margin2-r">
         <h5 class="big light blod">{{['', '待审核', '', '待发货', '待收货', '待测评', '已测评', '已关闭', '已逾期'][data.statusCode]}}</h5>
-        <p class="small margin-t" :class="{red: data.statusCode > 5, light: data.statusCode < 6}">{{msg}}</p>
+        <p class="small margin-t" :class="{red: data.statusCode == 6 || data.statusCode == 8, light: data.statusCode < 6}">{{msg}}</p>
       </div>
       <img class="state margin2" v-if="data.statusCode === 1" src="/static/images/issue_status_2.png" alt="status" />
       <img class="state margin2" v-if="data.statusCode === 2" src="/static/images/issue_status_2.png" alt="status" />
@@ -26,14 +26,14 @@
         </div>
       </div>
     </div>
-    <div v-if="data.statusCode > 7 && data.tickets.length > 0" class="margin-t white_bg pad2">
+    <div v-if="data.fineList.length > 0" class="margin-t white_bg pad2">
       <h5 class="middle dark blod">测评罚款</h5>
-      <div class="row just channel margin-t" v-for="(item, i) in data.tickets" :key="i">
+      <div class="row just channel margin-t" v-for="(item, i) in data.fineList" :key="i">
         <div class="row i-center">
-          <p class="light middle margin-l">测评逾期</p>
+          <p class="light middle margin-l">{{item.type === 1 ? '测评逾期' : '测评违规'}}</p>
         </div>
         <div class="row i-center" @click="onFine(item)">
-          <p class="light small">{{['','待修改','待确认','小二审核中','待重评','已修改','已取消','已违规'][item.statusCode]}}</p>
+          <p class="light small" :class="{red:item.statusCode < 3}">{{["", "待处理", "待支付", "已支付", "已撤销"][item.statusCode]}}</p>
           <img class="right" src="/static/images/arrow_right.png" alt="right" />
         </div>
       </div>
