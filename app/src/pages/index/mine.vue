@@ -55,7 +55,7 @@
       <div class="flex white_bg round pad2-l pad2-r">
         <div class="row just">
           <h5 class="big blod dark">活动订单</h5>
-          <div class="row i-center" @click="onRouter('orders')">
+          <div class="row i-center" @click="onOrder(0)">
             <p class="small light">查看全部</p>
             <img
               class="right"
@@ -96,8 +96,8 @@
             <div class="pos_r col center">
               <img src="/static/images/mine_icons_1.png " alt="1" />
               <p class="small light margin-t">已逾期</p>
-              <span class="dot flot" v-if="stat.depositToBePaid > 0">{{
-                stat.depositToBePaid
+              <span class="dot flot" v-if="stat.delayed > 0">{{
+                stat.delayed
               }}</span>
             </div>
           </div>
@@ -108,6 +108,17 @@
             <span class="dot fill" v-if="stat.hasTicket > 0">{{
               stat.hasTicket
             }}</span>
+            <img
+              class="right"
+              src="/static/images/arrow_right.png"
+              alt="right"
+            />
+          </div>
+        </div>
+        <div class="row just line" @click="onRouter('credit', {credit: user.creditLevel})">
+          <p class="middle light">信用等级</p>
+          <div class="row i-center">
+            <span class="risk middle fill" v-if="user.creditLevel !== 20">• 风险</span>
             <img
               class="right"
               src="/static/images/arrow_right.png"
@@ -255,7 +266,6 @@ export default {
         contact: data.realName,
         自定义信息: 'aabbccdd'
       }
-      console.log('info', userInfo)
       var params = {
         // 成功回调
         success: function () {
@@ -395,6 +405,9 @@ export default {
   background-color: #ff6144;
   color: white;
   border: none;
+}
+.risk {
+  color: #FF6144;
 }
 button.btn-row {
   border: 0;

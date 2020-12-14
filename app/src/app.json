@@ -17,11 +17,12 @@
     "pages/deposit/main",
     "pages/login/main",
     "pages/reward/main",
-    "pages/depose/main",
     "pages/ship/main",
     "pages/tester/main",
     "pages/web/main",
-    "pages/copy/main"
+    "pages/copy/main",
+    "pages/credit/main",
+    "pages/fine/main"
   ],
   "window": {
     "backgroundTextStyle": "light",

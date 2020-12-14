@@ -36,7 +36,7 @@ export default {
   data () {
     return {
       active: 0,
-      status: [{name: '全部', key: 0}, {name: '待发货', key: 3}, {name: '待收货', key: 4}, {name: '待测评', key: 5}, {name: '已逾期', key: 8}/*, {name: '已测评', key: 6}*/],
+      status: [{name: '全部', key: 0}, {name: '待发货', key: 3}, {name: '待收货', key: 4}, {name: '待测评', key: 5}, {name: '已逾期', key: 8}],
       datas: [],
       loading: false,
       page: 1,
@@ -45,9 +45,7 @@ export default {
   },
   mounted () {
     const status = parseInt(router(this).params().status)
-    if (status > 0) {
-      this.active = status - 1
-    }
+    this.active = status || 0
     this.loadData(1)
   },
   onPullDownRefresh () {
@@ -65,7 +63,7 @@ export default {
       this.loadData(1)
     },
     loadData (page) {
-      return request.get('/bl/activity/order/list', Object.assign({page: page, size: 10}, this.active > 0 ? {statusCode: this.active + 1} : {})).then(({json: {data}}) => {
+      return request.get('/bl/activity/order/list', Object.assign({page: page, size: 10}, this.active > 0 ? {statusCode: this.active} : {})).then(({json: {data}}) => {
         this.datas = (page === 1 ? [] : this.datas).concat((data.data || []).map(i => Object.assign({date: moment(i.gmtCreate).format('YYYY.MM.DD')}, i)))
         this.nomore = data.pager.totalPages <= page
         this.page = page

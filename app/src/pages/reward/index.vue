@@ -35,7 +35,7 @@ export default {
         this.img = '/static/images/act_done.png'
         break
       case '3':
-        this.msg = '测评逾期/测评违规/不符合悬赏规范/未达成合作'
+        this.msg = '测评逾期15天/测评违规/合作临时关停/未满足悬赏要求'
         this.state = '已取消'
         this.img = '/static/images/reward_status_3.png'
         break

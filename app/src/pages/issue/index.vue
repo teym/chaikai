@@ -13,7 +13,6 @@
       <img class="state margin2" v-if="data.statusCode === 5" src="/static/images/issue_status_3.png" alt="status" />
       <img class="state margin2" v-if="data.statusCode === 6" src="/static/images/issue_status_3.png" alt="status" />
       <img class="state margin2" v-if="data.statusCode === 7" src="/static/images/issue_status_3.png" alt="status" />
-
     </div>
     <div class="margin-t white_bg pad2">
       <h5 class="middle dark blod">投诉详情</h5>
