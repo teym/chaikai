@@ -514,7 +514,7 @@ export default {
       const { id } = router(this).params()
       return request
         .post('/wxpay/mini', {
-          amount: this.data.goods.price,
+          amount: request.isTest() ? 0.01 : this.data.goods.price,
           brActivityId: id,
           payScene: 'BL_PAY_DEPOSIT'
         })

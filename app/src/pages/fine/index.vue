@@ -167,7 +167,7 @@ export default {
       this.loading = true
       return request
         .post('/wxpay/mini', {
-          amount: this.data.amount,
+          amount: request.isTest() ? 0.01 : this.data.amount,
           brActivityId: this.data.brActivityId,
           brActivityOrderId: this.data.brActivityOrderId,
           fineId: id,

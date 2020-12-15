@@ -116,5 +116,9 @@ function rawConf () {
   return Object.assign({}, conf)
 }
 
-export const mrequest = { get: requestGet, raw: requestRaw, post: requestPost, put: requestPut, conf: requestConf, rawConf: rawConf, setup, upload: uploadFile }
+function isTest () {
+  return conf.host.indexOf('test.') >= 0 || conf.host.indexOf('192.168.') >= 0
+}
+
+export const mrequest = { get: requestGet, raw: requestRaw, post: requestPost, put: requestPut, conf: requestConf, rawConf: rawConf, setup, upload: uploadFile, isTest: isTest }
 export default mrequest
