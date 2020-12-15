@@ -25,7 +25,7 @@
         v-model="listQuery.statusCode"
         size="mini"
         class="filter-item"
-        style="width: 160px; margin-left: 16px"
+        style="width: 100px; margin-left: 16px"
       >
         <el-option v-for="(i, j) in status" :key="j" :value="j" :label="i" />
       </el-select>
@@ -33,7 +33,7 @@
         v-model="listQuery.type"
         size="mini"
         class="filter-item"
-        style="width: 120px; margin-left: 16px"
+        style="width: 100px; margin-left: 16px"
       >
         <el-option v-for="(i, j) in types" :key="j" :value="j" :label="i" />
       </el-select>
@@ -81,7 +81,7 @@
       </el-table-column>
       <el-table-column label="订单编号">
         <template slot-scope="{ row }">
-          <span>{{ row.id }}</span>
+          <span>{{ row.brActivityOrderId }}</span>
         </template>
       </el-table-column>
       <el-table-column label="活动名称" align="center">
@@ -101,15 +101,15 @@
       </el-table-column>
       <el-table-column label="用户昵称" align="center">
         <template slot-scope="{ row }">
-          <span>{{ row.blogger.nickname }}</span>
+          <span>{{ row.blAccount.nickname }}</span>
         </template>
       </el-table-column>
       <el-table-column label="罚款金额" align="center">
         <template slot-scope="{ row }">
           <span>
-            {{ row.reward }}
+            {{ row.amount }}
             <br>
-            {{ row.msg || "" }}
+            {{ row.description || "" }}
           </span>
         </template>
       </el-table-column>
@@ -120,15 +120,13 @@
       </el-table-column>
       <el-table-column label="状态" align="center">
         <template slot-scope="{ row }">
-          <span>{{
-            (status.find((i) => i.key === row.statusCode) || {}).name
-          }}</span><br>
+          <span>{{ status[row.statusCode] }}</span><br>
           <span style="color: #999">{{ row.statusDesc }}</span>
         </template>
       </el-table-column>
       <el-table-column label="备注" align="center">
         <template slot-scope="{ row }">
-          <span>{{ row.remark }}</span>
+          <span>{{ row.sysRemark }}</span>
         </template>
       </el-table-column>
 
@@ -162,7 +160,12 @@
 </template>
 
 <script>
-import { fetchOrderList, exportOrderList, closeOrder, remarkOrder } from '@/api/fine'
+import {
+  fetchOrderList,
+  exportOrderList,
+  closeOrder,
+  remarkOrder
+} from '@/api/fine'
 import moment from 'moment'
 import { clearQueryObject } from '@/utils/index'
 import waves from '@/directive/waves' // waves directive
@@ -209,7 +212,7 @@ export default {
       this.listLoading = true
       const obj = Object.assign({}, this.listQuery)
       obj[
-        ['', 'orderId', 'activityTitle', 'companyName', 'bloggerName'][
+        ['', 'orderId', 'id', 'activityTitle', 'companyName', 'bloggerName'][
           obj.searchType
         ]
       ] = obj.searchKey
@@ -279,9 +282,11 @@ export default {
       ).then((r) => {
         closeOrder({
           id: row.id,
-          reason: r.value
+          statusCode: 4,
+          statusDesc: r.value
         }).then(() => {
-          row.statusCode = 7
+          row.statusCode = 4
+          row.statusDesc = r.value
           this.$message({ message: '操作成功', type: 'success' })
         })
       })
@@ -302,15 +307,15 @@ export default {
       }).then((r) => {
         remarkOrder({
           id: row.id,
-          reason: r.value
+          sysRemark: r.value
         }).then(() => {
-          row.statusCode = 7
+          row.sysRemark = r.value
           this.$message({ message: '操作成功', type: 'success' })
         })
       })
     },
     handleDetail(row) {
-      window.showCommunicate(row.id)
+      window.showCommunicate(row.brActivityOrderId)
     }
   }
 }

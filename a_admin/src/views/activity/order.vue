@@ -282,7 +282,7 @@ export default {
       window.location.href = exportOrderList(clearQueryObject(obj, true))
     },
     handleClose(row) {
-      this.$prompt('请输入关闭理由', {
+      this.$prompt('悬赏将立即退回品牌方账户，关闭理由将同步到订单状态的提示语中', '关闭订单', {
         inputPlaceholder: '关闭理由,最多20字',
         inputValidator: (s) => {
           return s && s.length <= 20

@@ -453,7 +453,7 @@ export default {
           })
       }
       if (s === 7) {
-        this.$prompt('悬赏将立即退回品牌方账户', '请输入违规理由', {
+        this.$prompt('悬赏将立即退回品牌方账户，违规理由将同步至【订单问题】的状态提示语中', '判定违规', {
           inputPlaceholder: '违规理由,最多20字',
           inputValidator: (s) => {
             return s && s.length <= 20
@@ -491,7 +491,7 @@ export default {
     },
     onCancelReward() {
       const id = this.id
-      this.$confirm('悬赏将自动退回品牌方账户', {
+      this.$confirm('悬赏将自动退回品牌方账户', '取消悬赏发放', {
         title: '取消悬赏发放'
       }).then((r) => {
         if (r === 'confirm') {
