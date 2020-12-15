@@ -335,12 +335,12 @@ export default {
           uiapi.alert({ title: '温馨提示', content: e.info, confirmText: '去认证', confirmColor: '#ff8e3b' }).then(r => {
             router(this).push('/pages/channel/main')
           })
-        } else if (e.code === 200010) {
-          uiapi.alert({ title: '温馨提示', content: e.info, confirmText: '去处理', confirmColor: '#ff8e3b' }).then(r => {
+        } else if (e.code === 200016) {
+          uiapi.alert({ title: '温馨提示', content: '抱歉，您的信用等级为风险，暂时无法申请新的合作', confirmText: '去处理', confirmColor: '#ff8e3b' }).then(r => {
             router(this).push('/pages/credit/main')
           })
-        } else if (e.code === 200011) {
-          uiapi.alert({ title: '温馨提示', content: e.info, confirmText: '去处理', confirmColor: '#ff8e3b' }).then(r => {
+        } else if (e.code === 200017) {
+          uiapi.alert({ title: '温馨提示', content: '抱歉，您有未处理的测评投诉，请处理后，再申请新的合作喔~', confirmText: '去处理', confirmColor: '#ff8e3b' }).then(r => {
             router(this).push('/pages/issues/main')
           })
         } else {

@@ -21,7 +21,9 @@ export default {
   },
   mounted () {
     wx.createSelectorQuery().select('#bar_content_ctx').boundingClientRect((rect) => {
-      this.contentHeight = rect.height + 'px'
+      if (rect) {
+        this.contentHeight = rect.height + 'px'
+      }
     }).exec()
   }
 }

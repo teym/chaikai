@@ -17,10 +17,10 @@ function mapHeaders (headers) {
 //   return { timestamp, sign: s }
 // }
 const conf = {
-  host: 'http://192.168.50.17:8888/api',
+  // host: 'http://192.168.50.17:8888/api',
   // web: 'https://sstest.ckgift.cn/th/article.html',
 
-  // host: 'https://apartest.ckgift.cn/api',
+  host: 'https://apartest.ckgift.cn/api',
   // web: 'https://sstest.ckgift.cn/th/article.html',
 
   // host: 'https://apart.ckgift.cn/api',

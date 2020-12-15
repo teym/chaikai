@@ -39,7 +39,10 @@
             5.因系统故障导致提现和发放悬赏有误，拆开平台有权追回差额；
           </p>
           <p class="small light margin-t">
-            6.已发放的悬赏无法赠与或交易，用户应妥善保管账户
+            6.账号信用等级为风险时，无法提现
+          </p>
+          <p class="small light margin-t">
+            7.已发放的悬赏无法赠与或交易，用户应妥善保管账户
           </p>
         </div>
       </div>
@@ -109,11 +112,11 @@ export default {
             .catch((e) => {
               l()
               console.log('error', e)
-              if (e.code === 200010) {
+              if (e.code === 200015) {
                 uiapi
                   .alert({
                     title: '提现失败',
-                    content: e.info,
+                    content: '抱歉，您当前账号信用等级为风险，暂无法提现',
                     confirmText: '去处理',
                     confirmColor: '#ff8e3b'
                   })

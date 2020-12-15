@@ -49,8 +49,8 @@ export function imgMsgUrl (s) {
 export function makeImgMsg (u) {
   return `[img:${u}]`
 }
-export function diffTime (date, def) {
-  const sec = date ? moment(date).diff(moment(), 'seconds') : 0
+export function diffTime (date, def, now) {
+  const sec = date ? moment(date).diff(moment(now), 'seconds') : 0
   if (sec <= 0) {
     return def
   }
