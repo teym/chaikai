@@ -170,7 +170,6 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: white;
   width: 750rpx;
   height: 96rpx;
 }
