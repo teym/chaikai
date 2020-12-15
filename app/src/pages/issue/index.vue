@@ -111,7 +111,7 @@ export default {
         case 3:
           return '请等待小二审核'
         case 4:
-          return time ? `修改测评还剩${time}，超时将判违规，并扣除押金` : '已超时将判违规，并扣除押金'
+          return time ? `修改测评还剩${time}，超时将判违规` : '已超时将判违规'
         case 5:
           return ''
         case 6:

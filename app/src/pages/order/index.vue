@@ -397,7 +397,8 @@ export default {
       topics: [],
       keywords: [],
       otherReq: [],
-      msg: ''
+      msg: '',
+      todayNum: 0
     }
   },
   onShow () {
@@ -410,6 +411,9 @@ export default {
   methods: {
     loadData () {
       const { id } = router(this).params()
+      request.get('/bl/activity/qualification', {}).then(({json: {data}}) => {
+        this.todayNum = data.todayApplyNumRemaining
+      })
       return request
         .get('/bl/activity/order/' + id)
         .then(({ json: { data } }) => {
@@ -576,7 +580,7 @@ export default {
     },
     onCancel () {
       uiapi
-        .alert({ title: '取消申请', content: '取消申请活动' })
+        .alert({ title: '取消申请', content: `取消申请后，今日申请次数还剩：${this.todayNum}次` })
         .then((r) => {
           const l = uiapi.loading()
           request
