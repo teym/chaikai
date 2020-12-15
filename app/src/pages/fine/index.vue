@@ -74,81 +74,111 @@
 
 <script>
 // import _ from 'underscore'
-import moment from 'moment'
-import bar from '@/components/bar'
-import { router, request, uiapi } from '@/utils/index'
+import moment from "moment";
+import bar from "@/components/bar";
+import { router, request, uiapi } from "@/utils/index";
 
 export default {
-  props: ['id'],
+  props: ["id"],
   components: {
-    bar
+    bar,
   },
-  data () {
+  data() {
     return {
       data: {},
-      datas: {}
-    }
+      datas: {},
+      loading: false,
+    };
   },
   computed: {
     msg: function () {
       switch (this.data.statusCode) {
         case 1:
-          return '测评已逾期，期间将持续产生罚款'
+          return "测评已逾期，期间将持续产生罚款";
         case 2:
-          return '测评已逾期，期间将持续产生罚款'
+          return "测评已逾期，期间将持续产生罚款";
         case 3:
-          return '继续保持良好的合作行为'
+          return "继续保持良好的合作行为";
         case 4:
-          return this.data.statusRemark
+          return this.data.statusRemark;
       }
-    }
+    },
   },
-  created () {
+  created() {
     // let app = getApp()
   },
-  mounted () {
-    this.loadData()
+  mounted() {
+    this.loadData();
   },
-  onPullDownRefresh () {
-    uiapi.waitRefresh(this.loadData())
+  onPullDownRefresh() {
+    uiapi.waitRefresh(this.loadData());
   },
-  onReachBottom () {},
+  onReachBottom() {},
   methods: {
-    loadData () {
-      this.loading = true
-      const { id } = router(this).params()
+    loadData() {
+      this.loading = true;
+      const { id } = router(this).params();
       return Promise.all([
         request
-          .get('/bl/activity/order/fine/list', { id, page: 1, size: 1 })
+          .get("/bl/activity/order/fine/list", { id, page: 1, size: 1 })
           .then(({ json: { data } }) => {
-            this.data = data.data[0] || {}
+            this.data = data.data[0] || {};
             this.data.date = moment(this.data.gmtCreate).format(
-              'YYYY-MM-DD HH:mm:ss'
-            )
+              "YYYY-MM-DD HH:mm:ss"
+            );
           }),
         request
-          .get('/bl/activity/order/fine/record/list', { fineId: id })
+          .get("/bl/activity/order/fine/record/list", { fineId: id })
           .then(({ json: { data } }) => {
             this.datas = data.map((i) =>
               Object.assign(i, {
-                date: moment(i.gmtCreate).format('YYYY-MM-DD HH:mm:ss')
+                date: moment(i.gmtCreate).format("YYYY-MM-DD HH:mm:ss"),
               })
-            )
-          })
-      ]).catch((e) => {
-        uiapi.toast(e.info)
-      })
+            );
+          }),
+      ])
+        .then((r) => {
+          this.loading = false;
+        })
+        .catch((e) => {
+          this.loading = false;
+          uiapi.toast(e.info);
+        });
     },
-    onOrder () {
-      router(this).push('/pages/order/main', {
-        id: this.data.brActivityOrderId
-      })
+    onOrder() {
+      router(this).push("/pages/order/main", {
+        id: this.data.brActivityOrderId,
+      });
     },
-    onRule () {
-      console.log('rule')
-    }
-  }
-}
+    payFine() {
+      const { id } = router(this).params();
+      if(this.loading) {
+        return
+      }
+      this.loading = true;
+      return request
+        .post("/wxpay/mini", {
+          amount: this.data.amount,
+          brActivityId: this.data.brActivityId,
+          brActivityOrderId: this.data.brActivityOrderId,
+          fineId: id,
+          payScene: "BL_FINE",
+        })
+        .then(({ json: { data } }) => {
+          this.loading = false;
+          return api.pay(data);
+        })
+        .then((r) => {
+          uiapi.toast("支付成功");
+          return this.loadData();
+        })
+        .catch((e) => {
+          this.loading = false;
+          uiapi.toast(e.info || "支付失败");
+        });
+    },
+  },
+};
 </script>
 
 <style scoped>
