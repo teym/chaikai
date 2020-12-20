@@ -283,7 +283,7 @@
               <br />--品牌方无法提出：[合作篇幅]、[内容形式]、[图片数量]、[视频长度]等要求,并消耗一次置换活动次数
             </div>
           </el-form-item>
-          <div v-if="postForm.cooperationType !== 3">
+          <div v-if="postForm.cooperationType !== 3 && postForm.cooperationType !== 4">
             <el-form-item
               prop
               style="margin-bottom: 30px"
@@ -761,7 +761,7 @@ export default {
     const validateAmount = (rule, value, callback) => {
       const v = parseInt(value);
       if (v >= 0 && v >= this.minAmount) {
-        if (this.postForm.cooperationType !== 3 && v === 0) {
+        if (this.postForm.cooperationType !== 3 && this.postForm.cooperationType !== 4 && v === 0) {
           if (this.tip <= 0) {
             this.tip += 1;
             this.$message({
@@ -1148,7 +1148,7 @@ export default {
       this.$refs.postForm.validate((valid) => {
         if (valid) {
           var obj = Object.assign({}, this.postForm);
-          if (obj.cooperationType === 3) {
+          if (obj.cooperationType === 3 || obj.cooperationType === 4) {
             obj.extension = Object.assign({}, obj.extension, {
               articleType: 0,
               contentType: 0,
