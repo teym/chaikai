@@ -65,8 +65,8 @@
         </el-select>
         <div class="right">
           <span
-            >活动名额: {{ stat["0"] }} 已通过: {{ stat["9"] }} 剩余名额:
-            {{ stat["10"] }}</span
+            >活动名额: {{ stat["0"] }} 已通过: {{ stat["10"] }} 剩余名额:
+            {{ stat["11"] }}</span
           >
           <el-button
             type="primary"
@@ -77,7 +77,7 @@
                 query: { id: listQuery.brActivityId },
               })
             "
-            >候选名单{{ stat["8"] > 0 ? stat["8"] : "" }}</el-button
+            >候选名单{{ stat["9"] > 0 ? stat["9"] : "" }}</el-button
           >
         </div>
       </div>
@@ -667,17 +667,18 @@ export default {
       ])
         .then((r) => {
           this.stat = {
-            0: r[1].data.totalNum,
-            1: r[0].data.pending,
-            2: r[0].data.notPayDeposit,
-            3: r[0].data.toBeDelivered,
-            4: r[0].data.toBeReceived,
-            5: r[0].data.toBeEvaluated,
-            6: r[0].data.evaluated,
-            7: r[0].data.closed,
-            8: r[1].data.candidate || 0,
-            9: r[1].data.totalNum - (r[1].data.remainingNum || 0),
-            10: r[1].data.remainingNum || 0,
+            0: r[1].data.totalNum || 0,
+            1: r[0].data.pending || 0,
+            2: r[0].data.notPayDeposit || 0,
+            3: r[0].data.toBeDelivered || 0,
+            4: r[0].data.toBeReceived || 0,
+            5: r[0].data.toBeEvaluated || 0,
+            6: r[0].data.evaluated || 0,
+            7: r[0].data.closed || 0,
+            8: r[0].data.delayed || 0,
+            9: r[1].data.candidate || 0,
+            10: r[1].data.totalNum - (r[1].data.remainingNum || 0),
+            11: r[1].data.remainingNum || 0,
           };
           this.channels = r[1].data.extension.channelLimit
             ? r[1].data.extension.channels.map((i) =>

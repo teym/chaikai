@@ -71,7 +71,7 @@ export default {
       const {id} = router(this).params()
       if (page === 1) {
         request.get('/bl/activity/order/' + id).then(({json: {data}}) => {
-          this.done = !(data && data.statusCode > 2 && data.statusCode < 7 && data.rewardStatusCode === 1)
+          this.done = !(data && (data.statusCode > 2 && data.statusCode !== 7) && data.rewardStatusCode === 1)
           console.log('done', this.done)
         }).catch(e => {
           this.done = true

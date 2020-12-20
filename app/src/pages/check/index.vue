@@ -172,7 +172,7 @@
         <ul class="row">
           <li
             @click="type = 3"
-            v-if="data.cooperationType === 3"
+            v-if="data.cooperationType === 3 || data.cooperationType === 4"
             :class="{
               red: type === 3,
               red_bg: type === 3,
@@ -185,7 +185,7 @@
           </li>
           <li
             @click="type = 1"
-            v-if="data.cooperationType !== 3"
+            v-if="data.cooperationType < 3"
             :class="{
               red: type === 1,
               red_bg: type === 1,
@@ -198,7 +198,7 @@
           </li>
           <li
             @click="type = 2"
-            v-if="data.cooperationType === 2"
+            v-if="data.cooperationType === 2 || data.cooperationType === 4"
             :class="{
               red: type === 2,
               red_bg: type === 2,
@@ -451,7 +451,7 @@ export default {
           : []
         this.sku =
           data.goods.skuUnionList.find((i) => i.skuIdUnion === select) || {}
-        this.type = data.cooperationType === 3 ? 3 : 1
+        this.type = data.cooperationType < 3 ? 1 : 3
       })
     },
     chooseAddress () {
@@ -531,7 +531,7 @@ export default {
         uiapi.toast('请选择合作渠道')
         return
       }
-      if (this.reward <= 0 || this.reward > this.maxReward) {
+      if (this.type === 2 && (this.reward <= 0 || this.reward > this.maxReward)) {
         uiapi.toast(`请输入1~${this.maxReward}的报价金额`)
         return
       }
@@ -554,24 +554,7 @@ export default {
       }
 
       const l = uiapi.loading()
-      var p = null
-      if (this.pay === 1) {
-        p = this.createOrder(true)
-          .catch((e) => {
-            if (e.code === 200013) {
-              return this.payOrder()
-            } else {
-              throw e
-            }
-          })
-          .then((r) => {
-            return this.createOrder()
-          })
-      } else {
-        p = this.createOrder()
-      }
-
-      p.then((r) => {
+      this.createOrder().then((r) => {
         l()
         uiapi.toast('申请已提交')
         router(this).replace('/pages/orders/main')
