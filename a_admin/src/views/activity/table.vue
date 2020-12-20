@@ -213,7 +213,7 @@ export default {
         '报名中',
         '报名结束'
       ],
-      coopTypes: ['全部', '接受悬赏', '接受悬赏/达人报价', '免费置换'],
+      coopTypes: ['全部', '接受悬赏', '接受悬赏/达人报价', '免费置换', '免费置换/达人报价'],
       detailVisible: false,
       detailLoading: false,
       detail: null,

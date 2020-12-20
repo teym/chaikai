@@ -211,6 +211,7 @@
             >
               <el-radio-button :label="1">接受悬赏</el-radio-button>
               <el-radio-button :label="2">接受悬赏/达人报价</el-radio-button>
+              <el-radio-button :label="4">免费置换/达人报价</el-radio-button>
               <el-radio-button :label="3">免费置换</el-radio-button>
             </el-radio-group>
           </el-form-item>
