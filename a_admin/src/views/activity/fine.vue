@@ -268,7 +268,7 @@ export default {
         '撤销罚款',
         {
           inputPlaceholder: '撤销理由,最多200字',
-          inputType: 'textArea',
+          inputType: 'textarea',
           inputValidator: (s) => {
             return s && s.length <= 200
           },
@@ -295,7 +295,7 @@ export default {
     handleRemark(row) {
       this.$prompt('备注信息仅供内部查看', '填写备注', {
         inputPlaceholder: '备注,最多200字',
-        inputType: 'textArea',
+        inputType: 'textarea',
         inputValue: row.sysRemark,
         inputValidator: (s) => {
           return s && s.length <= 200

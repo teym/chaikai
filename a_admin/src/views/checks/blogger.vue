@@ -234,7 +234,7 @@ export default {
       } else {
         this.$prompt('请输入拒绝理由', {
           inputPlaceholder: '拒绝理由,最多200字',
-          inputType: 'textArea',
+          inputType: 'textarea',
           inputValidator: (s) => {
             return s && s.length > 0 && s.length <= 200
           },

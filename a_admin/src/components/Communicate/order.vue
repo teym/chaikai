@@ -455,7 +455,7 @@ export default {
       if (s === 7) {
         this.$prompt('悬赏将立即退回品牌方账户，违规理由将同步至【订单问题】的状态提示语中', '判定违规', {
           inputPlaceholder: '违规理由,最多200字',
-          inputType: 'textArea',
+          inputType: 'textarea',
           inputValidator: (s) => {
             return s && s.length <= 200
           },
@@ -598,6 +598,8 @@ export default {
             return ''
           })(data)
           this.data = data
+          const done = data.statusCode === 7 || data.rewardStatusCode > 1
+          this.$emit('order', { id, done })
         }
       })
     }

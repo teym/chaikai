@@ -236,10 +236,7 @@
               ((row.receiver || {}).address || "")
             }}
             <br />
-            物流信息：{{
-              ((row.receiver || {}).logisticsPlatform || "") +
-              ((row.receiver || {}).logisticsNo || "")
-            }}
+            {{ listQuery.statusCode === '3' ? '' : `物流信息：${((row.receiver || {}).logisticsPlatform || "") +((row.receiver || {}).logisticsNo || "")}`}}
           </span>
         </template>
       </el-table-column>

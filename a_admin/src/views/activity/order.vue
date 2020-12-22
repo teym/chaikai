@@ -118,7 +118,8 @@
       </el-table-column>
       <el-table-column label="悬赏|状态" align="center">
         <template slot-scope="{ row }">
-          <span>
+          <span v-if="row.coopSubType === 3">无</span>
+          <span v-else>
             {{ row.reward }}
             <br>
             {{
@@ -138,8 +139,28 @@
         <template slot-scope="{ row }">
           <span>{{
             (status.find((i) => i.key === row.statusCode) || {}).name
-          }}</span><br>
-          <span style="color:#999">{{ row.statusDesc }}</span>
+          }}</span>
+          <el-popover
+            placement="bottom"
+            title="状态提示"
+            width="400"
+            trigger="click"
+            :content="row.statusDesc"
+          >
+            <p
+              slot="reference"
+              style="
+                height: 23px;
+                overflow: hidden;
+                word-break: keep-all;
+                text-overflow: ellipsis;
+                margin: 0;
+                color: #999
+              "
+            >
+              {{ row.statusDesc }}
+            </p>
+          </el-popover>
         </template>
       </el-table-column>
 
@@ -152,7 +173,11 @@
         <template slot-scope="{ row }">
           <el-button size="mini" @click="handleDetail(row)">订单详情</el-button>
           <el-button
-            v-if="row.statusCode === 4 || row.statusCode === 5 || row.statusCode === 8"
+            v-if="
+              row.statusCode === 4 ||
+                row.statusCode === 5 ||
+                row.statusCode === 8
+            "
             size="mini"
             type="primary"
             @click="handleClose(row)"
@@ -247,7 +272,8 @@ export default {
       fetchOrderList(clearQueryObject(obj, true)).then(({ data }) => {
         this.list = (data.data || []).map((i) =>
           Object.assign(i, {
-            date: moment(i.gmtCreate).format('YYYY-MM-DD HH:mm:ss')
+            date: moment(i.gmtCreate).format('YYYY-MM-DD HH:mm:ss'),
+            statusDesc: i.statusCode === 8 ? `已逾期${Math.min(moment().diff(i.deadline ? moment(i.deadline) : new Date(), 'days'), 15)}天` : i.statusDesc
           })
         )
         this.total = data.pager.count
@@ -284,7 +310,7 @@ export default {
     handleClose(row) {
       this.$prompt('悬赏将立即退回品牌方账户，关闭理由将同步到订单状态的提示语中', '关闭订单', {
         inputPlaceholder: '关闭理由,最多200字',
-        inputType: 'textArea',
+        inputType: 'textarea',
         inputValidator: (s) => {
           return s && s.length <= 200
         },

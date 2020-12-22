@@ -76,7 +76,13 @@
           </div>
         </div>
         <div class="bar">
-          <textarea v-model="text" class="input" @keypress.enter="onSend" />
+          <textarea
+            v-model="text"
+            :disabled="orderDone"
+            class="input"
+            :placeholder="orderDone ? '合作已结束，无法发送消息' : '支持发送图文消息'"
+            @keypress.enter="onSend"
+          />
           <div class="row">
             <label for="file" class="file" @click="clickFile">
               <input
@@ -93,6 +99,7 @@
             </label>
 
             <el-button
+              :disabled="orderDone"
               :loading="data.sending"
               type="primary"
               size="mini"
@@ -102,7 +109,7 @@
         </div>
       </el-col>
       <el-col :span="showList ? 7 : 8" class="detail">
-        <order :id="active" ref="order" />
+        <order :id="active" ref="order" @order="onOrder" />
       </el-col>
     </el-row>
     <el-dialog width="60%" title="预览" :visible.sync="preview" append-to-body>
@@ -150,6 +157,7 @@ export default {
       list: [],
       showList: false,
       active: null,
+      orderDone: false,
       stat: 0,
       page: 0,
       nomore: false,
@@ -198,7 +206,9 @@ export default {
       })
     },
     clickFile() {
-      this.$refs.fileinput.click()
+      if (!this.orderDone) {
+        this.$refs.fileinput.click()
+      }
     },
     onFile(e) {
       this.realSend(uploadFile(e.target.files[0]).then((u) => makeImgMsg(u)))
@@ -237,7 +247,8 @@ export default {
           )
           this.data.sending = false
           setTimeout(() => {
-            this.$refs.box && this.$refs.box.scrollTo(0, this.$refs.box.scrollHeight)
+            this.$refs.box &&
+              this.$refs.box.scrollTo(0, this.$refs.box.scrollHeight)
           }, 0)
           if (done) {
             done()
@@ -250,6 +261,11 @@ export default {
           console.log(e)
           this.data.sending = false
         })
+    },
+    onOrder({ id, done }) {
+      if (id === this.active) {
+        this.orderDone = done
+      }
     },
     onActive(item) {
       this.active = item.originId
@@ -321,7 +337,8 @@ export default {
             this.data.page = page
             this.data.loading = false
             setTimeout(() => {
-              this.$refs.box && this.$refs.box.scrollTo(0, this.$refs.box.scrollHeight)
+              this.$refs.box &&
+                this.$refs.box.scrollTo(0, this.$refs.box.scrollHeight)
             }, 0)
           }
         })
@@ -499,6 +516,7 @@ export default {
         flex: 1;
         border: none;
         outline-style: none;
+        background-color: transparent;
       }
       .input:focus {
         border: 0;

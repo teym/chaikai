@@ -33,7 +33,9 @@
         <h5>订单状态：</h5>
         <div>
           <p>{{ activityStatus[data.statusCode] }}</p>
-          <span v-if="data.statusCode === 7" style="color: #999">{{ data.statusDesc }}</span>
+          <span v-if="data.statusCode === 7" style="color: #999">{{
+            data.statusDesc
+          }}</span>
         </div>
       </div>
       <div class="row">
@@ -132,7 +134,7 @@
       </div>
       <div class="row" v-if="data.coopSubType !== 3">
         <h5>悬赏结算：</h5>
-        <div style="flex:1">
+        <div style="flex: 1">
           <p>{{ ["", "待发放", "已发放", "已取消"][data.rewardStatusCode] }}</p>
           <span>{{ data.rewardMsg }}</span>
         </div>
@@ -549,8 +551,8 @@ export default {
             return "";
           })(data);
           this.data = data;
-          const done = !(data && data.statusCode > 2 && data.statusCode < 7 && data.rewardStatusCode === 1)
-          this.$emit('order', done)
+          const done = data.statusCode === 7 || data.rewardStatusCode > 1;
+          this.$emit("order", { id, done: true });
         }
       });
     },

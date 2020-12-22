@@ -79,6 +79,7 @@
           <textarea
             v-model="text"
             class="input"
+            :disabled="orderDone"
             @keypress.enter="onSend"
             :placeholder="
               orderDone ? '合作已结束，无法发送消息' : '支持发送图文消息'
@@ -100,6 +101,7 @@
             </label>
 
             <el-button
+              :disabled="orderDone"
               :loading="data.sending"
               type="primary"
               size="mini"
@@ -286,8 +288,10 @@ export default {
         .reduce((a, b) => a + b, 0);
       this.$emit("count", { count, list: this.list.length });
     },
-    onOrder(done) {
-      this.orderDone = done;
+    onOrder({id, done}) {
+      if(id === this.active){
+        this.orderDone = done;
+      }
     },
     loadList(page) {
       this.loading = true;
@@ -535,6 +539,7 @@ export default {
         flex: 1;
         border: none;
         outline-style: none;
+        background-color: transparent;
       }
       .input:focus {
         border: 0;

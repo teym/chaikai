@@ -265,7 +265,7 @@ export default {
         this.$prompt(state === 6 ? '请输入关闭理由' : '请输入拒绝理由', {
           inputPlaceholder:
             state === 6 ? '关闭理由,最多200字' : '拒绝理由,最多200字',
-          inputType: 'textArea',
+          inputType: 'textarea',
           inputValidator: (s) => {
             return s && s.length <= 200
           },
