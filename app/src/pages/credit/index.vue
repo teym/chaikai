@@ -7,7 +7,7 @@
         alt="img"
       />
       <img v-else src="/static/images/reward_status_3.png" alt="img" />
-      <p class="small light margin-t" :class="{ red: credit !== 20 }">
+      <p class="middle dark blod margin-t" :class="{ red: credit !== 20 }">
         {{ credit === 20 ? "信用良好" : "信用风险" }}
       </p>
     </div>
@@ -117,7 +117,7 @@ export default {
       router(this).push('/pages/fine/main', { id: item.id })
     },
     onRule () {
-      console.log('rule')
+      router(this).push('/pages/web/main', {url: request.rawConf().web + '?id=Akx95'})
     }
   }
 }
@@ -134,6 +134,9 @@ export default {
 .head img {
   width: 220rpx;
   height: 220rpx;
+}
+.empty {
+  padding-top: 96rpx;
 }
 .empty img {
   width: 480rpx;

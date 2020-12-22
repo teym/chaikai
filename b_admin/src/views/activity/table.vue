@@ -94,6 +94,11 @@
           <span>{{ row.unevaluatedNum }}</span>
         </template>
       </el-table-column>
+      <el-table-column label="已逾期">
+        <template slot-scope="{ row }">
+          <span>{{ row.delayedNum }}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="已评测">
         <template slot-scope="{ row }">
           <span>{{ row.evaluatedNum }}</span>

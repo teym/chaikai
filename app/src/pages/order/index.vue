@@ -135,7 +135,7 @@
         </div>
         <div class="row i-center">
           <p class="small light">
-            {{ ["", "待发放", "已发放", "已取消"][data.rewardStatusCode] }}
+            {{ ["", "待发放", "", "已取消"][data.rewardStatusCode] }}
           </p>
           <img class="right" src="/static/images/arrow_right.png" alt="right" />
         </div>

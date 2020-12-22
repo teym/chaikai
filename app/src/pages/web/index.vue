@@ -18,6 +18,12 @@ export default {
     this.src = url
     console.log('web load', url)
   },
+  onShareAppMessage () {
+    return {
+      title: '拆开',
+      path: `/pages/web/main?url=${encodeURIComponent(this.src)}`
+    }
+  },
   methods: {
     onLoad (e) {
       console.log(e)

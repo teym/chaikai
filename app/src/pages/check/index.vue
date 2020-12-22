@@ -37,7 +37,7 @@
         <div class="rule margin-t" @click="onRule">
           <img src="/static/images/detail_tip.png" alt="tip" />
         </div>
-        <div class="pad-b" v-if="data.cooperationType !== 3">
+        <div class="pad-b" v-if="data.cooperationType < 3">
           <h5 class="middle dark blod">合作要求</h5>
           <div class="light_bg margin-t pad-l pad-r pad-b">
             <div v-if="data.extension.articleType > 0" class="row just pad-t">
@@ -168,11 +168,11 @@
       <div
         class="pad2-l pad2-r pad-t pad-b margin-t white_bg row just i-center"
       >
-        <h5 class="middle dark medium">选择合作方式：</h5>
+        <h5 class="middle dark blod">选择合作方式</h5>
         <ul class="row">
           <li
-            @click="type = 3"
-            v-if="data.cooperationType === 3 || data.cooperationType === 4"
+            @click="onType(3)"
+            v-if="data.cooperationType >= 3"
             :class="{
               red: type === 3,
               red_bg: type === 3,
@@ -184,7 +184,7 @@
             免费置换
           </li>
           <li
-            @click="type = 1"
+            @click="onType(1)"
             v-if="data.cooperationType < 3"
             :class="{
               red: type === 1,
@@ -197,7 +197,7 @@
             接受悬赏
           </li>
           <li
-            @click="type = 2"
+            @click="onType(2)"
             v-if="data.cooperationType === 2 || data.cooperationType === 4"
             :class="{
               red: type === 2,
@@ -217,18 +217,18 @@
       >
         <div class="row i-center">
           <h5 class="middle dark blod">报价金额</h5>
-          <div class="flex row i-center small dark inputline">
+          <div class="flex row i-center small dark inputline" :class="{error:inputerror}">
             <input v-model="bid" type="text" placeholder="请输入报价金额" />悬赏
           </div>
         </div>
       </div>
       <div class="pad2-l pad2-r pad-t pad2-b white_bg margin-t">
         <h5 class="middle dark blod">填写申请理由</h5>
-        <div class="pad-l pad-t pad-r input light_bg margin-t">
+        <div class="pad-l pad-t pad-r input light_bg margin-t textinput">
           <textarea
             v-model="text"
             maxlength="200"
-            class="middle dark normal textinput"
+            class="middle dark normal"
             placeholder="表达更多合作意向，能提高通过率喔~"
           ></textarea>
           <p class="small light normal text-right">{{ textLen }}/200</p>
@@ -237,13 +237,13 @@
     </div>
     <bar background="#FFFFFF">
       <div class="row just i-center bar">
-        <p class="small light" v-if="data.cooperationType === 3">
-          免费置换无悬赏
-        </p>
-        <p class="small light" v-else>
+        <p class="small light" v-if="type !== 3">
           可获得
           <span class="red big blod">{{ blReward }}</span
           >悬赏
+        </p>
+        <p class="small light" v-else>
+          免费置换无悬赏
         </p>
         <div class="btn row center" @click="onOk">提交申请</div>
       </div>
@@ -296,7 +296,8 @@ function defaultData () {
     loading: false,
     active: {},
     tip: false,
-    text: ''
+    text: '',
+    inputerror: false
   }
 }
 
@@ -477,6 +478,9 @@ export default {
         )
       }
     },
+    onType (t) {
+      this.type = t
+    },
     onRule () {
       router(this).push('/pages/web/main', {
         url: request.rawConf().web + '?id=rxbeb'
@@ -523,6 +527,7 @@ export default {
         })
     },
     onOk () {
+      this.inputerror = false
       if (!this.address) {
         uiapi.toast('请填写收货地址')
         return
@@ -532,6 +537,7 @@ export default {
         return
       }
       if (this.type === 2 && (this.reward <= 0 || this.reward > this.maxReward)) {
+        this.inputerror = true
         uiapi.toast(`请输入1~${this.maxReward}的报价金额`)
         return
       }
@@ -615,8 +621,18 @@ export default {
   border: 1px solid #c1c6cb;
   border-radius: 8rpx;
   padding: 0 16rpx;
+  margin-right: 8rpx;
+  width: 168rpx;
+}
+.inputline.error input {
+  border: 1px solid #ff6144;
 }
 .textinput {
+  border-radius: 8rpx;
+  margin-bottom: 100rpx;
+  padding-bottom: 8rpx;
+}
+.textinput textarea {
   width: 670rpx;
 }
 .bar {
