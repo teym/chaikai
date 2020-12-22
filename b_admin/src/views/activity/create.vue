@@ -1155,9 +1155,10 @@ export default {
     submitForm(submit) {
       this.$refs.postForm.validate((valid) => {
         if (valid) {
-          var obj = Object.assign(
+          var obj = Object.assign({}, this.postForm);
+          obj = Object.assign(
             {},
-            this.postForm,
+            obj,
             {
               guidelines: obj.guidelines.map((i) => i.txt),
               displayType: obj.displayType ? 1 : 0,
