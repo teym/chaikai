@@ -479,7 +479,7 @@ export default {
     },
     onRule () {
       router(this).push('/pages/web/main', {
-        url: 'https://mp.weixin.qq.com/s/yPXWeSNE_vZx5WCiqOjqtQ'
+        url: request.rawConf().web + '?id=rxbeb'
       })
     },
     onGuide () {

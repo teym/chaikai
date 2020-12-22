@@ -1200,7 +1200,7 @@ export default {
               discountInfo: "",
               keywords: "",
               bloggerPublishTime: undefined,
-              otherReq: [],
+              otherReq: '',
             });
             obj.reward = "0";
           }

@@ -356,7 +356,7 @@ export default {
       }
     },
     onRule () {
-      router(this).push('/pages/web/main', {url: 'https://mp.weixin.qq.com/s/yPXWeSNE_vZx5WCiqOjqtQ'})
+      router(this).push('/pages/web/main', {url: request.rawConf().web + '?id=rxbeb'})
     },
     onHot (item) {
       if (!item) {
