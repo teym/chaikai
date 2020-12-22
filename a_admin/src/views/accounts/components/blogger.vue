@@ -21,7 +21,7 @@
           </div>
           <div class="row">
             <h4>信用等级:</h4>
-            <p :class="{red: detail.creditLevel !== 20}">{{ detail.creditLevel === 20 ? '正常' : "风险" }}</p>
+            <p :class="{red: detail.creditLevel !== 20}">{{ detail.creditLevel === 20 ? '良好' : "风险" }}</p>
           </div>
         </el-col>
         <el-col :span="12">

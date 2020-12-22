@@ -283,9 +283,10 @@ export default {
     },
     handleClose(row) {
       this.$prompt('悬赏将立即退回品牌方账户，关闭理由将同步到订单状态的提示语中', '关闭订单', {
-        inputPlaceholder: '关闭理由,最多20字',
+        inputPlaceholder: '关闭理由,最多200字',
+        inputType: 'textArea',
         inputValidator: (s) => {
-          return s && s.length <= 20
+          return s && s.length <= 200
         },
         beforeClose: (action, instance, done) => {
           if (action === 'confirm' && !instance.inputValue) {

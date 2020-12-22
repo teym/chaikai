@@ -267,9 +267,10 @@ export default {
         '撤销后，达人无需支付罚款\n撤销理由，将更新至罚款状态的提示语中',
         '撤销罚款',
         {
-          inputPlaceholder: '撤销理由,最多20字',
+          inputPlaceholder: '撤销理由,最多200字',
+          inputType: 'textArea',
           inputValidator: (s) => {
-            return s && s.length <= 20
+            return s && s.length <= 200
           },
           beforeClose: (action, instance, done) => {
             if (action === 'confirm' && !instance.inputValue) {
@@ -293,9 +294,11 @@ export default {
     },
     handleRemark(row) {
       this.$prompt('备注信息仅供内部查看', '填写备注', {
-        inputPlaceholder: '备注,最多20字',
+        inputPlaceholder: '备注,最多200字',
+        inputType: 'textArea',
+        inputValue: row.sysRemark,
         inputValidator: (s) => {
-          return s && s.length <= 20
+          return s && s.length <= 200
         },
         beforeClose: (action, instance, done) => {
           if (action === 'confirm' && !instance.inputValue) {
