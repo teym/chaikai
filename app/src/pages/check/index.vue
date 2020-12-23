@@ -536,6 +536,14 @@ export default {
         uiapi.toast('请选择合作渠道')
         return
       }
+      if (!/^[1-9][0-9.]*$/.test(this.bid)) {
+        uiapi.toast('请输入正确的报价金额')
+        return
+      }
+      if (!/^[1-9][0-9]*$/.test(this.bid)) {
+        uiapi.toast('报价金额只支持整数')
+        return
+      }
       if (this.type === 2 && (this.reward <= 0 || this.reward > this.maxReward)) {
         this.inputerror = true
         uiapi.toast(`请输入1~${this.maxReward}的报价金额`)

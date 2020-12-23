@@ -75,9 +75,13 @@ export default {
   mounted () {
     const { credit } = router(this).params()
     this.credit = parseInt(credit) || 20
+    const l = uiapi.loading()
+    this.loadData(1).then(l).catch(l)
   },
   onShow () {
-    this.loadData(1)
+    if (!this.loading) {
+      this.loadData(1)
+    }
   },
   onPullDownRefresh () {
     uiapi.waitRefresh(this.loadData(1))

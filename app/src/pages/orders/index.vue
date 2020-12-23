@@ -36,7 +36,7 @@ export default {
   data () {
     return {
       active: 0,
-      status: [{name: '全部', key: 0}, {name: '待发货', key: 3}, {name: '待收货', key: 4}, {name: '待测评', key: 5}, {name: '已逾期', key: 8}],
+      status: [{name: '全部', key: 0}, {name: '待发货', key: 3}, {name: '待收货', key: 4}, {name: '待测评', key: 5}, {name: '已逾期', key: 8}, {name: '已测评', key: 6}],
       datas: [],
       loading: false,
       page: 1,

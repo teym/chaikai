@@ -75,7 +75,7 @@
           <p class="light middle margin-l">测评投诉</p>
         </div>
         <div class="row i-center" @click="onIssue(item)">
-          <p class="light small">
+          <p class="light small" :class="{red: item.statusCode === 1 || item.statusCode === 4}">
             {{["","待修改","待确认","小二审核中","待重评","已修改","已取消","已违规"][item.statusCode]}}
           </p>
           <img class="right" src="/static/images/arrow_right.png" alt="right" />
@@ -127,7 +127,7 @@
         </div>
       </div>
     </div>
-    <div class="margin-t white_bg pad2">
+    <div class="margin-t white_bg pad2" v-if="data.coopSubType < 3">
       <div class="row just i-center" @click="onReward">
         <div class="row i-center">
           <h5 class="middle dark blod">悬赏金额</h5>
@@ -169,10 +169,10 @@
       <div class="rule margin-t" @click="onRule">
         <img src="/static/images/detail_tip.png" alt="tip" />
       </div>
-      <h5 class="middle dark blod margin-t" v-if="data.coopSubType !== 3">
+      <h5 class="middle dark blod margin-t" v-if="data.activity.cooperationType !== 4 && data.coopSubType !== 3">
         合作要求
       </h5>
-      <div class="light_bg pad margin-t" v-if="data.coopSubType !== 3">
+      <div class="light_bg pad margin-t" v-if="data.activity.cooperationType !== 4 && data.coopSubType !== 3">
         <div
           v-if="data.activity.extension.articleType > 0"
           class="row just pad-t"
@@ -655,7 +655,7 @@ export default {
   height: 44rpx;
   border-radius: 22rpx;
 }
-.right {
+img.right {
   width: 32rpx;
   height: 32rpx;
 }

@@ -46,7 +46,7 @@
         </div>
       </div>
     </div>
-    <div class="margin-t flex col">
+    <div class="margin-t flex col" v-if="data.type === 1">
       <div class="row white_bg pad2-t pad2-l i-center">
         <h5 class="middle dark blod">罚款明细</h5>
       </div>
@@ -65,7 +65,7 @@
     <bar v-if="data.statusCode < 3">
       <div class="bar">
         <div class="btn" @click="onOk">
-          {{ data.statusCode === 1 ? "去处理" : "去支付" }}
+          {{ data.statusCode === 1 && data.type === 1 ? "去处理" : "去支付" }}
         </div>
       </div>
     </bar>
@@ -106,11 +106,9 @@ export default {
       }
     }
   },
-  created () {
-    // let app = getApp()
-  },
   mounted () {
-    this.loadData()
+    const l = uiapi.loading()
+    this.loadData().then(l).catch(l)
   },
   onPullDownRefresh () {
     uiapi.waitRefresh(this.loadData())
@@ -128,6 +126,7 @@ export default {
             this.data.date = moment(this.data.gmtCreate).format(
               'YYYY-MM-DD HH:mm:ss'
             )
+            uiapi.setTitle(this.data.type === 1 ? '逾期罚款' : '违规罚款')
           }),
         request
           .get('/bl/activity/order/fine/record/list', { fineId: id })

@@ -45,9 +45,9 @@
                   名额
                   <span class="red blod">{{item.remainingNum || item.totalNum}}</span>
                 </p>
-                <ul v-if="item.cooperationType < 3" class="row tag">
-                  <li class="small red">悬赏</li>
-                  <li v-if="item.cooperationType === 2" class="small red margin-l">报价</li>
+                <ul v-if="item.cooperationType !== 3" class="row tag">
+                  <li v-if="item.cooperationType < 3" class="small red">悬赏</li>
+                  <li v-if="item.cooperationType === 2 || item.cooperationType === 4" class="small red margin-l">报价</li>
                 </ul>
               </div>
             </div>

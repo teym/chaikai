@@ -85,5 +85,15 @@ export function scrollTo (sel) {
   })
 }
 
-export const muiapi = { alert, toast, loading, chooseImage, chooseAddress, previewImgs, waitRefresh, scrollTo }
+export function setTitle (title) {
+  return new Promise((resolve, reject) => {
+    mpvue.setNavigationBarTitle({
+      title,
+      success: resolve,
+      fail: reject
+    })
+  })
+}
+
+export const muiapi = { alert, toast, loading, chooseImage, chooseAddress, previewImgs, waitRefresh, scrollTo, setTitle }
 export default muiapi
