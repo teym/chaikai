@@ -552,7 +552,7 @@ export default {
           })(data);
           this.data = data;
           const done = data.statusCode === 7 || data.rewardStatusCode > 1;
-          this.$emit("order", { id, done: true });
+          this.$emit("order", { id, done });
         }
       });
     },
