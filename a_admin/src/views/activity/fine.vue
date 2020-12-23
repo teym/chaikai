@@ -118,6 +118,12 @@
           <span>{{ row.date }}</span>
         </template>
       </el-table-column>
+      <el-table-column label="支付单号" align="center">
+        <template slot-scope="{ row }">
+          <span>{{ row.payTradeNo || '无' }}</span>
+        </template>
+      </el-table-column>
+
       <el-table-column label="状态" align="center">
         <template slot-scope="{ row }">
           <span>{{ status[row.statusCode] }}</span><br>
@@ -272,6 +278,7 @@ export default {
           inputValidator: (s) => {
             return s && s.length <= 200
           },
+          inputErrorMessage: '已超出最长输入长度200个字',
           beforeClose: (action, instance, done) => {
             if (action === 'confirm' && !instance.inputValue) {
               this.$message({ message: '请输入撤销理由', type: 'error' })
@@ -300,6 +307,7 @@ export default {
         inputValidator: (s) => {
           return s && s.length <= 200
         },
+        inputErrorMessage: '已超出最长输入长度200个字',
         beforeClose: (action, instance, done) => {
           if (action === 'confirm' && !instance.inputValue) {
             this.$message({ message: '请输入备注', type: 'error' })

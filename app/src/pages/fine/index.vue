@@ -44,6 +44,7 @@
           <p class="light small">订单信息：{{ data.activity.title }}</p>
           <img class="right" src="/static/images/arrow_right.png" alt="right" />
         </div>
+        <p class="light small margin-b" v-if="data.payTradeNo">支付单号：{{data.payTradeNo}}</p>
       </div>
     </div>
     <div class="margin-t flex col" v-if="data.type === 1">

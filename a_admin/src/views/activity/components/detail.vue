@@ -215,7 +215,7 @@
               <el-radio-button :label="3">免费置换</el-radio-button>
             </el-radio-group>
           </el-form-item>
-          <div v-if="postForm.cooperationType !== 3">
+          <div v-if="postForm.cooperationType < 3">
             <el-form-item
               prop
               style="margin-bottom: 30px"

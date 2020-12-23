@@ -155,7 +155,7 @@
                 word-break: keep-all;
                 text-overflow: ellipsis;
                 margin: 0;
-                color: #999
+                color: #999;
               "
             >
               {{ row.statusDesc }}
@@ -199,7 +199,7 @@
 <script>
 import { fetchOrderList, exportOrderList, closeOrder } from '@/api/check'
 import moment from 'moment'
-import { clearQueryObject } from '@/utils/index'
+import { clearQueryObject, formatDeadLine } from '@/utils/index'
 import waves from '@/directive/waves' // waves directive
 import { mapGetters } from 'vuex'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
@@ -269,11 +269,30 @@ export default {
           .format('YYYY-MM-DD HH:mm:ss')
         obj.timeRange = null
       }
+      const mapState = (data, s) => {
+        switch (data.statusCode) {
+          case 1:
+            return `还剩${formatDeadLine(data.deadline)}结束审核`
+          case 3:
+            return `发货剩余时间${formatDeadLine(data.deadline)}`
+          case 4:
+            return `确认收货剩余时间${formatDeadLine(data.deadline)}`
+          case 8:
+            return `已逾期${Math.min(
+              moment().diff(
+                data.deadline ? moment(data.deadline) : new Date(),
+                'days'
+              ),
+              15
+            )}天`
+        }
+        return ''
+      }
       fetchOrderList(clearQueryObject(obj, true)).then(({ data }) => {
         this.list = (data.data || []).map((i) =>
           Object.assign(i, {
             date: moment(i.gmtCreate).format('YYYY-MM-DD HH:mm:ss'),
-            statusDesc: i.statusCode === 8 ? `已逾期${Math.min(moment().diff(i.deadline ? moment(i.deadline) : new Date(), 'days'), 15)}天` : i.statusDesc
+            statusDesc: mapState(i) || i.statusDesc || ''
           })
         )
         this.total = data.pager.count
@@ -308,20 +327,25 @@ export default {
       window.location.href = exportOrderList(clearQueryObject(obj, true))
     },
     handleClose(row) {
-      this.$prompt('悬赏将立即退回品牌方账户，关闭理由将同步到订单状态的提示语中', '关闭订单', {
-        inputPlaceholder: '关闭理由,最多200字',
-        inputType: 'textarea',
-        inputValidator: (s) => {
-          return s && s.length <= 200
-        },
-        beforeClose: (action, instance, done) => {
-          if (action === 'confirm' && !instance.inputValue) {
-            this.$message({ message: '请输入关闭理由', type: 'error' })
-          } else {
-            done()
+      this.$prompt(
+        '悬赏将立即退回品牌方账户，关闭理由将同步到订单状态的提示语中',
+        '关闭订单',
+        {
+          inputPlaceholder: '关闭理由,最多200字',
+          inputType: 'textarea',
+          inputValidator: (s) => {
+            return s && s.length <= 200
+          },
+          inputErrorMessage: '已超出最长输入长度200个字',
+          beforeClose: (action, instance, done) => {
+            if (action === 'confirm' && !instance.inputValue) {
+              this.$message({ message: '请输入关闭理由', type: 'error' })
+            } else {
+              done()
+            }
           }
         }
-      }).then((r) => {
+      ).then((r) => {
         closeOrder({
           id: row.id,
           reason: r.value

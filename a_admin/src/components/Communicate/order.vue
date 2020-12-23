@@ -30,7 +30,7 @@
         <h5>订单状态：</h5>
         <div>
           <p>{{ activityStatus[data.statusCode] }}</p>
-          <span v-if="data.statusCode === 7" style="color: #999">{{
+          <span v-if="data.statusCode >= 7" style="color: #999">{{
             data.statusDesc
           }}</span>
         </div>
@@ -142,7 +142,7 @@
           <span>{{ data.rewardMsg }}</span>
         </div>
       </div>
-      <div v-if="data.coopSubType !== 3" class="row">
+      <div v-if="data.coopSubType !== 3 && data.activity.cooperationType !== 4" class="row">
         <h5>合作要求：</h5>
         <div>
           <div class="row" style="margin-top: 0">
@@ -459,6 +459,7 @@ export default {
           inputValidator: (s) => {
             return s && s.length <= 200
           },
+          inputErrorMessage: '已超出最长输入长度200个字',
           beforeClose: (action, instance, done) => {
             if (action === 'confirm' && !instance.inputValue) {
               this.$message({ message: '请输入违规理由', type: 'error' })
@@ -527,6 +528,9 @@ export default {
       }
       fetchOrder(id).then(({ data }) => {
         if (id === this.id) {
+          if (data.statusCode === 8) {
+            data.statusDesc = `已逾期${Math.min(moment().diff(data.deadline ? moment(data.deadline) : new Date(), 'days'), 15)}天`
+          }
           data.build = {}
           data.build.topics = data.channels.filter((i) => i.topic)
           data.build.keywords = data.activity.extension.keywords

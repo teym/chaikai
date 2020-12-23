@@ -269,6 +269,7 @@ export default {
           inputValidator: (s) => {
             return s && s.length <= 200
           },
+          inputErrorMessage: '已超出最长输入长度200个字',
           beforeClose: (action, instance, done) => {
             if (action === 'confirm' && !instance.inputValue) {
               this.$message({

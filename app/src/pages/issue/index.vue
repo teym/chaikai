@@ -117,7 +117,7 @@ export default {
         case 6:
           return ''
         case 7:
-          return '处理超时/违规'
+          return this.data.statusIntro || '处理超时/违规'
       }
     },
     onGo () {

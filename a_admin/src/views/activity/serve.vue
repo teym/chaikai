@@ -246,7 +246,8 @@ export default {
         inputType: 'textarea',
         inputValidator: (s) => {
           return s && s.length <= 200
-        }
+        },
+        inputErrorMessage: '已超出最长输入长度200个字'
       }).then((r) => {
         closeOrder({
           id: row.id,
