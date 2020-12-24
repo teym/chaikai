@@ -351,6 +351,8 @@ export default {
           reason: r.value
         }).then(() => {
           row.statusCode = 7
+          row.rewardStatusCode = 3
+          row.statusDesc = r.value
           this.$message({ message: '操作成功', type: 'success' })
         })
       })
