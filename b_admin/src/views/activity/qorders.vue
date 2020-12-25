@@ -100,7 +100,9 @@
       >
         <template slot-scope="{ row }">
           <div v-for="c in row.channels" :key="c.platformId" class="channel">
-            <span>{{ ((parseFloat(c.fansCount) || 0) / 10000).toFixed(2) }}</span>
+            <span>{{
+              ((parseFloat(c.fansCount) || 0) / 10000).toFixed(2)
+            }}</span>
           </div>
         </template>
       </el-table-column>
@@ -495,7 +497,7 @@ export default {
     },
     handleAccept() {
       if (this.list.length > 0) {
-        const count = Math.min(this.list.length, this.stat['10']);
+        const count = Math.min(this.list.length, this.stat["10"]);
         this.$confirm(
           `将消耗${count}个活动名额和账户余额${count * this.list[0].reward}元`,
           {
@@ -545,9 +547,9 @@ export default {
         height: 40px;
         line-height: 40px;
         .pill {
-          background-color: #4244ff;
+          background-color: #4244ff26;
           font-size: 12px;
-          color: white;
+          color: #4244ff;
           line-height: 18px;
           border-radius: 9px;
           min-width: 18px;
@@ -623,10 +625,10 @@ export default {
         font-size: 12px;
         color: #4244ff;
         line-height: 25px;
-        padding: 0 8px;
+        padding: 2px 8px;
         border-radius: 12px;
-        background-color: #4244ffa6;
-        margin-right: 8px;
+        background-color: #ececff;
+        margin-right: 6px;
       }
     }
   }

@@ -219,7 +219,8 @@
         v-if="
           listQuery.statusCode === '3' ||
           listQuery.statusCode === '4' ||
-          listQuery.statusCode === '5'
+          listQuery.statusCode === '5' ||
+          listQuery.statusCode === '8'
         "
         label="收货信息"
       >
@@ -236,12 +237,30 @@
               ((row.receiver || {}).address || "")
             }}
             <br />
-            {{ listQuery.statusCode === '3' ? '' : `物流信息：${((row.receiver || {}).logisticsPlatform || "") +((row.receiver || {}).logisticsNo || "")}`}}
+            {{
+              listQuery.statusCode === "3"
+                ? ""
+                : `物流信息：${
+                    ((row.receiver || {}).logisticsPlatform || "") +
+                    ((row.receiver || {}).logisticsNo || "")
+                  }`
+            }}
           </span>
         </template>
       </el-table-column>
       <el-table-column
         :index="8"
+        v-if="listQuery.statusCode === '8'"
+        label="逾期时间"
+      >
+        <template slot-scope="{ row }">
+          <span>
+            已逾期{{ row.delayed }}
+          </span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        :index="9"
         v-if="listQuery.statusCode === '3'"
         label="发货时间"
       >
@@ -250,7 +269,7 @@
         </template>
       </el-table-column>
       <el-table-column
-        :index="9"
+        :index="10"
         v-if="listQuery.statusCode === '4'"
         label="确认收货"
       >
@@ -259,7 +278,7 @@
         </template>
       </el-table-column>
       <el-table-column
-        :index="10"
+        :index="11"
         v-if="listQuery.statusCode === '5'"
         label="评测时间"
       >
@@ -268,7 +287,7 @@
         </template>
       </el-table-column>
       <el-table-column
-        :index="11"
+        :index="12"
         v-if="listQuery.statusCode === '6' || listQuery.statusCode === '7'"
         label="悬赏"
       >
@@ -350,7 +369,7 @@
               }}
             </el-button>
             <el-button
-              v-if="listQuery.statusCode === '6' && row.rewardStatusCode === 2"
+              v-if="listQuery.statusCode === '6' && row.rewardStatusCode > 1"
               size="mini"
               :type="row.scoreInfo ? '' : 'primary'"
               @click="handleCommend(row)"
@@ -673,7 +692,7 @@ export default {
             6: r[0].data.evaluated || 0,
             7: r[0].data.closed || 0,
             8: r[0].data.delayed || 0,
-            9: r[1].data.candidate || 0,
+            9: r[0].data.candidate || 0,
             10: r[1].data.totalNum - (r[1].data.remainingNum || 0),
             11: r[1].data.remainingNum || 0,
           };
@@ -706,7 +725,14 @@ export default {
         .then((response) => {
           this.list = response.data.data.map((i) =>
             Object.assign(
-              { brRemark: "", deadlineText: formatDeadLine(i.deadline) },
+              {
+                brRemark: "",
+                deadlineText: formatDeadLine(i.deadline),
+                delayed:
+                  i.statusCode === 8
+                    ? formatDeadLine(new Date(), i.deadline)
+                    : 0,
+              },
               i,
               {
                 rewardMsg: ((t) => {

@@ -96,7 +96,7 @@
       </el-table-column>
       <el-table-column label="罚款类型" align="center">
         <template slot-scope="{ row }">
-          <span>{{ types[row.type] }}</span>
+          <span>{{ row.type === 1 ? "测评逾期" : "测评违规" }}</span>
         </template>
       </el-table-column>
       <el-table-column label="用户昵称" align="center">

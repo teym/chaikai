@@ -46,7 +46,7 @@
               <span>{{ activity }}</span> 次
             </el-col>
             <el-col :span="12">
-              <div @click="$router.push('/user/balance')">
+              <div class="quic" @click="$router.push('/user/balance')">
                 <span>{{ amount }}</span> 元
                 <el-icon class="el-icon-arrow-right" />
               </div>
@@ -339,6 +339,9 @@ export default {
         }
         .el-button {
           margin-left: 8px;
+        }
+        .quic{
+          cursor: pointer;
         }
       }
       .title {

@@ -63,7 +63,7 @@
         </div>
       </div>
     </div>
-    <bar v-if="data.statusCode < 3">
+    <bar v-if="data.statusCode < 3" background="#FFFFFF">
       <div class="bar">
         <div class="btn" @click="onOk">
           {{ data.statusCode === 1 && data.type === 1 ? "去处理" : "去支付" }}

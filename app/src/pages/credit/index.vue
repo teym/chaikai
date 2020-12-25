@@ -13,7 +13,7 @@
     </div>
     <div class="margin-t flex col">
       <div class="row white_bg pad2 i-center">
-        <h5 class="middle dark blod flex">信用明细</h5>
+        <h5 class="middle dark blod flex">风险记录</h5>
         <p class="small light row center" @click="onRule">
           <img src="/static/images/detail_mark.png" class="tip_mark" />信用规则
         </p>

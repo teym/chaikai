@@ -94,8 +94,8 @@ export function formatTime(time, option) {
     )
   }
 }
-export function formatDeadLine(date) {
-  const sec = date ? moment(date).diff(moment(), 'seconds') : 0
+export function formatDeadLine(date, base) {
+  const sec = date ? moment(date).diff(moment(base), 'seconds') : 0
   const d = Math.floor(sec / (24 * 60 * 60))
   const h = Math.floor((sec - d * 24 * 60 * 60) / (60 * 60))
   const m = Math.floor((sec - d * 24 * 60 * 60 - h * 60 * 60) / 60)

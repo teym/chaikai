@@ -10,23 +10,23 @@
           <h3>快捷功能</h3>
           <el-row>
             <el-col :span="12">
-              <div @click="handelCreate">
+              <div class="quic" @click="handelCreate">
                 <img src="@/assets/images/dash_create.png" />
                 创建商品
               </div>
             </el-col>
             <el-col :span="12">
-              <div @click="handleActivity">
+              <div class="quic" @click="handleActivity">
                 <img src="@/assets/images/dash_activity.png" /> 发布活动
               </div>
             </el-col>
             <el-col :span="12">
-              <div @click="handleAuth">
+              <div class="quic" @click="handleAuth">
                 <img src="@/assets/images/dash_auth.png" />认证授权
               </div>
             </el-col>
             <el-col :span="12">
-              <div @click="handleInvoice">
+              <div class="quic" @click="handleInvoice">
                 <img src="@/assets/images/dash_invoice.png" />申请开票
               </div>
             </el-col>
@@ -153,6 +153,7 @@ export default {
         align-items: center;
         font-size: 16px;
         font-weight: 500;
+        cursor: pointer;
         img {
           width: 40px;
           height: 40px;
