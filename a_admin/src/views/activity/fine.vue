@@ -8,10 +8,10 @@
         style="width: 100px"
       >
         <el-option :value="1" label="订单ID" />
-        <el-option :value="5" label="罚款ID" />
-        <el-option :value="2" label="活动名称" />
-        <el-option :value="3" label="公司名称" />
-        <el-option :value="4" label="用户昵称" />
+        <el-option :value="2" label="罚款ID" />
+        <el-option :value="3" label="活动名称" />
+        <el-option :value="4" label="公司名称" />
+        <el-option :value="5" label="用户昵称" />
       </el-select>
       <el-input
         v-model="listQuery.searchKey"
@@ -218,7 +218,7 @@ export default {
       this.listLoading = true
       const obj = Object.assign({}, this.listQuery)
       obj[
-        ['', 'orderId', 'id', 'activityTitle', 'companyName', 'bloggerName'][
+        ['', 'brActivityOrderId', 'id', 'activityTitle', 'companyName', 'bloggerName'][
           obj.searchType
         ]
       ] = obj.searchKey

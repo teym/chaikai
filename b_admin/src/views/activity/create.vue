@@ -1221,6 +1221,9 @@ export default {
               duration: 2000,
             });
             this.loading = false;
+            if(obj.cooperationType > 2) {
+              this.$store.dispatch("user/getInfo");
+            }
             this.$router.push({ path: "/activity/index" });
           }).catch((e) => {
             this.loading = false;

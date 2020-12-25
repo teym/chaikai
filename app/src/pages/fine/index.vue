@@ -97,9 +97,9 @@ export default {
     msg: function () {
       switch (this.data.statusCode) {
         case 1:
-          return '测评已逾期，期间将持续产生罚款'
+          return '测评逾期期间，将按天累积罚款'
         case 2:
-          return '测评已逾期，期间将持续产生罚款'
+          return '罚款未支付将无法报名活动'
         case 3:
           return '继续保持良好的合作行为'
         case 4:

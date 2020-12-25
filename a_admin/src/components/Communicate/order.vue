@@ -441,7 +441,7 @@ export default {
       const id = this.id
       this.data.update = true
       const proc = (str) => {
-        updateIssueState({ id: ticket.id, statusCode: s, reason: str })
+        updateIssueState({ id: ticket.id, statusCode: s, statusIntro: str })
           .then((r) => {
             if (id === this.id) {
               this.data.update = false
@@ -522,7 +522,7 @@ export default {
           // case 5: //"已修改",
           // case 6: //"已取消",
           case 7: // "已违规",
-            return '处理超时/违规'
+            return tt.statusIntro
         }
         return ''
       }
