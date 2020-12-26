@@ -229,8 +229,10 @@
             v-model="text"
             maxlength="200"
             class="middle dark normal"
-            placeholder="表达更多合作意向，能提高通过率喔~"
+            @focus="focus = true"
+            @blur="focus = false"
           ></textarea>
+          <p v-if="!text && !focus" class="middle light normal placeholder">表达更多合作意向，能提高通过率喔~</p>
           <p class="small light normal text-right">{{ textLen }}/200</p>
         </div>
       </div>
@@ -297,7 +299,8 @@ function defaultData () {
     active: {},
     tip: false,
     text: '',
-    inputerror: false
+    inputerror: false,
+    focus: false
   }
 }
 
@@ -639,9 +642,15 @@ export default {
   border-radius: 8rpx;
   margin-bottom: 100rpx;
   padding-bottom: 8rpx;
+  position: relative;
 }
 .textinput textarea {
   width: 670rpx;
+}
+.textinput .placeholder {
+  position: absolute;
+  left: 8rpx;
+  top: 8rpx;
 }
 .bar {
   /* margin-top: 180rpx; */
