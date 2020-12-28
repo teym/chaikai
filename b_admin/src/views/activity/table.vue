@@ -120,10 +120,14 @@
               row.statusCode
             ]
           }}</span>
-          <span style="color: #999" v-if="row.statusCode === 3">
-            <br />
-            {{ row.rejectReason }}
-          </span>
+          <el-popover
+            v-if="row.statusCode === 3"
+            trigger="click"
+            :content="row.rejectReason"
+            placement="bottom"
+          >
+            <p style="color: #999" slot="reference">{{ row.rejectReason }}</p>
+          </el-popover>
         </template>
       </el-table-column>
       <el-table-column
@@ -318,15 +322,19 @@ export default {
     },
     handleCreate() {
       if (this.statusCode !== 3) {
-        this.$alert("无法发布活动，为保障品牌合作规范，请先完成企业认证", {title:'提示', confirmButtonText:'去认证'}).then(
-          (r) => {
-            if (r === "confirm") {
-              this.$router.push("/user/create");
-            }
+        this.$alert("无法发布活动，为保障品牌合作规范，请先完成企业认证", {
+          title: "提示",
+          confirmButtonText: "去认证",
+        }).then((r) => {
+          if (r === "confirm") {
+            this.$router.push("/user/create");
           }
-        );
+        });
       } else if (this.goodsCount === 0) {
-        this.$alert("无法发布活动，请先创建活动商品",{title:'提示', confirmButtonText:'创建商品'}).then((r) => {
+        this.$alert("无法发布活动，请先创建活动商品", {
+          title: "提示",
+          confirmButtonText: "创建商品",
+        }).then((r) => {
           if (r === "confirm") {
             this.$router.push("/goods/create");
           }
