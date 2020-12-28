@@ -324,7 +324,7 @@ export default {
         uiapi.toast('你已申请过该活动')
         return
       }
-      const {id} = router(this).params()
+      const {id} = this.param()
       const l = uiapi.loading()
       request.get('/bl/activity/qualification', {activityId: id}).then(({json: {data}}) => {
         l()
