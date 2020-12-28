@@ -127,15 +127,15 @@ export default {
       if (!this.user.wechatNo) {
         return uiapi.toast('请输入微信号')
       }
-      // if (_.values(this.active).length <= 0) {
-      //   return uiapi.toast('请选择垂直领域')
-      // }
-      const e = uiapi.loading()
+      if (_.values(this.active).length <= 0) {
+        return uiapi.toast('请选择垂直领域')
+      }
+      const l = uiapi.loading()
       request.put('/bl/account', Object.assign({}, this.user, {areas: _.values(this.active)})).then((r) => {
-        e()
+        l()
         router(this).pop()
       }).catch(e => {
-        e()
+        l()
         uiapi.toast(e.info)
       })
     }
