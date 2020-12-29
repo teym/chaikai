@@ -126,7 +126,19 @@
             :content="row.rejectReason"
             placement="bottom"
           >
-            <p style="color: #999" slot="reference">{{ row.rejectReason }}</p>
+            <p
+              style="
+                height: 23px;
+                overflow: hidden;
+                word-break: keep-all;
+                text-overflow: ellipsis;
+                margin: 0;
+                color: #999;
+              "
+              slot="reference"
+            >
+              {{ row.rejectReason }}
+            </p>
           </el-popover>
         </template>
       </el-table-column>

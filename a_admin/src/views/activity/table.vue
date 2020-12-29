@@ -88,10 +88,26 @@
       <el-table-column label="状态" align="center">
         <template slot-scope="{ row }">
           <span>{{ status[row.statusCode] }}</span>
-          <span v-if="row.statusCode === 3" style="color: #999">
-            <br>
-            {{ row.rejectReason }}
-          </span>
+          <el-popover
+            v-if="row.statusCode === 3"
+            trigger="click"
+            :content="row.rejectReason"
+            placement="bottom"
+          >
+            <p
+              slot="reference"
+              style="
+                height: 23px;
+                overflow: hidden;
+                word-break: keep-all;
+                text-overflow: ellipsis;
+                margin: 0;
+                color: #999;
+              "
+            >
+              {{ row.rejectReason }}
+            </p>
+          </el-popover>
         </template>
       </el-table-column>
       <el-table-column label="报名时间" align="center">
@@ -149,7 +165,12 @@
       :limit.sync="listQuery.size"
       @pagination="getList"
     />
-    <el-dialog width="80%" title="活动详情" :visible.sync="detailVisible" append-to-body>
+    <el-dialog
+      width="80%"
+      title="活动详情"
+      :visible.sync="detailVisible"
+      append-to-body
+    >
       <detail
         v-if="detailVisible && detail"
         :id="detail.id + ''"
@@ -213,7 +234,13 @@ export default {
         '报名中',
         '报名结束'
       ],
-      coopTypes: ['全部', '接受悬赏', '接受悬赏/达人报价', '免费置换', '免费置换/达人报价'],
+      coopTypes: [
+        '全部',
+        '接受悬赏',
+        '接受悬赏/达人报价',
+        '免费置换',
+        '免费置换/达人报价'
+      ],
       detailVisible: false,
       detailLoading: false,
       detail: null,

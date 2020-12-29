@@ -139,7 +139,14 @@
               :content="row.applyReason"
               placement="bottom"
             >
-              <p slot="reference">申请理由：{{ row.applyReason }}</p>
+              <p slot="reference" style="
+                height: 23px;
+                overflow: hidden;
+                word-break: keep-all;
+                text-overflow: ellipsis;
+                margin: 0;
+                color: #999;
+              ">申请理由：{{ row.applyReason }}</p>
             </el-popover>
           </div>
         </template>
