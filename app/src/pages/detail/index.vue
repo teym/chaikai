@@ -251,10 +251,10 @@ export default {
       return (((this.data || {}).extension || {}).receiveAreas || []).map(i => ((i.province || '') + (i.city || ''))).join(',')
     }
   },
-  mounted () {
-    this.reset()
-    this.loadData()
-  },
+  // mounted () {
+  //   this.reset()
+  //   this.loadData()
+  // },
   onShow () {
     this.reset()
     this.loadData()

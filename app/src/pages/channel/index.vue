@@ -55,20 +55,22 @@ import { router, uiapi, request, mapChannel } from '@/utils/index'
 export default {
   data () {
     return {
-      data: {},
+      data: null,
       bind: [],
       unbind: []
     }
   },
   mounted () {
-    this.data = {}
+    this.data = null
     this.bind = []
     this.unbind = []
-    const l = uiapi.loading()
-    this.loadData().then(l).catch(l)
   },
   onShow () {
-    this.loadData()
+    const p = this.loadData()
+    if (!this.data) {
+      const l = uiapi.loading()
+      p.then(l).catch(l)
+    }
   },
   onPullDownRefresh () {
     uiapi.waitRefresh(this.loadData())
