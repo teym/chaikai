@@ -31,7 +31,7 @@
             <img :src="row.blogger.avatar" alt="pic" />
             <div class="content">
               <div class="row">
-                <el-tooltip content="Top center" placement="top">
+                <el-tooltip :content="row.blogger.nickname" placement="top">
                   <p>
                     {{ row.blogger.nickname }}
                   </p>
@@ -625,8 +625,10 @@ export default {
         margin: 0;
         padding: 0;
         word-break: keep-all;
+        white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+        flex: 1;
       }
       span {
         color: #ff8300;
