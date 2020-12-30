@@ -412,6 +412,9 @@ export default {
           font-size: 18px;
           color: #333333;
           font-weight: 500;
+          word-break: keep-all;
+          overflow: hidden;
+          text-overflow: ellipsis;
         }
         span {
           font-size: 14px;

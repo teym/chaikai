@@ -109,15 +109,19 @@
       style="width: 100%"
       ref="table"
     >
-      <el-table-column label="达人" :index="1" width="260">
+      <el-table-column label="达人" :index="1" width="320">
         <template slot-scope="{ row }">
           <div class="info">
             <img :src="row.blogger.avatar" alt="pic" />
-            <div>
-              <p>
-                {{ row.blogger.nickname }}
+            <div class="content">
+              <div class="row">
+                <el-tooltip content="Top center" placement="top">
+                  <p>
+                    {{ row.blogger.nickname }}
+                  </p>
+                </el-tooltip>
                 <span>评分：{{ row.blogger.score }}</span>
-              </p>
+              </div>
               <p>
                 <span
                   v-for="(i, j) in row.blogger.areas"
@@ -139,14 +143,19 @@
               :content="row.applyReason"
               placement="bottom"
             >
-              <p slot="reference" style="
-                height: 23px;
-                overflow: hidden;
-                word-break: keep-all;
-                text-overflow: ellipsis;
-                margin: 0;
-                color: #999;
-              ">申请理由：{{ row.applyReason }}</p>
+              <p
+                slot="reference"
+                style="
+                  height: 23px;
+                  overflow: hidden;
+                  word-break: keep-all;
+                  text-overflow: ellipsis;
+                  margin: 0;
+                  color: #999;
+                "
+              >
+                申请理由：{{ row.applyReason }}
+              </p>
             </el-popover>
           </div>
         </template>
@@ -261,9 +270,7 @@
         label="逾期时间"
       >
         <template slot-scope="{ row }">
-          <span>
-            已逾期{{ row.delayed }}
-          </span>
+          <span> 已逾期{{ row.delayed }} </span>
         </template>
       </el-table-column>
       <el-table-column
@@ -1050,31 +1057,47 @@ export default {
     border-radius: 25px;
     background-color: #f5f5f5;
   }
-  div {
+  div.content {
     margin-left: 8px;
     height: 50px;
     flex: 1;
+    div.row {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      p {
+        color: #333;
+        font-size: 18px;
+        line-height: 25px;
+        margin: 0;
+        padding: 0;
+        word-break: keep-all;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      span {
+        color: #ff8300;
+        font-size: 12px;
+        float: right;
+      }
+    }
     p {
       color: #333;
       font-size: 18px;
       line-height: 25px;
       margin: 0;
       padding: 0;
-      span {
-        color: #ff8300;
-        font-size: 12px;
-        float: right;
-      }
-      span.pill {
-        float: none;
-        font-size: 12px;
-        color: #4244ff;
-        line-height: 25px;
-        padding: 2px 8px;
-        border-radius: 12px;
-        background-color: #ececff;
-        margin-right: 6px;
-      }
+    }
+    span.pill {
+      float: none;
+      font-size: 12px;
+      color: #4244ff;
+      line-height: 25px;
+      padding: 2px 8px;
+      border-radius: 12px;
+      background-color: #ececff;
+      margin-right: 6px;
     }
   }
 }
