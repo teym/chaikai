@@ -80,7 +80,9 @@
             v-model="text"
             :disabled="orderDone"
             class="input"
-            :placeholder="orderDone ? '合作已结束，无法发送消息' : '支持发送图文消息'"
+            :placeholder="
+              orderDone ? '合作已结束，无法发送消息' : '支持发送图文消息'
+            "
             @keypress.enter="onSend"
           />
           <div class="row">
@@ -390,8 +392,10 @@ export default {
           color: #333333;
           font-weight: 500;
           word-break: keep-all;
+          white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
+          flex: 1;
         }
         span {
           font-size: 14px;

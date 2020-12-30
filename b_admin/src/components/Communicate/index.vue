@@ -288,8 +288,8 @@ export default {
         .reduce((a, b) => a + b, 0);
       this.$emit("count", { count, list: this.list.length });
     },
-    onOrder({id, done}) {
-      if(id === this.active){
+    onOrder({ id, done }) {
+      if (id === this.active) {
         this.orderDone = done;
       }
     },
@@ -413,8 +413,10 @@ export default {
           color: #333333;
           font-weight: 500;
           word-break: keep-all;
+          white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
+          flex: 1;
         }
         span {
           font-size: 14px;
