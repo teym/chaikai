@@ -613,6 +613,7 @@ export default {
     margin-left: 8px;
     height: 50px;
     flex: 1;
+    max-width: calc(100% - 58px);
     div.row {
       display: flex;
       flex-direction: row;
