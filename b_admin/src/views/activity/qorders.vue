@@ -348,7 +348,7 @@ export default {
         page: 1,
         size: 10,
         candidate: true,
-        sort: "RECOMMEND",
+        sortType: "1",
         statusCode: "1",
         platformId: "",
         goodsSkuUnionId: "",

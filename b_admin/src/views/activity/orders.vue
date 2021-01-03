@@ -38,10 +38,10 @@
         </el-input>
       </div>
       <div v-show="listQuery.statusCode === '1'" class="row row2">
-        <el-select v-model="listQuery.sort" @change="handleFilter">
-          <el-option label="推荐排序" value="RECOMMEND" />
-          <el-option label="粉丝量" value="FANS" />
-          <el-option label="最新申请" value="TIME" />
+        <el-select v-model="listQuery.sortType" @change="handleFilter">
+          <el-option label="推荐排序" value="1" />
+          <el-option label="粉丝量" value="3" />
+          <el-option label="最新申请" value="2" />
         </el-select>
 
         <el-select v-model="listQuery.platformId" @change="handleFilter">
@@ -645,7 +645,7 @@ export default {
         brActivityId: 0,
         page: 1,
         size: 10,
-        sort: "RECOMMEND",
+        sortType: "1",
         statusCode: "1",
         platformId: "",
         goodsSkuUnionId: "",
