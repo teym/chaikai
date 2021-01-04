@@ -21,7 +21,7 @@
         @keyup.enter.native="handleFilter"
       />
       <el-select
-        v-model="listQuery.coopType"
+        v-model="listQuery.coopSubType"
         size="mini"
         class="filter-item"
         style="width: 160px; margin-left: 16px"
@@ -225,7 +225,7 @@ export default {
         searchType: 1,
         searchKey: '',
         statusCode: 0,
-        coopType: 0,
+        coopSubType: 0,
         rewardStatusCode: 0,
         timeRange: [ps, ns]
       },
