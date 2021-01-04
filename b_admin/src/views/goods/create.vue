@@ -328,6 +328,7 @@ export default {
         if (!d.skuGroups) {
           d.skuGroups = [];
         }
+        d.detail = (d.detail || '<div></div>').replace(/^<p/,'<div').replace(/<\/p>$/,'</div>')
         this.postForm = d;
       });
     },
@@ -356,7 +357,7 @@ export default {
             banners: data.images || this.postForm.banners,
             detail:
               data.descImgs && data.descImgs.length > 0
-                ? "<p>" + imgs + "</p>"
+                ? "<div>" + imgs + "</div>"
                 : this.postForm.detail,
             itemId: data.itemId || 0,
           };

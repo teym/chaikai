@@ -8,7 +8,7 @@
             手机号：{{ telephone }}
             <span>
               <el-button type="text" @click="showChangePhone = true"
-                >绑定手机</el-button
+                >换绑手机</el-button
               >
               <el-button type="text" @click="showChangePassword = true"
                 >修改密码</el-button

@@ -34,7 +34,7 @@
               >
             </div>
             <div class="col">
-              <div @click="$router.push('/user/balance')">
+              <div style="cursor: pointer;" @click="$router.push('/user/balance')">
                 <span>{{ amount }}</span
                 >元
                 <el-icon class="el-icon-arrow-right"></el-icon>
