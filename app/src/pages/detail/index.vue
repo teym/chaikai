@@ -292,7 +292,7 @@ export default {
         if (!data.goods.brandInfo) {
           data.goods.brandInfo = {}
         }
-        data.goods.detail = data.goods.detail.replace(/<img /g, '<img style="max-width:100%;height:auto;display:block;" ')
+        data.goods.detail = data.goods.detail.replace(/<img.*?src="(.*?)"[^>]+>/g, '<img style="max-width:100%;height:auto;display:block;" src="$1" />').replace(/^<p/, '<div').replace(/<\/p>$/, '</div>')
 
         data.statusCode = (moment(data.regEndTime).isAfter(new Date()) && data.remainingNum > 0) ? data.statusCode : 6
         data.extension.bloggerPublishTimeStr = moment(data.extension.bloggerPublishTime).format('截止M月D日前')

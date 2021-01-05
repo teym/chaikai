@@ -350,7 +350,7 @@ export default {
             return;
           }
           const imgs = data.descImgs
-            .map((i) => `<img style="width:100%" src="${i}"/>`)
+            .map((i) => `<img src="${i}"/>`)
             .join("");
           const d = {
             title: (data.title || this.postForm.title).substring(0, 30),

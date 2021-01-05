@@ -140,7 +140,7 @@ export default {
         language: this.languageTypeList["zh"],
         height: this.height,
         body_class: "panel-body ",
-        content_style: 'body{margin: 0;padding: 0;}img{max-width: 100%;height: auto;display: block;}body > p{margin: 0;}',
+        content_style: 'body{margin: 0;padding: 0;}img{max-width: 100%;height: auto;display: block;}',
         object_resizing: false,
         toolbar: this.toolbar.length > 0 ? this.toolbar : toolbar,
         menubar: this.menubar,
@@ -229,7 +229,7 @@ export default {
       arr.forEach((v) =>
         window.tinymce
           .get(this.tinymceId)
-          .insertContent(`<img class="wscnph" src="${v.url}" >`)
+          .insertContent(`<img src="${v.url}" >`)
       );
     },
   },
