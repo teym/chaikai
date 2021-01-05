@@ -229,7 +229,7 @@ export default {
       arr.forEach((v) =>
         window.tinymce
           .get(this.tinymceId)
-          .insertContent(`<img src="${v.url}" >`)
+          .insertContent(`<img src="${v.url}" />`)
       );
     },
   },
