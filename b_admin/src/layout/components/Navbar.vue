@@ -179,6 +179,7 @@ export default {
       .nav_img_icon {
         width: 24px;
         height: 24px;
+        cursor: pointer;
       }
     }
     .menu-help {

@@ -697,18 +697,18 @@ export default {
       ])
         .then((r) => {
           this.stat = {
-            0: r[1].data.totalNum || 0,
-            1: r[0].data.pending || 0,
-            2: r[0].data.notPayDeposit || 0,
-            3: r[0].data.toBeDelivered || 0,
-            4: r[0].data.toBeReceived || 0,
-            5: r[0].data.toBeEvaluated || 0,
-            6: r[0].data.evaluated || 0,
-            7: r[0].data.closed || 0,
-            8: r[0].data.delayed || 0,
-            9: r[0].data.candidate || 0,
-            10: r[1].data.totalNum - (r[1].data.remainingNum || 0),
-            11: r[1].data.remainingNum || 0,
+            '0': r[1].data.totalNum || 0,
+            '1': r[0].data.pending || 0,
+            '2': r[0].data.notPayDeposit || 0,
+            '3': r[0].data.toBeDelivered || 0,
+            '4': r[0].data.toBeReceived || 0,
+            '5': r[0].data.toBeEvaluated || 0,
+            '6': r[0].data.evaluated || 0,
+            '7': r[0].data.closed || 0,
+            '8': r[0].data.delayed || 0,
+            '9': r[0].data.candidate || 0,
+            '10': r[1].data.totalNum - (r[1].data.remainingNum || 0),
+            '11': r[1].data.remainingNum || 0,
           };
           this.channels = r[1].data.extension.channelLimit
             ? r[1].data.extension.channels.map((i) =>

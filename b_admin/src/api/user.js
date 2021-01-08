@@ -135,6 +135,20 @@ export function getCode(telephone, type) {
     data: { type, telephone, sign }
   })
 }
+export function bindPhone(data) {
+  return request({
+    url: '/br/account/telephone/bind',
+    method: 'put',
+    data
+  })
+}
+export function resetPass(data) {
+  return request({
+    url: '/br/account/password',
+    method: 'put',
+    data
+  })
+}
 
 export function logout() {
   return request({

@@ -7,10 +7,10 @@
           <div>
             手机号：{{ telephone }}
             <span>
-              <el-button type="text" @click="showChangePhone = true"
+              <el-button type="text" @click="onShowChangePhone"
                 >换绑手机</el-button
               >
-              <el-button type="text" @click="showChangePassword = true"
+              <el-button type="text" @click="onShowChangePassword"
                 >修改密码</el-button
               >
             </span>
@@ -79,32 +79,32 @@
     </el-row>
     <el-dialog title="绑定手机号" :visible.sync="showChangePhone" width="420px">
       <el-form
-        :model="phoneForm"
+        :model="fromdata"
         :rules="rules"
         label-position="right"
         label-width="92px"
       >
         <el-form-item label="登录密码" prop="password">
           <el-input
-            v-model="phoneForm.password"
+            v-model="fromdata.password"
             autocomplete="off"
             placeholder="请输入当前账号登录密码"
           />
         </el-form-item>
         <el-form-item label="(新)手机号" class="username" prop="username">
           <el-input
-            v-model="phoneForm.username"
+            v-model="fromdata.username"
             autocomplete="off"
             placeholder="请输入11位手机号码"
           >
-            <div slot="prepend" class="prefix">
+            <div slot="prefix" class="prefix">
               <p>+86</p>
             </div>
           </el-input>
         </el-form-item>
         <el-form-item label="验证码" props="code">
           <el-input
-            v-model="phoneForm.code"
+            v-model="fromdata.code"
             autocomplete="off"
             style="width: 60%"
             placeholder="请输入验证码"
@@ -113,7 +113,7 @@
             style="float: right"
             plain
             type="primary"
-            @click="handleCode"
+            @click="handleCode(104)"
             >{{ count > 0 ? `${count}后再试` : "获取验证码" }}</el-button
           >
         </el-form-item>
@@ -121,7 +121,7 @@
       <div slot="footer" class="dialog-footer">
         <el-button
           type="primary"
-          :loading="phoneLoading"
+          :loading="fromLoading"
           @click="handleChangePhone"
           >确 定</el-button
         >
@@ -133,24 +133,26 @@
       width="420px"
     >
       <el-form
-        :model="passwordForm"
+        :model="fromdata"
         :rules="rules"
         label-position="right"
         label-width="92px"
       >
-        <el-form-item label="手机号" prop="username">
+        <el-form-item label="手机号" class="username" prop="username">
           <el-input
-            v-model="passwordForm.username"
+            disabled
+            v-model="fromdata.username"
             autocomplete="off"
             placeholder="请输入11位手机号码"
-            ><div slot="prepend" class="prefix">
+          >
+            <div slot="prefix" class="prefix">
               <p>+86</p>
             </div>
           </el-input>
         </el-form-item>
-        <el-form-item label="验证码" prop="code">
+        <el-form-item label="验证码" props="code">
           <el-input
-            v-model="passwordForm.code"
+            v-model="fromdata.code"
             autocomplete="off"
             style="width: 60%"
             placeholder="请输入验证码"
@@ -159,22 +161,22 @@
             style="float: right"
             plain
             type="primary"
-            @click="handleCode"
+            @click="handleCode(104)"
             >{{ count > 0 ? `${count}后再试` : "获取验证码" }}</el-button
           >
         </el-form-item>
-        <el-form-item label="重置密码" prop="password">
+        <el-form-item label="登录密码" prop="password">
           <el-input
-            v-model="passwordForm.password"
+            v-model="fromdata.password"
             autocomplete="off"
-            placeholder="请输入密码"
+            placeholder="请输入当前账号登录密码"
           />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button
           type="primary"
-          :loading="passwordLoading"
+          :loading="fromLoading"
           @click="handleChangePassword"
           >确 定</el-button
         >
@@ -186,7 +188,7 @@
 <script>
 import { mapGetters } from "vuex";
 import { validPhone, validCode } from "@/utils/validate";
-import { getCode } from "@/api/user";
+import { getCode, bindPhone, resetPass } from "@/api/user";
 
 export default {
   name: "UserCard",
@@ -213,7 +215,7 @@ export default {
     };
     const validateCode = (rule, value, callback) => {
       if (!validCode(value)) {
-        callback(new Error("验证码为4位数字"));
+        callback(new Error("验证码为6位数字"));
       } else {
         callback();
       }
@@ -221,19 +223,12 @@ export default {
     return {
       showChangePhone: false,
       showChangePassword: false,
-      phoneForm: {
+      fromdata: {
         username: "",
         password: "",
         code: "",
       },
-      phoneLoading: false,
-
-      passwordForm: {
-        username: "",
-        code: "",
-        password: "",
-      },
-      passwordLoading: false,
+      fromLoading: false,
 
       rules: {
         username: [
@@ -251,12 +246,25 @@ export default {
   computed: {
     ...mapGetters(["name", "avatar", "telephone", "amount", "activity"]),
   },
-  created() {
-    // if (!this.roles.includes('admin')) {
-    //   this.currentRole = 'editorDashboard'
-    // }
-  },
   methods: {
+    onShowChangePhone() {
+      this.fromdata.username = "";
+      this.fromdata.code = "";
+      this.fromdata.password = "";
+      clearTimeout(this.timer);
+      this.count = 0;
+      this.fromLoading = false;
+      this.showChangePhone = true;
+    },
+    onShowChangePassword() {
+      this.fromdata.username = this.telephone;
+      this.fromdata.code = "";
+      this.fromdata.password = "";
+      clearTimeout(this.timer);
+      this.count = 0;
+      this.fromLoading = false;
+      this.showChangePassword = true;
+    },
     handleTimer() {
       this.timer = setTimeout(() => {
         this.count -= 1;
@@ -265,27 +273,55 @@ export default {
         }
       }, 1000);
     },
-    handleCode() {
+    handleCode(type) {
       if (this.count > 0) return;
-      if (!validPhone(this.loginForm.username)) return;
+      if (!validPhone(this.fromdata.username)) return;
       this.count = 59;
       this.handleTimer();
 
-      getCode(this.loginForm.username, 101);
+      getCode(this.fromdata.username, type);
     },
     handleChangePhone() {
-      this.phoneLoading = true;
-      setTimeout(() => {
-        this.phoneLoading = false;
-        this.showChangePhone = false;
-      }, 1000);
+      this.fromLoading = true;
+      bindPhone({
+        telephone: this.fromdata.username,
+        code: this.fromdata.code,
+        password: this.fromdata.password,
+      })
+        .then((r) => {
+          this.fromLoading = false;
+          clearTimeout(this.timer);
+          this.count = 0;
+          this.showChangePhone = false;
+          this.$store.dispatch("user/getInfo");
+          this.$message({
+            message: "修改成功",
+            type: "success",
+          });
+        })
+        .catch((e) => {
+          this.fromLoading = false;
+        });
     },
     handleChangePassword() {
-      this.showChangePassword = true;
-      setTimeout(() => {
-        this.passwordLoading = false;
-        this.showChangePassword = false;
-      }, 1000);
+      this.fromLoading = true;
+      resetPass({
+        code: this.fromdata.code,
+        password: this.fromdata.password,
+      })
+        .then((r) => {
+          this.fromLoading = false;
+          clearTimeout(this.timer);
+          this.count = 0;
+          this.showChangePassword = false;
+          this.$message({
+            message: "修改成功",
+            type: "success",
+          });
+        })
+        .catch((e) => {
+          this.fromLoading = false;
+        });
     },
     handleAuth() {
       this.$router.push("/user/create");
@@ -340,7 +376,7 @@ export default {
         .el-button {
           margin-left: 8px;
         }
-        .quic{
+        .quic {
           cursor: pointer;
         }
       }
@@ -355,18 +391,17 @@ export default {
   }
 }
 .prefix {
-  height: 34px;
-  border-radius: 4px 0 0 4px;
-  margin: -10px -21px -10px -20px;
-  background-color: white;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
   p {
+    width: 38px;
+    border-right: 1px solid #dcdfe6;
     text-align: center;
     margin: 0;
-    flex: 1;
-    border-right: 1px solid #909399;
   }
+}
+</style>
+
+<style>
+.el-form-item.username .el-input__inner {
+  padding-left: 48px;
 }
 </style>
