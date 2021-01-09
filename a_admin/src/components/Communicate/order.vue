@@ -89,18 +89,11 @@
         <div class="row">
           <h5 style="line-height: 28px; width: 64px">快递信息：</h5>
           <div style="flex: 1">
-            <el-select
+            <el-input
               v-model="data.build.address.logisticsPlatform"
               size="mini"
-              placeholder="请选择"
-            >
-              <el-option
-                v-for="(item, i) in logistics"
-                :key="i"
-                :label="item"
-                :value="item"
-              />
-            </el-select>
+              placeholder="快递平台"
+            />
             <el-input
               v-model="data.build.address.logisticsNo"
               style="margin-top: 8px"
