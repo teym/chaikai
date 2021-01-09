@@ -1,5 +1,5 @@
 <template>
-  <div class="dashboard-container">
+  <div class="_usercard">
     <el-row class="tools" :gutter="20">
       <el-col :span="12">
         <div class="block function">
@@ -331,7 +331,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.dashboard-container {
+._usercard {
   .tools {
     .block {
       background-color: white;
@@ -401,7 +401,7 @@ export default {
 </style>
 
 <style>
-.el-form-item.username .el-input__inner {
+._usercard .el-form-item.username .el-input__inner {
   padding-left: 48px;
 }
 </style>
