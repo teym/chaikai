@@ -98,6 +98,7 @@
               v-model="data.build.address.logisticsNo"
               style="margin-top: 8px"
               size="mini"
+              placeholder="快递单号"
             />
           </div>
         </div>
