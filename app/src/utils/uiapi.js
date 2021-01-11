@@ -71,6 +71,8 @@ export function waitRefresh (p) {
   if (p) {
     p.then(() => {
       mpvue.stopPullDownRefresh()
+    }).catch(() => {
+      mpvue.stopPullDownRefresh()
     })
   }
 }

@@ -60,17 +60,11 @@ export default {
       unbind: []
     }
   },
-  mounted () {
-    this.data = null
-    this.bind = []
-    this.unbind = []
-  },
   onShow () {
-    const p = this.loadData()
-    if (!this.data) {
-      const l = uiapi.loading()
-      p.then(l).catch(l)
-    }
+    const l = uiapi.loading()
+    this.loadData().then(() => setTimeout(() => {
+      l()
+    }, 50))
   },
   onPullDownRefresh () {
     uiapi.waitRefresh(this.loadData())
@@ -103,7 +97,9 @@ export default {
           }
         })
         .catch((e) => {
-          uiapi.toast(e.info)
+          setTimeout(() => {
+            uiapi.toast(e.info)
+          }, 100)
         })
     },
     onGo (item) {

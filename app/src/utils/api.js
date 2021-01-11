@@ -88,7 +88,6 @@ export function saveImage (path) {
     return new Promise((resolve, reject) => {
       mpvue.getSetting({
         success: (r) => {
-          console.log('setting', r)
           resolve(r.authSetting[auth])
         },
         fail: reject
