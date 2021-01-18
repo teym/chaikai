@@ -190,9 +190,9 @@
           <div class="pingce" v-for="(c, i) in row.evaluationItems" :key="i">
             <a target="_blank" :href="c.channel.homeLink">
               <img :src="channelIcons[c.platformId + ''].icon" alt="" />
-              <span>{{ c.type === 2 ? "追加" : "正式" }}</span> </a
+              <span style="word-break: keep-all;">{{ c.type === 2 ? "追加" : "正式" }}</span> </a
             ><a :href="c.url" target="_blank" @click="onRead(c)">
-              <span>互动量{{ c.activeAmount }}</span>
+              <span style="word-break: keep-all;">互动量{{ c.activeAmount }}</span>
               <el-icon class="el-icon-arrow-right"></el-icon>
             </a>
             <div v-if="!c.read" class="dot"></div>
