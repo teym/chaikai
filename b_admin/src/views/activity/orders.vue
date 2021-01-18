@@ -183,9 +183,10 @@
         :index="4"
         v-if="listQuery.statusCode === '6'"
         label="评测内容"
-        width="160"
+        width="180"
       >
         <template slot-scope="{ row }">
+          <div style="display: flex;flex-direction: column;align-items: center;">
           <div class="pingce" v-for="(c, i) in row.evaluationItems" :key="i">
             <a target="_blank" :href="c.channel.homeLink">
               <img :src="channelIcons[c.platformId + ''].icon" alt="" />
@@ -195,6 +196,7 @@
               <el-icon class="el-icon-arrow-right"></el-icon>
             </a>
             <div v-if="!c.read" class="dot"></div>
+          </div>
           </div>
         </template>
       </el-table-column>
