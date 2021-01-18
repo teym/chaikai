@@ -107,7 +107,7 @@ const AllChannels = [{
 
 const CHS = {
   1: { img: '/static/images/channel_wb.png', match: [/^https?:\/\/t.cn\/.+/, /^https?:\/\/([a-z0-9A-Z]+\.)?weibo.com\/.+/, /^https?:\/\/([a-z0-9A-Z]\.)?weibo.cn\/.+/] },
-  2: { img: '/static/images/channel_bi.png', match: [/^https?:\/\/([a-z0-9A-Z]+\.)?bilibili.com\/.+/] },
+  2: { img: '/static/images/channel_bi.png', match: [/^https?:\/\/b23.tv\/.+/, /^https?:\/\/([a-z0-9A-Z]+\.)?bilibili.com\/.+/] },
   4: { img: '/static/images/channel_xhs.png', match: [/^https?:\/\/xhslink.com\/.+/, /^https?:\/\/([a-z0-9A-Z]+\.)?xiaohongshu.com\/.+/] },
   8: { img: '/static/images/channel_dy.png', match: [/^https?:\/\/([a-z0-9A-Z]+\.)?douyin.com\/.+/] },
   16: { img: '/static/images/channel_ks.png', match: [/^https?:v.kuaishou.com\/.+/, /^https?:\/\/([a-z0-9A-Z]+\.)?kuaishou.com\/.+/] }
