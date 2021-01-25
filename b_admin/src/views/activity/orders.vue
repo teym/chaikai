@@ -188,7 +188,7 @@
         <template slot-scope="{ row }">
           <div style="display: flex;flex-direction: column;align-items: center;">
           <div class="pingce" v-for="(c, i) in row.evaluationItems" :key="i">
-            <a target="_blank" :href="c.channel.homeLink">
+            <a target="_blank" :href="(c.channel || {}).homeLink || ''">
               <img :src="channelIcons[c.platformId + ''].icon" alt="" />
               <span style="word-break: keep-all;">{{ c.type === 2 ? "追加" : "正式" }}</span> </a
             ><a :href="c.url" target="_blank" @click="onRead(c)">
