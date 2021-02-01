@@ -482,7 +482,6 @@ export default {
     },
     onReward () {
       const s = diffTime(this.data.deadline, '')
-      console.log('reward', s)
       router(this).push('/pages/reward/main', {
         status: this.data.rewardStatusCode,
         orderStatus: this.data.statusCode,
