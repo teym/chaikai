@@ -76,7 +76,7 @@ const actions = {
       loginCode(codes).then(response => {
         const { data } = response
         commit('SET_TOKEN', data.token)
-        setToken(data.token)
+        setToken(data.token, { expires: 15 })
         setTimeout(() => {
           resolve()
         }, 200);
@@ -88,12 +88,12 @@ const actions = {
   },
 
   login({ commit }, userInfo) {
-    const { username, password } = userInfo
+    const { username, password, cache } = userInfo
     return new Promise((resolve, reject) => {
       login({ telephone: username.trim(), password: password }).then(response => {
         const { data } = response
         commit('SET_TOKEN', data.token)
-        setToken(data.token)
+        setToken(data.token, cache ? { expires: 15 } : undefined)
         setTimeout(() => {
           resolve()
         }, 200);
@@ -108,7 +108,6 @@ const actions = {
   getInfo({ commit, state }) {
     return new Promise((resolve, reject) => {
       Promise.all([getInfo(), fetchStat(), fetchPv({ page: 1, size: 5, statusCode: 3 }), fetchFinance()]).then(([r1, r2, r3, r4]) => {
-        console.log(r1);
         if (r1.code === 20003) {
           throw r1
         }

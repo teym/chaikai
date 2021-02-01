@@ -17,9 +17,7 @@
         </div>
 
         <el-form-item class="username" prop="username">
-          <span class="prefix">
-            <svg-icon icon-class="user" /> +86
-          </span>
+          <span class="prefix"> <svg-icon icon-class="user" /> +86 </span>
           <el-input
             ref="username"
             v-model="loginForm.username"
@@ -43,23 +41,26 @@
             @keyup.enter.native="handleLogin"
           />
           <span @click="showPwd">
-            <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
+            <svg-icon
+              :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'"
+            />
           </span>
         </el-form-item>
         <div class="bar">
           <el-checkbox v-model="checked">15天内自动登录</el-checkbox>
-          <router-link :to="{path:'/resetpass'}">忘记密码</router-link>
+          <router-link :to="{ path: '/resetpass' }">忘记密码</router-link>
         </div>
 
         <el-button
           type="primary"
           :loading="loading"
-          style="width:100%;margin-bottom:20px;"
+          style="width: 100%; margin-bottom: 20px"
           @click.native.prevent="handleLogin"
-        >登录</el-button>
+          >登录</el-button
+        >
 
         <div class="bar">
-          <router-link :to="{path:'/regist'}">注册账号</router-link>
+          <router-link :to="{ path: '/regist' }">注册账号</router-link>
         </div>
       </el-form>
     </login-frame>
@@ -67,110 +68,113 @@
 </template>
 
 <script>
-import LoginFrame from './components/frame'
-import { validPhone } from '@/utils/validate'
+import LoginFrame from "./components/frame";
+import { validPhone } from "@/utils/validate";
 
 export default {
-  name: 'Login',
+  name: "Login",
   components: { LoginFrame },
   data() {
     const validateUsername = (rule, value, callback) => {
       if (!validPhone(value)) {
-        callback(new Error('错误的手机号码'))
+        callback(new Error("错误的手机号码"));
       } else {
-        callback()
+        callback();
       }
-    }
+    };
     const validatePassword = (rule, value, callback) => {
       if (value.length < 6) {
-        callback(new Error('密码不能少于6位'))
+        callback(new Error("密码不能少于6位"));
       } else {
-        callback()
+        callback();
       }
-    }
+    };
     return {
       loginForm: {
-        username: '',
-        password: ''
+        username: "",
+        password: "",
       },
       loginRules: {
         username: [
-          { required: true, trigger: 'blur', validator: validateUsername }
+          { required: true, trigger: "blur", validator: validateUsername },
         ],
         password: [
-          { required: true, trigger: 'blur', validator: validatePassword }
-        ]
+          { required: true, trigger: "blur", validator: validatePassword },
+        ],
       },
       checked: true,
-      passwordType: 'password',
+      passwordType: "password",
       loading: false,
       showDialog: false,
       redirect: undefined,
-      otherQuery: {}
-    }
+      otherQuery: {},
+    };
   },
   watch: {
     $route: {
-      handler: function(route) {
-        const query = route.query
+      handler: function (route) {
+        const query = route.query;
         if (query) {
-          this.redirect = query.redirect
-          this.otherQuery = this.getOtherQuery(query)
+          this.redirect = query.redirect;
+          this.otherQuery = this.getOtherQuery(query);
         }
       },
-      immediate: true
-    }
+      immediate: true,
+    },
   },
   mounted() {
-    if (this.loginForm.username === '') {
-      this.$refs.username.focus()
-    } else if (this.loginForm.password === '') {
-      this.$refs.password.focus()
+    if (this.loginForm.username === "") {
+      this.$refs.username.focus();
+    } else if (this.loginForm.password === "") {
+      this.$refs.password.focus();
     }
   },
   methods: {
     showPwd() {
-      if (this.passwordType === 'password') {
-        this.passwordType = ''
+      if (this.passwordType === "password") {
+        this.passwordType = "";
       } else {
-        this.passwordType = 'password'
+        this.passwordType = "password";
       }
       this.$nextTick(() => {
-        this.$refs.password.focus()
-      })
+        this.$refs.password.focus();
+      });
     },
     handleLogin() {
       this.$refs.loginForm.validate((valid) => {
         if (valid) {
-          this.loading = true
+          this.loading = true;
           this.$store
-            .dispatch('user/login', this.loginForm)
+            .dispatch(
+              "user/login",
+              Object.assign({ cache: this.checked }, this.loginForm)
+            )
             .then(() => {
               this.$router.push({
-                path: this.redirect || '/',
-                query: this.otherQuery
-              })
-              this.loading = false
+                path: this.redirect || "/",
+                query: this.otherQuery,
+              });
+              this.loading = false;
             })
             .catch((e) => {
-              this.loading = false
-            })
+              this.loading = false;
+            });
         } else {
-          console.log('error submit!!')
-          return false
+          console.log("error submit!!");
+          return false;
         }
-      })
+      });
     },
     getOtherQuery(query) {
       return Object.keys(query).reduce((acc, cur) => {
-        if (cur !== 'redirect') {
-          acc[cur] = query[cur]
+        if (cur !== "redirect") {
+          acc[cur] = query[cur];
         }
-        return acc
-      }, {})
-    }
-  }
-}
+        return acc;
+      }, {});
+    },
+  },
+};
 </script>
 
 <style lang="scss">
@@ -248,10 +252,10 @@ $light_gray: #eee;
         width: 80%;
       }
     }
-    .bar{
+    .bar {
       margin-top: -8px;
       margin-bottom: 32px;
-      a{
+      a {
         float: right;
         font-size: 14px;
         color: #333;
