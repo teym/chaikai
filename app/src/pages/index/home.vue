@@ -43,7 +43,7 @@
               <div class="row just i-center margin-t">
                 <p class="middle dark">
                   名额
-                  <span class="red blod">{{item.remainingNum || item.totalNum}}</span>
+                  <span class="red blod">{{item.remainingNum}}</span>
                 </p>
                 <ul v-if="item.cooperationType !== 3" class="row tag">
                   <li v-if="item.cooperationType < 3" class="small red">悬赏</li>
