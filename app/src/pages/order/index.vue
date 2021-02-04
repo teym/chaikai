@@ -317,7 +317,7 @@
     <bar background="#FFFFFF">
       <div class="bar row pad2 i-center white_bg">
         <div
-          v-if="data.statusCode === 1 || data.statusCode === 3"
+          v-if="data.statusCode === 1"
           class="btn gray small row center margin-l"
           @click="onCancel"
         >
@@ -332,7 +332,7 @@
         </div>
         <div
           v-if="data.statusCode > 2 && data.statusCode !== 7"
-          class="btn gray small row center margin-l"
+          class="btn red small row center margin-l"
           @click="onMessage"
         >
           留言
