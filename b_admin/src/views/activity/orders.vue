@@ -693,8 +693,14 @@ export default {
   },
   methods: {
     getTabs() {
+      const obj = Object.assign({}, this.listQuery);
+      if (obj.searchType === "2") {
+        obj.orderId = obj.searchKey;
+      } else {
+        obj.bloggerName = obj.searchKey;
+      }
       Promise.all([
-        fetchOdStat({ brActivityId: this.listQuery.brActivityId }),
+        fetchOdStat(clearQueryObject(Object.assign(obj, { brActivityId: this.listQuery.brActivityId }))),
         fetchData(this.listQuery.brActivityId),
       ])
         .then((r) => {
@@ -736,6 +742,9 @@ export default {
         obj.orderId = obj.searchKey;
       } else {
         obj.bloggerName = obj.searchKey;
+      }
+      if(this.listQuery.page === 1){
+        this.getTabs()
       }
       fetchOdList(clearQueryObject(obj))
         .then((response) => {
