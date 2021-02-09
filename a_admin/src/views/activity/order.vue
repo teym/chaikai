@@ -40,6 +40,7 @@
           :value="j"
           :label="i"
         />
+        <el-option :value="-1" label="无" />
       </el-select>
       <el-select
         v-model="listQuery.statusCode"
@@ -268,6 +269,10 @@ export default {
           .add(1, 'd')
           .format('YYYY-MM-DD HH:mm:ss')
         obj.timeRange = null
+      }
+      if (obj.rewardStatusCode === -1 || obj.rewardStatusCode === '-1') {
+        obj.coopSubType = 3
+        obj.rewardStatusCode = undefined
       }
       const mapState = (data, s) => {
         switch (data.statusCode) {
