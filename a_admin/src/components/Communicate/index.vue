@@ -48,7 +48,7 @@
           <p>提示：警惕站外沟通交易，平台提供合作保障</p>
           <el-icon class="el-icon-arrow-right" />
         </a> -->
-        <div ref="box" class="box">
+        <div ref="box" class="box" @scroll="onScroll">
           <div
             v-for="(item, i) in data.datas"
             :key="i"
@@ -349,6 +349,11 @@ export default {
             this.data.loading = false
           }
         })
+    },
+    onScroll(e) {
+      if (e.target.scrollTop === 0 && !this.data.loading && !this.data.nomore) {
+        this.loadData(this.data.page + 1)
+      }
     }
   }
 }
