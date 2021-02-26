@@ -136,13 +136,13 @@
       <div class="row" v-if="data.coopSubType !== 3 && data.activity.cooperationType !== 4">
         <h5>合作要求：</h5>
         <div>
-          <div class="row" style="margin-top: 0">
+          <div class="row" style="margin-top: 0" v-if="data.activity.extension.articleType > 0">
             <h5>合作篇幅：</h5>
             <p>
               {{ data.activity.extension.articleType > 0 ? "单篇" : "无要求" }}
             </p>
           </div>
-          <div class="row">
+          <div class="row" v-if="data.activity.extension.contentType > 0">
             <h5>内容形式：</h5>
             <p>
               {{
@@ -150,7 +150,7 @@
               }}
             </p>
           </div>
-          <div class="row">
+          <div class="row" v-if="data.activity.extension.minWordNum > 0">
             <h5 class="small normal light">最低字数：</h5>
             <p>
               {{
@@ -158,13 +158,13 @@
               }}
             </p>
           </div>
-          <div class="row">
+          <div class="row" v-if="data.activity.extension.minPicNum > 0">
             <h5>最低图片数：</h5>
             <p>
               {{ ["无要求", "6张", "9张"][data.activity.extension.minPicNum] }}
             </p>
           </div>
-          <div class="row">
+          <div class="row" v-if="data.activity.extension.minVideoLength > 0">
             <h5>最低视频时长：</h5>
             <p>
               {{
