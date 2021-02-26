@@ -75,7 +75,7 @@
             </div>
           </div>
         </div>
-        <div class="bar">
+        <form ref="input" class="bar">
           <textarea
             v-model="text"
             class="input"
@@ -109,7 +109,7 @@
               >发送</el-button
             >
           </div>
-        </div>
+        </form>
       </el-col>
       <el-col :span="showList ? 7 : 8" class="detail">
         <order ref="order" :id="active" @order="onOrder" />
@@ -270,6 +270,7 @@ export default {
         });
     },
     onActive(item) {
+      this.$refs.input.reset();
       this.active = item.originId;
       this.data = {
         datas: [],
@@ -387,6 +388,9 @@ export default {
   .list {
     border-right: 1px solid #e9e9e9;
     overflow: hidden scroll;
+    .item.active {
+      background-color: #f7f7f7;
+    }
     .item {
       display: flex;
       flex-direction: row;
