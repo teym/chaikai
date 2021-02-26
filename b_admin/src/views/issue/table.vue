@@ -194,7 +194,7 @@ export default {
         case 3:
           return "请等待小二审核";
         case 4:
-          return `修改测评还剩${time}，超时将判违规，并扣除押金`;
+          return `修改测评还剩${time}，超时将判违规`;
         case 7:
           return "处理超时/违规";
       }
