@@ -32,7 +32,7 @@
               <span>{{ i.date }}</span>
             </div>
             <div class="row b">
-              <p>{{ i.content }}</p>
+              <p>{{ i.content_str }}</p>
               <span v-if="i.brUnreadNum > 0">{{ i.brUnreadNum }}</span>
             </div>
           </div>
@@ -65,11 +65,11 @@
               <div>
                 <img
                   v-if="item.isImg"
-                  :src="item.content"
+                  :src="item.content_str"
                   alt="img"
-                  @click="onPreview(item.content)"
+                  @click="onPreview(item.content_str)"
                 >
-                <p v-else>{{ item.content }}</p>
+                <p v-else>{{ item.content_str }}</p>
                 <span>{{ item.date }}</span>
               </div>
             </div>
@@ -242,7 +242,7 @@ export default {
               my: true,
               date: formatDate(data.lastTime),
               isImg: isImgMsg(data.content),
-              content: isImgMsg(data.content)
+              content_str: isImgMsg(data.content)
                 ? imgMsgUrl(data.content)
                 : data.content
             })
@@ -289,7 +289,7 @@ export default {
             .concat(r.data.data || [])
             .map((i) =>
               Object.assign(i, {
-                content: isImgMsg(i.lastRecord.content)
+                content_str: isImgMsg(i.lastRecord.content)
                   ? '[图片]'
                   : i.lastRecord.content,
                 date: formatDate(i.lastTime)
@@ -330,7 +330,7 @@ export default {
                 Object.assign(i, {
                   date: moment(i.gmtCreate).format('YYYY-MM-DD HH:mm:ss'),
                   isImg: isImgMsg(i.content),
-                  content: isImgMsg(i.content)
+                  content_str: isImgMsg(i.content)
                     ? imgMsgUrl(i.content)
                     : i.content
                 })
@@ -367,6 +367,9 @@ export default {
     border-right: 1px solid #e9e9e9;
     overflow: hidden scroll;
     .item {
+      &.active{
+        background-color: #f7f7f7;
+      }
       display: flex;
       flex-direction: row;
       align-items: center;

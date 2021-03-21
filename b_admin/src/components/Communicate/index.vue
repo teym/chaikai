@@ -17,7 +17,12 @@
       </el-row>
     </div>
     <el-row class="layout">
-      <el-col v-if="showList" :span="5" class="list">
+      <el-col
+        v-if="showList"
+        :span="5"
+        class="list"
+        @scroll.native="onListScroll"
+      >
         <div
           v-for="(i, j) in list"
           :key="j"
@@ -32,7 +37,7 @@
               <span>{{ i.date }}</span>
             </div>
             <div class="row b">
-              <p>{{ i.content }}</p>
+              <p>{{ i.content_str }}</p>
               <span v-if="i.brUnreadNum > 0">{{ i.brUnreadNum }}</span>
             </div>
           </div>
@@ -65,11 +70,11 @@
               <div>
                 <img
                   v-if="item.isImg"
-                  :src="item.content"
+                  :src="item.content_str"
                   alt="img"
-                  @click="onPreview(item.content)"
+                  @click="onPreview(item.content_str)"
                 />
-                <p v-else>{{ item.content }}</p>
+                <p v-else>{{ item.content_str }}</p>
                 <span>{{ item.date }}</span>
               </div>
             </div>
@@ -247,7 +252,7 @@ export default {
               my: true,
               date: formatDate(data.lastTime),
               isImg: isImgMsg(data.content),
-              content: isImgMsg(data.content)
+              content_str: isImgMsg(data.content)
                 ? imgMsgUrl(data.content)
                 : data.content,
             })
@@ -302,7 +307,7 @@ export default {
             .concat(r.data.data || [])
             .map((i) =>
               Object.assign(i, {
-                content: isImgMsg(i.lastRecord.content)
+                content_str: isImgMsg(i.lastRecord.content)
                   ? "[图片]"
                   : i.lastRecord.content,
                 date: formatDate(i.lastTime),
@@ -310,10 +315,11 @@ export default {
             );
           this.nomore = r.data.pager.totalPages <= page;
           this.loading = false;
+          this.page = page;
           if (!this.active) {
             this.active = this.list[0].originId;
+            this.loadData(1);
           }
-          this.loadData(1);
           this.onCount();
         })
         .catch((e) => {
@@ -344,7 +350,7 @@ export default {
                 Object.assign(i, {
                   date: moment(i.gmtCreate).format("YYYY-MM-DD HH:mm:ss"),
                   isImg: isImgMsg(i.content),
-                  content: isImgMsg(i.content)
+                  content_str: isImgMsg(i.content)
                     ? imgMsgUrl(i.content)
                     : i.content,
                 })
@@ -372,6 +378,15 @@ export default {
           }
         });
     },
+    onListScroll(e) {
+      if (
+        (e.target.scrollTop + e.target.clientHeight + 5) >= e.target.scrollHeight &&
+        !this.loading &&
+        !this.nomore
+      ) {
+        this.loadList(this.page + 1);
+      }
+    },
     onScroll(e) {
       if (e.target.scrollTop === 0 && !this.data.loading && !this.data.nomore) {
         this.loadData(this.data.page + 1);
@@ -388,10 +403,10 @@ export default {
   .list {
     border-right: 1px solid #e9e9e9;
     overflow: hidden scroll;
-    .item.active {
-      background-color: #f7f7f7;
-    }
     .item {
+      &.active {
+        background-color: #f7f7f7;
+      }
       display: flex;
       flex-direction: row;
       align-items: center;

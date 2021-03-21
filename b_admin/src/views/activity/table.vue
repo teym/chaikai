@@ -66,7 +66,7 @@
       highlight-current-row
       style="width: 100%"
     >
-      <el-table-column label="商品名称" width="260">
+      <el-table-column label="活动名称" width="260">
         <template slot-scope="{ row }">
           <div class="info">
             <img :src="row.picUrl" alt="pic" />

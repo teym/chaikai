@@ -921,7 +921,7 @@ export default {
     handleCommend(row) {
       const v = row.scoreInfo ? row.scoreInfo.score - 5 : 5;
       const ids = row.scoreInfo
-        ? row.scoreInfo.scoreItemIds.split(",").map((i) => parseInt(i))
+        ? (row.scoreInfo.scoreItemIds || '').split(",").map((i) => parseInt(i))
         : [];
       this.commend = {
         value: v,
