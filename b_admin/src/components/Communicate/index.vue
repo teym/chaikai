@@ -193,6 +193,7 @@ export default {
         this.$refs.order.update(issue ? "issue" : "order");
       }, 0);
       this.loadList(1);
+      this.loadData(1);
     };
   },
   methods: {

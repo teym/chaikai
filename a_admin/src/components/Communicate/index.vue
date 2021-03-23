@@ -187,6 +187,7 @@ export default {
         this.$refs.order.update(issue ? 'issue' : 'order')
       }, 0)
       this.loadList(1)
+      this.loadData(1)
     }
   },
   methods: {
@@ -299,8 +300,8 @@ export default {
           this.loading = false
           if (!this.active) {
             this.active = this.list[0].originId
+            this.loadData(1)
           }
-          this.loadData(1)
         })
         .catch((e) => {
           this.loading = false
@@ -367,7 +368,7 @@ export default {
     border-right: 1px solid #e9e9e9;
     overflow: hidden scroll;
     .item {
-      &.active{
+      &.active {
         background-color: #f7f7f7;
       }
       display: flex;

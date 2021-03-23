@@ -291,7 +291,7 @@ export default {
       params.agent_info = agentInfo
       // params.location_info = location_info;
       // 美洽企业ID
-      params.ent_id = '249463'
+      params.ent_id = '6c328d6c66f45c74ec9e069445bb97ca'
       // // 小程序 token
       params.token = '108gemechat'
       // // 小程序 AppID
