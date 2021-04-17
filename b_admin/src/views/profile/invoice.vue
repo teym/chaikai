@@ -100,7 +100,7 @@
             <el-input v-model="form.company" placeholder="请填写发票抬头" />
           </el-form-item>
           <el-form-item label="税号：">
-            <el-input v-model="form.rise" placeholder="请填写税号" />
+            <el-input v-model="form.taxNumber" placeholder="请填写税号" />
           </el-form-item>
           <el-form-item label="接收邮箱：">
             <el-input v-model="form.receiveMail" placeholder="请填写接收邮箱" />
@@ -191,6 +191,7 @@ export default {
       form: {
         statusCode: 1,
         rise: "",
+        taxNumber: "",
         company: "",
         receiveMail: "",
       },
@@ -257,7 +258,7 @@ export default {
         this.$message({ message: "请填写发票抬头", type: "error" });
         return;
       }
-      if (!this.form.rise) {
+      if (!this.form.taxNumber) {
         this.$message({ message: "请填写税号", type: "error" });
         return;
       }
@@ -269,6 +270,7 @@ export default {
       createInvoice(
         Object.assign({}, this.form, {
           type: this.listQuery.type,
+          rise: this.form.company,
           totalAmount: this.totalAmount,
           orderIds: this.sel.map((i) => i.orderId),
         })
