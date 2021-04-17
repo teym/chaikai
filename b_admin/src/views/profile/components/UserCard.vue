@@ -161,7 +161,7 @@
             style="float: right"
             plain
             type="primary"
-            @click="handleCode('PASSWORD_MODIFY')"
+            @click="handleCode(106)"
             >{{ count > 0 ? `${count}后再试` : "获取验证码" }}</el-button
           >
         </el-form-item>
