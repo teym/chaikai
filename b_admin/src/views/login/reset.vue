@@ -180,7 +180,7 @@ export default {
       this.count = 59;
       this.handleTimer();
 
-      getCode(this.loginForm.username, 101).catch((e) => {
+      getCode(this.loginForm.username, 106).catch((e) => {
         clearTimeout(this.timer);
         this.count = 0;
       });
