@@ -133,10 +133,17 @@
           <span>{{ data.rewardMsg }}</span>
         </div>
       </div>
-      <div class="row" v-if="data.coopSubType !== 3 && data.activity.cooperationType !== 4">
+      <div
+        class="row"
+        v-if="data.coopSubType !== 3 && data.activity.cooperationType !== 4"
+      >
         <h5>合作要求：</h5>
         <div>
-          <div class="row" style="margin-top: 0" v-if="data.activity.extension.articleType > 0">
+          <div
+            class="row"
+            style="margin-top: 0"
+            v-if="data.activity.extension.articleType > 0"
+          >
             <h5>合作篇幅：</h5>
             <p>
               {{ data.activity.extension.articleType > 0 ? "单篇" : "无要求" }}
@@ -474,8 +481,14 @@ export default {
       };
       fetchOrder(id).then(({ data }) => {
         if (id === this.id) {
-          if(data.statusCode === 8) {
-            data.statusDesc = `已逾期${Math.min(moment().diff(data.deadline ? moment(data.deadline) : new Date(), 'days'), 15)}天`
+          if (data.statusCode === 8) {
+            data.statusDesc = `已逾期${Math.min(
+              moment().diff(
+                data.deadline ? moment(data.deadline) : new Date(),
+                "days"
+              ),
+              15
+            )}天`;
           }
           data.build = {};
           data.build.topics = data.channels.filter((i) => i.topic);

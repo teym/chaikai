@@ -35,9 +35,8 @@
         style="width: 120px;margin-left: 16px"
       >
         <el-option :value="-1" label="全部" />
-        <el-option :value="0" label="处理中" />
         <el-option :value="2" label="提现成功" />
-        <el-option :value="4" label="已拒绝" />
+        <el-option :value="4" label="提现失败" />
       </el-select>
 
       <el-button

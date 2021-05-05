@@ -169,7 +169,7 @@
           <el-input
             v-model="fromdata.password"
             autocomplete="off"
-            placeholder="请输入当前账号登录密码"
+            placeholder="请输入新的账号登录密码"
           />
         </el-form-item>
       </el-form>

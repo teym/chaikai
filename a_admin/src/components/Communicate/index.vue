@@ -210,6 +210,7 @@ export default {
     },
     clickFile() {
       if (!this.orderDone) {
+        this.$refs.fileinput.value = ''
         this.$refs.fileinput.click()
       }
     },

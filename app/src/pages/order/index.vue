@@ -503,7 +503,7 @@ export default {
         })
     },
     onChoseAddress () {
-      if (this.data.statusCode >= 4) {
+      if (this.data.statusCode >= 3) {
         return
       }
       uiapi

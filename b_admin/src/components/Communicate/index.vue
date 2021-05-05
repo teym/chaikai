@@ -218,10 +218,10 @@ export default {
       });
     },
     clickFile() {
-      if (this.orderDone) {
-        return;
+      if (!this.orderDone) {
+        this.$refs.fileinput.value = '';
+        this.$refs.fileinput.click()
       }
-      this.$refs.fileinput.click();
     },
     onFile(e) {
       this.realSend(uploadFile(e.target.files[0]).then((u) => makeImgMsg(u)));
