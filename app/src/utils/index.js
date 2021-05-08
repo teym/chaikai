@@ -122,21 +122,25 @@ mapi.isLogin = () => {
 const login = mapi.login
 const userInfo = mapi.userInfo
 mapi.rlogin = login
+mapi.rawLogin = (code, info) => {
+  // console.log('login', JSON.stringify({code, info}))
+  return mrequest.post('/bl/auth/miniapp', Object.assign(
+    {},
+    info.userInfo,
+    {
+      code,
+      encryptInfo:
+        { encryptedData: info.encryptedData, iv: info.iv }
+    }
+  )).then(({ json }) => {
+    mstore.setItem('token', json.data.token)
+  })
+}
 mapi.login = () => {
   return login().then(code => {
     return Promise.all([Promise.resolve(code.code), userInfo()])
   }).then(([code, info]) => {
-    return mrequest.post('/bl/auth/miniapp', Object.assign(
-      {},
-      info.userInfo,
-      {
-        code,
-        encryptInfo:
-          { encryptedData: info.encryptedData, iv: info.iv }
-      }
-    ))
-  }).then(({ json }) => {
-    mstore.setItem('token', json.data.token)
+    return mapi.rawLogin(code, info)
   })
 }
 // mapi.regist = (phone, c) => {

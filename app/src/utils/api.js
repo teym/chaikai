@@ -44,6 +44,25 @@ function checkSession () {
     })
   })
 }
+export function userProfile () {
+  return new Promise((resolve, reject) => {
+    wx.getUserProfile({
+      desc: '获取头像和昵称',
+      success: (r) => {
+        console.log('success', r)
+        resolve(r)
+      },
+      fail: (e) => {
+        console.log('fail', e)
+        mpvue.getUserInfo({
+          withCredentials: true,
+          success: resolve,
+          fail: reject
+        })
+      }
+    })
+  })
+}
 export function userInfo () {
   return checkSession().catch(() => login()).then(() => {
     return new Promise((resolve, reject) => {
@@ -133,5 +152,5 @@ export function canvasContext (id) {
   return mpvue.createCanvasContext(id)
 }
 
-export const mapi = { launchOptions, onLaunch, copy, login, userInfo, pay, imageInfo, saveCanvas, saveImage, pixelRate, download, canvasContext, isIOS }
+export const mapi = { launchOptions, onLaunch, copy, login, userProfile, userInfo, pay, imageInfo, saveCanvas, saveImage, pixelRate, download, canvasContext, isIOS }
 export default mapi

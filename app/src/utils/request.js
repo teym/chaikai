@@ -1,4 +1,5 @@
 import _ from 'underscore'
+import { signal } from '.'
 import { fetch, upload } from './fetch'
 import { mstore } from './store'
 // import md5 from 'blueimp-md5'
@@ -63,7 +64,19 @@ function request (method, url, header, body) {
   }).catch(e => {
     console.log(method, '-->', url, e)
     if (e.json) {
-      return e.json().then(r => { throw Object.assign(r, { info: r.info || r.msg || '请求出错' }) })
+      return e.json().then(r => {
+        if (r.code === 20004) {
+          conf.token = ''
+          mstore.setItem('token', '')
+          signal.emit('logined', {})
+        }
+        throw Object.assign(r, { info: r.info || r.msg || '请求出错' })
+      })
+    }
+    if (e.code === 20004) {
+      conf.token = ''
+      mstore.setItem('token', '')
+      signal.emit('logined', {})
     }
     if (!e.info) { e.info = e.msg || '请求出错' }
     throw e

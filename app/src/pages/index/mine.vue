@@ -257,7 +257,7 @@ export default {
       ])
     },
     sendUserInfo (data) {
-      console.log(data)
+      // console.log(data)
       // 用户信息：可以设置用户的一些基本信息
       let userInfo = {
         tel: data.telephone + '',
