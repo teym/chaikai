@@ -20,7 +20,7 @@
             />
           </div>
           <div class="flex"></div>
-          <span class="light small" @click="onUnbind(item)">解绑</span>
+          <!-- <span class="light small" @click="onUnbind(item)">解绑</span> -->
         </li>
       </ul>
     </div>

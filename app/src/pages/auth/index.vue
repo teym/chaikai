@@ -13,10 +13,11 @@
         <img v-else :src="channel.homePic" alt="img">
       </div>
       <p class="red small text-right margin2-t" @click="onGuide">查看示例</p>
-      <h5 class="middle dark medium margin2-t">{{channel.platformName}}入驻要求</h5>
-      <p class="small light margin-t">1.粉丝数≥{{channel.platformId === '2' ? 5000 : 10000}}</p>
-      <p class="small light margin-t">2.根据达人账号综合资质，评估入驻资格，如：粉丝量、内容质量、互动真实无水分</p>
-      <p class="small light margin-t">3.两个工作日内反馈申请结果</p>
+      <h5 class="middle dark medium margin2-t">入驻要求：</h5>
+      <p class="small light margin-t">1、我们将根据账号的综合资质，评估入驻资格，如：粉丝量、账号垂直度、内容质量、互动数据真实性</p>
+      <p class="small light margin-t">2、内容敷衍、数据掺假、二手号、营销号、引流号，互关互暖号都将无法入驻</p>
+      <p class="small light margin-t">3、最晚两个工作日反馈入驻结果，请关注微信公众号：拆开</p>
+      <p class="small light margin-t">4、入驻后解绑，请联系客服</p>
       <div v-if="channel.statusCode === '2'" class="light_bg pad2 reason margin2-t">
         <h6 class="middle medium">拒绝理由：</h6>
         <p class="small margin-t">{{channel.rejectReason}}</p>
